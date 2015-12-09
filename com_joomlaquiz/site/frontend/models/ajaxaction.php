@@ -2706,7 +2706,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				break;		
 			}
 			
-			if($quiz->c_pagination == 3  ($quiz->c_auto_breaks == $quest_count) ){
+			if($quiz->c_pagination == 3 && $quiz->c_auto_breaks && ($quiz->c_auto_breaks == $quest_count) ){
 				break;
 			}
 			

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<field name="asset_id" type="hidden" filter="unset" />
+	<fieldset name="settings"
+		label="COM_JOOMLAQUIZ_SETTINGS_GLOBAL"
+		>
+		
+		<field name="wysiwyg_options" type="radio"	default="0"	
+			class="btn-group"
+			label="COM_JOOMLAQUIZ_SETTINGS_WYSIWYG_OPTIONS" 
+			description="COM_JOOMLAQUIZ_SETTINGS_WYSIWYG_OPTIONS_DESC">
+			<option value="0">JHIDE</option>
+			<option value="1">JSHOW</option>
+		</field>
+		
+		<field name="jq_show_dev_info" type="radio"	default="0"	
+			class="btn-group"
+			label="COM_JOOMLAQUIZ_SETTINGS_SHOW_DEV_INFO" 
+			description="COM_JOOMLAQUIZ_SETTINGS_SHOW_DEV_INFO_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+	</fieldset>
+		
+	<fieldset name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+	>
+		<field name="rules" type="rules"
+			component="com_joomlaquiz"
+			filter="rules"
+			validate="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			section="component" />
+	</fieldset>
+</config>

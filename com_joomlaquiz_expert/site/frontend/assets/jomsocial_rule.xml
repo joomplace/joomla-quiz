@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?><jomsocial><license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license><component>com_joomlaquiz</component><rules>
+
+
+
+	<rule>
+
+		<name>Successfully completed quiz ID=2</name>
+
+		<description>Give points when registered user successfully complete quiz.</description>
+
+		<action_string>successfully.completed.quiz2</action_string>
+
+		<publish>false</publish>
+
+		<points>0</points>
+
+		<access_level>1</access_level>
+
+	</rule>
+
+
+
+
+
+	<rule>
+
+		<name>Failed quiz ID=2</name>
+
+		<description>Give points when registered user failed quiz.</description>
+
+		<action_string>fail.quiz2</action_string>
+
+		<publish>false</publish>
+
+		<points>0</points>
+
+		<access_level>1</access_level>
+
+	</rule>
+
+
+</rules></jomsocial>

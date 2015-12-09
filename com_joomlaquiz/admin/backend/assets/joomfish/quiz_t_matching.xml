@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Joomlaquiz - Answers (Drop-Down, Drag-Drop Questions)</name>
+  <author>JoomPlace</author>
+  <version>2.0.3</version>
+  <description>Definition for the JoomlaQuiz component</description>
+  <reference>
+	<table name="quiz_t_matching">
+  		<field type="referenceid" name="c_id" translate="0">ID</field>
+		<field type="titletext" name="c_left_text" translate="0">Option left text</field>
+  		<field type="textarea" name="c_left_text" translate="1">Option left text</field>
+		<field type="textarea" name="c_right_text" translate="1">Option right text</field>
+  	</table>
+  </reference>
+ <translationfilters>
+	<quiz>c_quiz_id</quiz> 
+	<question>c_question_id</question>
+  </translationfilters>
+
+</joomfish>

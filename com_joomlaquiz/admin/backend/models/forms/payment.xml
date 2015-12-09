@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" 
+			readonly="true" class="readonly" />
+
+		<field name="pid" type="sql" query="(SELECT '0' AS value, '- Select product -' AS text FROM #__users) UNION (SELECT DISTINCT(p.quiz_sku) AS value, p.name AS text FROM #__quiz_product_info AS p ORDER BY p.name)" multiple="single" key_field="value" value_field="text" class="inputbox" labelclass="control-label" label="COM_JOOMLAQUIZ_PRODUCT" description="COM_JOOMLAQUIZ_PRODUCT_DESC" required="false" />
+		
+		<field name="user_id" type="sql" query="SELECT DISTINCT(users.id) AS value, CONCAT(users.name, ' (', users.email, ')') AS text FROM #__users AS users ORDER BY users.name, users.email" multiple="single" key_field="value" value_field="text" class="inputbox" labelclass="control-label" label="COM_JOOMLAQUIZ_USER_2" description="COM_JOOMLAQUIZ_USER_2_DESC" required="false" />
+		
+		<field name="amount" type="text" class="input" size="30"
+			label="COM_JOOMLAQUIZ_AMOUNT_2"
+			required="false" description="COM_JOOMLAQUIZ_AMOUNT_2_DESC" labelclass="control-label" />
+			
+		<field name="cur_code" type="text" class="input" size="10"
+			label="COM_JOOMLAQUIZ_CURRENCY_CODE"
+			required="false" labelclass="control-label" />
+			
+		<field name="status" type="list" default="Cancelled" label="COM_JOOMLAQUIZ_STATUS_2" description="COM_JOOMLAQUIZ_STATUS_2_DESC" labelclass="control-label">
+			<option value="Cancelled">COM_JOOMLAQUIZ_CANCELLED</option>
+			<option value="Pending">COM_JOOMLAQUIZ_PENDING</option>
+			<option value="Confirmed">COM_JOOMLAQUIZ_CONFIRMED</option>
+		</field>
+	</fieldset>
+</form>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_JOOMLAQUIZ_MENU_QUIZ_LAYOUT">
+		<message>
+			<![CDATA[COM_JOOMLAQUIZ_MENU_QUIZ_LAYOUT_DESCR]]>
+		</message>
+	</layout>
+	<state>
+		<name>COM_JOOMLAQUIZ_MENU_QUIZ_LAYOUT</name>
+		<description>COM_JOOMLAQUIZ_MENU_QUIZ_LAYOUT_DESCR</description>
+	
+		<params>
+			<param name="quiz_id" value="value" type="sql" query="(SELECT '- Select quiz -' AS `text`, '- Select quiz -' AS `quiz_id`, '0' AS `value` FROM `#__users` LIMIT 0,1) UNION (SELECT `c_title` AS `text`, `c_title` AS `quiz_id`, `c_id` AS `value` FROM `#__quiz_t_quiz` WHERE `c_id` > 0)" default="0" label="Quiz" description="Select a quiz that will be assigned to this menu item" />
+		</params>
+
+	</state>
+	
+	<fields name="params" >
+		<fieldset name="basic" label="JoomlaQuiz Parameters" addfieldpath="/administrator/components/com_joomlaquiz/models/fields">		
+			<field name="quiz_id" type="quiz" default="0" label="Select quiz" description="">
+			</field>
+			
+		</fieldset>
+	</fields>
+</metadata>

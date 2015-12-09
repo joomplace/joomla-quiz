@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Joomlaquiz - Questions</name>
+  <author>JoomPlace</author>
+  <version>2.0.3</version>
+  <description>Definition for the JoomlaQuiz component</description>
+  <reference>
+	
+	<table name="quiz_t_question">
+  		<field type="referenceid" name="c_id" translate="0">ID</field>
+		<field type="titletext" name="c_question" translate="0">Question text</field>
+  		<field type="textarea" name="c_question" translate="1">Question text</field>
+		<field type="textarea" name="c_title_true" translate="1">Title for `True` option</field>
+		<field type="textarea" name="c_title_false" translate="1">Title for `False` option</field>
+		<field type="textarea" name="c_right_message" translate="1">Message when the answer is correct</field>
+		<field type="textarea" name="c_wrong_message" translate="1">Message when the answer is incorrect</field>
+		<field type="textarea" name="c_partially_message" translate="1">Message when only part of correct answers selected</field>
+
+  	</table>
+
+  </reference>
+  <translationfilters>
+	<quiz>c_quiz_id</quiz>
+  </translationfilters>
+</joomfish>

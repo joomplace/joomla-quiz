@@ -1,0 +1,364 @@
+#system-message-container.j-toggle-main.j-toggle-transition.span10 {
+    width: 100%;
+}
+
+.brand{
+  float: left !important;
+}
+
+.control-label{
+    width: 250px !important;
+    padding-top: 0px !important;
+}
+
+.form-horizontal .controls{
+    margin-left: 260px !important;
+}
+
+.form-horizontal .controls textarea {
+    width: 90% !important;
+}
+
+.jqd-survey {
+    border: 1px solid rgb(215,198,154);
+    border-radius: 5px;
+    position: relative;
+    height: 15px;
+    width: 450px;
+    padding: 10px 20px;
+    margin: 0 auto;
+    background-color: rgb(248,238,185);
+    top: 35px;
+    box-shadow: 0 3px 10px 1px #ccc;
+}
+
+.jqd-survey .icon-remove{
+    position: absolute;
+    font-size: 10px;
+    right: 5px;
+    top: 5px;
+    color: #cccccc;
+    cursor: pointer;
+}
+
+#close-icon:hover{
+    color: #000000;
+}
+
+.gl_left {
+  text-align: left !important;
+}
+
+
+#dashboard_items
+
+{
+
+  margin-left: 5px;
+  padding-top: 10px;
+  clear:both;
+
+}
+
+
+
+#dashboard_items a
+
+{
+
+  vertical-align: middle;
+
+}
+
+
+
+.pmg-dashboard_item_icon
+
+{
+
+margin-left: 24px;
+
+}
+
+
+/*ABOUT*/
+
+.a_comptitle
+
+{
+
+	font-size:16px;
+
+	font-weight: normal;
+
+}
+
+.about_table
+
+{
+
+  background-color: #F7F8F9; 
+
+  border: 1px solid #d5d5d5; 
+
+  width: 100%; 
+
+  padding: 10px; 
+
+  border-collapse: collapse;
+
+}
+
+
+
+.about_table td
+
+{
+
+  background-color:#fff;
+
+   padding: 4px;
+
+}
+
+
+
+.about_table,  .about_table td, .about_table th, .about_table tr
+
+{
+
+  border: 1px solid #d5d5d5
+
+}
+
+
+
+.update_link
+
+{
+
+  cursor: pointer; 
+
+  text-decoration:underline;
+
+}
+
+
+
+.thank_tabl
+
+{
+
+  background-color: #F7F8F9; 
+
+  border: 1px solid #d5d5d5; 
+
+  width: 100%; 
+
+  padding: 10px; 
+
+  border-collapse: collapse;
+
+}
+
+
+
+.thank_ftd
+
+{
+
+  background-color: #e7e8e9;
+
+  text-align:left; 
+
+  font-size:16px; 
+
+  font-weight:400; 
+
+  line-height:18px; 
+
+}
+
+.thank_fdiv
+
+{
+
+  float:left; 
+
+  width:720px;
+
+}
+
+.thank_rate
+
+{
+
+  float:left;
+
+  display: block; 
+
+  width: 234px; 
+
+  height: 60px; 
+
+  background: transparent url(http://cdn.hotscripts.com/img/widgets/rt_234x60-1.gif) 0 0 no-repeat; 
+
+  font: normal 11px/12px Arial, Helvetica, sans-serif; 
+
+  color: #fff; 
+
+  text-align: right;
+
+}
+
+
+
+.thank_form
+
+{
+
+  display: block; 
+
+  position: relative; 
+
+  left: 79px; 
+
+  margin: 0; 
+
+  padding: 8px 0 0; 
+
+  width: 153px; 
+
+  overflow: hidden; 
+
+  text-align: left;
+
+}
+
+.about_news
+
+{
+
+  background-color: #e7e8e9;
+
+  text-align:left; 
+
+  font-size:14px; 
+
+  font-weight:400; 
+
+  line-height:18px;
+
+}
+
+.jp-panel-logo {
+
+    height: 20px;
+
+    width: 20px;
+
+    vertical-align: top;
+
+}
+
+#jp-navbar {
+	margin-bottom: 18px !important;
+}
+
+.container .brand {
+
+    text-transform: uppercase;
+
+    font-family: 'Lucida Sans Unicode', Helvetica, Arial;
+
+}
+
+#pgm_dashboard {
+
+    margin:20px 10px 0 0;
+
+    width:49%;
+
+    min-height: 100px;
+
+    height: auto;
+
+  /*  background: #ccc;
+
+    border-radius: 3px;
+
+    border:1px solid #AAA;*/
+
+    float:left;
+
+}
+
+#pgm_collapse {
+
+    width:49%;
+
+    float:left;
+
+    margin:20px 0 0 0;
+
+}
+
+.accordion-inner {
+
+    overflow: hidden;
+
+}
+
+.pgm-dashboard_button {
+
+    cursor: pointer;
+
+    background: none repeat scroll 0 0 #FAFAFA;
+
+    border: 1px solid #eed;
+
+    border-radius: 3px 3px 3px 3px;
+
+    float: left;
+
+    margin: 5px;
+
+    padding: 20px 10px;
+
+    width: 100px;
+
+    height: 66px;
+
+    overflow: hidden;
+
+}
+
+.pgm-dashboard_button:hover {
+
+    background-color: #fff;
+    box-shadow: 0px 0px 10px #eed;
+
+}
+
+.pgm-dashboard_button_text {
+
+    text-align: center;
+
+    width: 100%;
+
+    overflow: hidden;
+
+}
+
+.accordion-inner
+
+{
+
+  padding: 0px !important;
+
+}
+
+#system-message-container.j-toggle-main{
+	float: none !important;
+}
+

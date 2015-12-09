@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.0" method="upgrade" >
+	<name>COM_JOOMLAQUIZ</name>
+	<creationDate>April 2013</creationDate>
+	<author>JoomPlace Team</author>
+	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>support@joomplace.com</authorEmail>
+	<authorUrl>www.joomplace.com</authorUrl>
+	<version>3.4.1.001</version>
+	<description>This component manages Quizzes and Quiz Clients</description>
+	
+	<scriptfile>script.php</scriptfile>
+		
+	<files folder="site">
+		<filename>frontend.zip</filename>
+		<filename>jq_modules.zip</filename>
+		<filename>jq_plugins.zip</filename>
+		<filename>quiz_content_plugin.zip</filename>
+	</files>
+	<administration>
+	<menu img="components/com_joomlaquiz/assets/images/jp_menu_pic.gif" link="index.php?option=com_joomlaquiz&amp;view=dashboard">COM_JOOMLAQUIZ</menu>
+		<submenu>
+			<menu link="option=com_joomlaquiz&amp;view=quizzes" img="class:content">COM_JOOMLAQUIZ_MENU_QUIZZES</menu>
+			<menu link="option=com_joomlaquiz&amp;view=questions" img="class:content">COM_JOOMLAQUIZ_MENU_QUESTIONS</menu>
+			<menu link="option=com_joomlaquiz&amp;view=configuration" img="class:config">COM_JOOMLAQUIZ_MENU_CONFIG</menu>
+			<menu link="option=com_joomlaquiz&amp;view=results" img="class:stats">COM_JOOMLAQUIZ_MENU_RESULTS</menu>
+			<menu link="option=com_joomlaquiz&amp;view=dashboard" img="class:default">COM_JOOMLAQUIZ_MENU_ABOUT_JOOMLAQUIZ</menu>
+		</submenu>
+	<files folder="admin">
+		<filename>backend.zip</filename>
+		<folder>installer</folder>
+	</files>
+	</administration>
+	<updateservers>
+		<!-- Note: No spaces or linebreaks allowed between the server tags -->
+		<server type="extension" priority="1" name="Joomlaquiz Update Site">http://www.joomplace.com/updates/updates.xml</server>
+	</updateservers>
+</extension>

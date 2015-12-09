@@ -1,0 +1,51 @@
+<?php
+/**
+* Joomlaquiz Deluxe Component for Joomla 3
+* @package Joomlaquiz Deluxe
+* @author JoomPlace Team
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
+* @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+*/
+ defined('_JEXEC') or die('Restricted access');
+
+jimport('joomla.application.component.view');
+ 
+/**
+ * HTML View class for the Joomlaquiz Deluxe Component
+ */
+class JoomlaquizViewReactivate extends JViewLegacy
+{
+	protected $state;
+	protected $item;
+	protected $form;
+	
+    public function display($tpl = null) 
+    {
+		$submenu = 'reactivate';
+		JoomlaquizHelper::showTitle($submenu);	 
+		$this->addTemplatePath(JPATH_BASE.'/components/com_joomlaquiz/helpers/html');
+		
+		$this->state	= $this->get('State');
+		$this->item		= $this->get('Item');
+		$this->form		= $this->get('Form');
+		$this->lists	= $this->get('Lists');
+		
+		// Check for errors.
+		if (count($errors = $this->get('Errors'))) {
+			JError::raiseError(500, implode("\n", $errors));
+			return false;
+		}
+	
+		$this->addToolbar();
+		parent::display($tpl);
+    }
+        
+    protected function addToolbar()
+	{
+		JToolBarHelper::custom('reactivate.apply_reactivate', 'save-new.png', 'save-new_f2.png', 'COM_JOOMLAQUIZ_REACTIVATE', false);
+		JToolBarHelper::cancel('reactivate.cancel', 'JTOOLBAR_CANCEL');
+		JToolBarHelper::divider();
+		JToolBarHelper::help('JHELP_COMPONENTS_WEBLINKS_LINKS_EDIT');
+	}
+}
+?>

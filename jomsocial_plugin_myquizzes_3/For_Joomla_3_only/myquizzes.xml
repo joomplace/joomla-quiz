@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="community" method="upgrade">
+	<name>My Quizzes</name>
+	<author>JoomPlace.com</author>
+	<creationDate>May 2010</creationDate>
+	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>support@joomplace.com</authorEmail>
+	<authorUrl>www.joomplace.com</authorUrl>
+	<version>2.0</version>
+	<isapplication>true</isapplication>
+	<isbrowseable>true</isbrowseable>
+	<description>
+		JoomlaQuiz plugin for JomSocial 3
+	</description>
+	<languages>
+	    <language tag="en-GB">en-GB.plg_myquizzes.ini</language>
+	    <language tag="es-ES">es-ES.plg_myquizzes.ini</language>
+	</languages>
+	<files>
+		<file plugin="myquizzes">myquizzes.php</file>
+		<folder>myquizzes</folder>
+	</files>
+	<positions>
+		<position>content</position>
+		<position>sidebar_top</position>
+        <position>sidebar_bottom</position>
+	</positions>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+			<field name="coreapp" type="list" default="0" label="Core Application" description="Causes this application to not appear in the users applications list but it will allow this application to appear in the user profile automatically if selected.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</field>
+		<field name="position" type="list" default="content" label="Position" description="Default position if you select this as core apps">
+			<option value="content">Main  content</option>
+			<option value="sidebar-top">Sidebar top</option>
+			<option value="sidebar-bottom">Sidebar bottom</option>
+		</field>
+		<field name="category" type="text" default="" label="Category" description="Show only quizzes form categories listed in this textfield (seperated by comma eg. 1,2,3). Leave it blank to display all quizzes." />
+		<field name="limit" type="text" default="50" label="Limit" description="Limit the length of the quiz short description (default is 50)." />
+		<field name="count" type="text" default="10" label="Count" description="The number of quizzes to display per page(default is 10)" />
+		<field name="introtext" type="list" default="0" label="Short description" description="Select whether to display the short description of the quiz.">
+			<option value="1">Yes</option>
+			<option value="0">No</option>
+		</field>
+		<field name="cache" type="list" default="1" label="Caching" description="Select whether to cache the content of this plugin">
+			<option value="1">Use Global</option>
+			<option value="0">No</option>
+		</field>
+		<field name="display_notactive" type="list" default="1" label="Display not active" description="Display not active quizzes.">
+			<option value="1">Yes</option>
+			<option value="0">No</option>
+		</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

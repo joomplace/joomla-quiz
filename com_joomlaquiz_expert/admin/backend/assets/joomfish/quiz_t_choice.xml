@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Joomlaquiz - Answers (M.Choice, M.Response Questions)</name>
+  <author>JoomPlace</author>
+  <version>2.0.3</version>
+  <description>Definition for the JoomlaQuiz component</description>
+  <reference>
+	<table name="quiz_t_choice">
+  		<field type="referenceid" name="c_id" translate="0">ID</field>
+		<field type="titletext" name="c_choice" translate="0">Choice</field>
+
+  		<field type="textarea" name="c_choice" translate="1">Choice</field>
+  	</table>
+  </reference>
+  <translationfilters>
+	<quiz>c_quiz_id</quiz> 
+	<question>c_question_id</question>
+  </translationfilters>
+</joomfish>

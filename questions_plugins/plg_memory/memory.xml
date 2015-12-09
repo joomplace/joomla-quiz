@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="joomlaquiz" method="upgrade">
+	<name>Joomlaquiz - memory</name>
+	<author>JoomPlace Team</author>
+	<creationDate>June 2013</creationDate>
+	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>support@joomplace.com</authorEmail>
+	<authorUrl>www.joomplace.com</authorUrl>
+	<version>3.0</version>
+	<isapplication>false</isapplication>
+	<isbrowsable>false</isbrowsable>
+	<description>Added Memory question type</description>
+	<files>
+		<filename plugin="memory">memory.php</filename>
+		<filename>index.html</filename>
+		<folder>admin</folder>
+		<folder>js</folder>
+		<folder>tmpl</folder>
+		<folder>sql</folder>
+	</files>
+</extension>

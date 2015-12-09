@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Joomlaquiz - Language constants</name>
+  <author>JoomPlace</author>
+  <version>2.0.3</version>
+  <description>Definition for the JoomlaQuiz component</description>
+  <reference>
+	
+	<table name="quiz_constants">
+  		<field type="referenceid" name="c_id" translate="0">ID</field>
+  		<field type="titletext" name="default_value" translate="0">Language constant</field>
+		<field type="textarea" name="default_value" translate="1">Language constant</field>
+
+  	</table>
+  </reference>
+</joomfish>

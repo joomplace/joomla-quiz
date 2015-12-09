@@ -1,0 +1,35 @@
+.myquizzes-title a {
+	font-size: 110%;
+	font-weight: 700;
+}
+.myquizzes-content {
+	font-size: 90%;
+}
+
+table.myquizzes-table {
+	border: none;
+	width: 100%;
+}
+
+table.myquizzes-table tr td {
+	/*padding: 8px 5px;*/
+}
+ul#myquizzes li {
+	background: none;
+	list-style: none;
+}
+/*
+table.myquizzes-table tr td.mq_key {
+	padding: 8px 5px;
+	font-weight:bold;
+	color:#666666;
+	border-bottom: 1px solid #EEEEEE;
+	text-align: left;
+}
+
+table.myquizzes-table tr td.mq_value {
+	padding: 8px 5px;
+	color:#333333;
+	text-align: left;
+}
+*/

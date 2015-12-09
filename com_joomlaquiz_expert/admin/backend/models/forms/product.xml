@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="question_details"
+		label="COM_JOOMLAQUIZ_SETTINGS_GLOBAL"
+		description="COM_JOOMLAQUIZ_PRODUCT_GLOBAL_DESC"
+		>
+		
+		<field name="asset_id" type="hidden" filter="unset" />		
+		<field name="name" type="text" default="" size="30"
+				label="COM_JOOMLAQUIZ_PRODUCT_NAME2" labelclass="control-label" required="false">
+		</field>
+		
+	</fieldset>
+	<fields name="params" >
+		<fieldset name="permissions"
+			description="JCONFIG_PERMISSIONS_DESC"
+			label="JCONFIG_PERMISSIONS_LABEL"
+		>
+
+		<field name="rules" type="rules"
+				component="com_joomlaquiz"
+				filter="rules"
+				validate="rules"
+				label="JCONFIG_PERMISSIONS_LABEL"
+				section="component" />
+		</fieldset>
+	</fields>
+</form>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_JOOMLAQUIZ_MENU_CAT_LAYOUT">
+		<message>
+			<![CDATA[COM_JOOMLAQUIZ_MENU_CAT_LAYOUT_DESCR]]>
+		</message>
+	</layout>
+	<state>
+		<name>COM_JOOMLAQUIZ_MENU_CAT_LAYOUT</name>
+		<description>COM_JOOMLAQUIZ_MENU_CAT_LAYOUT_DESCR</description>
+
+		<params>
+			<param name="cat_id" value="value" type="sql" query="(SELECT '- Select category -' AS `text`, '- Select category -' AS `cat_id`, '0' AS `value` FROM `#__users` LIMIT 0,1) UNION (SELECT `c_category` AS `text`, `c_category` AS `cat_id`, `c_id` AS `value` FROM `#__quiz_t_category`)" default="0" label="Category" description="Select a quiz category that will be assigned to this menu item" />
+		</params>
+
+	</state>
+	
+	<fields name="request" >
+		<fieldset name="request">
+			<field 
+				name="cat_id" 
+				type="category" 
+				extension="com_joomlaquiz" 
+				label="COM_JOOMLAQUIZ_CATEGORY" 
+			/>
+		</fieldset>
+	</fields>
+</metadata>

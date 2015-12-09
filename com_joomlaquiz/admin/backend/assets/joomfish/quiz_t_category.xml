@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<joomfish type="contentelement">
+  <name>Joomlaquiz - Category</name>
+  <author>JoomPlace</author>
+  <version>2.0.3</version>
+  <description>Definition for the JoomlaQuiz component</description>
+  <reference>
+	<table name="quiz_t_category">
+  		<field type="referenceid" name="c_id" translate="0">ID</field>
+		<field type="titletext" name="c_category" translate="0">Category</field>
+		<field type="textarea" name="c_category" translate="1">Category</field>
+
+  		<field type="textarea" name="c_instruction" translate="1">Description</field>
+  	</table>
+  </reference>
+</joomfish>

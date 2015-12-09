@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_JOOMLAQUIZ_MENU_STATISTICS_LAYOUT">
+		<message>
+			<![CDATA[COM_JOOMLAQUIZ_MENU_RESULTS_LAYOUT_DESCR]]>
+		</message>
+	</layout>
+	<state>
+		<name>COM_JOOMLAQUIZ_MENU_STATISTICS_LAYOUT</name>
+		<description>COM_JOOMLAQUIZ_MENU_STATISTICS_LAYOUT_DESCR</description>
+	</state>
+	
+	<fields name="params" >
+		<fieldset name="basic" label="JoomlaQuiz Parameters" addfieldpath="/administrator/components/com_joomlaquiz/models/fields">		
+			<field name="quiz_id" type="quiz" default="0" label="Select quiz" description="">
+			</field>
+			
+		</fieldset>
+	</fields>
+
+</metadata>

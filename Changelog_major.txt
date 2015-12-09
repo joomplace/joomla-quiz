@@ -1,0 +1,4 @@
+--- 3.4.002 ---
+admin ui fixes
+resonsive hotspot add
+front css fixes

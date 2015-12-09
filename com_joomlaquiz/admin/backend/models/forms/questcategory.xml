@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset>
+		<field name="qc_id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" 
+			readonly="true" class="readonly" />
+
+		<field name="qc_category" type="text" class="input-xlarge" size="30"
+			label="COM_JOOMLAQUIZ_NAME2"
+			required="true" labelclass="control-label" />
+
+		<field name="qc_instruction" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
+			class="inputbox"
+			filter="safehtml"
+			label="COM_JOOMLAQUIZ_DESCRIPTION2" required="false" />
+		
+		<field name="qc_tag_t" type="text" class="input-xlarge" size="30"
+			label="COM_JOOMLAQUIZ_ENTER_A_NAME"
+			required="false" labelclass="control-label" />
+				
+		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
+			translate_label="false" class="inputbox" filter="rules"
+			component="com_joomlaquiz" section="quizcategory" validate="rules"
+		/>
+	</fieldset>
+</form>

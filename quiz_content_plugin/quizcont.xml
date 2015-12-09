@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="content" method="upgrade">
+	<name>Content - Quiz Content</name>
+	<author>JoomPlace Team</author>
+	<creationDate>June 2013</creationDate>
+	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>support@joomplace.com</authorEmail>
+	<authorUrl>www.joomplace.com</authorUrl>
+	<version>3.0</version>
+	<description>Displays formatted code in content items</description>
+	<files>
+		<filename plugin="quizcont">quizcont.php</filename>
+		<filename>index.html</filename>
+		<filename>quizcont.xml</filename>
+
+	</files>
+	<config>
+		<fields name="params">
+		</fields>
+	</config>
+</extension>

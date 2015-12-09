@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_JOOMLAQUIZ_MENU_PACKEGES_LAYOUT">
+		<message>
+			<![CDATA[COM_JOOMLAQUIZ_MENU_PACKEGES_LAYOUT_DESCR]]>
+		</message>
+	</layout>
+	<state>
+		<name>COM_JOOMLAQUIZ_MENU_PACKEGES_LAYOUT</name>
+		<description>COM_JOOMLAQUIZ_MENU_PACKEGES_LAYOUT_DESCR</description>
+	</state>
+</metadata>

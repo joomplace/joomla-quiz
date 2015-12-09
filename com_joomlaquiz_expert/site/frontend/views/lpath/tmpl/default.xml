@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_JOOMLAQUIZ_MENU_LPATH_LAYOUT">
+		<message>
+			<![CDATA[COM_JOOMLAQUIZ_MENU_LPATH_LAYOUT_DESCR]]>
+		</message>
+	</layout>
+	<state>
+		<name>COM_JOOMLAQUIZ_MENU_LPATH_LAYOUT</name>
+		<description>COM_JOOMLAQUIZ_MENU_LPATH_LAYOUT_DESCR</description>
+		<params>
+			<param name="lpath_id" value="value" type="sql" query="(SELECT '- Select learnin path -' AS `text`, '- Select learnin path -' AS `lpath_id`, '0' AS `value` FROM `#__users` LIMIT 0,1) UNION (SELECT `title` AS `text`, `title` AS `lpath_id`, `id` AS `value` FROM `#__quiz_lpath` WHERE `id` > 0)" default="0" label="Learnin Path" description="Select a learnin path that will be assigned to this menu item" />
+		</params>
+
+	</state>
+	
+	<fields name="params" >
+		<fieldset name="basic" label="JoomlaQuiz Parameters" addfieldpath="/administrator/components/com_joomlaquiz/models/fields">		
+			<field name="lpath_id" type="lpath" default="0" label="Select Learning path" description="">
+			</field>
+			
+		</fieldset>
+	</fields>
+</metadata>

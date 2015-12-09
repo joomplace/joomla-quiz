@@ -970,7 +970,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		
 		$share_id = intval(empty($_SESSION['share_id']) ? 0 : $_SESSION['share_id']);
 		$is_share = false;
-
+		
 		if($share_id){
 			$database->setQuery("SELECT COUNT(id) FROM `#__quiz_r_student_share` WHERE `id` = '".$share_id."'");
 			$is_share = $database->loadResult();
@@ -978,8 +978,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 			unset($_SESSION['share_id']);
 		}
 		
+		$false_share = false;
 		if($my->authorise('core.manage','com_joomlaquiz')){
 			$is_share = 1;
+			$false_share = true;
 		}
 
 		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
@@ -1000,7 +1002,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$user_unique_id = strval( JFactory::getApplication()->input->get( 'user_unique_id', '') );
 
 			if($quiz->c_share_buttons){
-				if($is_share){
+				if($is_share && !$false_share){
 
 					$database->setQuery("SELECT `c_stu_quiz_id` FROM `#__quiz_r_student_share` WHERE `id` = '".$share_id."'");
 					$stu_quiz_id = $database->loadResult();

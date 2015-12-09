@@ -2477,7 +2477,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$cur_template = $database->LoadResult();
 		if ($cur_template) JoomlaquizHelper::JQ_load_template($cur_template);
 		
-		$query = "SELECT `c_random`, `c_pool`, `c_pool_breaks`, `c_pagination`, `c_enable_skip` FROM `#__quiz_t_quiz` WHERE `c_id` = '$i_quiz_id'";
+		$query = "SELECT `c_random`, `c_pool`, `c_auto_breaks`, `c_pagination`, `c_enable_skip` FROM `#__quiz_t_quiz` WHERE `c_id` = '$i_quiz_id'";
 		$database->SetQuery($query);
 
 		$quiz = $database->loadObjectList();
@@ -2551,6 +2551,15 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$q_ids[] = $qchid;
 			}
 		} else {
+			$found = 0;
+			foreach($qchids as $k => $qchid){
+				if($qchid == $q_data->c_id){
+					$found = 1;
+				}
+				if(!$found){
+					unset($qchids[$k]);	
+				}
+			}
 			$q_ids = $qchids;
 		}
 
@@ -2768,8 +2777,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				break;		
 			}
 			
-			/* '&& $quiz->c_pool' - may be too much */
-			if(($quiz->c_random || $quiz->c_pool) && $quiz->c_pool_breaks &&  ($quiz->c_pool_breaks == $quest_count) ){
+			if($quiz->c_pagination == 3  ($quiz->c_auto_breaks == $quest_count) ){
 				break;
 			}
 			

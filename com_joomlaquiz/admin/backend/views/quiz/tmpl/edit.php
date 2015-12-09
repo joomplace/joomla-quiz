@@ -155,10 +155,10 @@ window.onload = function (){
 			</div>
 			<div class="control-group">
                 <div class="control-label">
-                    <?php echo $this->form->getLabel('c_category_id'); ?>
+				    <?php echo $this->form->getLabel('c_category_id'); ?>
                 </div>
 				<div class="controls">
-					<?php echo $this->form->getInput('c_category_id'); ?>
+					 <?php echo $this->form->getInput('c_category_id'); ?>
 				</div>
 			</div>
 			<div class="control-group">
@@ -577,6 +577,12 @@ window.onload = function (){
 				</div>
 			</div>
 			<div class="control-group">
+				<?php echo $this->form->getLabel('c_auto_breaks'); ?>
+				<div class="controls">
+					<?php echo $this->form->getInput('c_auto_breaks'); ?>
+				</div>
+			</div>
+			<div class="control-group">
 				<div class="control-label">
                     <?php echo $this->form->getLabel('pool_rand'); ?>
                 </div>
@@ -587,7 +593,7 @@ window.onload = function (){
 			<div class="control-group">
 				<label class="control-label" for="" id="jform_pool_rand-lbl" aria-invalid="false"><?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES');?></label>
 				<div class="controls">
-					<?php echo $this->head_cat; ?>
+					<?php echo $this->head_cat;?>
 				</div>
 			</div>
 			<div class="control-group">
@@ -768,7 +774,7 @@ window.onload = function (){
 		var reas = new RegExp('[0-9]{1,3}');
 		if (!reas.test(thfield.value)) 
 		{	
-			alert(thfield.value + '<?php echo JText::_('COM_JOOMLAQUIZ_IS_NOT_NUMERIC',true);?>');
+			alert(thfield.value + '<?php echo addslashes( JText::_('COM_JOOMLAQUIZ_IS_NOT_NUMERIC'));?>');
 			return false;
 		}
 		if(thfield.value>100 && jQuery('#jform_c_feed_option').val()==1)

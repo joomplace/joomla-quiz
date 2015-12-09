@@ -577,9 +577,9 @@ window.onload = function (){
 				</div>
 			</div>
 			<div class="control-group">
-				<?php echo $this->form->getLabel('c_pool_breaks'); ?>
+				<?php echo $this->form->getLabel('c_auto_breaks'); ?>
 				<div class="controls">
-					<?php echo $this->form->getInput('c_pool_breaks'); ?>
+					<?php echo $this->form->getInput('c_auto_breaks'); ?>
 				</div>
 			</div>
 			<div class="control-group">

@@ -52,6 +52,7 @@
 		<field name="c_pagination" type="list" default="0" label="COM_JOOMLAQUIZ_QUESTIONS_LAYOUT" 
 		description="COM_JOOMLAQUIZ_THE_NUMBER_OF">
 			<option value="0">COM_JOOMLAQUIZ_ONE_QUESTION_PER_PAGE</option>
+			<option value="3">COM_JOOMLAQUIZ_AUTO_SEPARATED</option>
 			<option value="1">COM_JOOMLAQUIZ_ALL_QUESTIONS_ON_ONE</option>
 			<option value="2">COM_JOOMLAQUIZ_SEPARATED_WITH</option>
 		</field>
@@ -383,7 +384,7 @@
 			<option  value="2">COM_JOOMLAQUIZ_BY_CATEGORIES</option>
 		</field>
 		<field 
-			name="c_pool_breaks" 
+			name="c_auto_breaks" 
 			type="text" 
 			default="" 
 			size="3"

@@ -231,6 +231,12 @@ window.onload = function (){
 							<?php echo $this->form->getInput('c_pagination'); ?>
 						</div>
 					</div>
+					<div id="break-opt" class="control-group">
+						<?php echo $this->form->getLabel('c_auto_breaks'); ?>
+						<div class="controls">
+							<?php echo $this->form->getInput('c_auto_breaks'); ?>
+						</div>
+					</div>
 					<div class="control-group">
 						<div class="control-label">
 							<?php echo $this->form->getLabel('c_allow_continue'); ?>
@@ -567,12 +573,6 @@ window.onload = function (){
 							<?php echo $this->form->getLabel('c_pool'); ?>
 							<div class="controls">
 								<?php echo $this->form->getInput('c_pool'); ?>
-							</div>
-						</div>
-						<div id="breakpool-opt" class="control-group">
-							<?php echo $this->form->getLabel('c_pool_breaks'); ?>
-							<div class="controls">
-								<?php echo $this->form->getInput('c_pool_breaks'); ?>
 							</div>
 						</div>
 						<div class="control-group" id="randpool-opts">
@@ -937,27 +937,23 @@ window.onload = function (){
 			}
 		});
 		
-		$('#catpool-opts, #randpool-opts, #breakpool-opt').hide();
+		$('#catpool-opts, #randpool-opts').hide();
 		switch($('#jform_c_pool input:checked').val()){
 			case '1':
 				$('#randpool-opts').show();
-				$('#breakpool-opt').show();
 				break;
 			case '2':
 				$('#catpool-opts').show();
-				$('#breakpool-opt').show();
 				break;
 		}
 		$('#jform_c_pool').on('click','input',function(){
-			$('#catpool-opts, #randpool-opts, #breakpool-opt').hide();
+			$('#catpool-opts, #randpool-opts').hide();
 			switch($(this).val()){
 				case '1':
 					$('#randpool-opts').show();
-					$('#breakpool-opt').show();
 					break;
 				case '2':
 					$('#catpool-opts').show();
-					$('#breakpool-opt').show();
 					break;
 			}
 		});
@@ -980,6 +976,20 @@ window.onload = function (){
 				$('#feed_toins').show();
 				$('#by_score_id').show();
 				$('#by_passed_not').hide();
+			}
+	
+		});
+		
+		if($('#jform_c_pagination').val() != 3 ){
+			$('#break-opt').hide();
+		} else { 
+			$('#break-opt').show();
+		}
+		$('#jform_c_pagination').on('change', function(e) {
+			if($(this).val() != 3 ){
+				$('#break-opt').hide();
+			} else { 
+				$('#break-opt').show();
 			}
 	
 		});

@@ -18,10 +18,6 @@
 				label="COM_JOOMLAQUIZ_TITLE" 
                 labelclass="control-label" required="true">
 		</field>
-		<field name="c_author" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_AUTHOR2" 
-				labelclass="control-label">
-		</field>
 		<field 
 			name="c_category_id" 
 			type="category" 
@@ -29,6 +25,10 @@
 			label="COM_JOOMLAQUIZ_CATEGORY" 
 			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUIZCAT" 
 		/>
+		<field name="c_author" type="text" default="" size="30"
+				label="COM_JOOMLAQUIZ_AUTHOR2" 
+				labelclass="control-label">
+		</field>
 		<field
 				name="c_show_author"
 				type="radio"
@@ -52,6 +52,7 @@
 		<field name="c_pagination" type="list" default="0" label="COM_JOOMLAQUIZ_QUESTIONS_LAYOUT" 
 		description="COM_JOOMLAQUIZ_THE_NUMBER_OF">
 			<option value="0">COM_JOOMLAQUIZ_ONE_QUESTION_PER_PAGE</option>
+			<option value="3">COM_JOOMLAQUIZ_AUTO_SEPARATED</option>
 			<option value="1">COM_JOOMLAQUIZ_ALL_QUESTIONS_ON_ONE</option>
 			<option value="2">COM_JOOMLAQUIZ_SEPARATED_WITH</option>
 		</field>
@@ -381,6 +382,15 @@
 			<option value="0">COM_JOOMLAQUIZ_DONT_USE</option>
 			<option value="1">COM_JOOMLAQUIZ_RANDOM_QUESTIONS</option>
 			<option  value="2">COM_JOOMLAQUIZ_BY_CATEGORIES</option>
+		</field>
+		<field 
+			name="c_auto_breaks" 
+			type="text" 
+			default="" 
+			size="3"
+			label="COM_JOOMLAQUIZ_POOL_BREAK_COUNT" 
+			labelclass="control-label" 
+			description="COM_JOOMLAQUIZ_POOL_BREAK_COUNT_DESCR">
 		</field>
 		<field name="pool_rand" type="text" default="" size="10"
 				label="COM_JOOMLAQUIZ_NUMBER_OF_QUESTIONS" 

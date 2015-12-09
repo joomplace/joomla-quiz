@@ -387,7 +387,7 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name, field_type) {
             if ((task == 'lpath.apply' || task == 'lpath.save') && document.formvalidator.isValid(document.id('lpath-form')))
             {
                 if(ids.length==0){
-                    alert('<?php echo JText::_('COM_JOOMLAQUIZ_LPATH_NOQUIZSELECTED',true));?>');
+                    alert('<?php echo JText::_('COM_JOOMLAQUIZ_LPATH_NOQUIZSELECTED',true);?>');
                     return false;}
                 Joomla.submitform(task, document.getElementById('lpath-form'));
             }

@@ -168,7 +168,7 @@ function jq_CreateQuestions() {
 	var question_template = '';
 	var question_delimeter = quest_count > 1? '<?php echo JoomlaQuiz_template_class::JQ_getQuestionDelimeter()?>': '';
 	
-	<?php if((preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)) && $quiz->c_show_timer){?>
+	<?php if((preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name) || preg_match("/t3_bs3/", $quiz->template_name)) && $quiz->c_show_timer){?>
 		jq_jQuery('.jq_time_tick_container').css('display', 'inline-block');
 	<?php } ?>
 

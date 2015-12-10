@@ -1656,7 +1656,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$start_quiz = $st_quiz_data[0]->c_quiz_id;
 				} else { return ''; }
 				if ($user_unique_id != $st_quiz_data[0]->unique_id) { return ''; }
-				if ($my->id != $st_quiz_data[0]->c_student_id) { return ''; }
+				if ($my->id != $st_quiz_data[0]->c_student_id && !$my->authorise('core.manage','com_joomlaquiz')) { return ''; }
 				if ($start_quiz != $quiz_id) { return '';}
 				if (!$st_quiz_data[0]->allow_review) { return ''; }
 
@@ -1822,7 +1822,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$start_quiz = $st_quiz_data[0]->c_quiz_id;
 			} else { return $ret_str; }
 			if ($user_unique_id != $st_quiz_data[0]->unique_id) { return ''; }
-			if ($my->id != $st_quiz_data[0]->c_student_id) { return ''; }
+			if ($my->id != $st_quiz_data[0]->c_student_id && !$my->authorise('core.manage','com_joomlaquiz')) { return ''; }
 			if ($start_quiz != $quiz_id) { return '';}
 			if (!$st_quiz_data[0]->allow_review) { return ''; }
 			

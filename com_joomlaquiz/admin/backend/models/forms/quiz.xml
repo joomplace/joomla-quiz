@@ -388,9 +388,9 @@
 			type="text" 
 			default="" 
 			size="3"
-			label="COM_JOOMLAQUIZ_POOL_BREAK_COUNT" 
+			label="COM_JOOMLAQUIZ_AUTO_BREAK_COUNT" 
 			labelclass="control-label" 
-			description="COM_JOOMLAQUIZ_POOL_BREAK_COUNT_DESCR">
+			description="COM_JOOMLAQUIZ_AUTO_BREAK_COUNT_DESCR">
 		</field>
 		<field name="pool_rand" type="text" default="" size="10"
 				label="COM_JOOMLAQUIZ_NUMBER_OF_QUESTIONS" 

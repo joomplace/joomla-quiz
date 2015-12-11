@@ -19,7 +19,7 @@ class JoomlaquizModelQuiz extends JModelList
 		
 		$db = JFactory::getDBO();
 		$user = JFactory::getUser();
-		$app = JFactory::getApplication();
+		$app = JFactory::getApplication('site');
 		$jinput = $app->input;
 		$query = $db->getQuery(true);
 

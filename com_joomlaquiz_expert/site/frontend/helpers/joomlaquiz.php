@@ -434,7 +434,7 @@ class JoomlaquizHelper
 				$adminEmail2 	= $row2->email;
 			}
 			
-			$jmail = new JMail();
+			$jmail = JFactory::getMailer();
 			return $jmail->sendMail($adminEmail2, $adminName2, $email, $subject, $message, 1, null, null, null, null, null);
 		}
 		

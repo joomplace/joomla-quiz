@@ -351,6 +351,9 @@ class com_joomlaquizInstallerScript
 			'r_student_question' => array(
 				'c_flag_question' => "TINYINT( 2 ) NOT NULL"
 			),
+			'r_student_blank' => array(
+				'is_correct' => "TINYINT( 4 ) NOT NULL"
+			),
 			't_quiz' => array(
 				'c_flag' => 'TINYINT( 3 ) NOT NULL',
 				'c_hide_feedback' => 'TINYINT( 3 ) NOT NULL',

@@ -21,5 +21,5 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_memory` (
 ALTER TABLE `#__quiz_t_question` ADD `c_column` INT( 11 ) NOT NULL DEFAULT '1';
 ALTER TABLE `#__quiz_t_question` ADD `c_img_cover` VARCHAR(50) NOT NULL DEFAULT 'tnnophoto.jpg';
 ALTER TABLE `#__quiz_t_question` ADD `c_sec_penalty` INT( 11 ) NOT NULL DEFAULT '0';
-ALTER TABLE `#__quiz_t_question` ADD `c_width` INT( 10 ) NOT NULL DEFAULT '150';
-ALTER TABLE `#__quiz_t_question` ADD `c_height` INT( 10 ) NOT NULL DEFAULT '150';
+
+UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'memory';

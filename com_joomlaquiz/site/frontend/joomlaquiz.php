@@ -11,6 +11,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controller');
 
 JLoader::register('JoomlaquizHelper', JPATH_SITE . '/components/com_joomlaquiz/helpers/joomlaquiz.php');
+JLoader::register('plgJoomlaquizQuestion', JPATH_SITE . '/components/com_joomlaquiz/helpers/plgquestion.php');
 JoomlaquizHelper::isJoomfish();
 
 $controller = JControllerLegacy::getInstance('Joomlaquiz');

@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizTruefalse
+class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 {
 	var $name		= 'Truefalse';
 	var $_name		= 'truefalse';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizTruefalse()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		
@@ -628,5 +622,10 @@ class plgJoomlaquizTruefalse
 			$data['answer'] = JoomlaquizHelper::jq_substr($data['answer'], 0, strlen($data['answer'])-1);
 			
 		return $data['answer'];	
+	}
+	
+	public function onScoreByCategory(&$data){
+		
+		return true;
 	}
 }

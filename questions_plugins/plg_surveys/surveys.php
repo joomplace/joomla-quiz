@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizSurveys
+class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 {
 	var $name		= 'Surveys';
 	var $_name		= 'surveys';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizSurveys()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		

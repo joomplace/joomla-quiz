@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizDropdown
+class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 {
 	var $name		= 'Dropdown';
 	var $_name		= 'dropdown';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizDropdown()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		
@@ -76,7 +70,7 @@ class plgJoomlaquizDropdown
 		}
 		$qhtml = JoomlaQuiz_template_class::JQ_createQuestion($qdata, $data);
 		if(preg_match('/pretty_green/', $data['cur_template']) || preg_match('/pretty_blue/', $data['cur_template'])){
-			$data['ret_add_script'] = "jQuery(function() {jQuery('.chzn-select').chosen()});";
+			$data['ret_add_script'] = "jq_jQuery(function() {jq_jQuery('.chzn-select').chosen()});";
 		}
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div id="div_qoption'.$data['q_data']->c_id.'"><form onsubmit=\'javascript: return false;\' name=\'quest_form'.$data['q_data']->c_id.'\'>'. $qhtml .'</form></div>]]></quest_data_user>' . "\n";	
 		

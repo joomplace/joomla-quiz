@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizBlank
+class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 {
 	var $name		= 'Blank';
 	var $_name		= 'blank';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizBlank()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		

@@ -32,23 +32,6 @@ class JoomlaquizHelper
 			return $data;
 		}
 		
-		public static function JQ_createDatabase(){
-			jimport('joomla.filesystem.folder');
-		
-			$appsLib = JqAppPlugins::getInstance();
-			$plugins = $appsLib->loadApplications();
-			
-			$folders = JFolder::folders(JPATH_SITE.'/plugins/joomlaquiz/', '.');
-			if(count($folders)){
-				foreach($folders as $folder){
-					$data = array();
-					$data['quest_type'] = $folder;
-					
-					$appsLib->triggerEvent( 'onCreateDatabase' , $data );
-				}
-			}
-		}
-		
 		public static function JQ_Delete_Items($cids, $path, $event){
 			
 			jimport('joomla.filesystem.folder');

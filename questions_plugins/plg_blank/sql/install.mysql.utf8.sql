@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_blank` (
 		`c_id` int(10) unsigned NOT NULL auto_increment,
 		`c_sq_id` int(10) unsigned NOT NULL default '0',
 		`c_answer` varchar(255) NOT NULL default '',
+		`is_correct` tinyint(2) NOT NULL default '0',
 		PRIMARY KEY  (`c_id`),
 		KEY `c_sq_id` (`c_sq_id`) ) DEFAULT CHARSET=utf8;
 
@@ -35,3 +36,5 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_blank` (
 		`gtype` TINYINT( 1 ) NOT NULL DEFAULT '0',
 		PRIMARY KEY  (`c_id`),
 		KEY `c_question_id` (`c_question_id`) ) DEFAULT CHARSET=utf8;
+		
+UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'blank';

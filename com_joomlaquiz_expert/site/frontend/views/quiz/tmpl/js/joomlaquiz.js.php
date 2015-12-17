@@ -329,8 +329,6 @@ function pagination_go(page_num) {
 	var post_target = jq_clean_amp('<?php echo $live_url;?>index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
 	http_request.open("POST", jq_clean_amp(post_target), true);
 	http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	http_request.setRequestHeader("Content-length", lp_url_prefix2.length + url.length);
-	http_request.setRequestHeader("Connection", "close");
 	http_request.send(jq_clean_amp(lp_url_prefix2 + url));
 	var div_inside = jq_getObj('jq_feed_questions');
 	div_inside.align = 'center';
@@ -413,8 +411,6 @@ function jq_MakeRequest(url, do_clear, silent) {
 	var post_target = jq_clean_amp('<?php echo $live_url;?>index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
 	http_request.open("POST", post_target, true);
 	http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	http_request.setRequestHeader("Content-length", lp_url_prefix2.length + url.length);
-	http_request.setRequestHeader("Connection", "close");
 	http_request.send(jq_clean_amp(lp_url_prefix2 + url));
 	stop_timer = 2;
 }

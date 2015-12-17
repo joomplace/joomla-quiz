@@ -1211,7 +1211,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$database->SetQuery( $query );
 						$score_bycat = $database->LoadObjectList();
 						
-						$query = "SELECT id AS qc_id,title AS qc_category FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' ORDER BY `lft` ASC";
+						$quest_cats = array();
+						foreach($score_bycat as $cat){
+							$quest_cats[] =  $cat->q_cat;
+						}
+						
+						$query = "SELECT id AS qc_id,title AS qc_category FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `id` IN (".implode(',',$quest_cats).") ORDER BY `lft` ASC";
 						$database->SetQuery( $query );
 						$quest_cats = $database->LoadObjectList();
 											
@@ -1251,7 +1256,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$i=0;
 						foreach($q_cate as $curcat)
 						{
-							if($curcat[2] && $i){
+							if($curcat[2] || $i){
 								$percent = ($curcat[2]) ? number_format(($curcat[1]/$curcat[2]) * 100, 0, '.', ',') : 0;
 								$c_resbycat .= "<div class='jq_cat_score'>".$curcat[0].': '.sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $curcat[1], $curcat[2], $percent)."</div><br />";
 							}

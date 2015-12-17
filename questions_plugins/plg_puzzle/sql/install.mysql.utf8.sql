@@ -15,6 +15,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_puzzle` (
 			  `c_elapsed_time` int(10) NOT NULL,
 			  PRIMARY KEY (`c_id`)
 			) DEFAULT CHARSET=utf8;
+
+UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'puzzle';
 			
-ALTER TABLE `#__quiz_t_question` ADD `c_width` INT( 10 ) NOT NULL DEFAULT '150';
-ALTER TABLE `#__quiz_t_question` ADD `c_timer` INT( 10 ) NOT NULL;

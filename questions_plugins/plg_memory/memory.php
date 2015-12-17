@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizMemory
+class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 {
 	var $name		= 'Memory';
 	var $_name		= 'memory';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizMemory()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		

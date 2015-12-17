@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizDalliclick
+class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 {
 	var $name		= 'Dalliclick';
 	var $_name		= 'dalliclick';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizDalliclick()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		

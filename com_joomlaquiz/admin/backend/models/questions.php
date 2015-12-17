@@ -30,6 +30,7 @@ class JoomlaquizModelQuestions extends JModelList
 				'c_question', 'a.c_question',
 				'published', 'a.published',
 				'ordering', 'a.ordering',
+				'category', 'cat.title',
 				'c_type', 'b.qtype_full',
 				'c_title', 'c.c_title',);
 		}
@@ -273,17 +274,17 @@ class JoomlaquizModelQuestions extends JModelList
     * @return      string  An SQL query
     */
     protected function getListQuery()
-    {
-		JoomlaquizHelper::JQ_createDatabase();
-			
+    {		
 		$db = JFactory::getDBO();
         $query = $db->getQuery(true);
 		$enabled = $this->getState('filter.enabled');
 		     
 		$query->select("a.*, b.c_qtype as qtype_full, c.c_title as quiz_name");
+		$query->select('`cat`.`title` AS `category`');
 		$query->from('`#__quiz_t_question` AS `a`');
 		$query->join('LEFT', '`#__quiz_t_qtypes` as `b` ON b.c_id = a.c_type');
 		$query->join('LEFT', '`#__quiz_t_quiz` as `c` ON a.c_quiz_id = c.c_id');
+		$query->join('LEFT','`#__categories` AS `cat` ON `cat`.`id` = `a`.`c_ques_cat` ');
 		
 		if($enabled != ''){
 			$query->where('a.published = "'.$enabled.'"');

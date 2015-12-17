@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizBoilerplate
+class plgJoomlaquizBoilerplate extends plgJoomlaquizQuestion
 {
 	var $name		= 'Boilerplate';
 	var $_name		= 'boilerplate';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizBoilerplate()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		
@@ -124,5 +118,9 @@ class plgJoomlaquizBoilerplate
 		
 	public function onGetAdminReportsHTML(&$data){
 		return;
+	}
+	
+	public function onScoreByCategory(&$data){
+		return true;
 	}
 }

@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizDragdrop
+class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 {
 	var $name		= 'Dragdrop';
 	var $_name		= 'dragdrop';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizDragdrop()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		

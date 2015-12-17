@@ -19,9 +19,10 @@ class com_joomlaquizInstallerScript
 	
 		jimport( 'joomla.filesystem.folder' );
 		jimport( 'joomla.filesystem.file' );
-		$this->_extract();
 		
 		$adminDir = JPATH_ROOT.DS.'administrator'.DS.'components'.DS.'com_joomlaquiz';
+		
+		/* is this needed? */
 		if (!JFolder::exists(JPATH_ROOT . DS . 'images'. DS . 'joomlaquiz') ) {
 			JFolder::create( JPATH_ROOT . DS . 'images' . DS . 'joomlaquiz');
 		}
@@ -30,41 +31,7 @@ class com_joomlaquizInstallerScript
 			JFolder::create( JPATH_ROOT . DS . 'images' . DS . 'joomlaquiz' . DS . 'images');
 		}
 		
-		if (!JFolder::exists(JPATH_ROOT . DS . 'media'. DS . 'com_joomlaquiz') ) {
-			JFolder::create( JPATH_ROOT . DS . 'media'. DS . 'com_joomlaquiz');
-		}
-		
-		if (!JFolder::exists(JPATH_ROOT . DS . 'media'. DS . 'com_joomlaquiz' .DS. 'images') ) {
-			JFolder::create( JPATH_ROOT . DS . 'media'. DS . 'com_joomlaquiz' .DS. 'images');
-		}
-		
-		if (!JFile::exists(JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'help48.png')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'help48.png', JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'help48.png');	
-		}
-		
-		if (!JFile::exists(JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'questions48.png')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'questions48.png', JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'questions48.png');	
-		}
-		
-		if (!JFile::exists(JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'quizzes48.png')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'quizzes48.png', JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'quizzes48.png');	
-		}
-		
-		JFile::copy($adminDir . DS . "index.html", JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'index.html');
-		JFile::copy($adminDir . DS . "index.html", JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'index.html');
-		JFile::copy($adminDir . DS . "index.html", JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'index.html');
-
-		if (JFolder::exists(JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements') ) {	
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_constants.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_constants.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_category.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_category.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_choice.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_choice.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_matching.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_matching.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_question.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_question.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_quiz.xml', 		JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_quiz.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_text.xml', 		JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_text.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_product_info.xml', JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_product_info.xml');
-		}
-
+		/* need to be refactored // delete duplication */
 		if (!JFile::exists(JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_green.jpg')) {
 			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'certificate_green.jpg', JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_green.jpg');
 		}
@@ -77,9 +44,9 @@ class com_joomlaquizInstallerScript
 			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'certificate_beige.jpg', JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_beige.jpg');
 		}
 		
+		/* is this needed? //  need to be refactored  */
 		JFile::copy($adminDir . DS . 'assets' .DS. 'fonts' .DS. 'arial.ttf', JPATH_SITE . DS . 'media' . DS . 'arial.ttf');
 		
-		$this->_installDatabase();
 	}
 	
 	function uninstall($parent)
@@ -120,37 +87,6 @@ class com_joomlaquizInstallerScript
 				$db->execute();
 			}
 		}
-		
-		
-		$this->_extract();
-		/*
-		$db	= JFactory::getDBO();
-        $jq_this_version = '3.3.2.009';
-        $curr_date = JHtml::_('date',strtotime("-2 months"), 'Y-m-d');
-
-        $db->setQuery("SELECT `c_id` FROM `#__quiz_t_category` WHERE `c_category`='Uncategorized'");
-        if(!$db->loadResult())
-        {
-            $db->setQuery("INSERT INTO `#__quiz_t_category` (`c_category`) VALUES('Uncategorized')");
-            $db->execute();
-        }
-
-        $db->setQuery("SELECT `qc_id` FROM `#__quiz_q_cat` WHERE `qc_category`='Uncategorized'");
-        if(!$db->loadResult())
-        {
-            $db->setQuery("INSERT INTO `#__quiz_q_cat` (`qc_category`) VALUES('Uncategorized')");
-            $db->execute();
-        }
-
-        $db->setQuery("TRUNCATE TABLE `#__quiz_certificates`");
-        $db->execute();
-        $db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (1, 'Certificate Green', 'certificate_green.jpg')");
-        $db->execute();
-        $db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (2, 'Certificate Blue', 'certificate_blue.jpg')");
-        $db->execute();
-        $db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (3, 'Certificate Beige', 'certificate_beige.jpg')");
-        $db->execute();
-		*/
     }
 
 	function migrateCategories(){
@@ -317,6 +253,8 @@ class com_joomlaquizInstallerScript
 	
 	function postflight($type, $parent)
     {
+		/* need to be refacrored */
+		
 		$app = JFactory::getApplication();
 		$db	= JFactory::getDBO();	
 		
@@ -558,22 +496,6 @@ class com_joomlaquizInstallerScript
 		$db->setQuery("UPDATE `#__quiz_t_quiz` SET `c_id` = 0 , `c_skin` = 1 WHERE `c_title` = 'Questions Pool'");
 		$db->execute();
 		
-		/*
-		$db->setQuery("SELECT `c_id` FROM `#__quiz_t_category` WHERE `c_category`='Uncategorized'");
-        if(!$db->loadResult())
-        {
-            $db->setQuery("INSERT INTO `#__quiz_t_category` (`c_category`) VALUES('Uncategorized')");
-            $db->execute();
-        }
-
-        $db->setQuery("SELECT `qc_id` FROM `#__quiz_q_cat` WHERE `qc_category`='Uncategorized'");
-        if(!$db->loadResult())
-        {
-            $db->setQuery("INSERT INTO `#__quiz_q_cat` (`qc_category`) VALUES('Uncategorized')");
-            $db->execute();
-        }
-		*/
-		
 		$db->setQuery("SELECT COUNT(id) FROM #__quiz_dashboard_items");
 		if(!$db->loadResult()){
 			$db->setQuery("INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
@@ -586,136 +508,7 @@ class com_joomlaquizInstallerScript
 		$db->setQuery("INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES ('', 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'), ('', 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'), ('', 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'), ('', 2, '#course#', 170, 570, 20, 1, 'arial.ttf'), ('', 2, '#name#', 350, 450, 20, 1, 'arial.ttf');");
 		$db->execute();
 		
-		//==================================================
-		// Fixing / adding permissions.
-		//==================================================
-		/*
-		$query = "SELECT `rules`" .
-			" FROM `#__assets`" .
-			" WHERE `name` = 'com_joomlaquiz'";
-		$db->setQuery($query);
-		$componentRulesJson = $db->loadResult();
-		
-		if (!empty($componentRulesJson))
-		{
-			$componentRules = json_decode($componentRulesJson);
-			
-			$coreView = (isset($componentRules->{'core.view'}) ? $componentRules->{'core.view'} : null);
-			$coreResult = (isset($componentRules->{'core.result'}) ? $componentRules->{'core.result'} : null);
-			
-			$rules = (object) array(
-				'core.view' => (isset($coreView) ? $coreView : (object) array('1' => 1)),
-				'core.result' => (isset($coreResult) ? $coreResult : (object) array('1' => 1)),
-			);
-			
-			$rulesJson = json_encode($rules);
-			
-			$query = "UPDATE `#__assets`" .
-				" SET `rules` = " . $db->quote($rulesJson) .
-				" WHERE `name` = 'com_joomlaquiz'";
-			$db->setQuery($query);
-			$db->execute();
-		}
-		*/
-		
 		$this->migrateCategories();
-		
-		$app->redirect(JURI::root().'administrator/index.php?option=com_joomlaquiz&task=install.plugins');
-	}
-	
-	function _extract(){
-		
-		jimport( 'joomla.filesystem.folder' );
-		jimport( 'joomla.filesystem.file' );
-		jimport( 'joomla.filesystem.archive' );
-		
-		// Install frontend
-		$source			= JPATH_SITE . '/components/com_joomlaquiz/frontend.zip';
-		$destination	= JPATH_SITE . '/components/com_joomlaquiz/';
-		if (!JFolder::exists($destination))
-		{
-			JFolder::create($destination);
-		}
-
-		if(!JArchive::extract($source, $destination))
-		{
-			// If frontend did not extract
-			return false;
-		}
-		
-		// Copy site language file
-		JFile::copy(JPATH_SITE . DS . 'components'.DS. 'com_joomlaquiz' .DS. 'language' .DS. 'en-GB.com_joomlaquiz.ini', JPATH_SITE . DS . 'language' . DS . 'en-GB' . DS . 'en-GB.com_joomlaquiz.ini');
-		
-		//Delete frontend archive
-		JFile::delete(JPATH_SITE.'/components/com_joomlaquiz/frontend.zip');
-		
-		// Install backend
-		$source			= JPATH_SITE . '/administrator/components/com_joomlaquiz/backend.zip';
-		$destination	= JPATH_SITE . '/administrator/components/com_joomlaquiz/';
-		if (!JFolder::exists($destination))
-		{
-			JFolder::create($destination);
-		}
-
-		if(!JArchive::extract($source, $destination))
-		{
-			// If backend did not extract
-			return false;
-		}
-		
-		// Copy admin language files
-		JFile::copy(JPATH_SITE.DS.'administrator' .DS. 'components'. DS . 'com_joomlaquiz' .DS. 'language' .DS. 'en-GB.com_joomlaquiz.ini', JPATH_SITE.DS.'administrator'. DS . 'language' . DS . 'en-GB' . DS . 'en-GB.com_joomlaquiz.ini');
-		JFile::copy(JPATH_SITE.DS.'administrator' .DS. 'components'. DS . 'com_joomlaquiz' .DS. 'language' .DS. 'en-GB.com_joomlaquiz.sys.ini', JPATH_SITE.DS.'administrator'. DS . 'language' . DS . 'en-GB' . DS . 'en-GB.com_joomlaquiz.sys.ini');
-		
-		//Delete backend archive
-		JFile::delete(JPATH_SITE.'/administrator/components/com_joomlaquiz/backend.zip');
-	}
-	
-	function _installDatabase()
-	{
-		$db	= JFactory::getDBO();
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.path');
-		jimport('joomla.base.adapter');
-		
-		$sqlfile = JPATH_SITE.'/administrator/components/com_joomlaquiz/sql/install.mysql.utf8.sql';
-		$buffer = file_get_contents($sqlfile);
-		
-		// Graceful exit and rollback if read not successful
-		if ($buffer === false)
-		{
-			JLog::add(JText::_('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// Create an array of queries from the sql file
-		$queries = JDatabaseDriver::splitSql($buffer);
-
-		if (count($queries) == 0)
-		{
-			// No queries to process
-			return 0;
-		}
-		
-		// Process each query in the $queries array (split out of sql file).
-		foreach ($queries as $query)
-		{
-			$query = trim($query);
-
-			if ($query != '' && $query{0} != '#')
-			{
-				$db->setQuery($query);
-
-				if (!$db->execute())
-				{
-					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
-
-					return false;
-				}
-			}
-		}
 	}
 }
 ?>

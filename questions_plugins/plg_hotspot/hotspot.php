@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizHotspot
+class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 {
 	var $name		= 'Hotspot';
 	var $_name		= 'hotspot';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizHotspot()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		

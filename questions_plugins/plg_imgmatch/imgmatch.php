@@ -12,16 +12,10 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgJoomlaquizImgmatch
+class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 {
 	var $name		= 'Imgmatch';
 	var $_name		= 'imgmatch';
-	var $_type		= 'joomlaquiz';
-	
-	public function plgJoomlaquizImgmatch()
-	{
-		return true;
-	}
 	
 	public function onCreateQuestion(&$data) {
 		

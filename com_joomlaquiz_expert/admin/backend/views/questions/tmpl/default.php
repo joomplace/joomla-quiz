@@ -115,11 +115,14 @@ $sortFields = $this->getSortFields();
 					<th width="1%" class="hidden-phone nowrap center">
 						<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					</th>
-					<th width="40%">
+					<th width="30%">
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_TEXT', 'c_question', $listDirn, $listOrder); ?> 
 					</th>
 					<th width="5%">
 						<?php echo JHtml::_('grid.sort', 'JPUBLISHED', 'published', $listDirn, $listOrder); ?>
+					</th>
+					<th width="15%">
+						<?php echo JHtml::_('grid.sort', 'JCATEGORY', 'category', $listDirn, $listOrder); ?>
 					</th>
 					<th width="10%">
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_TYPE', 'c_type', $listDirn, $listOrder); ?> 
@@ -200,6 +203,9 @@ $sortFields = $this->getSortFields();
 						<?php if($item->enabled):?>
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'questions.', $canChange);?>
 						<?php endif;?>
+					</td>
+					<td class="has-context">
+						<?php echo $item->category; ?>
 					</td>
 					<td class="has-context">
                         <div>

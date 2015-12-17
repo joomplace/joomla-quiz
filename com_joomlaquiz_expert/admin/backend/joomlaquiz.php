@@ -10,6 +10,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 JLoader::register('JoomlaquizHelper', JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'joomlaquiz.php');
+JLoader::register('plgJoomlaquizQuestion', JPATH_SITE . '/components/com_joomlaquiz/helpers/plgquestion.php');
  
 $controller = JControllerLegacy::getInstance('Joomlaquiz');
 $controller->execute(JFactory::getApplication()->input->getCmd('task'));

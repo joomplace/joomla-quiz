@@ -920,6 +920,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$false_share = false;
 		if($my->authorise('core.manage','com_joomlaquiz')){
 			$is_share = 1;
+			$false_share = true;
 		}
 		
 		if ( ($quiz->published) ) {

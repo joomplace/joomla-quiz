@@ -418,9 +418,10 @@ class com_joomlaquizInstallerScript
 		$db->execute();
 		$db->setQuery("ALTER TABLE `#__quiz_r_student_quiz` CHANGE `c_total_score` `c_total_score` FLOAT NOT NULL DEFAULT '0';");
 		$db->execute();
-		
+
 		$db->setQuery("ALTER TABLE `#__quiz_t_question` CHANGE `c_point` `c_point` FLOAT NOT NULL DEFAULT '0';");
 		$db->execute();
+  
 		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_full_score` `c_full_score` FLOAT( 10 ) NOT NULL DEFAULT '0';");
 		$db->execute();
 		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_passing_score` `c_passing_score` FLOAT NOT NULL DEFAULT '0';");

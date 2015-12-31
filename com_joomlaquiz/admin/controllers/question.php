@@ -42,20 +42,21 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		parent::save();
 		$data = JFactory::getApplication()->input->get('jform',array(),'array');
 		$task = JFactory::getApplication()->input->get('task');
-		if(!$data['c_quiz_id'] && $task!='apply' ){
-			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id=0' );
+			
+		if(!$data['c_quiz_id'] && $task!='save' ){
+			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id=0');
+		}else
+		{
+		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id='.$data['c_quiz_id'] );
 		}
 
 	}
 
 	public function cancel(){
-	
 		parent::cancel();
 		$data = JFactory::getApplication()->input->get('jform',array(),'array');
-		if(!$data['c_quiz_id']){
-			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id=0' );
-		}
-
+		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id='.$data['c_quiz_id'] );
+		
 	}
 
 	public function preview_quest()

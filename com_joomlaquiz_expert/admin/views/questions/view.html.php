@@ -20,7 +20,7 @@ class JoomlaquizViewQuestions extends JViewLegacy
     public $messageTrigger = false;
 	
     function display($tpl = null) 
-	{
+	{		
             $document = JFactory::getDocument();
             $document->addScript('components/com_joomlaquiz/assets/js/js.js');
 			$this->addTemplatePath(JPATH_BASE.'/components/com_joomlaquiz/helpers/html');
@@ -28,6 +28,7 @@ class JoomlaquizViewQuestions extends JViewLegacy
 			$layout = $app->input->get('layout');
             $this->messageTrigger = $this->get('CurrDate');
 			$quiz_id = JFactory::getApplication()->input->get('quiz_id');
+			
 			if(isset($quiz_id) && !$quiz_id){
 				JoomlaquizHelper::addQuestionsSubmenu('questions_pool');
 			} elseif($layout == 'uploadquestions') {
@@ -59,6 +60,7 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				JoomlaquizHelper::showTitle($submenu);
 				
 				$quizzesFields = JHTML::_('select.genericlist', $this->get("Quizzes"), 'filter_quiz_id', 'class="input-medium" size="1" ', 'value', 'text', 0);
+			
 				$this->quizzesFields = $quizzesFields;
 				
 				$this->addUploadquestToolBar();
@@ -66,7 +68,7 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				$submenu = 'questions';
 				JoomlaquizHelper::showTitle($submenu);
 				$this->addToolBar();
-				
+					
 				$items 		= $this->get('Items');
 				$pagination = $this->get('Pagination');
 				$state		= $this->get('State');
@@ -76,7 +78,7 @@ class JoomlaquizViewQuestions extends JViewLegacy
 					JError::raiseError(500, implode('<br />', $errors));
 					return false;
 				}
-						
+				
 				$this->items = $items;
 				$this->pagination = $pagination;
 				$this->state = $state;
@@ -91,6 +93,11 @@ class JoomlaquizViewQuestions extends JViewLegacy
 					'filter_enabled',
 					$enabledFields
 				);
+				
+				if(isset($_REQUEST['quiz_id']) && $app->getUserState('quizzes.filter.quiz_id') != $_REQUEST['quiz_id'])
+				{
+					$app->setUserState('quizzes.filter.quiz_id', $_REQUEST['quiz_id'] );
+				}
 				
 				$quizzesFields = JHTML::_('select.options', $this->get("Quizzes"), 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', $_REQUEST['quiz_id']));
 				

@@ -19,9 +19,10 @@ class com_joomlaquizInstallerScript
 	
 		jimport( 'joomla.filesystem.folder' );
 		jimport( 'joomla.filesystem.file' );
-		$this->_extract();
 		
 		$adminDir = JPATH_ROOT.DS.'administrator'.DS.'components'.DS.'com_joomlaquiz';
+		
+		/* is this needed? */
 		if (!JFolder::exists(JPATH_ROOT . DS . 'images'. DS . 'joomlaquiz') ) {
 			JFolder::create( JPATH_ROOT . DS . 'images' . DS . 'joomlaquiz');
 		}
@@ -30,41 +31,7 @@ class com_joomlaquizInstallerScript
 			JFolder::create( JPATH_ROOT . DS . 'images' . DS . 'joomlaquiz' . DS . 'images');
 		}
 		
-		if (!JFolder::exists(JPATH_ROOT . DS . 'media'. DS . 'com_joomlaquiz') ) {
-			JFolder::create( JPATH_ROOT . DS . 'media'. DS . 'com_joomlaquiz');
-		}
-		
-		if (!JFolder::exists(JPATH_ROOT . DS . 'media'. DS . 'com_joomlaquiz' .DS. 'images') ) {
-			JFolder::create( JPATH_ROOT . DS . 'media'. DS . 'com_joomlaquiz' .DS. 'images');
-		}
-		
-		if (!JFile::exists(JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'help48.png')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'help48.png', JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'help48.png');	
-		}
-		
-		if (!JFile::exists(JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'questions48.png')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'questions48.png', JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'questions48.png');	
-		}
-		
-		if (!JFile::exists(JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'quizzes48.png')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'quizzes48.png', JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'quizzes48.png');	
-		}
-		
-		JFile::copy($adminDir . DS . "index.html", JPATH_SITE . DS . 'media' . DS . 'com_joomlaquiz' . DS . 'images' . DS . 'index.html');
-		JFile::copy($adminDir . DS . "index.html", JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'index.html');
-		JFile::copy($adminDir . DS . "index.html", JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'index.html');
-
-		if (JFolder::exists(JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements') ) {	
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_constants.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_constants.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_category.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_category.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_choice.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_choice.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_matching.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_matching.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_question.xml', 	JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_question.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_quiz.xml', 		JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_quiz.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_t_text.xml', 		JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_t_text.xml');
-			JFile::copy($adminDir . DS . 'assets' .DS. 'joomfish' . DS . 'quiz_product_info.xml', JPATH_SITE . DS . 'administrator' . DS . 'components' . DS . 'com_joomfish' . DS . 'contentelements' . DS . 'quiz_product_info.xml');
-		}
-
+		/* need to be refactored // delete duplication */
 		if (!JFile::exists(JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_green.jpg')) {
 			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'certificate_green.jpg', JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_green.jpg');
 		}
@@ -77,9 +44,9 @@ class com_joomlaquizInstallerScript
 			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'certificate_beige.jpg', JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_beige.jpg');
 		}
 		
+		/* is this needed? //  need to be refactored  */
 		JFile::copy($adminDir . DS . 'assets' .DS. 'fonts' .DS. 'arial.ttf', JPATH_SITE . DS . 'media' . DS . 'arial.ttf');
 		
-		$this->_installDatabase();
 	}
 	
 	function uninstall($parent)
@@ -122,33 +89,194 @@ class com_joomlaquizInstallerScript
 		}
 		
 		
-		$this->_extract();
-		/*
-		$db	= JFactory::getDBO();
 
-        $db->setQuery("SELECT `c_id` FROM `#__quiz_t_category` WHERE `c_category`='Uncategorized'");
-        if(!$db->loadResult())
-        {
-            $db->setQuery("INSERT INTO `#__quiz_t_category` (`c_category`) VALUES('Uncategorized')");
-            $db->execute();
-        }
+		$newColumns = array(
+			't_qtypes' => array(
+				'c_type' => "VARCHAR( 50 ) NOT NULL"
+			),
+			't_question' => array(
+				'c_detailed_feedback' => "TEXT NOT NULL"
+			),
+			'r_student_question' => array(
+				'c_flag_question' => "TINYINT( 2 ) NOT NULL"
+			),
+			'r_student_blank' => array(
+				'is_correct' => "TINYINT( 4 ) NOT NULL"
+			),
+			't_quiz' => array(
+				'c_flag' => 'TINYINT( 3 ) NOT NULL',
+				'c_hide_feedback' => 'TINYINT( 3 ) NOT NULL',
+				'c_auto_breaks' => 'TINYINT( 5 ) NOT NULL',
+				'c_share_buttons' => 'TINYINT( 3 ) NOT NULL',
+				'asset_id' => 'INT( 18 ) NOT NULL',
+                'c_quiz_access_message' => 'TEXT NOT NULL',
+                'c_quiz_certificate_access_message' => 'TEXT NOT NULL'
+			),
+			'r_student_quiz' => array(
+				'user_name' => 'VARCHAR(50) NOT NULL',
+				'user_surname' => 'VARCHAR(100) NOT NULL',
+                'params' => "VARCHAR( 1024 ) NOT NULL DEFAULT '{}'"
+			),
+			'lpath' => array(
+				'asset_id' => 'INT(18) NOT NULL',
+				'lp_access_message' => 'TEXT NOT NULL'
+			),
+			'certificates' => array(
+				'text_font' => 'VARCHAR(255) NOT NULL'
+			)
+		);
 
-        $db->setQuery("SELECT `qc_id` FROM `#__quiz_q_cat` WHERE `qc_category`='Uncategorized'");
-        if(!$db->loadResult())
-        {
-            $db->setQuery("INSERT INTO `#__quiz_q_cat` (`qc_category`) VALUES('Uncategorized')");
-            $db->execute();
-        }
+		foreach ($newColumns as $table => $fields)
+		{
+			$oldColumns = $db->getTableColumns('#__quiz_'.$table);
 
-        $db->setQuery("TRUNCATE TABLE `#__quiz_certificates`");
-        $db->execute();
-        $db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (1, 'Certificate Green', 'certificate_green.jpg')");
-        $db->execute();
-        $db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (2, 'Certificate Blue', 'certificate_blue.jpg')");
-        $db->execute();
-        $db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (3, 'Certificate Beige', 'certificate_beige.jpg')");
-        $db->execute();
-		*/
+			foreach ( $fields as $key => $value)
+			{
+				if ( empty($oldColumns[$key]) )
+				{
+					$db->setQuery('ALTER TABLE `#__quiz_'.$table.'` ADD `'.$key.'` '.$value);
+					$db->execute();
+					if($key=='c_type' && $table == 't_qtypes'){
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'choice' WHERE `c_id` =1");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'mresponse' WHERE `c_id` =2");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'truefalse' WHERE `c_id` =3");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'dragdrop' WHERE `c_id` =4");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'dropdown' WHERE `c_id` =5");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'blank' WHERE `c_id` =6");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'hotspot' WHERE `c_id` =7");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'surveys' WHERE `c_id` =8");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'boilerplate' WHERE `c_id` =9");
+						$db->execute();
+						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'mquestion' WHERE `c_id` =10");
+						$db->execute();
+					}
+				}
+			}
+		}
+		
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_question` CHANGE `c_score` `c_score` FLOAT( 11 ) NULL DEFAULT '0';");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_quiz` CHANGE `c_total_score` `c_total_score` FLOAT NOT NULL DEFAULT '0';");
+		$db->execute();
+		
+		$db->setQuery("ALTER TABLE `#__quiz_t_question` CHANGE `c_point` `c_point` FLOAT NOT NULL DEFAULT '0';");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_full_score` `c_full_score` FLOAT( 10 ) NOT NULL DEFAULT '0';");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_passing_score` `c_passing_score` FLOAT NOT NULL DEFAULT '0';");
+		$db->execute();
+		
+		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 1");
+		if(!$db->loadResult()){
+			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (1, 'Certificate Green', 'certificate_green.jpg')");
+			$db->execute();
+		}
+		
+		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 2");
+		if(!$db->loadResult()){
+			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (2, 'Certificate Blue', 'certificate_blue.jpg')");
+			$db->execute();
+		}
+		
+		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 3");
+		if(!$db->loadResult()){
+			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (3, 'Certificate Beige', 'certificate_beige.jpg')");
+			$db->execute();
+		}
+		
+		$db->setQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_delux'");
+		$joomlaquiz_delux_id = $db->loadResult();
+		if ($joomlaquiz_delux_id) {
+			$db->setQuery("UPDATE #__quiz_t_quiz SET c_skin = 1 WHERE c_skin = '{$joomlaquiz_delux_id}'");
+			$db->execute();
+			
+			$db->setQuery("DELETE #__quiz_t_quiz FROM `#__quiz_templates` WHERE template_name='joomlaquiz_delux''");
+			$db->execute();
+		}
+				
+		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_standard'");
+		if(!$db->loadResult()) {
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_standard');");
+			$db->execute();
+		}
+
+		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_t3_bs3'");
+		if(!$db->loadResult()) {
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_t3_bs3');");
+			$db->execute();
+		}
+
+		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_blue'");
+		if(!$db->loadResult()) {
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_blue');");
+			$db->execute();
+		}
+		
+		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_simple'");
+		if(!$db->loadResult()) {
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_simple');");
+			$db->execute();
+		}
+
+		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_pretty_green'");
+		if(!$db->loadResult()) {
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_pretty_green');");
+			$db->execute();
+		}
+		
+		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_pretty_blue'");
+		if(!$db->loadResult()) {
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_pretty_blue');");
+			$db->execute();
+		}
+		
+		$db->setQuery("SELECT COUNT(*) FROM `#__quiz_configuration` WHERE `config_var` = 'wysiwyg_options'");
+		if (!$db->loadResult()) {
+				$db->setQuery("INSERT INTO `#__quiz_configuration` ( `config_var` , `config_value` ) VALUES ('wysiwyg_options', '0');");
+				$db->execute();
+		}
+		
+		//add quiz pool
+		$db->SetQuery("SELECT count(*) FROM `#__quiz_t_quiz` WHERE `c_title` = 'Questions Pool'");
+		if(!$db->LoadResult()){
+			$db->SetQuery("INSERT INTO `#__quiz_t_quiz` SET 
+									`c_id` = 0, 
+									`c_user_id` = 62, 
+									`c_full_score` = 0, 
+									`c_title` = 'Questions Pool', 
+									`c_description` = '', 
+									`c_right_message` = '', 
+									`c_wrong_message` = '', 
+									`c_pass_message` = '', 
+									`c_unpass_message` = '', 
+									`c_short_description` = ''");	
+		}
+		$db->execute();
+		$db->setQuery("UPDATE `#__quiz_t_quiz` SET `c_id` = 0 , `c_skin` = 1 WHERE `c_title` = 'Questions Pool'");
+		$db->execute();
+		
+		$db->setQuery("SELECT COUNT(id) FROM #__quiz_dashboard_items");
+		if(!$db->loadResult()){
+			$db->setQuery("INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
+			(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root()."/media/com_joomlaquiz/images/quizzes48.png', 1),
+			(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root()."/media/com_joomlaquiz/images/questions48.png', 1),
+			(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '".JURI::root()."/media/com_joomlaquiz/images/help48.png', 1);");
+			$db->execute();
+		}
+
+		$db->setQuery("INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES ('', 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'), ('', 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'), ('', 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'), ('', 2, '#course#', 170, 570, 20, 1, 'arial.ttf'), ('', 2, '#name#', 350, 450, 20, 1, 'arial.ttf');");
+		$db->execute();
+		
+		
+		$this->migrateCategories();
     }
 
 	function migrateCategories(){
@@ -218,13 +346,13 @@ class com_joomlaquizInstallerScript
 			}else{
 				$query->clear();
 				$query->update('#__quiz_t_question')
-					->set('`c_ques_cat` = "'.$quiz_categories[$key]->id.'"')
-					->where('`c_ques_cat` = "'.$quiz_categories[$key]->note.'"');
+					->set('`c_ques_cat` = "'.$quest_categories[$key]->id.'"')
+					->where('`c_ques_cat` = "'.$quest_categories[$key]->note.'"');
 				$db->setQuery($query)->execute();
 				$query->clear();
 				$query->update('#__quiz_pool')
-					->set('`q_cat` = "'.$quiz_categories[$key]->id.'"')
-					->where('`q_cat` = "'.$quiz_categories[$key]->note.'"');
+					->set('`q_cat` = "'.$quest_categories[$key]->id.'"')
+					->where('`q_cat` = "'.$quest_categories[$key]->note.'"');
 				$db->setQuery($query)->execute();
 			}
 		}
@@ -340,338 +468,6 @@ class com_joomlaquizInstallerScript
 
 		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_question_id` int(12) NOT NULL, `c_paths` text NOT NULL, PRIMARY KEY (`c_id`))");
 		$db->execute();
-
-		$newColumns = array(
-			't_qtypes' => array(
-				'c_type' => "VARCHAR( 50 ) NOT NULL"
-			),
-			't_question' => array(
-				'c_detailed_feedback' => "TEXT NOT NULL"
-			),
-			'r_student_question' => array(
-				'c_flag_question' => "TINYINT( 2 ) NOT NULL"
-			),
-			'r_student_blank' => array(
-				'is_correct' => "TINYINT( 4 ) NOT NULL"
-			),
-			't_quiz' => array(
-				'c_flag' => 'TINYINT( 3 ) NOT NULL',
-				'c_hide_feedback' => 'TINYINT( 3 ) NOT NULL',
-				'c_auto_breaks' => 'TINYINT( 5 ) NOT NULL',
-				'c_share_buttons' => 'TINYINT( 3 ) NOT NULL',
-				'asset_id' => 'INT( 18 ) NOT NULL',
-                'c_quiz_access_message' => 'TEXT NOT NULL',
-                'c_quiz_certificate_access_message' => 'TEXT NOT NULL'
-			),
-			'r_student_quiz' => array(
-				'user_name' => 'VARCHAR(50) NOT NULL',
-				'user_surname' => 'VARCHAR(100) NOT NULL',
-                'params' => "VARCHAR( 1024 ) NOT NULL DEFAULT '{}'"
-			),
-			'lpath' => array(
-				'asset_id' => 'INT(18) NOT NULL',
-				'lp_access_message' => 'TEXT NOT NULL'
-			),
-			'certificates' => array(
-				'text_font' => 'VARCHAR(255) NOT NULL'
-			)
-		);
-
-		foreach ($newColumns as $table => $fields)
-		{
-			$oldColumns = $db->getTableColumns('#__quiz_'.$table);
-
-			foreach ( $fields as $key => $value)
-			{
-				if ( empty($oldColumns[$key]) )
-				{
-					$db->setQuery('ALTER TABLE `#__quiz_'.$table.'` ADD `'.$key.'` '.$value);
-					$db->execute();
-					if($key=='c_type' && $table == 't_qtypes'){
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'choice' WHERE `c_id` =1");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'mresponse' WHERE `c_id` =2");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'truefalse' WHERE `c_id` =3");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'dragdrop' WHERE `c_id` =4");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'dropdown' WHERE `c_id` =5");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'blank' WHERE `c_id` =6");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'hotspot' WHERE `c_id` =7");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'surveys' WHERE `c_id` =8");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'boilerplate' WHERE `c_id` =9");
-						$db->execute();
-						$db->setQuery("UPDATE `#__quiz_t_qtypes` SET `c_type` = 'mquestion' WHERE `c_id` =10");
-						$db->execute();
-					}
-				}
-			}
-		}
-		
-
-		$db->setQuery("ALTER TABLE `#__quiz_r_student_question` CHANGE `c_score` `c_score` FLOAT( 11 ) NULL DEFAULT '0';");
-		$db->execute();
-		$db->setQuery("ALTER TABLE `#__quiz_r_student_quiz` CHANGE `c_total_score` `c_total_score` FLOAT NOT NULL DEFAULT '0';");
-		$db->execute();
-		
-		$db->setQuery("ALTER TABLE `#__quiz_t_question` CHANGE `c_point` `c_point` FLOAT NOT NULL DEFAULT '0';");
-		$db->execute();
-		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_full_score` `c_full_score` FLOAT( 10 ) NOT NULL DEFAULT '0';");
-		$db->execute();
-		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_passing_score` `c_passing_score` FLOAT NOT NULL DEFAULT '0';");
-		$db->execute();
-		
-		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 1");
-		if(!$db->loadResult()){
-			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (1, 'Certificate Green', 'certificate_green.jpg')");
-			$db->execute();
-		}
-		
-		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 2");
-		if(!$db->loadResult()){
-			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (2, 'Certificate Blue', 'certificate_blue.jpg')");
-			$db->execute();
-		}
-		
-		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 3");
-		if(!$db->loadResult()){
-			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (3, 'Certificate Beige', 'certificate_beige.jpg')");
-			$db->execute();
-		}
-		
-		$db->setQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_delux'");
-		$joomlaquiz_delux_id = $db->loadResult();
-		if ($joomlaquiz_delux_id) {
-			$db->setQuery("UPDATE #__quiz_t_quiz SET c_skin = 1 WHERE c_skin = '{$joomlaquiz_delux_id}'");
-			$db->execute();
-			
-			$db->setQuery("DELETE #__quiz_t_quiz FROM `#__quiz_templates` WHERE template_name='joomlaquiz_delux''");
-			$db->execute();
-		}
-				
-		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_standard'");
-		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_standard');");
-			$db->execute();
-		}
-
-		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_t3_bs3'");
-		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_t3_bs3');");
-			$db->execute();
-		}
-
-		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_blue'");
-		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_blue');");
-			$db->execute();
-		}
-		
-		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_simple'");
-		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_simple');");
-			$db->execute();
-		}
-
-		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_pretty_green'");
-		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_pretty_green');");
-			$db->execute();
-		}
-		
-		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_pretty_blue'");
-		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_pretty_blue');");
-			$db->execute();
-		}
-		
-		$db->setQuery("SELECT COUNT(*) FROM `#__quiz_configuration` WHERE `config_var` = 'wysiwyg_options'");
-		if (!$db->loadResult()) {
-				$db->setQuery("INSERT INTO `#__quiz_configuration` ( `config_var` , `config_value` ) VALUES ('wysiwyg_options', '0');");
-				$db->execute();
-		}
-		
-		//add quiz pool
-		$db->SetQuery("SELECT count(*) FROM `#__quiz_t_quiz` WHERE `c_title` = 'Questions Pool'");
-		if(!$db->LoadResult()){
-			$db->SetQuery("INSERT INTO `#__quiz_t_quiz` SET 
-									`c_id` = 0, 
-									`c_user_id` = 62, 
-									`c_full_score` = 0, 
-									`c_title` = 'Questions Pool', 
-									`c_description` = '', 
-									`c_right_message` = '', 
-									`c_wrong_message` = '', 
-									`c_pass_message` = '', 
-									`c_unpass_message` = '', 
-									`c_short_description` = ''");	
-		}
-		$db->execute();
-		$db->setQuery("UPDATE `#__quiz_t_quiz` SET `c_id` = 0 , `c_skin` = 1 WHERE `c_title` = 'Questions Pool'");
-		$db->execute();
-
-		
-		$db->setQuery("SELECT `c_id` FROM `#__quiz_t_category` WHERE `c_category`='Uncategorized'");
-        if(!$db->loadResult())
-        {
-            $db->setQuery("INSERT INTO `#__quiz_t_category` (`c_category`) VALUES('Uncategorized')");
-            $db->execute();
-        }
-
-        $db->setQuery("SELECT `qc_id` FROM `#__quiz_q_cat` WHERE `qc_category`='Uncategorized'");
-        if(!$db->loadResult())
-        {
-            $db->setQuery("INSERT INTO `#__quiz_q_cat` (`qc_category`) VALUES('Uncategorized')");
-            $db->execute();
-        }
-		
-		$db->setQuery("SELECT COUNT(id) FROM #__quiz_dashboard_items");
-		if(!$db->loadResult()){
-			$db->setQuery("INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
-			(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root()."media/com_joomlaquiz/images/quizzes48.png', 1),
-			(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root()."media/com_joomlaquiz/images/questions48.png', 1),
-			(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '".JURI::root()."media/com_joomlaquiz/images/help48.png', 1);");
-			$db->execute();
-		}
-
-		$db->setQuery("INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES ('', 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'), ('', 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'), ('', 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'), ('', 2, '#course#', 170, 570, 20, 1, 'arial.ttf'), ('', 2, '#name#', 350, 450, 20, 1, 'arial.ttf');");
-		$db->execute();
-		
-		//==================================================
-		// Fixing / adding permissions.
-		//==================================================
-		/*
-		$query = "SELECT `rules`" .
-			" FROM `#__assets`" .
-			" WHERE `name` = 'com_joomlaquiz'";
-		$db->setQuery($query);
-		$componentRulesJson = $db->loadResult();
-		
-		if (!empty($componentRulesJson))
-		{
-			$componentRules = json_decode($componentRulesJson);
-			
-			$coreView = (isset($componentRules->{'core.view'}) ? $componentRules->{'core.view'} : null);
-			$coreResult = (isset($componentRules->{'core.result'}) ? $componentRules->{'core.result'} : null);
-			
-			$rules = (object) array(
-				'core.view' => (isset($coreView) ? $coreView : (object) array('1' => 1)),
-				'core.result' => (isset($coreResult) ? $coreResult : (object) array('1' => 1)),
-			);
-			
-			$rulesJson = json_encode($rules);
-			
-			$query = "UPDATE `#__assets`" .
-				" SET `rules` = " . $db->quote($rulesJson) .
-				" WHERE `name` = 'com_joomlaquiz'";
-			$db->setQuery($query);
-			$db->execute();
-		}
-		*/
-		
-		$this->migrateCategories();
-
-		$app->redirect(JURI::root().'administrator/index.php?option=com_joomlaquiz&task=install.plugins');
 	}
 	
-	function _extract(){
-		
-		jimport( 'joomla.filesystem.folder' );
-		jimport( 'joomla.filesystem.file' );
-		jimport( 'joomla.filesystem.archive' );
-		
-		// Install frontend
-		$source			= JPATH_SITE . '/components/com_joomlaquiz/frontend.zip';
-		$destination	= JPATH_SITE . '/components/com_joomlaquiz/';
-		if (!JFolder::exists($destination))
-		{
-			JFolder::create($destination);
-		}
-
-		if(!JArchive::extract($source, $destination))
-		{
-			// If frontend did not extract
-			return false;
-		}
-		
-		// Copy site language file
-		JFile::copy(JPATH_SITE . DS . 'components'.DS. 'com_joomlaquiz' .DS. 'language' .DS. 'en-GB.com_joomlaquiz.ini', JPATH_SITE . DS . 'language' . DS . 'en-GB' . DS . 'en-GB.com_joomlaquiz.ini');
-		
-		//Delete frontend archive
-		JFile::delete(JPATH_SITE.'/components/com_joomlaquiz/frontend.zip');
-		
-		// Install backend
-		$source			= JPATH_SITE . '/administrator/components/com_joomlaquiz/backend.zip';
-		$destination	= JPATH_SITE . '/administrator/components/com_joomlaquiz/';
-		if (!JFolder::exists($destination))
-		{
-			JFolder::create($destination);
-		}
-
-		if(!JArchive::extract($source, $destination))
-		{
-			// If backend did not extract
-			return false;
-		}
-		
-		// Copy admin language files
-		JFile::copy(JPATH_SITE.DS.'administrator' .DS. 'components'. DS . 'com_joomlaquiz' .DS. 'language' .DS. 'en-GB.com_joomlaquiz.ini', JPATH_SITE.DS.'administrator'. DS . 'language' . DS . 'en-GB' . DS . 'en-GB.com_joomlaquiz.ini');
-		JFile::copy(JPATH_SITE.DS.'administrator' .DS. 'components'. DS . 'com_joomlaquiz' .DS. 'language' .DS. 'en-GB.com_joomlaquiz.sys.ini', JPATH_SITE.DS.'administrator'. DS . 'language' . DS . 'en-GB' . DS . 'en-GB.com_joomlaquiz.sys.ini');
-		
-		//Delete backend archive
-		JFile::delete(JPATH_SITE.'/administrator/components/com_joomlaquiz/backend.zip');
-	}
-	
-	function _installDatabase()
-	{
-		$db	= JFactory::getDBO();
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
-		jimport('joomla.filesystem.path');
-		jimport('joomla.base.adapter');
-		
-		$sqlfile = JPATH_SITE.'/administrator/components/com_joomlaquiz/sql/install.mysql.utf8.sql';
-		$buffer = file_get_contents($sqlfile);
-		
-		// Graceful exit and rollback if read not successful
-		if ($buffer === false)
-		{
-			JLog::add(JText::_('JLIB_INSTALLER_ERROR_SQL_READBUFFER'), JLog::WARNING, 'jerror');
-
-			return false;
-		}
-
-		// Create an array of queries from the sql file
-		$queries = JDatabaseDriver::splitSql($buffer);
-
-		if (count($queries) == 0)
-		{
-			// No queries to process
-			return 0;
-		}
-		
-		// Process each query in the $queries array (split out of sql file).
-		foreach ($queries as $query)
-		{
-			$query = trim($query);
-
-			if ($query != '' && $query{0} != '#')
-			{
-				$db->setQuery($query);
-
-				if (!$db->execute())
-				{
-					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
-
-					return false;
-				}
-			}
-		}
-	}
 }
-?>

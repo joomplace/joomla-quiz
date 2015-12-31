@@ -30,7 +30,7 @@ class JoomlaquizModelResults extends JModelList
 				'c_date_time', 'sq.c_date_time',
 				'c_title', 'q.c_title',
 				'c_total_score', 'sq.c_total_score',
-				'c_full_score', 'q.c_full_score',
+				'c_full_score', 'sq.c_max_score',
 				'c_passing_score', 'q.c_passing_score',
 				'c_passed', 'sq.c_passed',
 				'c_total_time', 'sq.c_total_time',);
@@ -110,7 +110,7 @@ class JoomlaquizModelResults extends JModelList
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);		$layout = JFactory::getApplication()->input->get('layout');
         		if($layout == 'stu_report'){					$cid = JFactory::getApplication()->input->get('cid');						$query = $this->getSTUQuery($cid, $query);				}else{
-			$query->select("sq.user_email, sq.user_name, sq.c_id, sq.c_passed, sq.c_total_score, sq.c_total_time, sq.c_date_time, sq.params, sq.c_passed,q.c_title, q.c_author, q.c_passing_score, sq.c_student_id, u.username, u.name, u.email,q.c_full_score, q.c_pool, ch.q_chain");
+			$query->select("sq.user_email, sq.user_name, sq.c_id, sq.c_passed, sq.c_total_score,sq.c_max_score as c_full_score, sq.c_total_time, sq.c_date_time, sq.params, sq.c_passed,q.c_title, q.c_author, q.c_passing_score, sq.c_student_id, u.username, u.name, u.email, q.c_pool, ch.q_chain");
 			$query->from('`#__quiz_r_student_quiz` as `sq`');
 			$query->join('LEFT', '`#__users` as `u` ON sq.c_student_id = u.id');
 			$query->join('LEFT', '`#__quiz_q_chain` AS `ch` ON ch.s_unique_id = sq.unique_id');

@@ -87,197 +87,6 @@ class com_joomlaquizInstallerScript
 				$db->execute();
 			}
 		}
-    }
-
-	function migrateCategories(){
-	
-		$this->defaultCategoryCheck();
-		
-		$db = JFactory::getDBO();
-		
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__quiz_t_category');
-		$quiz_categories = $db->setQuery($query)->loadObjectList('c_id');
-		
-		$error = false;
-		foreach($quiz_categories as $key => $qzc){
-			$extension = 'com_joomlaquiz';
-			$title     = $qzc->c_category;
-			$desc      = $qzc->c_instruction;
-			$parent_id = 1;
-			$quiz_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $qzc->c_id);
-			if(!$quiz_categories[$key]->id){
-				$error = true;
-			}else{
-				$query->clear();
-				$query->update('#__quiz_t_quiz')
-					->set('`c_category_id` = "'.$quiz_categories[$key]->id.'"')
-					->where('`c_category_id` = "'.$quiz_categories[$key]->note.'"');
-				$db->setQuery($query)->execute();
-			}
-		}
-		if(!$error){
-			$query->clear();
-			$query->delete('#__quiz_t_category');
-			$db->setQuery($query)->execute();
-		}
-		
-		/* create pseudo-tree */
-		$query = $db->getQuery(true);
-		$query->select('DISTINCT(qc_tag) AS value, qc_tag')
-			->from('#__quiz_q_cat')
-			->where('TRIM(qc_tag) <> \'\'');
-		$head_categories = $db->setQuery($query)->loadObjectList('qc_tag');
-		
-		foreach($head_categories as $key => $hqc){
-			$extension = 'com_joomlaquiz.questions';
-			$title     = $hqc->qc_tag;
-			$desc      = '';
-			$parent_id = 1;
-			$head_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $hqc->c_id);
-		}
-		/* pseudo-tree done */
-		
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__quiz_q_cat');
-		$quest_categories = $db->setQuery($query)->loadObjectList('qc_id');
-		
-		$error = false;
-		foreach($quest_categories as $key => $quc){
-			$extension = 'com_joomlaquiz.questions';
-			$title     = $quc->qc_category;
-			$desc      = $quc->instruction;
-			$parent_id = $head_categories[$quc->qc_tag]->id;
-			$quest_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $quc->qc_id);
-			if(!$quest_categories[$key]->id){
-				$error = true;
-			}else{
-				$query->clear();
-				$query->update('#__quiz_t_question')
-					->set('`c_ques_cat` = "'.$quiz_categories[$key]->id.'"')
-					->where('`c_ques_cat` = "'.$quiz_categories[$key]->note.'"');
-				$db->setQuery($query)->execute();
-				$query->clear();
-				$query->update('#__quiz_pool')
-					->set('`q_cat` = "'.$quiz_categories[$key]->id.'"')
-					->where('`q_cat` = "'.$quiz_categories[$key]->note.'"');
-				$db->setQuery($query)->execute();
-			}
-		}
-		if(!$error){
-			$query->clear();
-			$query->delete('#__quiz_q_cat');
-			$db->setQuery($query)->execute();
-		}
-		
-	}
-	
-	function defaultCategoryCheck()
-	{
-		/* checking default category quizzes */
-		$extension = 'com_joomlaquiz';
-		$title     = 'Uncategorised';
-		$desc      = 'A default category for the joomlaquiz quizzes.';
-		$parent_id = 1;
-		
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__categories')
-			->where('`extension`="'.$extension.'"')
-			->where('`parent_id`="'.$parent_id.'"');
-		$exists = count($db->setQuery($query)->loadObjectList());
-		
-		if(!$exists)
-			$this->createCategory($extension, $title, $desc, $parent_id);
-		
-		/* checking default category questions */
-		$extension = 'com_joomlaquiz.questions';
-		$title     = 'Uncategorised';
-		$desc      = 'A default category for the joomlaquiz questions.';
-		$parent_id = 1;
-		
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__categories')
-			->where('`extension`="'.$extension.'"')
-			->where('`parent_id`="'.$parent_id.'"');
-		$exists = count($db->setQuery($query)->loadObjectList());
-		
-		if(!$exists)
-			$this->createCategory($extension, $title, $desc, $parent_id);
-	}
-	
-	function createCategory($extension, $title, $desc, $parent_id=1, $note='', $published=1, $access = 1, $params = '{"target":"","image":""}', $metadata = '{"page_title":"","author":"","robots":""}', $language = '*'){	
-		if (version_compare(JVERSION, '3.0', 'lt'))
-		{
-		   JTable::addIncludePath(JPATH_PLATFORM . 'joomla/database/table');
-		}
-
-		// Initialize a new category
-		$category = JTable::getInstance('Category');
-		$category->extension = $extension;
-		$category->title = $title;
-		$category->description = $desc;
-		$category->note = $note;
-		$category->published = $published;
-		$category->access = $access;
-		$category->params = $params;
-		$category->metadata = $metadata;
-		$category->language = $language;
-
-		$category->setLocation($parent_id, 'last-child');
-		if (!$category->check())
-		{
-		   JError::raiseNotice(500, $category->getError());
-		   return false;
-		}
-		if (!$category->store(true))
-		{
-		   JError::raiseNotice(500, $category->getError());
-		   return false;
-		}
-		
-		$category->rebuildPath($category->id);
-		
-		return $category;
-	}
-	
-	function preflight($type, $parent) 
-	{
-		$this->defaultCategoryCheck();
-	}
-	
-	function postflight($type, $parent)
-    {
-		/* need to be refacrored */
-		
-		$app = JFactory::getApplication();
-		$db	= JFactory::getDBO();	
-		
-		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_r_student_share` (`id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_quiz_id` int(12) unsigned NOT NULL, `c_stu_quiz_id` int(12) unsigned NOT NULL, `c_user_id` int(12) unsigned NOT NULL, `c_share_id` varchar(64) NOT NULL, PRIMARY KEY (`id`))");
-		$db->execute();
-
-		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_dashboard_items` ( `id` int(11) NOT NULL AUTO_INCREMENT, `title` varchar(255) NOT NULL, `url` varchar(255) NOT NULL, `icon` varchar(255) NOT NULL, `published` tinyint(1) NOT NULL,  PRIMARY KEY (`id`)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;");
-		$db->execute();
-		
-		$db->setQuery("SELECT * FROM `#__quiz_dashboard_items`");
-		$dashs = $db->loadObjectList();
-		if(empty($dashs)){
-			$db->setQuery("
-				INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
-				(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/media/com_joomlaquiz/images/quizzes48.png', 1),
-				(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/media/com_joomlaquiz/images/questions48.png', 1),
-				(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '".JURI::root(true)."/media/com_joomlaquiz/images/help48.png', 1);
-			");
-			$db->execute();
-		}
-		
-		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_question_id` int(12) NOT NULL, `c_paths` text NOT NULL, PRIMARY KEY (`c_id`))");
-		$db->execute();
 
 		$newColumns = array(
 			't_qtypes' => array(
@@ -501,7 +310,7 @@ class com_joomlaquizInstallerScript
 			$db->setQuery("INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
 			(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/media/com_joomlaquiz/images/quizzes48.png', 1),
 			(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/media/com_joomlaquiz/images/questions48.png', 1),
-			(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '".JURI::root(true)."media/com_joomlaquiz/images/help48.png', 1);");
+			(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '".JURI::root(true)."/media/com_joomlaquiz/images/help48.png', 1);");
 			$db->execute();
 		}
 
@@ -509,6 +318,197 @@ class com_joomlaquizInstallerScript
 		$db->execute();
 		
 		$this->migrateCategories();
+    }
+
+	function migrateCategories(){
+	
+		$this->defaultCategoryCheck();
+		
+		$db = JFactory::getDBO();
+		
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__quiz_t_category');
+		$quiz_categories = $db->setQuery($query)->loadObjectList('c_id');
+		
+		$error = false;
+		foreach($quiz_categories as $key => $qzc){
+			$extension = 'com_joomlaquiz';
+			$title     = $qzc->c_category;
+			$desc      = $qzc->c_instruction;
+			$parent_id = 1;
+			$quiz_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $qzc->c_id);
+			if(!$quiz_categories[$key]->id){
+				$error = true;
+			}else{
+				$query->clear();
+				$query->update('#__quiz_t_quiz')
+					->set('`c_category_id` = "'.$quiz_categories[$key]->id.'"')
+					->where('`c_category_id` = "'.$quiz_categories[$key]->note.'"');
+				$db->setQuery($query)->execute();
+			}
+		}
+		if(!$error){
+			$query->clear();
+			$query->delete('#__quiz_t_category');
+			$db->setQuery($query)->execute();
+		}
+		
+		/* create pseudo-tree */
+		$query = $db->getQuery(true);
+		$query->select('DISTINCT(qc_tag) AS value, qc_tag')
+			->from('#__quiz_q_cat')
+			->where('TRIM(qc_tag) <> \'\'');
+		$head_categories = $db->setQuery($query)->loadObjectList('qc_tag');
+		
+		foreach($head_categories as $key => $hqc){
+			$extension = 'com_joomlaquiz.questions';
+			$title     = $hqc->qc_tag;
+			$desc      = '';
+			$parent_id = 1;
+			$head_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $hqc->c_id);
+		}
+		/* pseudo-tree done */
+		
+		$query = $db->getQuery(true);
+		$query->select('*')
+			->from('#__quiz_q_cat');
+		$quest_categories = $db->setQuery($query)->loadObjectList('qc_id');
+		
+		$error = false;
+		foreach($quest_categories as $key => $quc){
+			$extension = 'com_joomlaquiz.questions';
+			$title     = $quc->qc_category;
+			$desc      = $quc->instruction;
+			$parent_id = $head_categories[$quc->qc_tag]->id;
+			$quest_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $quc->qc_id);
+			if(!$quest_categories[$key]->id){
+				$error = true;
+			}else{
+				$query->clear();
+				$query->update('#__quiz_t_question')
+					->set('`c_ques_cat` = "'.$quest_categories[$key]->id.'"')
+					->where('`c_ques_cat` = "'.$quest_categories[$key]->note.'"');
+				$db->setQuery($query)->execute();
+				$query->clear();
+				$query->update('#__quiz_pool')
+					->set('`q_cat` = "'.$quest_categories[$key]->id.'"')
+					->where('`q_cat` = "'.$quest_categories[$key]->note.'"');
+				$db->setQuery($query)->execute();
+			}
+		}
+		if(!$error){
+			$query->clear();
+			$query->delete('#__quiz_q_cat');
+			$db->setQuery($query)->execute();
+		}
+		
+	}
+	
+	function defaultCategoryCheck()
+	{
+		/* checking default category quizzes */
+		$extension = 'com_joomlaquiz';
+		$title     = 'Uncategorised';
+		$desc      = 'A default category for the joomlaquiz quizzes.';
+		$parent_id = 1;
+		
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from('#__categories')
+			->where('`extension`="'.$extension.'"')
+			->where('`parent_id`="'.$parent_id.'"');
+		$exists = count($db->setQuery($query)->loadObjectList());
+		
+		if(!$exists)
+			$this->createCategory($extension, $title, $desc, $parent_id);
+		
+		/* checking default category questions */
+		$extension = 'com_joomlaquiz.questions';
+		$title     = 'Uncategorised';
+		$desc      = 'A default category for the joomlaquiz questions.';
+		$parent_id = 1;
+		
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from('#__categories')
+			->where('`extension`="'.$extension.'"')
+			->where('`parent_id`="'.$parent_id.'"');
+		$exists = count($db->setQuery($query)->loadObjectList());
+		
+		if(!$exists)
+			$this->createCategory($extension, $title, $desc, $parent_id);
+	}
+	
+	function createCategory($extension, $title, $desc, $parent_id=1, $note='', $published=1, $access = 1, $params = '{"target":"","image":""}', $metadata = '{"page_title":"","author":"","robots":""}', $language = '*'){	
+		if (version_compare(JVERSION, '3.0', 'lt'))
+		{
+		   JTable::addIncludePath(JPATH_PLATFORM . 'joomla/database/table');
+		}
+
+		// Initialize a new category
+		$category = JTable::getInstance('Category');
+		$category->extension = $extension;
+		$category->title = $title;
+		$category->description = $desc;
+		$category->note = $note;
+		$category->published = $published;
+		$category->access = $access;
+		$category->params = $params;
+		$category->metadata = $metadata;
+		$category->language = $language;
+
+		$category->setLocation($parent_id, 'last-child');
+		if (!$category->check())
+		{
+		   JError::raiseNotice(500, $category->getError());
+		   return false;
+		}
+		if (!$category->store(true))
+		{
+		   JError::raiseNotice(500, $category->getError());
+		   return false;
+		}
+		
+		$category->rebuildPath($category->id);
+		
+		return $category;
+	}
+	
+	function preflight($type, $parent) 
+	{
+		$this->defaultCategoryCheck();
+	}
+	
+	function postflight($type, $parent)
+    {
+		/* need to be refacrored */
+		
+		$app = JFactory::getApplication();
+		$db	= JFactory::getDBO();	
+		
+		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_r_student_share` (`id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_quiz_id` int(12) unsigned NOT NULL, `c_stu_quiz_id` int(12) unsigned NOT NULL, `c_user_id` int(12) unsigned NOT NULL, `c_share_id` varchar(64) NOT NULL, PRIMARY KEY (`id`))");
+		$db->execute();
+
+		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_dashboard_items` ( `id` int(11) NOT NULL AUTO_INCREMENT, `title` varchar(255) NOT NULL, `url` varchar(255) NOT NULL, `icon` varchar(255) NOT NULL, `published` tinyint(1) NOT NULL,  PRIMARY KEY (`id`)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;");
+		$db->execute();
+		
+		$db->setQuery("SELECT * FROM `#__quiz_dashboard_items`");
+		$dashs = $db->loadObjectList();
+		if(empty($dashs)){
+			$db->setQuery("
+				INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
+				(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/media/com_joomlaquiz/images/quizzes48.png', 1),
+				(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/media/com_joomlaquiz/images/questions48.png', 1),
+				(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '".JURI::root(true)."/media/com_joomlaquiz/images/help48.png', 1);
+			");
+			$db->execute();
+		}
+		
+		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_question_id` int(12) NOT NULL, `c_paths` text NOT NULL, PRIMARY KEY (`c_id`))");
+		$db->execute();
 	}
 }
 ?>

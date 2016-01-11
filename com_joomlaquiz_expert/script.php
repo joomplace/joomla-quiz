@@ -121,6 +121,7 @@ class com_joomlaquizInstallerScript
 			)
 		);
 
+		$db = JFactory::getDbo();
 		foreach ($newColumns as $table => $fields)
 		{
 			$oldColumns = $db->getTableColumns('#__quiz_'.$table);

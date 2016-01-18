@@ -1578,6 +1578,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					if (!$c_manual) {	
 						if (file_exists(JPATH_ROOT. '/components/com_community/libraries/userpoints.php')) {
 							include_once( JPATH_ROOT. '/components/com_community/libraries/userpoints.php');
+							include_once( JPATH_ROOT. '/components/com_community/libraries/core.php');
 							if ($user_passed) {
 								CuserPoints::assignPoint("successfully.completed.quiz".$quiz->c_id);
 							} else {

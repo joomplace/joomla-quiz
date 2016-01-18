@@ -100,7 +100,9 @@ foreach($this->categories as $categ){
 	$bought_quizzes = (isset($categ->bought_quizzes)) ? $categ->bought_quizzes : array();
 	?>
 	<div class="contentpane <?php echo (!$parent)?'child-cat':'parent-cat'; echo ' rel-level'.$cat->level; ?> joomlaquiz">
-		<h3 class="componentheading"><?php echo JText::_('COM_QUIZ_CAREGORY').": ".$cat->title; ?></h3>
+		<?php if(JFactory::getApplication()->getParams()->get('show_page_heading',0)){ ?>
+			<h1 class="componentheading"><?php echo JFactory::getApplication()->getParams()->get('page_heading',JText::_('COM_QUIZ_CAREGORY').": ".$cat->title);?></h1>
+		<?php } ?>
 		<br />	
 		<?php echo $cat->description ;?>	
 		<br />

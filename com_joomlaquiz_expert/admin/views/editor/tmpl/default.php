@@ -79,7 +79,7 @@ input.button2:hover, input.button3:hover {
 	window.addEvent('domready', function() {
 		var qwerty = getObj_frame('test_<?php echo $id;?>').innerHTML;
 		<?php 				
-		echo $editor->setContent('cdescription', 'qwerty'); 
+		echo $editor->setContent('cdescription', ''); 
 		?>		
 		timerID2 = setTimeout("get_content()", 300);
 	});

@@ -3,14 +3,14 @@
 	<name>Joomla Quiz Deluxe Package</name>
 	<author>Joomplace Team</author>
 	<creationDate>December 2012</creationDate>
-	<packagename>expert_quiz_341</packagename>
+	<packagename>quiz_341</packagename>
     <authorEmail>support@joomplace.com</authorEmail>
     <authorUrl>www.joomplace.com</authorUrl>
     <copyright>(C) JoomPlace, www.joomplace.com</copyright>
     <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
     <version>3.4.1.009</version>
 	<files folder="packages">
-		<file type="component" id="com_joomlaquiz" >com_joomlaquiz_expert.zip</file>
+		<file type="component" id="com_joomlaquiz" >com_joomlaquiz.zip</file>
 		<file type="module" id="joomlaquiz" client="site">mod_quiz_lastten.zip</file>
 		<file type="module" id="joomlaquiz" client="site">mod_quiz_myresult.zip</file>
 		<file type="module" id="joomlaquiz" client="site">mod_quiz_topxquiz.zip</file>
@@ -18,15 +18,11 @@
 		<file type="plugin" id="blank" group="joomlaquiz">plg_blank.zip</file>
 		<file type="plugin" id="boilerplate" group="joomlaquiz">plg_boilerplate.zip</file>
 		<file type="plugin" id="choice" group="joomlaquiz">plg_choice.zip</file>
-		<file type="plugin" id="dalliclick" group="joomlaquiz">plg_dalliclick.zip</file>
 		<file type="plugin" id="dragdrop" group="joomlaquiz">plg_dragdrop.zip</file>
 		<file type="plugin" id="dropdown" group="joomlaquiz">plg_dropdown.zip</file>
 		<file type="plugin" id="hotspot" group="joomlaquiz">plg_hotspot.zip</file>
-		<file type="plugin" id="imgmatch" group="joomlaquiz">plg_imgmatch.zip</file>
-		<file type="plugin" id="memory" group="joomlaquiz">plg_memory.zip</file>
 		<file type="plugin" id="mquestion" group="joomlaquiz">plg_mquestion.zip</file>
 		<file type="plugin" id="mresponse" group="joomlaquiz">plg_mresponse.zip</file>
-		<file type="plugin" id="puzzle" group="joomlaquiz">plg_puzzle.zip</file>
 		<file type="plugin" id="surveys" group="joomlaquiz">plg_surveys.zip</file>
 		<file type="plugin" id="truefalse" group="joomlaquiz">plg_truefalse.zip</file>
 		<file type="plugin" id="quiz_content" group="content">quiz_content_plugin.zip</file>

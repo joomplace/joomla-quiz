@@ -37,17 +37,29 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		$view->display();
 	}
 
-	public function save(){
-	
-		parent::save();
+		public function save(){
 		$data = JFactory::getApplication()->input->get('jform',array(),'array');
 		$task = JFactory::getApplication()->input->get('task');
-			
-		if(!$data['c_quiz_id'] && $task!='save' ){
-			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id=0');
-		}else
-		{
-		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id='.$data['c_quiz_id'] );
+	
+		switch($task){
+			case 'save2copy':
+				parent::save();
+				break;
+			case 'save2new':
+				parent::save();
+				$this->setRedirect( 'index.php?option=com_joomlaquiz&view=question&layout=edit');
+				break;
+			case 'apply':
+				parent::save();
+				break;
+			case 'save':
+			default:
+			parent::save();
+			if(!$data['c_quiz_id']){
+				$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id=0');
+			}else{
+				$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id='.$data['c_quiz_id'] );
+			}
 		}
 
 	}

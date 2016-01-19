@@ -177,7 +177,7 @@ class JoomlaquizTableQuiz extends JTable
 			return $this->c_title;
 		}
 		//----------------------------------------------------------------------------------------------------
-		protected function _getAssetParentId($table = null, $id = null)
+		protected function _getAssetParentId(JTable $table = NULL, $id = NULL)
 		{
 			$assetsTable = JTable::getInstance('Asset', 'JTable');
 			

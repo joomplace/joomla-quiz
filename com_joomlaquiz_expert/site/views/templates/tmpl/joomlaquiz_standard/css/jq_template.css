@@ -654,3 +654,81 @@ table#quiz_table label {
 .contentpane.child-cat.joomlaquiz.rel-level2 {
     margin-left: 30px;
 }
+
+.dc_layout .dc_cover_container,
+.dc_layout .dc_buttons_container {
+	display:table-cell;
+	float:none;
+	vertical-align:top;
+}
+
+.dc_pda_ver .dc_cover_container,
+.dc_pda_ver .dc_buttons_container {
+	display:block;
+	width:100%;
+	text-align:center;
+}
+.cover{
+	position:relative;
+	float:left;
+}
+.dc_pda_ver .cover {
+	float:none;
+	margin:auto;
+}
+.square
+{
+	display:block;
+	float:left;
+	border:1px solid #cccccc;
+	background:#eeeeee;
+	position:relative;
+	z-index:100;
+	-webkit-box-sizing:border-box;
+	   -moz-box-sizing:border-box;
+	        box-sizing:border-box;
+}
+.lt-ie8 .square {
+	behavior:url(/components/com_joomlaquiz/boxsizing.php);
+}
+.square {border-style:solid;} /* IE6-IE7*/
+html>/**/body .square {border-style:dotted;} /*all normal browsers*/
+
+.dc_layout {
+	display:table;
+	table-layout:fixed;
+}
+.dc_layout .dc_cover_container,
+.dc_layout .dc_buttons_container {
+	display:table-cell;
+	float:none;
+	vertical-align:top;
+}
+.dc_layout .dc_image {
+	float:none;
+    display: block;
+	position: absolute;
+}
+.dc_layout .dc_buttons_container {
+	min-width:120px;
+}
+.pause
+{
+	left: 170px;
+    position: absolute;
+    top: 50%;
+	z-index:100;
+}
+.dc_time
+{
+	margin-top:10px;
+	clear:both;
+}
+	.dc_time{
+		color:#000000;
+	}
+.jq_time_tick_container_popup .dc_time,
+.jq_time_tick_container_popup .q_time-separator{
+	font-weight:bold;
+	color:#333;
+}

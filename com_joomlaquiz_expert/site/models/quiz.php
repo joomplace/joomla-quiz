@@ -24,7 +24,11 @@ class JoomlaquizModelQuiz extends JModelList
 		$query = $db->getQuery(true);
 
 		/* get menu item params */
-		$params = $app->getParams();
+		// check because fails on article save because of content plugin
+		if(!$app->isAdmin())
+			$params = $app->getParams();
+		else
+			$params = new JRegistry();
 		
 		$error_info = '';
 		if (!isset($quiz_id) || !$quiz_id) {

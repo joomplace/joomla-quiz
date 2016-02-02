@@ -1302,7 +1302,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						if($p1 && $p2)	$results_txt = JoomlaquizHelper::jq_substr($results_txt, 0, $p1).JoomlaquizHelper::jq_substr($results_txt, $p2+29);
 					}
 
-					if(!$is_share && $quiz->c_share_buttons){
+					if($quiz->c_share_buttons){
 						$social_buttons = '<div id="jq_share"><ul><li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer.php?u='.$share_link.'\', \'_blank\');"></div></li><li><div class="jq_twitter" onclick="window.open(\'http://twitter.com/share?text='.$quiz->c_title.' '.$share_link.'\', \'_blank\');"><!--x--></div></li><li><div class="jq_linkedin" onclick="window.open(\'http://www.linkedin.com/shareArticle?mini=true&url='.$share_link.'\', \'_blank\');"><!--x--></div></li></ul></div>';
 						$results_txt = str_replace('<!-- SOCIAL BUTTONS -->', $social_buttons, $results_txt);
 					}

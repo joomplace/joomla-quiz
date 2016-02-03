@@ -77,7 +77,7 @@ if(!count($this->packages)) {
 				<?php
 				echo JText::_('COM_PACKAGES_NUMBER') . $package_number;
 				echo ' (';
-				echo JText::_('COM_PACKAGE_STATUS') . ((JText::_('COM_JOOMLAQUIZ_PACKAGE_'.strtoupper($package->order_status_name)) == 'COM_JOOMLAQUIZ_PACKAGE_'.strtoupper($package->order_status_name))?$package->order_status_name:JText::_('COM_JOOMLAQUIZ_PACKAGE_'.strtoupper($package->order_status_name))) . '; ';
+				echo JText::_('COM_PACKAGE_STATUS') . ((JText::_('COM_JOOMLAQUIZ_PACKAGE_'.strtoupper($package->order_status_name)) == 'COM_JOOMLAQUIZ_PACKAGE_'.strtoupper($package->order_status_name))?JText::_($package->order_status_name):JText::_('COM_JOOMLAQUIZ_PACKAGE_'.strtoupper($package->order_status_name))) . '; ';
 				echo JText::_('COM_PACKAGE_STATUS_FROM') . $package->order_status_date;
 				echo ')';
 				?>

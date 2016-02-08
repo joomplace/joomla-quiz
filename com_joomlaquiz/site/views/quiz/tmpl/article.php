@@ -9,6 +9,10 @@
 
 defined('_JEXEC') or die('Restricted Access');
 
+$tag = JFactory::getLanguage()->getTag();
+$lang = JFactory::getLanguage();
+$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
+
 $article = $article_data->article;
 $params = $article_data->params;
 $user = $article_data->user;

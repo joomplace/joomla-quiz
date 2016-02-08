@@ -75,7 +75,9 @@ $document->addScriptDeclaration("
 				echo JHtml::_('content.prepare',$short_des[0]); 
 			?>
 			
-			<?php if ($lpath_item->show_link) {						
+			<?php 
+			$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
+			if ($lpath_item->show_link) {						
 				$item_id_name = ($lpath_item->type == 'q' ? 'quiz_id' : 'article_id');?>
 				<br />
 				<div id="jq_start_link_container" style="float:right; margin-right:15px; line-height: 32px; text-transform: uppercase; width: auto !important; background-position: right center !important;">

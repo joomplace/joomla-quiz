@@ -200,6 +200,14 @@ CREATE TABLE IF NOT EXISTS `#__quiz_templates` (
 		`id` int(11) NOT NULL auto_increment,
 		`template_name` varchar(250) NOT NULL,
 		PRIMARY KEY  (`id`) ) DEFAULT CHARSET=utf8;
+		
+INSERT INTO `#__quiz_templates` (`id`, `template_name`) VALUES
+(1, 'joomlaquiz_standard'),
+(2, 'joomlaquiz_t3_bs3'),
+(3, 'joomlaquiz_blue'),
+(4, 'joomlaquiz_simple'),
+(5, 'joomlaquiz_pretty_green'),
+(6, 'joomlaquiz_pretty_blue');
 
 CREATE TABLE IF NOT EXISTS `#__quiz_setup` (
 		`c_par_name` varchar(20) NOT NULL default '',

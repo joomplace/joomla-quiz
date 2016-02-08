@@ -392,11 +392,14 @@ class JoomlaquizModelQuestions extends JModelList
 		
 		$db = JFactory::getDBO();
 		$quiz_id = $this->getState('filter.quiz_id');
-		
-		$query = "SELECT c_question_id FROM `#__quiz_t_pbreaks` WHERE `c_quiz_id` = '$quiz_id'";
-		$db->setQuery( $query );
-		$pbreaks = $db->loadColumn();
-		$pbreaks = (is_array($pbreaks)? $pbreaks: array());
+		if($this->state->get('list.ordering')=='ordering'){
+			$query = "SELECT c_question_id FROM `#__quiz_t_pbreaks` WHERE `c_quiz_id` = '$quiz_id'";
+			$db->setQuery( $query );
+			$pbreaks = $db->loadColumn();
+			$pbreaks = (is_array($pbreaks)? $pbreaks: array());
+		}else{
+			$pbreaks = array();
+		}
 		
 		return $pbreaks;
 	}

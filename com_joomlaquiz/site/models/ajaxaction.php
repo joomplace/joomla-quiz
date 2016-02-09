@@ -48,6 +48,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 			default:		
 			break;
 		}
+			
+		$jq_ret_str = JHtml::_('content.prepare',$jq_ret_str);
 		
 		$regex  = '#href="index.php\?([^"]*)#m';
 		$jq_ret_str = preg_replace_callback($regex, function ($matches) {return 'href="'.JRoute::_(str_replace('href="','',$matches[0]));}, $jq_ret_str);

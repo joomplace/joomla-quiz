@@ -1611,10 +1611,14 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 	var answer = '';
 	var url = '&ajax_task=' + jq_task + '&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id;
 	for(var n=0; n < quest_count; n++) {
+		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 0, '');
+	   // jq_QuizContinueFinish
+	}
+	for(var n=0; n < quest_count; n++) {
 		answer = '';
 		if (!questions[n].disabled) {
 			switch (questions[n].cur_quest_type) {
-				<?php JoomlaquizHelper::getJavascriptIncludes('nextfinish');?>
+				<?php JoomlaquizHelper::getJavascriptIncludes('next');?>
 				case '9':
 					answer = 0;
 				break;

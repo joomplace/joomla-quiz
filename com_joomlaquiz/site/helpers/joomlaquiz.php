@@ -802,7 +802,7 @@ class JoomlaquizHelper
 						if(count($include_files)){
 							foreach($include_files as $include_file){
 								echo "\n";
-								include_once(JPATH_SITE.'/plugins/joomlaquiz/'.$folder.'/js/'.$dir.'/'.$include_file);
+								include(JPATH_SITE.'/plugins/joomlaquiz/'.$folder.'/js/'.$dir.'/'.$include_file);
 							}
 						} else {
 							echo "";

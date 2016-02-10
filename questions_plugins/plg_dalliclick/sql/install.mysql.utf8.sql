@@ -20,7 +20,5 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_dalliclick` (
 			  `c_elapsed_time` int(10) NOT NULL,
 			  PRIMARY KEY (`c_id`)
 			) DEFAULT CHARSET=utf8;
-			
-ALTER TABLE `#__quiz_t_question` ADD `sq_delayed` INT( 5 ) NOT NULL DEFAULT '1';
 		
 UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'dalliclick';

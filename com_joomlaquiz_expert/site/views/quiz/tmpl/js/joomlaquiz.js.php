@@ -1690,21 +1690,39 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 0, '');
 	   // jq_QuizContinueFinish
 	}
+	
 	for(var n=0; n < quest_count; n++) {
-		answer = '';
-		if (!questions[n].disabled) {
-			switch (questions[n].cur_quest_type) {
-				<?php JoomlaquizHelper::getJavascriptIncludes('next');?>
-				case '9':
-					answer = 0;
-				break;
-			}
-			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]='+answer;
-		} else {
-			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]=';
+		if (questions[n].disabled) {
+			continue;
+		}
+		switch (questions[n].cur_quest_type) {
+			<?php JoomlaquizHelper::getJavascriptIncludes('next');?>
+		}
+		if (quiz_blocked) {
+			try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {}
+			<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
+			var qid = jq_jQuery('.error_messagebox_quest').attr('id');
+			ShowMessage(qid, 1, mes_please_wait);
+			<?php } else { ?>
+			ShowMessage('error_messagebox', 1, mes_please_wait);
+			<?php } ?>
+			setTimeout("jq_releaseBlock()", 1000);
+			return;
 		}
 	}
-	jq_MakeRequest(url, 1);
+	if (!quiz_blocked) {
+		quiz_blocked = 1;
+		timerID = setTimeout("jq_QuizNext()", 300);
+	} else {
+		try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {}
+		<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
+		var qid = jq_jQuery('.error_messagebox_quest').attr('id');
+		ShowMessage(qid, 1, mes_please_wait);
+		<?php } else { ?>
+		ShowMessage('error_messagebox', 1, mes_please_wait);
+		<?php } ?>
+		setTimeout("jq_releaseBlock()", 1000);
+	}
 }
 
 function jq_UpdateTaskDiv(task, skip_question) {

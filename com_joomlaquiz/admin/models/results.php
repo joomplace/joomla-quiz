@@ -121,6 +121,19 @@ class JoomlaquizModelResults extends JModelList
 			$query->join('LEFT', '`#__quiz_t_quiz` as `q` ON sq.c_quiz_id = q.c_id');
 			$query->where('1=1');
 			
+			$sub_query = $db->getQuery(true);
+			$sub_query->select('`rq`.`c_stu_quiz_id`, COUNT(`rq`.`c_id`) AS `q_count`')
+				->from('`#__quiz_r_student_question` AS `rq`')
+				->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
+				->group('`rq`.`c_stu_quiz_id`');
+			if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+				$sub_query->where('`tq`.`c_type` != 9');
+			}
+			$sub_query = (string)$sub_query;
+			
+			$query->join('LEFT', "($sub_query) AS `sqr` ON `sqr`.`c_stu_quiz_id` = `sq`.`c_id`");
+			$query->select('`sqr`.`q_count`');
+			
 			// Filter by search in title.
 			$search = $this->getState('filter.search');
 			if (!empty($search))
@@ -165,7 +178,10 @@ class JoomlaquizModelResults extends JModelList
 		$query->leftJoin("#__quiz_t_question as q ON sp.c_question_id = q.c_id");		
 		$query->leftJoin("#__quiz_t_qtypes as qt ON q.c_type = qt.c_id");		
 		$query->leftJoin("`#__extensions` as `e` ON e.element = qt.c_type");		
-		$query->where("sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'");		
+		$query->where("sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'");	
+		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+			$query->where('`q`.`c_type` != 9');	
+		}	
 		$query->order("q.ordering, q.c_id");				
 		return $query;	
 	}			
@@ -260,7 +276,15 @@ class JoomlaquizModelResults extends JModelList
 		
 		if (is_array($quizzies) && count($quizzies) > 0)
 		foreach($quizzies as $quiz_number=>$quiz_id) {
-			$query = "SELECT * FROM `#__quiz_t_question` WHERE `c_id` IN ('".implode("','", $questions_arr)."') AND published = 1 ORDER BY `ordering`, `c_id`";
+			$query = $database->getQuery(true);
+			$query->select('*')
+				->from('`#__quiz_t_question`')
+				->where("`c_id` IN ('".implode("','", $questions_arr)."')")
+				->where("`published` = 1")
+				->order("`ordering`, `c_id`");
+			if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+				$query->where('`c_type` != 9');
+			}
 			$database->setQuery( $query );
 			$questions = $database->loadObjectList();
 			

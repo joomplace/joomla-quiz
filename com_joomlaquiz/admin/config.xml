@@ -20,6 +20,15 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+		<field name="hide_boilerplates" 
+			type="hidden"	
+			default="0"	
+			class="btn-group"
+			label="Hide boilerplates" 
+			description="Hide boilerplates in reports">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 	</fieldset>
 		
 	<fieldset name="permissions"

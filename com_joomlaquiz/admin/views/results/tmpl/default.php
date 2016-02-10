@@ -131,6 +131,9 @@ $sortFields = $this->getSortFields();
 			</tfoot>
 			<tbody>
 			<?php foreach ($this->items as $i => $item) :
+				if(!$item->q_count){
+					continue;
+				}
 				if (!$item->c_student_id){
 					if($item->user_name != '' && $item->user_email == ''){
 						$item->username = $item->user_name;

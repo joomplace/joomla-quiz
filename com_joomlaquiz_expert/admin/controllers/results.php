@@ -98,7 +98,15 @@ class JoomlaquizControllerResults extends JControllerAdmin
 				if(!empty($qch_ids)){
 					foreach($qch_ids as $qch_id){
 						$qchids = explode('*', $qch_id);
-						$database->setQuery("SELECT * FROM `#__quiz_t_question` WHERE `c_id` IN (".implode(',', $qchids).") AND `published` = 1");
+						$query = $database->getQuery(true);
+						$query->select('*')
+							->from('`#__quiz_t_question`')
+							->where("`c_id` IN (".implode(',', $qchids).")")
+							->where("`published` = 1");
+						if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+							$query->where('`c_type` != 9');
+						}
+						$database->setQuery($query);
 						$question = $database->loadObjectList();
 
 						$questions = array_merge($questions, $question);

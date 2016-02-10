@@ -136,7 +136,15 @@ class JoomlaquizModelPrintresult extends JModelList
 			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 			$pdf->Ln();
 		}		
-		$query = "SELECT c_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$sid."' ORDER BY c_id ";
+		$query = $database->getQuery(true);
+		$query->select('`rq`.`c_id`')
+			->from('`#__quiz_r_student_question` AS `rq`')
+			->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
+			->order('`c_id`');
+		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+			$query->where('`tq`.`c_type` != 9');
+		}
+		$query->where('`rq`.`c_stu_quiz_id` = "'.$sid.'"');
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
 		$total = count($info);
@@ -250,7 +258,15 @@ class JoomlaquizModelPrintresult extends JModelList
 		}		
 		$str .= " \n";
 		
-		$query = "SELECT c_id, remark FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$sid."' ORDER BY c_id ";
+		$query = $database->getQuery(true);
+		$query->select('`rq`.`c_id`, `rq`.`remark`')
+			->from('`#__quiz_r_student_question` AS `rq`')
+			->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
+			->order('`c_id`');
+		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+			$query->where('`tq`.`c_type` != 9');
+		}
+		$query->where('`rq`.`c_stu_quiz_id` = "'.$sid.'"');
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
 		$total = count($info);

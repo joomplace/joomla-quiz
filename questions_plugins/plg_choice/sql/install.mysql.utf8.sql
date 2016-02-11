@@ -21,4 +21,3 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_choice` (
 		KEY `c_sq_id` (`c_sq_id`),
 		KEY `c_choice_id` (`c_choice_id`) ) DEFAULT CHARSET=utf8;
 		
-UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'choice';

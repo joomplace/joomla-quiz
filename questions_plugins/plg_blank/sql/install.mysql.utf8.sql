@@ -37,4 +37,3 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_blank` (
 		PRIMARY KEY  (`c_id`),
 		KEY `c_question_id` (`c_question_id`) ) DEFAULT CHARSET=utf8;
 		
-UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'blank';

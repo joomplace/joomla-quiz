@@ -21,9 +21,4 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_matching` (
 			KEY `c_sq_id` (`c_sq_id`),
 			KEY `c_matching_id` (`c_matching_id`) ) DEFAULT CHARSET=utf8;
 			
-ALTER TABLE `#__quiz_r_student_question` ADD `c_elapsed_time` INT( 10 ) NOT NULL;
-ALTER TABLE `#__quiz_t_question` ADD `c_width` INT( 10 ) NOT NULL DEFAULT '150';
-ALTER TABLE `#__quiz_t_question` ADD `c_timer` INT( 10 ) NOT NULL;
-ALTER TABLE `#__quiz_t_question` ADD `c_height` INT( 10 ) NOT NULL DEFAULT '150';
 
-UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'imgmatch';

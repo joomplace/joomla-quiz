@@ -21,4 +21,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_matching` (
 			KEY `c_sq_id` (`c_sq_id`),
 			KEY `c_matching_id` (`c_matching_id`) ) DEFAULT CHARSET=utf8;
 			
+			UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'imgmatch';
+			
 

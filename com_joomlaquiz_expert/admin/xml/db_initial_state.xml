@@ -1,0 +1,771 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <database name="">
+  <table_structure name="#__quiz_certificates">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="cert_name" Type="varchar(50)" Null="NO" Key="" Extra="" />
+   <field Field="cert_file" Type="varchar(50)" Null="NO" Key="" Extra="" />
+   <field Field="crtf_align" Type="varchar(100)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="crtf_shadow" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="text_x" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="text_y" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="text_size" Type="tinyint(4)" Null="NO" Key="" Default="10" Extra="" />
+   <field Field="crtf_text" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="text_font" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_certificates" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_cert_fields">
+   <field Field="c_id" Type="int(11) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="cert_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="f_text" Type="text" Null="YES" Key="" Extra="" />
+   <field Field="text_x" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="text_y" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="text_h" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="shadow" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="font" Type="varchar(255)" Null="YES" Key="" Default="arial.ttf" Extra="" />
+   <key Table="#__quiz_cert_fields" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_configuration">
+   <field Field="config_var" Type="varchar(50)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="config_value" Type="text" Null="NO" Key="" Extra="" />
+  </table_structure>
+  <table_structure name="#__quiz_constants">
+   <field Field="c_id" Type="int(11) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="key_value" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="default_value" Type="text" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_constants" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_dashboard_items">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="title" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <field Field="url" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <field Field="icon" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <field Field="published" Type="tinyint(1)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_dashboard_items" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_export">
+   <field Field="eid" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="e_filename" Type="varchar(100)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="e_date" Type="date" Null="NO" Key="" Default="0000-00-00" Extra="" />
+   <field Field="e_quizes" Type="text" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_export" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="eid" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_feed_option">
+   <field Field="quiz_id" Type="int(11)" Null="NO" Key="PRI" Extra="" />
+   <field Field="from_percent" Type="char(3)" Null="NO" Key="PRI" Extra="" />
+   <field Field="to_percent" Type="char(3)" Null="NO" Key="PRI" Extra="" />
+   <field Field="fmessage" Type="text" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_feed_option" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="quiz_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_feed_option" Non_unique="0" Key_name="PRIMARY" Seq_in_index="2" Column_name="from_percent" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_feed_option" Non_unique="0" Key_name="PRIMARY" Seq_in_index="3" Column_name="to_percent" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_languages">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="lang_file" Type="varchar(50)" Null="YES" Key="" Extra="" />
+   <field Field="is_default" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_languages" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_lpath">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="title" Type="varchar(255)" Null="YES" Key="" Extra="" />
+   <field Field="paid_check" Type="tinyint(1)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="short_descr" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <field Field="descr" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="published" Type="tinyint(4)" Null="YES" Key="" Extra="" />
+   <field Field="asset_id" Type="int(18)" Null="NO" Key="" Extra="" />
+   <field Field="lp_access_message" Type="text" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_lpath" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_lpath_quiz">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="lid" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="type" Type="char(1)" Null="NO" Key="" Extra="" />
+   <field Field="qid" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="order" Type="int(11)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_lpath_quiz" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_lpath_stage">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="uid" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="oid" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="rel_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="lpid" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="type" Type="char(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="qid" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="stage" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="attempts" Type="int(5)" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_lpath_stage" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_payments">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="processor" Type="varchar(255)" Null="YES" Key="" Extra="" />
+   <field Field="status" Type="varchar(255)" Null="YES" Key="" Extra="" />
+   <field Field="amount" Type="decimal(12,5)" Null="YES" Key="" Extra="" />
+   <field Field="cur_code" Type="char(3)" Null="YES" Key="" Extra="" />
+   <field Field="date" Type="datetime" Null="YES" Key="" Default="0000-00-00 00:00:00" Extra="" />
+   <field Field="pid" Type="varchar(32)" Null="NO" Key="" Extra="" />
+   <field Field="user_id" Type="int(11)" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="checked_out" Type="int(11)" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="checked_out_time" Type="datetime" Null="YES" Key="" Default="0000-00-00 00:00:00" Extra="" />
+   <field Field="confirmed_time" Type="datetime" Null="YES" Key="" Default="0000-00-00 00:00:00" Extra="" />
+   <key Table="#__quiz_payments" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_pool">
+   <field Field="q_id" Type="int(11)" Null="NO" Key="PRI" Default="0" Extra="" />
+   <field Field="q_cat" Type="int(11)" Null="NO" Key="PRI" Default="0" Extra="" />
+   <field Field="q_count" Type="int(11)" Null="NO" Key="PRI" Default="0" Extra="" />
+   <key Table="#__quiz_pool" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="q_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_pool" Non_unique="0" Key_name="PRIMARY" Seq_in_index="2" Column_name="q_cat" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_pool" Non_unique="0" Key_name="PRIMARY" Seq_in_index="3" Column_name="q_count" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_products">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="pid" Type="varchar(32)" Null="YES" Key="" Extra="" />
+   <field Field="type" Type="char(1)" Null="YES" Key="" Extra="" />
+   <field Field="rel_id" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="xdays" Type="int(5)" Null="NO" Key="" Extra="" />
+   <field Field="period_start" Type="date" Null="NO" Key="" Extra="" />
+   <field Field="period_end" Type="date" Null="NO" Key="" Extra="" />
+   <field Field="attempts" Type="int(5)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_products" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_products_stat">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="uid" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="oid" Type="int(11)" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="qp_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="xdays_start" Type="datetime" Null="NO" Key="" Default="0000-00-00 00:00:00" Extra="" />
+   <field Field="period_start" Type="date" Null="NO" Key="" Default="0000-00-00" Extra="" />
+   <field Field="period_end" Type="date" Null="NO" Key="" Default="0000-00-00" Extra="" />
+   <field Field="attempts" Type="int(3)" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_products_stat" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_product_info">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="name" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <field Field="quiz_sku" Type="varchar(32)" Null="YES" Key="" Extra="" />
+   <key Table="#__quiz_product_info" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_q_cat">
+   <field Field="qc_id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="qc_category" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="qc_instruction" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="qc_tag" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_q_cat" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="qc_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_q_chain">
+   <field Field="quiz_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="user_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="q_chain" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="s_unique_id" Type="varchar(32)" Null="NO" Key="PRI" Default="" Extra="" />
+   <key Table="#__quiz_q_chain" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="s_unique_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_blank">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_sq_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_answer" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="is_correct" Type="tinyint(3)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_r_student_blank" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_blank" Non_unique="1" Key_name="c_sq_id" Seq_in_index="1" Column_name="c_sq_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_choice">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_sq_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_choice_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <key Table="#__quiz_r_student_choice" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_choice" Non_unique="1" Key_name="c_sq_id" Seq_in_index="1" Column_name="c_sq_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_choice" Non_unique="1" Key_name="c_choice_id" Seq_in_index="1" Column_name="c_choice_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_dalliclick">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_sq_id" Type="int(10)" Null="NO" Key="" Extra="" />
+   <field Field="c_choice_id" Type="int(10)" Null="NO" Key="" Extra="" />
+   <field Field="c_elapsed_time" Type="int(10)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_r_student_dalliclick" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_hotspot">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_sq_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_select_x" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_select_y" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_r_student_hotspot" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_hotspot" Non_unique="1" Key_name="c_sq_id" Seq_in_index="1" Column_name="c_sq_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_matching">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_sq_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_sel_text" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_matching_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <key Table="#__quiz_r_student_matching" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_matching" Non_unique="1" Key_name="c_sq_id" Seq_in_index="1" Column_name="c_sq_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_matching" Non_unique="1" Key_name="c_matching_id" Seq_in_index="1" Column_name="c_matching_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_memory">
+   <field Field="c_id" Type="int(11) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_sq_id" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="c_mid" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="c_elapsed_time" Type="int(11)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_r_student_memory" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_puzzle">
+   <field Field="c_id" Type="int(11) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_sq_id" Type="int(11) unsigned" Null="NO" Key="" Extra="" />
+   <field Field="c_piece" Type="int(10)" Null="NO" Key="" Extra="" />
+   <field Field="c_elapsed_time" Type="int(10)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_r_student_puzzle" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_question">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_stu_quiz_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_question_id" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_score" Type="float" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="c_attempts" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="is_correct" Type="tinyint(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="remark" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="reviewed" Type="tinyint(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_flag_question" Type="tinyint(2)" Null="NO" Key="" Extra="" />
+   <field Field="c_elapsed_time" Type="int(10)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_r_student_question" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_question" Non_unique="1" Key_name="c_stu_quiz_id" Seq_in_index="1" Column_name="c_stu_quiz_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_quiz">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_quiz_id" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_student_id" Type="int(11) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_total_score" Type="float" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_total_time" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_date_time" Type="datetime" Null="NO" Key="" Default="0000-00-00 00:00:00" Extra="" />
+   <field Field="c_passed" Type="tinyint(1) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="unique_id" Type="varchar(32)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="allow_review" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_order_id" Type="int(11)" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="c_rel_id" Type="int(11)" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="c_lid" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="unique_pass_id" Type="varchar(32)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_finished" Type="tinyint(4)" Null="YES" Key="" Default="1" Extra="" />
+   <field Field="user_email" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_passing_score" Type="decimal(12,2)" Null="NO" Key="" Default="0.00" Extra="" />
+   <field Field="c_max_score" Type="decimal(12,2)" Null="NO" Key="" Default="0.00" Extra="" />
+   <field Field="user_name" Type="varchar(50)" Null="NO" Key="" Extra="" />
+   <field Field="user_surname" Type="varchar(100)" Null="NO" Key="" Extra="" />
+   <field Field="params" Type="varchar(1024)" Null="NO" Key="" Default="{}" Extra="" />
+   <key Table="#__quiz_r_student_quiz" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_quiz" Non_unique="1" Key_name="c_student_id" Seq_in_index="1" Column_name="c_student_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_share">
+   <field Field="id" Type="int(12) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_quiz_id" Type="int(12) unsigned" Null="NO" Key="" Extra="" />
+   <field Field="c_stu_quiz_id" Type="int(12) unsigned" Null="NO" Key="" Extra="" />
+   <field Field="c_user_id" Type="int(12) unsigned" Null="NO" Key="" Extra="" />
+   <field Field="c_share_id" Type="varchar(64)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_r_student_share" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_r_student_survey">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_sq_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_answer" Type="text" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_r_student_survey" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_r_student_survey" Non_unique="1" Key_name="c_sq_id" Seq_in_index="1" Column_name="c_sq_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_setup">
+   <field Field="c_par_name" Type="varchar(20)" Null="NO" Key="PRI" Default="" Extra="" />
+   <field Field="c_par_value" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <key Table="#__quiz_setup" Non_unique="0" Key_name="c_par_name" Seq_in_index="1" Column_name="c_par_name" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_templates">
+   <field Field="id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="template_name" Type="varchar(250)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_templates" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_blank">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_question_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="ordering" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="points" Type="float" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="css_class" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <field Field="c_quiz_id" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="gtype" Type="tinyint(1)" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_t_blank" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_blank" Non_unique="1" Key_name="c_question_id" Seq_in_index="1" Column_name="c_question_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_category">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_category" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_instruction" Type="text" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_t_category" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_choice">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_choice" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_right" Type="char(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_question_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="ordering" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_incorrect_feed" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="a_point" Type="float" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_quiz_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_t_choice" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_choice" Non_unique="1" Key_name="c_question_id" Seq_in_index="1" Column_name="c_question_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_dalliclick">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_choice" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_right" Type="char(1)" Null="NO" Key="" Extra="" />
+   <field Field="c_question_id" Type="int(10)" Null="NO" Key="" Extra="" />
+   <field Field="ordering" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="c_incorrect_feed" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="a_point" Type="float" Null="NO" Key="" Extra="" />
+   <field Field="c_quiz_id" Type="int(11)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_t_dalliclick" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_ext_hotspot">
+   <field Field="c_id" Type="int(12) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_question_id" Type="int(12)" Null="NO" Key="" Extra="" />
+   <field Field="c_paths" Type="text" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_t_ext_hotspot" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_faketext">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_quest_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_text" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <key Table="#__quiz_t_faketext" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_faketext" Non_unique="1" Key_name="c_quest_id" Seq_in_index="1" Column_name="c_quest_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_hotspot">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_question_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_start_x" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_start_y" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_width" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_height" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_t_hotspot" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_hotspot" Non_unique="1" Key_name="c_question_id" Seq_in_index="1" Column_name="c_question_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_matching">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_question_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_left_text" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_right_text" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="ordering" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_quiz_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="a_points" Type="float" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_t_matching" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_matching" Non_unique="1" Key_name="c_question_id" Seq_in_index="1" Column_name="c_question_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_memory">
+   <field Field="m_id" Type="int(11) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_question_id" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="a_points" Type="float" Null="NO" Key="" Extra="" />
+   <field Field="c_img" Type="varchar(50)" Null="NO" Key="" Extra="" />
+   <field Field="a_pairs" Type="int(10)" Null="NO" Key="" Default="1" Extra="" />
+   <key Table="#__quiz_t_memory" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="m_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_pbreaks">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_quiz_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_question_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <key Table="#__quiz_t_pbreaks" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_pbreaks" Non_unique="1" Key_name="c_quiz_id" Seq_in_index="1" Column_name="c_quiz_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_pbreaks" Non_unique="1" Key_name="c_question_id" Seq_in_index="1" Column_name="c_question_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_puzzle">
+   <field Field="c_id" Type="int(11) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_question_id" Type="int(11)" Null="NO" Key="" Extra="" />
+   <field Field="c_pieces" Type="int(11)" Null="NO" Key="" Default="4" Extra="" />
+   <key Table="#__quiz_t_puzzle" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_qtypes">
+   <field Field="c_id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_qtype" Type="varchar(50)" Null="NO" Key="" Extra="" />
+   <field Field="c_type" Type="varchar(50)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_t_qtypes" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_question">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_quiz_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_point" Type="float" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_attempts" Type="int(11) unsigned" Null="YES" Key="" Default="1" Extra="" />
+   <field Field="c_question" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_image" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_type" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="ordering" Type="int(11)" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="c_right_message" Type="text" Null="YES" Key="" Extra="" />
+   <field Field="c_wrong_message" Type="text" Null="YES" Key="" Extra="" />
+   <field Field="c_feedback" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="cq_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_ques_cat" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_random" Type="char(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_partial" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_partially_message" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="published" Type="tinyint(4)" Null="YES" Key="" Default="1" Extra="" />
+   <field Field="c_title_true" Type="varchar(255)" Null="YES" Key="" Extra="" />
+   <field Field="c_title_false" Type="varchar(255)" Null="YES" Key="" Extra="" />
+   <field Field="c_qform" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="report_name" Type="varchar(255)" Null="NO" Key="" Extra="" />
+   <field Field="c_layout" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_separator" Type="tinyint(4)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_manual" Type="tinyint(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_penalty" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_immediate" Type="tinyint(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_detailed_feedback" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_time_limit" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_show_timer" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="sq_delayed" Type="int(5)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_width" Type="int(10)" Null="NO" Key="" Default="150" Extra="" />
+   <field Field="c_timer" Type="int(10)" Null="NO" Key="" Extra="" />
+   <field Field="c_height" Type="int(10)" Null="NO" Key="" Default="150" Extra="" />
+   <field Field="c_column" Type="int(11)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_img_cover" Type="varchar(50)" Null="NO" Key="" Default="tnnophoto.jpg" Extra="" />
+   <field Field="c_sec_penalty" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_t_question" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_question" Non_unique="1" Key_name="c_quiz_id" Seq_in_index="1" Column_name="c_quiz_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_quiz">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_category_id" Type="int(11) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_user_id" Type="int(11) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_author" Type="varchar(255)" Null="NO" Key="MUL" Default="" Extra="" />
+   <field Field="c_full_score" Type="float" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_title" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_description" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_short_description" Type="text" Null="YES" Key="" Extra="" />
+   <field Field="c_image" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_time_limit" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_min_after" Type="int(10) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_passing_score" Type="float" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_created_time" Type="date" Null="NO" Key="" Default="0000-00-00" Extra="" />
+   <field Field="c_published" Type="char(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_right_message" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_wrong_message" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_pass_message" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_unpass_message" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_enable_review" Type="char(1)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_email_to" Type="tinyint(1) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_email_chk" Type="tinyint(1) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_enable_print" Type="char(1)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_enable_sertif" Type="char(1)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="c_skin" Type="tinyint(3) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_random" Type="tinyint(1) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_guest" Type="tinyint(1) unsigned" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="published" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_slide" Type="tinyint(4)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_language" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_certificate" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_feedback" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_pool" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_resbycat" Type="char(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_feed_option" Type="char(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_show_quest_pos" Type="tinyint(4)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_show_quest_points" Type="tinyint(4)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_show_author" Type="tinyint(1)" Null="NO" Key="" Extra="" />
+   <field Field="c_show_timer" Type="tinyint(4)" Null="YES" Key="" Default="1" Extra="" />
+   <field Field="c_once_per_day" Type="tinyint(4)" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="c_emails" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_timer_style" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_statistic" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_metadescr" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_keywords" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_metatitle" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_ismetadescr" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_iskeywords" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_ismetatitle" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_number_times" Type="int(11)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_pagination" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_enable_prevnext" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="paid_check" Type="tinyint(1)" Null="YES" Key="" Default="1" Extra="" />
+   <field Field="paid_check_descr" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_allow_continue" Type="tinyint(1)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_autostart" Type="tinyint(4)" Null="YES" Key="" Default="0" Extra="" />
+   <field Field="c_redirect_after" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_redirect_delay" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_redirect_linktype" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_redirect_link" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_grading" Type="tinyint(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_ifmanual" Type="tinyint(1)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_enable_skip" Type="tinyint(3)" Null="NO" Key="" Extra="" />
+   <field Field="c_show_result" Type="tinyint(3)" Null="NO" Key="" Default="1" Extra="" />
+   <field Field="c_show_qfeedback" Type="tinyint(3)" Null="NO" Key="" Extra="" />
+   <field Field="c_flag" Type="tinyint(3)" Null="NO" Key="" Extra="" />
+   <field Field="c_hide_feedback" Type="tinyint(3)" Null="NO" Key="" Extra="" />
+   <field Field="c_share_buttons" Type="tinyint(3)" Null="NO" Key="" Extra="" />
+   <field Field="c_quiz_access_message" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_quiz_certificate_access_message" Type="text" Null="NO" Key="" Extra="" />
+   <field Field="c_pool_breaks" Type="tinyint(5)" Null="NO" Key="" Extra="" />
+   <field Field="asset_id" Type="int(18)" Null="NO" Key="" Extra="" />
+   <field Field="c_auto_breaks" Type="tinyint(5)" Null="NO" Key="" Extra="" />
+   <key Table="#__quiz_t_quiz" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_quiz" Non_unique="1" Key_name="c_user_id" Seq_in_index="1" Column_name="c_user_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_quiz" Non_unique="1" Key_name="c_author" Seq_in_index="1" Column_name="c_author" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_quiz" Non_unique="1" Key_name="c_category_id" Seq_in_index="1" Column_name="c_category_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_structure name="#__quiz_t_text">
+   <field Field="c_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+   <field Field="c_blank_id" Type="int(10) unsigned" Null="NO" Key="MUL" Default="0" Extra="" />
+   <field Field="c_text" Type="varchar(255)" Null="NO" Key="" Default="" Extra="" />
+   <field Field="ordering" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="c_quiz_id" Type="int(11)" Null="NO" Key="" Default="0" Extra="" />
+   <field Field="regexp" Type="tinyint(4)" Null="NO" Key="" Default="0" Extra="" />
+   <key Table="#__quiz_t_text" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="c_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+   <key Table="#__quiz_t_text" Non_unique="1" Key_name="c_blank_id" Seq_in_index="1" Column_name="c_blank_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+  </table_structure>
+  <table_data name="#__quiz_certificates">
+   <record id="1" cert_name="Certificate Green" cert_file="certificate_green.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font=""  />
+   <record id="2" cert_name="Certificate Blue" cert_file="certificate_blue.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font=""  />
+   <record id="3" cert_name="Certificate Beige" cert_file="certificate_beige.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font=""  />
+  </table_data>
+  <table_data name="#__quiz_cert_fields">
+   <record c_id="1" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="2" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="3" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="4" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="5" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="6" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="7" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="8" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="9" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="10" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="11" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="12" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="13" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="14" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="15" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="16" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="17" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="18" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="19" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="20" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="21" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="22" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="23" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="24" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="25" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="26" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="27" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="28" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="29" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="30" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="31" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="32" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="33" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="34" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="35" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="36" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="37" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="38" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="39" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="40" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="41" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="42" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="43" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="44" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="45" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="46" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="47" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="48" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="49" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="50" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="51" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="52" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="53" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="54" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="55" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="56" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="57" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="58" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="59" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="60" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="61" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="62" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="63" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="64" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="65" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="66" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="67" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="68" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="69" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="70" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="71" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="72" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="73" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="74" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="75" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="76" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="77" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="78" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="79" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="80" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="81" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="82" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="83" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="84" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="85" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="86" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="87" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="88" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="89" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="90" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="91" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="92" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="93" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="94" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="95" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="96" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="97" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="98" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="99" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="100" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="101" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="102" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="103" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="104" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="105" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="106" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="107" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="108" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="109" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="110" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="111" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="112" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="113" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="114" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="115" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="116" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="117" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="118" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="119" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="120" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="121" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="122" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="123" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="124" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="125" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="126" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="127" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="128" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="129" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="130" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="131" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="132" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="133" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="134" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="135" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="136" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="137" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="138" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="139" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="140" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="141" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="142" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="143" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="144" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="145" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="146" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="147" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="148" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="149" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="150" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="151" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="152" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="153" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="154" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="155" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="156" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="157" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="158" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="159" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="160" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="161" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="162" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="163" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="164" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="165" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="166" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="167" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="168" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="169" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="170" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="171" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="172" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="173" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="174" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="175" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="176" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="177" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="178" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="179" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="180" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="181" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="182" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="183" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="184" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="185" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="186" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="187" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="188" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="189" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="190" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="191" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="192" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="193" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="194" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="195" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="196" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="197" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="198" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="199" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="200" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="201" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="202" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="203" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="204" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="205" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="206" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="207" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="208" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="209" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="210" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="211" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="212" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="213" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="214" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="215" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="216" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="217" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="218" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="219" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="220" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="221" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="222" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="223" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="224" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="225" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="226" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="227" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="228" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="229" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="230" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="231" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="232" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="233" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="234" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="235" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="236" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="237" cert_id="2" f_text="#reg_answer#" text_x="170" text_y="680" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="238" cert_id="2" f_text="dated from #date(d F Y)#" text_x="170" text_y="630" text_h="20" shadow="0" font="arial.ttf"  />
+   <record c_id="239" cert_id="2" f_text="#course#" text_x="170" text_y="570" text_h="20" shadow="1" font="arial.ttf"  />
+   <record c_id="240" cert_id="2" f_text="#name#" text_x="350" text_y="450" text_h="20" shadow="1" font="arial.ttf"  />
+  </table_data>
+  <table_data name="#__quiz_dashboard_items">
+   <record id="1" title="Manage Quizzes" url="index.php?option=com_joomlaquiz&amp;view=quizzes" icon="administrator/components/com_joomlaquiz/assets/images/quizzes48.png" published="1"  />
+   <record id="2" title="Manage Questions" url="index.php?option=com_joomlaquiz&amp;view=questions" icon="administrator/components/com_joomlaquiz/assets/images/questions48.png" published="1"  />
+   <record id="3" title="Help" url="http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html" icon="administrator/components/com_joomlaquiz/assets/images/help48.png" published="1"  />
+  </table_data>
+  <table_data name="#__quiz_templates">
+   <record id="1" template_name="joomlaquiz_standard"  />
+   <record id="2" template_name="joomlaquiz_t3_bs3"  />
+   <record id="3" template_name="joomlaquiz_blue"  />
+   <record id="4" template_name="joomlaquiz_simple"  />
+   <record id="5" template_name="joomlaquiz_pretty_green"  />
+   <record id="6" template_name="joomlaquiz_pretty_blue"  />
+  </table_data>
+ </database>
+</mysqldump>

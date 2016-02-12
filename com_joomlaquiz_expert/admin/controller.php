@@ -69,4 +69,12 @@ class JoomlaquizController extends JControllerLegacy
 		    }
 		    exit();
         }
+		
+		public function fix_database(){
+			JPluginHelper::importPlugin( 'joomplace_lab' );
+			$dispatcher = JEventDispatcher::getInstance();
+			$results = $dispatcher->trigger('fixTableStructure');
+			JFactory::getApplication()->enqueueMessage(JText::_('JDONE'));
+			$this->diplay();
+		}
 }

@@ -16,5 +16,4 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_puzzle` (
 			  PRIMARY KEY (`c_id`)
 			) DEFAULT CHARSET=utf8;
 
-UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'puzzle';
-			
+		UPDATE `#__extensions` SET `enabled` = 1 WHERE `element` = 'puzzle';

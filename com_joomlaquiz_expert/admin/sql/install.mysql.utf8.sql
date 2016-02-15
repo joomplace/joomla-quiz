@@ -42,7 +42,17 @@ INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_
 (2, 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'),
 (3, 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'),
 (4, 2, '#course#', 170, 570, 20, 1, 'arial.ttf'),
-(5, 2, '#name#', 350, 450, 20, 1, 'arial.ttf');
+(5, 2, '#name#', 350, 450, 20, 1, 'arial.ttf'),
+(6, 1, 'For the successful completion of quiz:', 180, 620, 20, 0, 'arial.ttf'),
+(7, 1, '#reg_answer#', 180, 780, 20, 0, 'arial.ttf'),
+(8, 1, 'dated from #date(d F Y)#', 180, 730, 20, 0, 'arial.ttf'),
+(9, 1, '#course#', 180, 670, 20, 1, 'arial.ttf'),
+(10, 1, '#name#', 350, 580, 20, 1, 'arial.ttf'),
+(11, 3, 'For the successful completion of quiz:', 320, 410, 16, 0, 'arial.ttf'),
+(12, 3, '#reg_answer#', 520, 480, 16, 0, 'arial.ttf'),
+(13, 3, 'dated from #date(d F Y)#', 690, 620, 16, 0, 'arial.ttf'),
+(14, 3, '#course#', 690, 410, 16, 1, 'arial.ttf'),
+(15, 3, '#name#', 540, 360, 16, 1, 'arial.ttf');
 
 
 

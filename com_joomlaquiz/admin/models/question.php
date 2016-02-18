@@ -50,6 +50,7 @@ class JoomlaquizModelQuestion extends JModelAdmin
 				$id = $app->getUserState('com_joomlaquiz.edit.question.c_id');
 				if ($id) $data->set('c_id', JFactory::getApplication()->input->getInt('c_id', $id));
 			}
+			$data->set('c_quiz_id', JFactory::getApplication()->getUserState('quizzes.filter.quiz_id'));
 		}
 		
 		return $data;

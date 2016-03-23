@@ -20,6 +20,17 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+		
+		<field 
+			name="download_certificate" 
+			type="radio"	
+			default="0"	
+			class="btn-group"
+			label="Download certificate" 
+			description="Auto download certificate as attachment if 'yes', open certificate as image if 'no'">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		<field name="hide_boilerplates" 
 			type="hidden"	
 			default="0"	

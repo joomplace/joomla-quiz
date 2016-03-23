@@ -229,6 +229,22 @@ class JoomlaquizModelQcategory extends JModelList
 
 			$data = new stdClass;
 			$data->cat = $cat;
+		
+			$user = JFactory::getUser();
+			foreach($rows as $i => $quizz){	
+				if($quizz->paid_check || !$quizz->c_guest){
+					// need to run checks
+					if(!$user->id){
+						// need to check permissions
+						if(!$user->authorise('core.view', 'com_joomlaquiz.quiz.'.$quizz->c_id)){
+							unset($rows[$i]);
+						}
+					}
+					// need to check packages
+					// feature to release(after refactoring)
+				}
+			}
+			
 			$data->rows = $rows;
 			$data->lpaths = $lpaths;
 			$data->bought_quizzes = $bought_quizzes;

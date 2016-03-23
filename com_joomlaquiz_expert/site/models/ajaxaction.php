@@ -1363,7 +1363,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 					
 					
-					if ($fin_message && !$is_share) {
+					if ($fin_message && (!$is_share || $false_share)) {
 						$results_txt = str_replace('<!-- QUIZ FINAL MESSAGE -->', $fin_message, $results_txt);
 					} else {
 						$p1 = JoomlaquizHelper::jq_strpos($results_txt, '<!-- FIN MESSAGE BEGIN -->');

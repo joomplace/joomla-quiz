@@ -73,6 +73,7 @@ class JoomlaquizController extends JControllerLegacy
 		public function fix_database(){
 			JPluginHelper::importPlugin( 'joomplace_lab' );
 			$dispatcher = JEventDispatcher::getInstance();
+			new plgSystemDatabaseFixer($dispatcher,array());
 			$results = $dispatcher->trigger('fixTableStructure');
 			JFactory::getApplication()->enqueueMessage(JText::_('JDONE'));
 			$this->diplay();

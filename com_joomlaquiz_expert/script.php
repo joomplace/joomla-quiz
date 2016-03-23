@@ -315,8 +315,10 @@ class com_joomlaquizInstallerScript
 			$db->execute();
 		}
 
+		/*
 		$db->setQuery("INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES ('', 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'), ('', 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'), ('', 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'), ('', 2, '#course#', 170, 570, 20, 1, 'arial.ttf'), ('', 2, '#name#', 350, 450, 20, 1, 'arial.ttf');");
 		$db->execute();
+		*/
 		
 		$this->migrateCategories();
     }

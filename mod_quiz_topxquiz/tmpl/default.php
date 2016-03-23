@@ -19,7 +19,7 @@ defined('_JEXEC') or die;
 <?php
 $sec_tbl = 1;
 foreach ($result as $one_res) {
-	echo "<tr><td class='sectiontableentry".$sec_tbl.$moduleclass_sfx."'><div style='width:100%; overflow:hidden'>".$one_res->c_title."</div></td><td class='sectiontableentry".$sec_tbl.$moduleclass_sfx."'><div style='width:100%; overflow:hidden'>".$one_res->c_total_score."</div></td></tr>";
+	echo "<tr><td class='sectiontableentry".$sec_tbl.$moduleclass_sfx."'><div style='width:100%; overflow:hidden'><a href='index.php?option=com_joomlaquiz&view=quiz&quiz_id=".$one_res->qid."'>".$one_res->c_title."</a></div></td><td class='sectiontableentry".$sec_tbl.$moduleclass_sfx."'><div style='width:100%; overflow:hidden'>".$one_res->c_total_score."</div></td></tr>";
 	if ($sec_tbl == 1) $sec_tbl = 2;
 	else $sec_tbl = 1;
 }

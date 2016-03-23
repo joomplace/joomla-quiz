@@ -10,13 +10,13 @@ CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
   `crtf_text` text NOT NULL,
   `text_font` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 INSERT INTO `#__quiz_certificates` (`id`, `cert_name`, `cert_file`, `crtf_align`, `crtf_shadow`, `text_x`, `text_y`, `text_size`, `crtf_text`, `text_font`) VALUES
-(1, 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', ''),
-(2, 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', ''),
-(3, 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '');
+('', 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', ''),
+('', 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', ''),
+('', 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '');
 
 -- --------------------------------------------------------
 

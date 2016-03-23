@@ -151,12 +151,26 @@ class JoomlaquizModelQuizzes extends JModelList
 		foreach ($quizzes_to_copy as $quiz2copy) {
 			$new_quiz = $this->getTable();
 			
-			if (!$new_quiz->bind( $quiz2copy )) { echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+			if (!$new_quiz->bind( $quiz2copy )) { 
+				echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); 
+			}
 			$new_quiz->published = 0;
-			$new_quiz->c_id = 0; $new_quiz->c_category_id = $categoryCopy; $new_quiz->c_title = JText::_('COM_JOOMLAQUIZ_COPY_OF') . $new_quiz->c_title;
-			if (!$new_quiz->check()) { echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-			if (!$new_quiz->store()) { echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+			$new_quiz->c_id = 0; 
+			$new_quiz->c_category_id = $categoryCopy; 
+			$new_quiz->c_title = JText::_('COM_JOOMLAQUIZ_COPY_OF') . $new_quiz->c_title;
+			if (!$new_quiz->check()) { 
+				echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); 
+			}
+			if (!$new_quiz->store()) { 
+				echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); 
+			}
 			$new_quiz_id = $new_quiz->c_id;
+			$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz2copy['c_id']."'";
+			$pool = $database->SetQuery( $query )->loadObjectList();
+			foreach($pool as $pool_conf_item){
+				$pool_conf_item->q_id = $new_quiz_id;
+				$database->insertObject('#__quiz_pool', $pool_conf_item);
+			}
 			$query = "SELECT c_id FROM #__quiz_t_question WHERE c_quiz_id = '".$quiz2copy['c_id']."'";
 			$database->SetQuery( $query );
 			$cid = $database->loadColumn();

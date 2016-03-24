@@ -44,7 +44,7 @@ class com_joomlaquizInstallerScript
 			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'certificate_beige.jpg', JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_beige.jpg');
 		}
 		
-		/* is this needed? //  need to be refactored  */
+		/* copy font used for certificate //  need to be refactored  */
 		JFile::copy($adminDir . DS . 'assets' .DS. 'fonts' .DS. 'arial.ttf', JPATH_SITE . DS . 'media' . DS . 'arial.ttf');
 		
 	}

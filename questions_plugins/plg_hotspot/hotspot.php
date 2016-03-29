@@ -240,7 +240,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 		
-		if($data['c_score']) 
+		if($data['data']['is_correct']) 
 			$answer = JText::_('COM_QUIZ_PDF_RIGHT');
 		else 
 			$answer = ' '.JText::_('COM_QUIZ_PDF_WRONG');

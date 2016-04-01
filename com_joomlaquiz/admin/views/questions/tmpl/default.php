@@ -183,7 +183,7 @@ $sortFields = $this->getSortFields();
 					<td class="nowrap has-context">
                         <div>
                         <?php
-                            $question = strip_tags($item->c_question);
+							$question = $item->c_question;
                             $length =100;
                             $dots="...";
                             $spacebar= ' ';
@@ -193,8 +193,8 @@ $sortFields = $this->getSortFields();
                                 $question = $part.$dots;
                             }
                             if ($canEdit && $item->enabled) : ?>
-						<a title="<?php echo strip_tags($item->c_question); ?>" href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&task=question.edit&c_id='.$item->c_id);?>"><?php echo $question; ?></a>
-                        <?php else : ?>
+								<a title="<?php echo $this->escape($item->c_question); ?>" href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&task=question.edit&c_id='.$item->c_id);?>"><?php echo $question; ?></a>
+							<?php else : ?>
                             <?php echo $this->escape($question); ?>
                         <?php endif; ?>
                         </div>

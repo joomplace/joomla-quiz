@@ -267,7 +267,16 @@ class JoomlaquizModelQuestions extends JModelList
 		unset($_SESSION['com_joomlaquiz.copy.questions.cids']);
 		return $msg;
 	}
-	
+
+	public function getItems(){
+		$items = parent::getItems();
+
+		foreach ($items as $item) {
+			$item->c_question = html_entity_decode(strip_tags($item->c_question));
+		}
+
+		return $items;
+	}
     /**
     * Method to build an SQL query to load the list data.
 	*

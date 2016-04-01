@@ -26,9 +26,7 @@ $id = JFactory::getApplication()->input->get( 'id', '' );
 				
 function get_content() {
 	var qwerty = getObj_frame('test_<?php echo $id;?>').innerHTML;
-	<?php 	
-		echo $editor->setContent('cdescription', 'qwerty');			
-	?>	
+	WFEditor.setContent('cdescription',qwerty);
 }
 			
 function save_content() {

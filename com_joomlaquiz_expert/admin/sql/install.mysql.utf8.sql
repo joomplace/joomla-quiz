@@ -88,9 +88,9 @@ CREATE TABLE IF NOT EXISTS `#__quiz_dashboard_items` (
 
 
 INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
-(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '/media/com_joomlaquiz/images/quizzes48.png', 1),
-(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '/media/com_joomlaquiz/images/questions48.png', 1),
-(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '/media/com_joomlaquiz/images/help48.png', 1);
+(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
+(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
+(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
 
 
 

@@ -22,7 +22,7 @@
 			name="c_category_id" 
 			type="category" 
 			extension="com_joomlaquiz" 
-			label="COM_JOOMLAQUIZ_CATEGORY" 
+			label="COM_JOOMLAQUIZ_CATEGORY2"
 			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUIZCAT" 
 		/>
 		<field name="c_author" type="text" default="" size="30"

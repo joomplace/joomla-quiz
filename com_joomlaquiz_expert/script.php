@@ -57,34 +57,36 @@ class com_joomlaquizInstallerScript
     function update($parent)
     {
 			
-		$xml = JFactory::getXML(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml');
-		$this->version_from = $version = preg_split( '/(\s|\.)/', $xml->version );
-		if($version[1]<=4 && $version[2]<1){
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query->select('*')
-				->from('`#__menu`')
-				->where('`link` LIKE "%com_joomlaquiz%"');
-			$db->setQuery($query);
-			$menu_items = $db->loadObjectList();
-			
-			$query->clear();
-			$query->select('*')
-				->from('`#__categories`')
-				->where('`extension` LIKE "%com_joomlaquiz%"');
-			$db->setQuery($query);
-			$categories = $db->loadObjectList('note');
-		
-			foreach($menu_items as $mi){
-				$mi->params = json_decode($mi->params);
-				$mi->params->cat_id = $categories[$mi->params->cat_id]->id;
-				$mi->params = json_encode($mi->params);
-				$query->clear();
-				$query->update('`#__menu`')
-					->where('`id` = '.$mi->id)
-					->set('`params` = '.$db->q($mi->params).'');
+		if(file_exists(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml')){
+			$xml = JFactory::getXML(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml');
+			$this->version_from = $version = preg_split( '/(\s|\.)/', $xml->version );
+			if($version[1]<=4 && $version[2]<1){
+				$db = JFactory::getDbo();
+				$query = $db->getQuery(true);
+				$query->select('*')
+					->from('`#__menu`')
+					->where('`link` LIKE "%com_joomlaquiz%"');
 				$db->setQuery($query);
-				$db->execute();
+				$menu_items = $db->loadObjectList();
+				
+				$query->clear();
+				$query->select('*')
+					->from('`#__categories`')
+					->where('`extension` LIKE "%com_joomlaquiz%"');
+				$db->setQuery($query);
+				$categories = $db->loadObjectList('note');
+			
+				foreach($menu_items as $mi){
+					$mi->params = json_decode($mi->params);
+					$mi->params->cat_id = $categories[$mi->params->cat_id]->id;
+					$mi->params = json_encode($mi->params);
+					$query->clear();
+					$query->update('`#__menu`')
+						->where('`id` = '.$mi->id)
+						->set('`params` = '.$db->q($mi->params).'');
+					$db->setQuery($query);
+					$db->execute();
+				}
 			}
 		}
 

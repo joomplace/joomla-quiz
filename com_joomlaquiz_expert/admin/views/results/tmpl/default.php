@@ -119,12 +119,18 @@ $sortFields = $this->getSortFields();
 					<th>
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_SPEND_TIME', 'c_total_time', $listDirn, $listOrder); ?>
 					</th>
+					<th>
+						<?php echo JText::_('PDF'); ?>
+					</th>
+					<th>
+						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_CERTIFICATES', 'c_passed', $listDirn, $listOrder); ?>
+					</th>
 					<?php echo JHtml::_('content.prepare','',$this->items,'admin.results.table.head'); ?>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<td colspan="<?php echo 10+(int)JHtml::_('content.prepare','',$this->items,'admin.results.table.count'); ?>">
+					<td colspan="<?php echo 12+(int)JHtml::_('content.prepare','',$this->items,'admin.results.table.count'); ?>">
 						<?php echo $this->pagination->getListFooter(); ?>
 					</td>
 				</tr>
@@ -216,6 +222,20 @@ $sortFields = $this->getSortFields();
 								echo str_pad($tot_min,2, "0", STR_PAD_LEFT).":".str_pad($tot_sec,2, "0", STR_PAD_LEFT);
 							?>
                         </div>
+					</td>
+					<td class="has-context">
+						<a href="/<?php echo JUri::root(true).'index.php?option=com_joomlaquiz&view=results&task=printresult.get_pdf&stu_quiz_id='.$item->c_id.'&user_unique_id='.$item->unique_id; ?>">
+							<span class="icon-file-2"></span>
+						</a> 
+					</td>
+					<td class="has-context">
+						<?php if($item->c_passed){ ?>
+						<span class="text-center" style="width:100%;display: inline-block;">
+							<a href="<?php echo JUri::root(true).JRoute::_('index.php?option=com_joomlaquiz&view=results&task=printcert.get_certificate&stu_quiz_id='.$item->c_id.'&user_unique_id='.$item->unique_id); ?>">
+								<span class="icon-file-check"></span>
+							</a>
+						</span>
+						<?php } ?>
 					</td>
 					<?php echo JHtml::_('content.prepare','',$item,'admin.results.table.row'); ?>
 				</tr>

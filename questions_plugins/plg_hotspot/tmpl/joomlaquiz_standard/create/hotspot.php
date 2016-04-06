@@ -242,7 +242,6 @@ HTMLEND;
 				
 		drawPolygons = function(){
 			var paths = new Array();
-			var path_elems = new Array();
 			{$path_str}
 
 			if(viewport_width < wOrigin){

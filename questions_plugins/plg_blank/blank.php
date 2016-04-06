@@ -215,7 +215,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		if($all_this)
 		{
 			$query = "SELECT count(*)"
-			. "\n FROM #__quiz_r_student_question as sp LEFT JOIN #__quiz_t_question as q ON (sp.c_question_id = q.c_id AND q.published = 1) WHERE q.c_id='".$data['q_data']->c_id."' AND sp.c_score >= q.c_point";
+			. "\n FROM #__quiz_r_student_question as sp LEFT JOIN #__quiz_t_question as q ON (sp.c_question_id = q.c_id AND q.published = 1) WHERE q.c_id='".$data['q_data']->c_id."' AND sp.is_correct";
 			$database->setQuery($query);
 			$right_this = $database->LoadResult();
 			$blank_overal = "<br /><div class='review_statistic'>".JText::_('COM_QUIZ_RST_PPAST')." ".$all_this." ".JText::_('COM_QUIZ_RST_PPAST_TIMES').", ".round($right_this*100/$all_this)."% ".JText::_('COM_QUIZ_RST_ARIGHT')."</div>";
@@ -298,7 +298,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		if($all_this)
 		{
 			$query = "SELECT count(*)"
-			. "\n FROM #__quiz_r_student_question as sp LEFT JOIN #__quiz_t_question as q ON (sp.c_question_id = q.c_id AND q.published = 1) WHERE q.c_id='".$data['q_data']->c_id."' AND sp.c_score >= q.c_point";
+			. "\n FROM #__quiz_r_student_question as sp LEFT JOIN #__quiz_t_question as q ON (sp.c_question_id = q.c_id AND q.published = 1) WHERE q.c_id='".$data['q_data']->c_id."' AND sp.is_correct";
 			$database->setQuery($query);
 			$right_this = $database->LoadResult();
 			$blank_overal = "<div class='review_statistic'>".JText::_('COM_QUIZ_RST_PPAST')." ".$all_this." ".JText::_('COM_QUIZ_RST_PPAST_TIMES').", ".round($right_this*100/$all_this)."% ".JText::_('COM_QUIZ_RST_ARIGHT')."</div>";

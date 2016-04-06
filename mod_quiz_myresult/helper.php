@@ -31,7 +31,9 @@ class modMyresultHelper
 		}
 		
 		if ($my->id) {
-			$query = "SELECT qtq.c_title, qrsq.c_total_score FROM #__quiz_t_quiz qtq, #__quiz_r_student_quiz qrsq WHERE qtq.c_id = qrsq.c_quiz_id and qrsq.c_passed = '1' and qrsq.c_student_id = '".$my->id."'";
+			$query = "SELECT qtq.c_title, qtq.c_id as qid, qrsq.c_total_score 
+			FROM #__quiz_t_quiz qtq, #__quiz_r_student_quiz qrsq 
+			WHERE qtq.c_id = qrsq.c_quiz_id and qrsq.c_passed = '1' and qrsq.c_student_id = '".$my->id."'";
 			if ($quiz_id) {
 				$quiz_ids = explode( ',', $quiz_id );
 				if(count($quiz_ids)){

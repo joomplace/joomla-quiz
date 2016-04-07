@@ -1,18 +1,7 @@
  <div class="tab-pane" id="question-image">
 		<fieldset class="adminform">
 			<legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IMAGE')?></legend>
-			<table class="admintable" style="margin-top:2px; margin-bottom:2px; ">
-				<tr><td><span style="padding-left:20px ">
-					<?php echo JText::_('COM_JOOMLAQUIZ_THE_IMAGE_WIDTH_CANNOT_BE');?>
-					</span><br />
-					<span style="padding-left:20px ">
-					<?php echo JText::_('COM_JOOMLAQUIZ_TAFTER_SELECTING_AN_IMAGE');?>
-					</span><br />
-					<span style="padding-left:20px ">
-					<?php echo JText::_('COM_JOOMLAQUIZ_PLEASE_NOTE_THAT_INSOME_JOOMLA');?>
-					</span>
-				</td></tr>
-			</table>
+				<?php echo JText::_('COM_JOOMLAQUIZ_PUZZLE_OPTIONS_TEXT');?>
 			<table width="100%" class="adminform" style="margin-top:15px;">
 				<tr>
 					<td><?php echo JText::_('COM_JOOMLAQUIZ_IMAGE');?></td>

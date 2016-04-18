@@ -799,4 +799,22 @@ window.onload = function (){
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
 	}
+	
+	/* dumb code here as we`ve not renamed our columns still */
+	var initialGetElementById = document.getElementById;
+	document.getElementById = function(){
+		if(arguments[0] == 'jform_title'){
+			return initialGetElementById.apply(document, ['jform_c_title']);
+		}else{
+			return initialGetElementById.apply(document, arguments);
+		}
+	}
+	var initialgetUrlParam = getUrlParam;
+	getUrlParam = function(){
+		if(arguments[0] == 'id'){
+			return initialgetUrlParam.apply(document, ['c_id']);
+		}else{
+			return initialgetUrlParam.apply(document, arguments);
+		}
+	}
 </script>

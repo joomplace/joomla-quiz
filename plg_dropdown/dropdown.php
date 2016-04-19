@@ -30,6 +30,14 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 			JoomlaquizHelper::JQ_GetJoomFish($match_data[$t]->c_right_text, 'quiz_t_matching', 'c_right_text', $match_data[$t]->c_id);
 			JoomlaquizHelper::JQ_GetJoomFish($match_data[$t]->c_left_text, 'quiz_t_matching', 'c_left_text', $match_data[$t]->c_id);
 		}
+
+		/*Change language before ajax post*/
+		$lang = JFactory::getLanguage();
+		$extension = 'com_joomlaquiz';
+		$base_dir = JPATH_SITE;
+		$language_tag = $lang->getTag();;
+		$reload = true;
+		$lang->load($extension, $base_dir, $language_tag, $reload);
 						
 		$shuffle_match = $match_data;
 		shuffle($shuffle_match);

@@ -1,3 +1,19 @@
+CREATE TABLE IF NOT EXISTS `#__quiz_r_student_puzzle` (
+      `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+      `c_sq_id` int(11) unsigned NOT NULL,
+      `c_piece` int(10) NOT NULL,
+      `c_elapsed_time` int(10) NOT NULL,
+      PRIMARY KEY (`c_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `#__quiz_r_student_memory` (
+      `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+      `c_sq_id` int(11) NOT NULL,
+      `c_mid` int(11) NOT NULL,
+      `c_elapsed_time` int(11) NOT NULL,
+      PRIMARY KEY (`c_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+
 ALTER TABLE `#__quiz_certificates` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 ALTER TABLE `#__quiz_cert_fields` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 ALTER TABLE `#__quiz_configuration` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;

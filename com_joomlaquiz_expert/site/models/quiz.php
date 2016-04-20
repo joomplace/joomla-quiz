@@ -322,8 +322,7 @@ class JoomlaquizModelQuiz extends JModelList
 			}
 									
 			/* check if has access */
-			$q_allow_guest = $quiz_params->c_guest;
-			if(!$user->id && !$quiz_params->c_guest) {
+			if(!JFactory::getUser()->authorise('core.view', 'com_joomlaquiz.quiz.'.$quiz_params->c_id) /* c_guest must be excluded */&& (!JFactory::getUser()->id && !$quiz_params->c_guest)) {
 				$quiz_params->error = 1;
 				$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_REG_ONLY').'</p>';
 				return $quiz_params;

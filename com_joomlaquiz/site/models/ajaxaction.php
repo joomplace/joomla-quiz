@@ -101,6 +101,33 @@ class JoomlaquizModelAjaxaction extends JModelList
 		die;
 	}
 	
+	protected function userHasAccess($quiz, $user = null){
+		
+		if(!is_object($quiz)){		
+			$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".(int)$quiz."'";
+			$database->SetQuery ($query );
+			$quiz = $database->LoadObject();
+		}
+		
+		if($user===null){
+			$user = JFactory::getUser();
+		}else{
+			if(!is_object($user)){
+				$user = JFactory::getUser($user);
+			}
+		}
+		
+		if(
+			!$quiz->published 
+			|| 
+			(!$user->authorise('core.view', 'com_joomlaquiz.quiz.'.$quiz->c_id) /* c_guest must be excluded */&& (!$user->id && !$quiz->c_guest))
+		){ 
+			return false; 
+		}else{
+			return true;
+		}
+	}
+	
 	public function JQ_StartQuiz() {
 		
 		$database = JFactory::getDBO(); 
@@ -119,12 +146,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		
 		if (count($quiz)) { $quiz = $quiz[0];
 		} else { return $ret_str; }
+
+		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
 		
-		if ( ($quiz->published) ) {
-			if ( ($my->id) ) {
-			} elseif ($quiz->c_guest) {
-			} else { return $ret_str; }
-		} else { return $ret_str; }
+		if(!$this->userHasAccess($quiz, $my)){
+			return $ret_str;
+		}
 
 		if ($quiz_id) {
 			
@@ -455,12 +482,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (count($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
+
+		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
 		
-		if ( ($quiz->published) ) {
-			if ( ($my->id) ) {
-			} elseif ($quiz->c_guest) {
-			} else { return $ret_str; }
-		} else { return $ret_str; }
+		if(!$this->userHasAccess($quiz, $my)){
+			return $ret_str;
+		}
 
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
 		$quest_ids = JFactory::getApplication()->input->get( 'quest_id', array(), '' );
@@ -677,12 +704,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (count($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
+
+		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
 		
-		if ( ($quiz->published) ) {
-			if ( ($my->id) ) {
-			} elseif ($quiz->c_guest) {
-			} else { return $ret_str; }
-		} else { return $ret_str; }
+		if(!$this->userHasAccess($quiz, $my)){
+			return $ret_str;
+		}
 
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
 		$quest_ids = JFactory::getApplication()->input->get( 'quest_id', array(), '' );
@@ -924,14 +951,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$is_share = 1;
 			$false_share = true;
 		}
+
+		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
 		
-		if ( ($quiz->published) ) {
-			if(!$is_share){
-				if ( ($my->id) ) {
-				} elseif ($quiz->c_guest) {
-				} else { return $ret_str; }
-			}
-		} else { return $ret_str; }
+		if(!$this->userHasAccess($quiz, $my)){
+			return $ret_str;
+		}
 
 		if ($quiz_id) {
 			$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
@@ -1645,12 +1670,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (count($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
-				
-		if ( ($quiz->published) ) {
-			if ( ($my->id) ) {
-			} elseif ($quiz->c_guest) {
-			} else { return $ret_str; }
-		} else { return $ret_str; }
+
+		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
+		
+		if(!$this->userHasAccess($quiz, $my)){
+			return $ret_str;
+		}
 
 		if ($quiz_id) {
 			$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
@@ -1810,12 +1835,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (count($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
+
+		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
 		
-		if ( ($quiz->published) ) {
-			if ( ($my->id) ) {
-			} elseif ($quiz->c_guest) {
-			} else { return $ret_str; }
-		} else { return $ret_str; }
+		if(!$this->userHasAccess($quiz, $my)){
+			return $ret_str;
+		}
 
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
 		$quest_ids =  JFactory::getApplication()->input->get( 'quest_id', array(), '') ;
@@ -2092,12 +2117,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (count($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
+
+		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
 		
-		if ( ($quiz->published) ) {
-			if ( ($my->id) ) {
-			} elseif ($quiz->c_guest) {
-			} else { return $ret_str; }
-		} else { return $ret_str; }
+		if(!$this->userHasAccess($quiz, $my)){
+			return $ret_str;
+		}
 
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
 
@@ -2226,12 +2251,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (count($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
+
+		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
 		
-		if ( ($quiz->published) ) {
-			if ( ($my->id) ) {
-			} elseif ($quiz->c_guest) {
-			} else { return $ret_str; }
-		} else { return $ret_str; }
+		if(!$this->userHasAccess($quiz, $my)){
+			return $ret_str;
+		}
 
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
 		$quest_ids = JFactory::getApplication()->input->get( 'quest_id', array(), '' );

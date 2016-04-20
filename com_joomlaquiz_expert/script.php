@@ -322,7 +322,6 @@ class com_joomlaquizInstallerScript
 		$db->execute();
 		*/
 		
-		$this->migrateCategories();
     }
 
 	function migrateCategories(){
@@ -514,6 +513,8 @@ class com_joomlaquizInstallerScript
 		
 		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_question_id` int(12) NOT NULL, `c_paths` text NOT NULL, PRIMARY KEY (`c_id`))");
 		$db->execute();
+		
+		$this->migrateCategories();
 	}
 }
 ?>

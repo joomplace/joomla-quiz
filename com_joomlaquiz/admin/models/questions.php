@@ -188,32 +188,26 @@ class JoomlaquizModelQuestions extends JModelList
 					if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 				}
 			}
-			if ( ($quest2copy['c_type'] == 4)) {
+			if  ($quest2copy['c_type'] == 4 || $quest2copy['c_type'] == 5) {
 				$query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = '".$old_quest_id."'";
 				$database->setQuery( $query );
 				$fields_to_copy = $database->loadAssocList();
+				$profile = new stdClass();
+
 				foreach ($fields_to_copy as $field2copy) {
-					$new_field = $this->getTable("Matching Drag&Drop");
-					if (!$new_field->bind( $field2copy )) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-					$new_field->c_id = 0;
-					$new_quest->ordering = 0;
-					$new_field->c_question_id = $new_quest_id;
-					if (!$new_field->check()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-					if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-				}
-			}
-			if (($quest2copy['c_type'] == 5)) {
-				$query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = '".$old_quest_id."'";
-				$database->setQuery( $query );
-				$fields_to_copy = $database->loadAssocList();
-				foreach ($fields_to_copy as $field2copy) {
-					$new_field = $this->getTable("Matching Drop-Down");
-					if (!$new_field->bind( $field2copy )) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-					$new_field->c_id = 0;
-					$new_quest->ordering = 0;
-					$new_field->c_question_id = $new_quest_id;
-					if (!$new_field->check()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-					if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+
+					// Create and populate an object.
+					$profile->c_question_id = $new_quest_id;
+					$profile->c_left_text = $field2copy['c_left_text'];
+					$profile->c_right_text = $field2copy['c_right_text'];
+					$profile->ordering = 0;
+					$profile->c_quiz_id = $field2copy['c_quiz_id'];
+					$profile->a_points = $field2copy['a_points'];
+
+					// Insert the object into the user profile table.
+					$result = JFactory::getDbo()->insertObject('#__quiz_t_matching', $profile);
+
+					if (!$result) JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_COPY_ANSWER_TO_QUIZ_ERROR'));
 				}
 			}
 			if ( ($quest2copy['c_type'] == 6)) {

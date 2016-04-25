@@ -408,7 +408,7 @@ function jq_MakeRequest(url, do_clear, silent) {
 	<?php } ?>
 
 	lp_url_prefix2 = jq_clean_amp("tmpl=component&lang=<?php echo _JQ_JF_LANG;?>&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces" + url_prefix2);
-	var post_target = jq_clean_amp('<?php echo $live_url;?>index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
+	var post_target = jq_clean_amp('/index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
 	http_request.open("POST", post_target, true);
 	http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	http_request.send(jq_clean_amp(lp_url_prefix2 + url));

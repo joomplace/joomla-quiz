@@ -206,10 +206,21 @@ class JoomlaquizModelResults extends JModelList
 		}				
 		return $rows;	
 	}		
-	public function getItemSum($row){			
-		$database = JFactory::getDBO();				
-		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = '".$row->c_question_id."' AND c_right = 1";		
-		$database->SetQuery( $query );		
+	public function getItemSum($row){
+
+		$database = JFactory::getDBO();
+
+		switch ($row->c_type) {
+			case 5: // DropDown
+			case 4: //Drag&Drop
+				$query = "SELECT SUM(a_points) FROM #__quiz_t_matching WHERE c_question_id = '". $row->c_question_id ."'";
+				break;
+
+			default:
+				$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = '" . $row->c_question_id . "' AND c_right = 1";
+		}
+
+		$database->SetQuery($query);
 		return $database->LoadResult();
 	}
 	

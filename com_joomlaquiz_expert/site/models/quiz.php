@@ -79,13 +79,13 @@ class JoomlaquizModelQuiz extends JModelList
 				->where($db->qn('qid').' = '.$db->q($article_id));
 		
 			$sub_query = (string)$query;
-			
+
 			$query->clear();
-			$query->select($db->qn('type'))
-				->select($db->qn('qid'))
-				->from($db->qn('#__quiz_lpath_quiz'))
-				->where($db->qn('lid').' = '.$db->q($lid))
-				->where($db->qn('order').' > ('.$sub_query.')');
+			$query->select($db->qn( array('a.type','a.qid')))
+				->from($db->qn('#__quiz_lpath_quiz', 'a'))
+				->where($db->qn('a.lid').' = '.$db->q($lid).' AND '.$db->qn('a.order').' > ('.$sub_query.')')
+				->order('a.order ASC');
+
 			$db->setQuery($query,0,1);
 			/* loading next step */
 			$next = $db->loadObject();

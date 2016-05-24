@@ -453,6 +453,11 @@ class JoomlaquizHelper
 		public static function JQ_Email($sid, $email_to) {
 			
 			$database = JFactory::getDBO();
+
+			$query = "SELECT q.c_title AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
+			$database->SetQuery( $query );
+			$info = $database->LoadAssocList();
+			$info = $info[0];
 			
 			if (!preg_match("/^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$/i", $email_to)) {
 				return false;
@@ -464,7 +469,7 @@ class JoomlaquizHelper
 			$str = JoomlaquizModelPrintresult::JQ_PrintResultForMail($sid);
 			
 			$email = $email_to;
-			$subject = JText::_('COM_QUIZ_RESULTS');
+			$subject = JText::_('COM_QUIZ_RESULTS').'('.$info['quiz_id'].')';
 			$message = html_entity_decode($str, ENT_QUOTES);
 			
 			$config = new JConfig();

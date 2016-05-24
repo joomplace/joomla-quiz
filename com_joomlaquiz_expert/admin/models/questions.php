@@ -420,16 +420,6 @@ class JoomlaquizModelQuestions extends JModelList
 			
 			$quiz_id			= JFactory::getApplication()->input->get('filter_quiz_id', 0);
 			
-			require_once(JPATH_BASE.'/components/com_joomlaquiz/assets/csv/DataSource.php');
-
-			$csv = new File_CSV_DataSource; 
-			if($csv->load($userfileTempName)) {
-				$rows = $csv->connect();
-			} else {	
-				$msg = JText::_('COM_JOOMLAQUIZ_UPLOAD_FAILED');
-				echo "<script> alert('".$msg."'); window.history.go(-1); </script>\n"; exit();		
-			}
-			
 			JLoader::register('JoomlaquizControllerQuizzes', JPATH_COMPONENT_ADMINISTRATOR.'/controllers/quizzes.php');
 			$quiz_controller = new JoomlaquizControllerQuizzes();
 			
@@ -437,6 +427,38 @@ class JoomlaquizModelQuestions extends JModelList
 			$qcat_id = 0;
 			$quest_id = 0;
 			$opt_ordering = 0;
+
+			/*******************PARSE CSV FILE***********************/
+
+			$csv = file_get_contents($userfileTempName);
+			$rows = explode("\r",str_replace("\n","\r",$csv));
+			$rows = array_filter($rows);
+
+			$rowsAssoc = array();
+			$keys = array();
+
+			$i = 0;
+
+			if(!$rows) {
+				$msg = JText::_('COM_JOOMLAQUIZ_UPLOAD_FAILED');
+				echo "<script> alert('".$msg."'); window.history.go(-1); </script>\n"; exit();
+			}
+
+			foreach ($rows as $row){
+				$row = str_getcsv($row);
+				if ($i === 0) $keys = $row;
+				else {
+					$rowAssoc = array();
+					for ($i = 0; $i < count($row); $i++) {
+						$rowAssoc[$keys[$i]] = $row[$i];
+					}
+					array_push($rowsAssoc, $rowAssoc);
+				}
+				$i++;
+			}
+
+			$rows = $rowsAssoc;
+			/*********************************************************/
 
 			foreach($rows as $values) {
 				if (!$values['question/answer text']) continue;

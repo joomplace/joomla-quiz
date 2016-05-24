@@ -1620,7 +1620,7 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 			continue;
 		}
 		switch (questions[n].cur_quest_type) {
-			<?php JoomlaquizHelper::getJavascriptIncludes('next');?>
+			<?php JoomlaquizHelper::getJavascriptIncludes('nextfinish');?>
 		}
 		if (quiz_blocked) {
 			try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {}

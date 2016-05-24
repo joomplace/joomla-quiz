@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter">
+        <field
+			name="search"
+			type="text"
+			label="COM_BANNERS_SEARCH_IN_TITLE"
+			hint="JSEARCH_FILTER"
+			class="js-stools-search-string"
+        />
+        <field 
+			name="quiz_id" 
+			type="sql"
+			query="SELECT c_id as id, c_title as title FROM #__quiz_t_quiz WHERE published = 1" 
+			key_field="id" 
+			value_field="title"
+			size="30"
+			label="COM_JOOMLAQUIZ_QUIZ"
+			onchange="this.form.submit();"
+        />
+    </fields>
+</form>

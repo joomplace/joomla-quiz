@@ -20,6 +20,62 @@ class JoomlaquizModelDashboard extends JModelList
 
 
 	}
+	
+	public function getDatabaseState(){
+		
+		$folder = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/updates/';
+
+		try{
+			$changeSet = JSchemaChangeset::getInstance($this->getDbo(), $folder);
+		}catch (RuntimeException $e){
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+
+			return false;
+		}
+		
+		return $changeSet;
+		
+	}
+	
+	/**
+	 * Fixes database problems.
+	 *
+	 * @return  void
+	 */
+	public function fix(){
+		if (!$changeSet = $this->getDatabaseState()){
+			return false;
+		}
+
+		$changeSet->fix();
+	}
+
+	public function  fixEncode(){
+
+		$folder = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/other/';
+
+		try{
+			$changeSet = JSchemaChangeset::getInstance($this->getDbo(), $folder);
+		}catch (RuntimeException $e){
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+
+			return false;
+		}
+
+		$db = $this->getDbo();
+		$result = $changeSet->getStatus();
+		$result = $result['unchecked'];
+		$mb4 = $db->hasUTF8mb4Support();
+		foreach($result as $item){
+			if((strpos($item->file, 'mb4')!== false && $mb4) || (strpos($item->file, 'mb4')=== false && !$mb4)){
+				if(!$item->checkQueryExpected || ($item->checkQueryExpected && $db->setQuery($item->checkQuery)->loadObject())){
+					if($db->setQuery($item->updateQuery)->execute()){
+						echo $item->updateQuery."<br/>";
+					}
+				}
+			}
+		}
+	}
 
 	protected function getListQuery() 
 	{

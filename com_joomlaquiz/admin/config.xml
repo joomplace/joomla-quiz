@@ -22,12 +22,42 @@
 		</field>
 		
 		<field 
+			name="lttrack" 
+			type="integer" 
+			default="15" 
+			label="COM_JOOMLAQUIZ_REALTIME_TRACK_INT" 
+			description="" 
+			first="5" 
+			last="75" 
+			step="10" 
+		/>
+
+		<field 
+			name="lttrack_up" 
+			type="integer" 
+			label="COM_JOOMLAQUIZ_REALTIME_TRACK_UP" 
+			description="" 
+			first="1" 
+			last="10" 
+			step="1" 
+		/>
+		
+		<field 
 			name="download_certificate" 
 			type="radio"	
 			default="0"	
 			class="btn-group"
 			label="Download certificate" 
 			description="Auto download certificate as attachment if 'yes', open certificate as image if 'no'">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<!-- Customizations settings -->
+		<field name="restrict_on_passed" type="hidden"	default="0"	
+			class="btn-group"
+			label="Restrict when passed(customization)" 
+			>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>

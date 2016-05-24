@@ -19,6 +19,23 @@ class JoomlaquizViewDashboard extends JViewLegacy
 	{
 		$this->addTemplatePath(JPATH_BASE.'/components/com_joomlaquiz/helpers/html');
         $this->dashboardItems = $this->get('Items');
+        
+		/* db check and fix */
+		$this->db_state = $this->get('DatabaseState');
+		$this->errors = $this->db_state->check();
+		$this->results = $this->db_state->getStatus();
+		if($this->errors){
+			JToolbarHelper::custom('dashboard.fix', 'refresh', 'refresh', 'COM_JOOMLAQUIZ_MANAGER_DASHBOARD_FIX_DB', false);
+		}
+
+		$lang = JFactory::getLanguage();
+		$extension = 'com_installer';
+		$base_dir = JPATH_ADMINISTRATOR;
+		$language_tag = $lang->getTag();
+		$reload = true;
+		$lang->load($extension, $base_dir, $language_tag, $reload);
+		/* db check end */
+		
 		$this->addToolBar();
 		$this->setDocument();
         $this->messageTrigger = $this->get('CurrDate');

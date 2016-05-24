@@ -103,11 +103,30 @@ class JoomlaquizModelPrintresult extends JModelList
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 		
+		/* results by category */		
+		if($info['c_resbycat'] == 1 && JComponentHelper::getParams('com_joomlaquiz')->get('res_by_cats_pdf',0)){
+			
+			$q_cate = JoomlaquizHelper::getResultsByCategories($sid);
+			
+			$pdf->Write(5, $pdf_doc->cleanText(JText::_('COM_QUIZ_RES_SCORE_BY_CATEGORIES')), '', 0);
+			$pdf->Ln();
+			foreach($q_cate as $curcat)
+			{
+				if($curcat[2] || $i){
+					$percent = ($curcat[2]) ? number_format(($curcat[1]/$curcat[2]) * 100, 0, '.', ',') : 0;
+					$cat_str =  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$curcat[0].': '.sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $curcat[1], $curcat[2], $percent)."<br />";
+					$pdf->Write(5, $pdf_doc->cleanText($cat_str), '', 0);
+					$pdf->Ln();
+				}
+				$i++;
+			}
+		}
+		
 		$str = JText::_('COM_QUIZ_PDF_TOTSCORE')." ".$total;
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 		
-		$str = JText::_('COM_QUIZ_PDF_PASSCORE')." ".$info['c_passing_score'];
+		$str = JText::_('COM_QUIZ_PDF_PASSCORE')." ".$info['c_passing_score']."%";
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 

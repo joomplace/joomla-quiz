@@ -1172,52 +1172,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$c_resbycat = '';
 					if($quiz_info->c_resbycat == 1)
 					{
-						$query = "SELECT qtq.c_id, qtq.c_type, qtq.c_ques_cat as q_cat, qtq.c_point as fuly_score, qrs.c_score as us_score FROM #__quiz_r_student_question as qrs, #__quiz_t_question as qtq WHERE qrs.c_question_id = qtq.c_id AND qrs.c_stu_quiz_id = '".$stu_quiz_id."' AND qtq.published = 1";
-						$database->SetQuery( $query );
-						$score_bycat = $database->LoadObjectList();
-						
-						$quest_cats = array();
-						foreach($score_bycat as $cat){
-							$quest_cats[] =  $cat->q_cat;
-						}
-						
-						$query = "SELECT id AS qc_id,title AS qc_category FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `id` IN (".implode(',',$quest_cats).") ORDER BY `lft` ASC";
-						$database->SetQuery( $query );
-						$quest_cats = $database->LoadObjectList();
-											
-						$q_cate[0][0] = 'Other';
-						$q_cate[0][1] = 0;
-						$q_cate[0][2] = 0;
-						for($i=0;$i<count($quest_cats);$i++)
-						{
-							$q_cate[$quest_cats[$i]->qc_id][0] = $quest_cats[$i]->qc_category;
-							$q_cate[$quest_cats[$i]->qc_id][1] = 0;
-							$q_cate[$quest_cats[$i]->qc_id][2] = 0;
-						}
-												
-						for($i=0;$i<count($score_bycat);$i++)
-						{
-							if(isset($score_bycat[$i])){
-								$score = 0;
-								$points = $score_bycat[$i]->fuly_score;
-								$type = JoomlaquizHelper::getQuestionType($score_bycat[$i]->c_type);
-								
-								$data = array();
-								$data['quest_type'] = $type;
-								$data['score_bycat'] = $score_bycat[$i];
-								$data['score'] = 0;
-								
-								$database->setQuery("SELECT `enabled` FROM `#__extensions` WHERE folder = 'joomlaquiz' AND type = 'plugin' AND element = '".$type."'");
-								$enabled = $database->loadResult();
-								
-								if($enabled){
-									$appsLib->triggerEvent( 'onScoreByCategory' , $data );
-									$full_score = $data['score'] + $points;
-								}
-								@$q_cate[$score_bycat[$i]->q_cat][1] += $score_bycat[$i]->us_score;
-								@$q_cate[$score_bycat[$i]->q_cat][2] += $full_score;
-							}
-						}
+						$q_cate = JoomlaquizHelper::getResultsByCategories($stu_quiz_id);
 						$i=0;
 						foreach($q_cate as $curcat)
 						{
@@ -1436,7 +1391,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$user = JFactory::getUser($quiz->c_user_id);
 						JoomlaquizHelper::JQ_Email($stu_quiz_id, $user->email);
 					}
-					if ($quiz->c_enable_review && $reviewAccessGranted) {
+					
+					if ($quiz->c_enable_review && $reviewAccessGranted && $user_passed) {
 						$query = "UPDATE #__quiz_r_student_quiz SET allow_review = 1 WHERE c_id = '".$stu_quiz_id."' AND c_rel_id = '".$rel_id."' AND c_order_id = '".$package_id."' AND c_quiz_id = '".$quiz_id."' AND c_student_id = '".$my->id."'";
 						$database->SetQuery( $query );
 						$database->execute();

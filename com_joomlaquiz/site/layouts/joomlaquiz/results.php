@@ -8,9 +8,10 @@
 */
 defined('_JEXEC') or die('Restricted Access');
 $pagination = $displayData->pagination;
+JHtml::_('script', 'system/core.js', true, true);
 ?>
 <div class="jq_results_container">
-	<form name="adminForm" action="index.php?option=com_joomlaquiz&view=results<?php echo JoomlaquizHelper::JQ_GetItemId();?>" method="post">
+	<form name="adminForm" id="adminForm" action="index.php?option=com_joomlaquiz&view=results<?php echo JoomlaquizHelper::JQ_GetItemId();?>" method="post">
 	<table class="jq_results_container_table table-striped" cellpadding="10" cellspacing="10" border="0" width="100%">
 	<tr>	
 		<td class="sectiontableheader">#</td>

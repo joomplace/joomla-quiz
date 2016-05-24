@@ -26,7 +26,6 @@ function subfolding($r_url){
 		return $r_url;
 	}
 }
-
 ?>
 <?php echo $this->loadTemplate('menu');?>
 <div id="pgm_dashboard">
@@ -89,6 +88,31 @@ function subfolding($r_url){
             </div>
         </div>
     </div>
+	<?php if($this->errors){ ?>
+    <div class="accordion-group">
+        <div class="accordion-heading" style="background: #DC0000;border-radius: 4px;">
+            <a style="color: #FFF;font-weight: bold;text-decoration: none!important;" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseErrors">
+                Databse Errors (<?php echo count($this->errors); ?>)
+            </a>
+        </div>
+        <div id="collapseErrors" class="accordion-body collapse">
+            <div class="accordion-inner">
+				<div style="padding: 15px;">
+				<?php foreach ($this->errors as $line => $error) : ?>
+					<?php $key = 'COM_INSTALLER_MSG_DATABASE_' . $error->queryType;
+					$msgs = $error->msgElements;
+					$file = basename($error->file);
+					$msg0 = (isset($msgs[0])) ? $msgs[0] : ' ';
+					$msg1 = (isset($msgs[1])) ? $msgs[1] : ' ';
+					$msg2 = (isset($msgs[2])) ? $msgs[2] : ' ';
+					$message = JText::sprintf($key, $file, $msg0, $msg1, $msg2); ?>
+					<p><?php echo $message; ?></p>
+				<?php endforeach; ?>
+				</div>
+            </div>
+        </div>
+    </div>
+	<?php } ?>
     <div class="accordion-group">
         <div class="accordion-heading">
             <a style="text-decoration: underline !important" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
@@ -112,6 +136,10 @@ function subfolding($r_url){
     </div>
 </div>
 </div>
+<form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=dashboard');?>" method="post" name="adminForm" id="adminForm">
+	<input type="hidden" name="task" value="" />
+	<?php echo JHtml::_('form.token'); ?>
+</form>
 <?php if ($this->messageTrigger) { ?>
 <div id="notification" class="jqd-survey-wrap clearfix" style="clear: both">
     <div class="jqd-survey">

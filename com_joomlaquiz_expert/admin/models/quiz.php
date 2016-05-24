@@ -37,6 +37,38 @@ class JoomlaquizModelQuiz extends JModelAdmin
 	 */
 	protected function loadFormData()
 	{
+		/* assets auto creation (fix for old data) */
+		/*
+		$asset = $this->getTable('Asset', 'JTable');
+		$asset->loadByName('com_joomlaquiz');
+		$parentId = $asset->id;
+		
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('c_id,c_title')
+			->from('#__quiz_t_quiz');
+		$qzs = $db->setQuery($query)->loadObjectList();
+		$table = $this->getTable();
+		foreach($qzs as $q){
+			$asset = $this->getTable('Asset', 'JTable');
+			$asset->loadByName('com_joomlaquiz.quiz.'.$q->c_id);
+			if(!$asset->id){
+				$asset->name = 'com_joomlaquiz.quiz.'.$q->c_id;
+				$asset->rules = '{}';
+				$asset->title = $q->c_title;
+				$asset->parent_id = $parentId;
+				$asset->setLocation($parentId, 'last-child');
+				$asset->check();
+				$asset->store();
+			}
+			$query->clear();
+			$query->update('`#__quiz_t_quiz`')
+				->where('`c_id` = '.$q->c_id)
+				->set('`asset_id` = '.$asset->id);
+			$db->setQuery($query)->execute();
+		}
+		*/
+		
 		// Check the session for previously entered form data.
 		$data = JFactory::getApplication()->getUserState('com_joomlaquiz.edit.quiz.data', array());
 

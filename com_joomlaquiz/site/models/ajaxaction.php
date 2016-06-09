@@ -1459,7 +1459,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                             $emails = explode(',', $quiz->c_emails);
 
                             if (is_array($emails) && count($emails)){
-								$subject = '[QUIZ] '.JText::_('COM_QUIZ_AN_MAIL_SUBJECT');
+								$subject = '[QUIZ] '.JText::_('COM_QUIZ_AN_MAIL_SUBJECT').'('.$quiz['quiz_id'].')';
 								if ($my->id) {
 									$message = JText::_('COM_QUIZ_MAIL_MESSAGE_USER').$my->name.' ('.$my->username.', '.$my->email.') '.JText::_('COM_QUIZ_MAIL_MESSAGE_HAS_FINISHED').' "'.$quiz->c_title.'"<br/>'."\n";
 								} else {

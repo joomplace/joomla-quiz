@@ -207,19 +207,25 @@ class JoomlaquizModelProducts extends JModelList
 	}
 	
 	public function getCategories(){
-				
+
 		$app = JFactory::getApplication();
 		$category_id = $app->getUserStateFromRequest('products.filter.category_id', 'filter_category_id');
-		
-		$category_options[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_SELECT_CATEGORY') );
-		$category = JHTML::_('select.genericlist', $category_options, 'filter_category_id', 'class="text_area" size="1"" onchange="document.adminForm.submit();"', 'value', 'text', '' );
-		
-		if(!$GLOBALS['no_virtuemart']){
-			if(class_exists('ShopFunctions')){
-				$category = ShopFunctions::categoryListTree(array($category_id));
+		$category_id  = $category_id ? $category_id : -1;
+
+		if(!$GLOBALS['no_virtuemart']) {
+
+			$categories = JoomlaquizHelper::getVirtuemartCategories();
+			$category_options[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_SELECT_CATEGORY'));
+			foreach ($categories as $id => $name) {
+				$category_options[] = JHTML::_('select.option', $id, $name);
 			}
+
+		} else {
+			$category_options[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_SELECT_CATEGORY'));
 		}
-		
+
+		$category = JHTML::_('select.genericlist', $category_options, 'filter_category_id', 'class="text_area" size="1"" onchange="document.adminForm.submit();"', 'value', 'text', $category_id );
+
 		return $category;
 	}
 	

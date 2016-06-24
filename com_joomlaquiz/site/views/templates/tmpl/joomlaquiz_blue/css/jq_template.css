@@ -1430,13 +1430,8 @@ textarea.jq_survey {
 	clear:both;
 	overflow:hidden;
 	width:98%;
-	padding: 5px;
+	/*padding: 5px;*/
 	border-top: 1px solid #e5e5e5;
-}
-
-.jq_question_info_container span#jq_quest_num_container {
-    padding-left:40px;
-    float:left;
 }
 
 .jq_question_info_container span#jq_points_container {

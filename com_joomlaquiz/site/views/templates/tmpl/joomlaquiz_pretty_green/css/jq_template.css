@@ -440,12 +440,6 @@ blockquote span{
 #jq_quiz_container > :first-child{
 	margin-top: -40px;/* moves on one level with .jq_time_tick_container */
 }
-.jq_question_info_container{
-	text-align: left;
-	line-height: 18px;
-	*text-align:left;
-	position: relative;/* for .jq_points_container */
-}
 .jq_question_name-wr,
 .jq_points_container,
 .jq_time_tick_container{

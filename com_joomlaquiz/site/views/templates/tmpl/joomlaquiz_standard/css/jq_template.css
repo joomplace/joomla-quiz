@@ -323,12 +323,7 @@ textarea.jq_survey {
     clear:both;
     overflow:hidden;
     width:100%;
-    padding: 5px;
-}
-
-.jq_question_info_container span#jq_quest_num_container {
-    padding-left:40px;
-    float:left;
+    /*padding: 5px;*/
 }
 
 .jq_question_info_container span#jq_points_container {

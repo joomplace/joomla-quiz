@@ -1001,7 +1001,11 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 .jq_question_info_container
 {
 	margin-bottom: 0px !important;
-	padding: 1px;
+	/*padding: 1px;*/
+}
+
+#jq_quiz_container .progress {
+	margin-top: 15px;
 }
 
 div.incorrect_answer

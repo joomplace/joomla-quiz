@@ -203,6 +203,7 @@ function jq_CreateQuestions() {
 				?>	
 					question_info = question_info.replace("<!-- Z -->", (questions[i].cur_quest_num/quiz_count_quests)*100).replace("<!-- Z -->", (questions[i].cur_quest_num/quiz_count_quests)*100);
 					question_info = question_info.replace("<!-- QUESTION_X_Y -->", mes_quest_number.replace("{X}", questions[i].cur_quest_num).replace("{Y}", quiz_count_quests));
+					question_info = getProgressBar(questions[i].cur_quest_num, quiz_count_quests, question_info);
 				<?php
 				}else{
 				?>
@@ -267,6 +268,14 @@ function jq_CreateQuestions() {
 		
 		<?php JoomlaquizHelper::getJavascriptIncludes('includes');?>
 	}
+}
+
+function getProgressBar(x, y, text) {
+	percent = Math.round((100 / y) * x);
+
+	html = '<div class="progress progress-striped active"> <div class="bar" style="width: '+percent+'%;">'+text+'</div> </div>';
+
+	return html;
 }
 
 function createPopupText(question_id, text, className) {

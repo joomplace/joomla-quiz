@@ -41,161 +41,8 @@ class JoomlaquizModelPrintresult extends JModelList
 	}
 	
 	public function JQ_PrintPDF($sid){
-		
-		$appsLib = JqAppPlugins::getInstance();
-		$plugins = $appsLib->loadApplications();
-				
-		defined(_PDF_GENERATED) or define('_PDF_GENERATED', JText::_('COM_JOOMLAQUIZ_PDF_GENERATED'));
-		$database = JFactory::getDBO();
-		
-		$str = "";
-		 $query = "SELECT sq.*, q.*, u.* FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq LEFT JOIN #__users AS u ON sq.c_student_id = u.id"
-	 . "\n WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
-		$database->SetQuery( $query );
-		$info = $database->LoadAssocList();
-		$info = $info[0];
-		
-		$info['username'] = ($info['username'])?$info['username']:JText::_('COM_JOOMLAQUIZ_ANONYMOUS');
-		$info['name'] = ($info['name'])?$info['name']:$info['user_name'].''.$info['user_surname'];
-		$info['email'] = ($info['email'])?$info['email']:$info['user_email'];
-		
-		JoomlaquizHelper::JQ_GetJoomFish($info['c_title'], 'quiz_t_quiz', 'c_title', $info['c_quiz_id']);
-		$quiz_id = $info['c_quiz_id'];
-			
-		$query = "SELECT q_chain FROM #__quiz_q_chain "
-		. "\n WHERE s_unique_id = '".$info['unique_id']."'";
-		$database->SetQuery($query);
-		$qch_ids = $database->LoadResult();
-		$qch_ids = str_replace('*',',',$qch_ids);
-		
-		$total = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
-				
-		chdir(JPATH_SITE);
-		
-		require_once(JPATH_SITE . '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
-		
-		$pdf_doc = new jq_pdf();
 
-		$pdf = &$pdf_doc->_engine;
-
-		$pdf->AliasNbPages();
-		$pdf->AddPage();
-		
-		$pdf->SetFontSize(10);	
-		
-		$str = JText::_('COM_QUIZ_PDF_QTITLE')." ".$info['c_title'];
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-				
-		$str = JText::_('COM_QUIZ_PDF_UNAME')." ".$info['username'];
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-		
-		$str = JText::_('COM_QUIZ_PDF_NAME')." ".$info['name'];
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-		
-		$str = JText::_('COM_QUIZ_PDF_UEMAIL')." ".$info['email'];
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-
-		$str = JText::_('COM_QUIZ_PDF_USCORE')." ".$info['c_total_score'];
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-		
-		/* results by category */		
-		if($info['c_resbycat'] == 1 && JComponentHelper::getParams('com_joomlaquiz')->get('res_by_cats_pdf',0)){
-			
-			$q_cate = JoomlaquizHelper::getResultsByCategories($sid);
-			
-			$pdf->Write(5, $pdf_doc->cleanText(JText::_('COM_QUIZ_RES_SCORE_BY_CATEGORIES')), '', 0);
-			$pdf->Ln();
-			foreach($q_cate as $curcat)
-			{
-				if($curcat[2] || $i){
-					$percent = ($curcat[2]) ? number_format(($curcat[1]/$curcat[2]) * 100, 0, '.', ',') : 0;
-					$cat_str =  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$curcat[0].': '.sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $curcat[1], $curcat[2], $percent)."<br />";
-					$pdf->Write(5, $pdf_doc->cleanText($cat_str), '', 0);
-					$pdf->Ln();
-				}
-				$i++;
-			}
-		}
-		
-		$str = JText::_('COM_QUIZ_PDF_TOTSCORE')." ".$total;
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-		
-		$str = JText::_('COM_QUIZ_PDF_PASSCORE')." ".$info['c_passing_score']."%";
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-
-
-		$tot_min = floor($info['c_total_time'] / 60);
-		$tot_sec = $info['c_total_time'] - $tot_min*60;
-		
-		$str = JText::_('COM_QUIZ_PDF_USPENT');
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		
-		$pdf->setStyle('b', true);
-		$str = str_pad($tot_min,2, "0", STR_PAD_LEFT).":".str_pad($tot_sec,2, "0", STR_PAD_LEFT);
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		
-		$pdf->setStyle('b', false);
-		$str = JText::_('COM_QUIZ_PDF_QTIME');
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-		
-		if ($info['c_passed'] == 1) {
-			$str = $info['name']." ".JText::_('COM_QUIZ_PDF_PASQUIZ_BOLD');
-			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-			$pdf->Ln();
-		} else {
-			$str = $info['name']." ".JText::_('COM_QUIZ_PDF_NPASSQUIZ_BOLD');
-			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-			$pdf->Ln();
-		}		
-		$query = $database->getQuery(true);
-		$query->select('`rq`.`c_id`')
-			->from('`#__quiz_r_student_question` AS `rq`')
-			->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
-			->order('`c_id`');
-		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-			$query->where('`tq`.`c_type` != 9');
-		}
-		$query->where('`rq`.`c_stu_quiz_id` = "'.$sid.'"');
-		$database->SetQuery( $query );
-		$info = $database->LoadObjectList();
-		$total = count($info);
-
-		for($i=0;$i < $total;$i++) {
-			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
-
-			$pdf->Ln();
-			$pdf->setStyle('b', true);
-			$str = ($i+1).".[".$data['c_score'].'/'.$data['c_point']."]";
-			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-			
-			$pdf->setStyle('b', false);
-			$str = $data['c_question'];
-			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		
-			$type = $data['c_type'];
-			$answer = '';
-			$correct_answer = '';
-			
-			$t = JoomlaquizHelper::getQuestionType($type);
-			$pdf_data = array();
-			$pdf_data['quest_type'] = $t;
-			$pdf_data['pdf_doc'] = $pdf_doc;
-			$pdf_data['data'] = $data;
-			$pdf_data['pdf'] = $pdf;
-			
-			$appsLib->triggerEvent( 'onGetPdf' , $pdf_data );
-			$pdf = $pdf_data['pdf'];
-			
-			$pdf->Ln();
-		}
+		$pdf = $this->generatePDF($sid);
 
 		$data = $pdf->Output('', 'S'); 
 		
@@ -263,8 +110,8 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?($info['username']):JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
 		$str .= JText::_('COM_QUIZ_PDF_NAME')." ".(($info['name'])?$info['name']:$info['user_name'])."\n";
 		$str .= JText::_('COM_QUIZ_PDF_UEMAIL')." ".(($info['email'])?$info['email']:$info['user_email'])."\n";
-		$str .= JText::_('COM_QUIZ_PDF_USCORE')." ".$info['c_total_score']."\n";
-		$str .= JText::_('COM_QUIZ_PDF_TOTSCORE')." ".$total."\n";
+		$str .= JText::_('COM_QUIZ_PDF_USCORE')." ".number_format($info['c_total_score'],1)."\n";
+		$str .= JText::_('COM_QUIZ_PDF_TOTSCORE')." ".number_format($total,1)."\n";
 		$str .= JText::_('COM_QUIZ_PDF_PASSCORE')." ".$info['c_passing_score']."\n";
 		$tot_min = floor($info['c_total_time'] / 60);
 		$tot_sec = $info['c_total_time'] - $tot_min*60;
@@ -293,7 +140,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		for($i=0;$i < $total;$i++) {
 			$data = array();
 			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
-			$str .= "".($i+1).".[".$data['c_score'].'/'.$data['c_point']."] ".$data['c_question']."\n";
+			$str .= "".($i+1).".[".number_format($data['c_score'],1).'/'.number_format($data['c_point'],1)."] ".$data['c_question']."\n";
 			$type = JoomlaquizHelper::getQuestionType($data['c_type']);
 			$answer = '';
 			
@@ -311,6 +158,216 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str .= " ";
 		
 		return nl2br($str);
+	}
+
+	/**
+	 * @param $sid
+	 *
+	 * @return array
+	 */
+	protected function generatePDF($sid)
+	{
+		$appsLib = JqAppPlugins::getInstance();
+		$plugins = $appsLib->loadApplications();
+
+		defined(_PDF_GENERATED) or define(
+			'_PDF_GENERATED', JText::_('COM_JOOMLAQUIZ_PDF_GENERATED')
+		);
+		$database = JFactory::getDBO();
+
+		$str = "";
+		$query
+		     = "SELECT sq.*, q.*, u.* FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq LEFT JOIN #__users AS u ON sq.c_student_id = u.id"
+			. "\n WHERE sq.c_id = '" . $sid . "' AND sq.c_quiz_id = q.c_id";
+		$database->SetQuery($query);
+		$info = $database->LoadAssocList();
+		$info = $info[0];
+
+		$info['username'] = ($info['username'])
+			? $info['username']
+			: JText::_(
+				'COM_JOOMLAQUIZ_ANONYMOUS'
+			);
+		$info['name']     = ($info['name']) ? $info['name']
+			: $info['user_name'] . '' . $info['user_surname'];
+		$info['email']    = ($info['email']) ? $info['email']
+			: $info['user_email'];
+
+		JoomlaquizHelper::JQ_GetJoomFish(
+			$info['c_title'], 'quiz_t_quiz', 'c_title', $info['c_quiz_id']
+		);
+		$quiz_id = $info['c_quiz_id'];
+
+		$query = "SELECT q_chain FROM #__quiz_q_chain "
+			. "\n WHERE s_unique_id = '" . $info['unique_id'] . "'";
+		$database->SetQuery($query);
+		$qch_ids = $database->LoadResult();
+		$qch_ids = str_replace('*', ',', $qch_ids);
+
+		$total = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
+
+		chdir(JPATH_SITE);
+
+		require_once(JPATH_SITE
+			. '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
+
+		$pdf_doc = new jq_pdf();
+
+		$pdf = &$pdf_doc->_engine;
+
+		$pdf->AliasNbPages();
+		$pdf->AddPage();
+
+		$pdf->SetFontSize(10);
+
+		$str = JText::_('COM_QUIZ_PDF_QTITLE') . " " . $info['c_title'];
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+		$str = JText::_('COM_QUIZ_PDF_UNAME') . " " . $info['username'];
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+		$str = JText::_('COM_QUIZ_PDF_NAME') . " " . $info['name'];
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+		$str = JText::_('COM_QUIZ_PDF_UEMAIL') . " " . $info['email'];
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+		$str = JText::_('COM_QUIZ_PDF_USCORE') . " " . $info['c_total_score'];
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+		/* results by category */
+		if ($info['c_resbycat'] == 1
+			&& JComponentHelper::getParams(
+				'com_joomlaquiz'
+			)->get('res_by_cats_pdf', 0)
+		)
+		{
+
+			$q_cate = JoomlaquizHelper::getResultsByCategories($sid);
+
+			$pdf->Write(
+				5, $pdf_doc->cleanText(
+				JText::_('COM_QUIZ_RES_SCORE_BY_CATEGORIES')
+			), '', 0
+			);
+			$pdf->Ln();
+			foreach ($q_cate as $curcat)
+			{
+				if ($curcat[2] || $i)
+				{
+					$percent = ($curcat[2]) ? number_format(
+						($curcat[1] / $curcat[2]) * 100, 0, '.', ','
+					) : 0;
+					$cat_str
+					         = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+						. $curcat[0] . ': ' . sprintf(
+							JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $curcat[1],
+							$curcat[2], $percent
+						) . "<br />";
+					$pdf->Write(5, $pdf_doc->cleanText($cat_str), '', 0);
+					$pdf->Ln();
+				}
+				$i++;
+			}
+		}
+
+		$str = JText::_('COM_QUIZ_PDF_TOTSCORE') . " " . $total;
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+		$str = JText::_('COM_QUIZ_PDF_PASSCORE') . " "
+			. $info['c_passing_score'] . "%";
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+
+		$tot_min = floor($info['c_total_time'] / 60);
+		$tot_sec = $info['c_total_time'] - $tot_min * 60;
+
+		$str = JText::_('COM_QUIZ_PDF_USPENT');
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setStyle('b', true);
+		$str = str_pad($tot_min, 2, "0", STR_PAD_LEFT) . ":" . str_pad(
+				$tot_sec, 2, "0", STR_PAD_LEFT
+			);
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setStyle('b', false);
+		$str = JText::_('COM_QUIZ_PDF_QTIME');
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+		if ($info['c_passed'] == 1)
+		{
+			$str = $info['name'] . " " . JText::_('COM_QUIZ_PDF_PASQUIZ_BOLD');
+			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+			$pdf->Ln();
+		}
+		else
+		{
+			$str = $info['name'] . " " . JText::_(
+					'COM_QUIZ_PDF_NPASSQUIZ_BOLD'
+				);
+			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+			$pdf->Ln();
+		}
+		$query = $database->getQuery(true);
+		$query->select('`rq`.`c_id`')->from(
+				'`#__quiz_r_student_question` AS `rq`'
+			)->join(
+				'LEFT',
+				'`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`'
+			)->order('`c_id`');
+		if (JComponentHelper::getParams('com_joomlaquiz')->get(
+			'hide_boilerplates'
+		)
+		)
+		{
+			$query->where('`tq`.`c_type` != 9');
+		}
+		$query->where('`rq`.`c_stu_quiz_id` = "' . $sid . '"');
+		$database->SetQuery($query);
+		$info  = $database->LoadObjectList();
+		$total = count($info);
+
+		for ($i = 0; $i < $total; $i++)
+		{
+			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
+
+			$pdf->Ln();
+			$pdf->setStyle('b', true);
+			$str = ($i + 1) . ".[" . number_format($data['c_score'],1) . '/' . number_format($data['c_point'],1)
+				. "]";
+			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+			$pdf->setStyle('b', false);
+			$str = $data['c_question'];
+			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+			$type           = $data['c_type'];
+			$answer         = '';
+			$correct_answer = '';
+
+			$t                      = JoomlaquizHelper::getQuestionType($type);
+			$pdf_data               = array();
+			$pdf_data['quest_type'] = $t;
+			$pdf_data['pdf_doc']    = $pdf_doc;
+			$pdf_data['data']       = $data;
+			$pdf_data['pdf']        = $pdf;
+
+			$appsLib->triggerEvent('onGetPdf', $pdf_data);
+			$pdf = $pdf_data['pdf'];
+
+			$pdf->Ln();
+		}
+
+		return $pdf;
 	}
 }
 ?>

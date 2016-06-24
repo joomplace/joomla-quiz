@@ -1541,8 +1541,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 								} else {
 									$message .= "<br>\n<br>\n".($user_passed?JText::_('COM_QUIZ_USER_PASSES2'):JText::_('COM_QUIZ_USER_FAILS2'));
 								}
-								
-								$jmail = JFactory::getMailer();
+
+	                            $jmail = JFactory::getMailer();
+	                            include_once './prrintresult.php';
+	                            $results_model = new JoomlaquizModelPrintresult();
+	                            $pdf = $results_model->generatePDF($stu_quiz_id);
+	                            $pdf = $pdf->Output('results.pdf', 'S');
+	                            $jmail->AddStringAttachment($pdf,'results.pdf');
 								foreach($emails as $email){
 								    $jmail->sendMail( $mailfrom, $sitename, trim($email), $subject, $message, 1, NULL, NULL, NULL, NULL, NULL);
 								}

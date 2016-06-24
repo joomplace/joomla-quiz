@@ -1489,6 +1489,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 								}
 								
 								$jmail = JFactory::getMailer();
+	                            include_once './prrintresult.php';
+	                            $results_model = new JoomlaquizModelPrintresult();
+	                            $pdf = $results_model->generatePDF($stu_quiz_id);
+	                            $pdf = $pdf->Output('results.pdf', 'S');
+	                            $jmail->AddStringAttachment($pdf,'results.pdf');
 								foreach($emails as $email){
 								    $jmail->sendMail( $mailfrom, $sitename, trim($email), $subject, $message, 1, NULL, NULL, NULL, NULL, NULL);
 								}

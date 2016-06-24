@@ -248,4 +248,28 @@ class JoomlaquizHelper
 				$vName == 'dynamic'
 			);
 		}
+
+		public static function getVirtuemartCategories() {
+			VmConfig::loadConfig();
+			VmConfig::loadJLang('com_virtuemart');
+
+			$db = JFactory::getDBO();
+			$query = $db->getQuery(true);
+
+			$categoriesVm = array();
+
+
+			$query->select($db->qn(array('vm_pc.virtuemart_category_id', 'vm_c.category_name')));
+			$query->from($db->qn('#__virtuemart_categories', 'vm_pc'));
+			$query->join('LEFT', $db->qn('#__virtuemart_categories_' . VmConfig::$vmlang, 'vm_c') . ' ON (' . $db->quoteName('vm_c.virtuemart_category_id') . ' = ' . $db->quoteName('vm_pc.virtuemart_category_id') . ')');
+
+			$db->setQuery( $query );
+			$categories = $db->loadObjectList();
+
+			for($i = 0; $i < count($categories); $i++) {
+				$categoriesVm[$categories[$i]->virtuemart_category_id] = $categories[$i]->category_name;
+			}
+
+			return $categoriesVm;
+		}
 }

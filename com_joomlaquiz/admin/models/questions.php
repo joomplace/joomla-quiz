@@ -266,7 +266,7 @@ class JoomlaquizModelQuestions extends JModelList
 		$items = parent::getItems();
 
 		foreach ($items as $item) {
-			$item->c_question = html_entity_decode(strip_tags($item->c_question));
+			$item->c_question = html_entity_decode(strip_tags($item->c_question), ENT_COMPAT, 'UTF-8');
 		}
 
 		return $items;

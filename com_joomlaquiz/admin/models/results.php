@@ -229,7 +229,15 @@ class JoomlaquizModelResults extends JModelList
 		$database->SetQuery($query);
 		return $database->LoadResult();
 	}
-	
+	public function getItems(){
+		$items = parent::getItems();
+
+		foreach ($items as $item) {
+			$item->c_question = html_entity_decode(strip_tags($item->c_question), ENT_COMPAT, 'UTF-8');
+		}
+
+		return $items;
+	}
 	public function getLists(){
 		
 		$app = JFactory::getApplication();

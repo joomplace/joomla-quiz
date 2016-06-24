@@ -140,9 +140,11 @@ $sortFields = $this->getSortFields();
 			</tfoot>
 			<tbody>
 			<?php foreach ($this->items as $i => $item) :
+				/*
 				if(!$item->q_count){
 					continue;
 				}
+				*/
 				if (!$item->c_student_id){
 					if($item->user_name != '' && $item->user_email == ''){
 						$item->username = $item->user_name;
@@ -234,7 +236,7 @@ $sortFields = $this->getSortFields();
 					<td class="has-context">
 						<?php if($item->c_passed){ ?>
 						<span class="text-center" style="width:100%;display: inline-block;">
-							<a href="<?php echo JUri::root(true).JRoute::_('index.php?option=com_joomlaquiz&view=results&task=printcert.get_certificate&stu_quiz_id='.$item->c_id.'&user_unique_id='.$item->unique_id); ?>">
+							<a href="<?php echo $this->getConvertedURL('index.php?option=com_joomlaquiz&view=results&task=printcert.get_certificate&stu_quiz_id='.$item->c_id.'&user_unique_id='.$item->unique_id); ?>">
 								<span class="icon-file-check"></span>
 							</a>
 						</span>

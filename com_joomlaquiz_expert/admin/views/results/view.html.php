@@ -105,4 +105,16 @@ class JoomlaquizViewResults extends JViewLegacy
 			'c_total_time' => JText::_('COM_JOOMLAQUIZ_SPEND_TIME'),
 		);
 	}
+
+	protected function getConvertedURL($url) {
+		$newUrl = $url;
+
+		$router = new JRouterSite(array('mode'=>JROUTER_MODE_SEF));
+		$newUrl = $router->build($newUrl)->toString(array('path', 'query', 'fragment'));
+
+		$newUrl = str_replace('/administrator/', '/', $newUrl);
+		$newUrl = str_replace('component/content/article/', '', $newUrl);
+
+		return $newUrl;
+	}
 }

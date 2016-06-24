@@ -799,8 +799,20 @@ class JoomlaquizHelper
 		public static function getTotalScore($qch_ids, $quiz_id){
 			
 			jimport('joomla.filesystem.folder');
+
+			$qch_ids = $qch_ids ? $qch_ids : 0;
+
 			$database = JFactory::getDBO();
-			$query = "SELECT SUM(c_point) FROM #__quiz_t_question WHERE c_id IN (".$qch_ids.") AND published = 1 AND c_type <> 11";
+			$query = $database->getQuery(true);
+
+			//$query = "SELECT SUM(c_point) FROM #__quiz_t_question WHERE c_id IN (".$qch_ids.") AND published = 1 AND c_type <> 11";
+			$query->select ('SUM(c_point)')
+				->from($database->qn('#__quiz_t_question'))
+				//->where("`c_id` IN (".$database->qn($qch_ids).")")
+				->where("`c_id` IN (".$qch_ids.")")
+				->where($database->qn('published')." = 1")
+				->where($database->qn('c_type')." <> 11");
+			
 			$database->SetQuery( $query );
 			$max_score = $database->LoadResult();
 			

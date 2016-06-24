@@ -303,10 +303,10 @@ class com_joomlaquizInstallerScript
 									`c_pass_message` = '', 
 									`c_unpass_message` = '', 
 									`c_short_description` = ''");	
+			$db->execute();
+			$db->setQuery("UPDATE `#__quiz_t_quiz` SET `c_id` = 0 , `c_skin` = 1 WHERE `c_title` = 'Questions Pool'");
+			$db->execute();
 		}
-		$db->execute();
-		$db->setQuery("UPDATE `#__quiz_t_quiz` SET `c_id` = 0 , `c_skin` = 1 WHERE `c_title` = 'Questions Pool'");
-		$db->execute();
 		
 		$db->setQuery("SELECT COUNT(id) FROM #__quiz_dashboard_items");
 		if(!$db->loadResult()){
@@ -481,11 +481,6 @@ class com_joomlaquizInstallerScript
 		return $category;
 	}
 	
-	function preflight($type, $parent) 
-	{
-		$this->defaultCategoryCheck();
-	}
-	
 	function postflight($type, $parent)
     {
 		/* need to be refacrored */
@@ -514,6 +509,7 @@ class com_joomlaquizInstallerScript
 		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_question_id` int(12) NOT NULL, `c_paths` text NOT NULL, PRIMARY KEY (`c_id`))");
 		$db->execute();
 		
+		$this->defaultCategoryCheck();
 		$this->migrateCategories();
 	}
 }

@@ -125,6 +125,9 @@ $sortFields = $this->getSortFields();
 					<th>
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_CERTIFICATES', 'c_passed', $listDirn, $listOrder); ?>
 					</th>
+					<th>
+						<?php echo JText::_('COM_JOOMLAQUIZ_UNIQUE_CODE'); ?>
+					</th>
 					<?php echo JHtml::_('content.prepare','',$this->items,'admin.results.table.head'); ?>
 				</tr>
 			</thead>
@@ -235,6 +238,11 @@ $sortFields = $this->getSortFields();
 								<span class="icon-file-check"></span>
 							</a>
 						</span>
+						<?php } ?>
+					</td>
+					<td class="has-context">
+						<?php if($item->c_passed){ ?>
+							<?php echo base_convert($item->c_id.''.$item->c_student_id.''.$item->c_total_score, 10, 36) ?>
 						<?php } ?>
 					</td>
 					<?php echo JHtml::_('content.prepare','',$item,'admin.results.table.row'); ?>

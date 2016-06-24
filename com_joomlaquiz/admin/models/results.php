@@ -143,8 +143,14 @@ class JoomlaquizModelResults extends JModelList
 					$query->where('sq.c_id = '.(int) substr($search, 3));
 				}
 				else {
-					$search = $db->Quote('%'.$db->escape($search, true).'%');
-					$query->where('(q.c_title LIKE '.$search.')');
+					if (stripos(trim($search), 'code:') === 0)
+					{
+						$query->where('CONCAT(sq.c_id,sq.c_student_id,sq.c_total_score) = "'.base_convert(str_replace('code:','',trim($search)),36,10).'"');
+					}
+					else {
+						$search = $db->Quote('%'.$db->escape($search, true).'%');
+						$query->where('(q.c_title LIKE '.$search.')');
+					}
 				}
 			}
 			

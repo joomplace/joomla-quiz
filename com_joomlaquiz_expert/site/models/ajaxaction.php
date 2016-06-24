@@ -577,28 +577,28 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 		
 					$jq_language = array();
-					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars(nl2br($quiz->c_wrong_message)): JText::_('COM_QUIZ_ANSWER_INCORRECT');
-					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars(nl2br($quiz->c_right_message)): JText::_('COM_QUIZ_ANSWER_CORRECT');
+					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars($quiz->c_wrong_message): JText::_('COM_QUIZ_ANSWER_INCORRECT');
+					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars($quiz->c_right_message): JText::_('COM_QUIZ_ANSWER_CORRECT');
 								
 					$query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($quest_id)."' AND published = 1";
 					$database->SetQuery( $query );
 					$question = $database->LoadObjectList();
 			
-					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message)?htmlspecialchars(nl2br($question[0]->c_wrong_message)):$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
-					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars(nl2br($question[0]->c_right_message)):$jq_language['COM_QUIZ_ANSWER_CORRECT'];
+					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message)?htmlspecialchars($question[0]->c_wrong_message):$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
+					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars($question[0]->c_right_message):$jq_language['COM_QUIZ_ANSWER_CORRECT'];
 					
-					if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars(nl2br($question[0]->c_partially_message));
-					elseif ($question[0]->c_wrong_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars(nl2br($question[0]->c_wrong_message));
+					if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars($question[0]->c_partially_message);
+					elseif ($question[0]->c_wrong_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars($question[0]->c_wrong_message);
 					else $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = $jq_language['COM_QUIZ_ANSWER_INCORRECT'];
 					
 					
 					if ($got_one_correct) {
-						if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = htmlspecialchars(nl2br($question[0]->c_partially_message));
+						if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = htmlspecialchars($question[0]->c_partially_message);
 					}
 					
 					$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = JText::_('COM_QUIZ_ANSWER_ACCEPTED');
 					if(($question[0]->c_type==8)&&($question[0]->c_right_message)) 
-						$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = htmlspecialchars(nl2br($question[0]->c_right_message));					
+						$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = htmlspecialchars($question[0]->c_right_message);					
 		
 					if ($cur_tmpl) {
 						
@@ -846,28 +846,28 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 
 					$jq_language = array();
-					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars(nl2br($quiz->c_wrong_message)): JText::_('COM_QUIZ_ANSWER_INCORRECT');
-					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars(nl2br($quiz->c_right_message)): JText::_('COM_QUIZ_ANSWER_CORRECT');
+					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars($quiz->c_wrong_message): JText::_('COM_QUIZ_ANSWER_INCORRECT');
+					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars($quiz->c_right_message): JText::_('COM_QUIZ_ANSWER_CORRECT');
 
 					$query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($quest_id)."' AND published = 1";
 					$database->SetQuery( $query );
 					$question = $database->LoadObjectList();
 
-					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message)?htmlspecialchars(nl2br($question[0]->c_wrong_message)):JText::_('COM_QUIZ_ANSWER_INCORRECT');
-					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars(nl2br($question[0]->c_right_message)):JText::_('COM_QUIZ_ANSWER_CORRECT');
+					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message)?htmlspecialchars($question[0]->c_wrong_message):JText::_('COM_QUIZ_ANSWER_INCORRECT');
+					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars($question[0]->c_right_message):JText::_('COM_QUIZ_ANSWER_CORRECT');
 
-					if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars(nl2br($question[0]->c_partially_message));
-					elseif ($question[0]->c_wrong_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars(nl2br($question[0]->c_wrong_message));
+					if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars($question[0]->c_partially_message);
+					elseif ($question[0]->c_wrong_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars($question[0]->c_wrong_message);
 					else $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = $jq_language['COM_QUIZ_ANSWER_INCORRECT'];
 
 
 					if ($got_one_correct) {
-						if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = htmlspecialchars(nl2br($question[0]->c_partially_message));
+						if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = htmlspecialchars($question[0]->c_partially_message);
 					}
 
 					$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = JText::_('COM_QUIZ_ANSWER_ACCEPTED');
 					if(($question[0]->c_type==8)&&($question[0]->c_right_message))
-						$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = htmlspecialchars(nl2br($question[0]->c_right_message));
+						$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = htmlspecialchars($question[0]->c_right_message);
 				}
 
 				// -- my chain ==//
@@ -1286,13 +1286,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$fin_message = '';
 					if ($user_passed) {
 						if ($quiz_info->c_pass_message) {
-							$jq_language['COM_QUIZ_USER_PASSES'] = nl2br($quiz_info->c_pass_message);
+							$jq_language['COM_QUIZ_USER_PASSES'] = $quiz_info->c_pass_message;
 						} else {
 							$jq_language['COM_QUIZ_USER_PASSES'] = JText::_('COM_QUIZ_USER_PASSES');
 						}
 					} else {
 						if ($quiz_info->c_unpass_message) {
-							$jq_language['COM_QUIZ_USER_FAILS'] = nl2br($quiz_info->c_unpass_message);
+							$jq_language['COM_QUIZ_USER_FAILS'] = $quiz_info->c_unpass_message;
 						} else {
 							$jq_language['COM_QUIZ_USER_FAILS'] = JText::_('COM_QUIZ_USER_FAILS');
 						}
@@ -1958,18 +1958,18 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$q_data_count = $database->LoadResult();
 			
 			$jq_language = array();
-			$jq_language['COM_QUIZ_ANSWER_INCORRECT'] =  ($quiz->c_wrong_message) ? htmlspecialchars(nl2br($quiz->c_wrong_message)) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
-			$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars(nl2br($quiz->c_right_message)) : JText::_('COM_QUIZ_ANSWER_CORRECT');
+			$jq_language['COM_QUIZ_ANSWER_INCORRECT'] =  ($quiz->c_wrong_message) ? htmlspecialchars($quiz->c_wrong_message) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
+			$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars($quiz->c_right_message) : JText::_('COM_QUIZ_ANSWER_CORRECT');
 				
 			$query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($quest_id)."'";
 			$database->SetQuery( $query );
 			$question = $database->LoadObjectList();
 			
 			$qtype = $question[0]->c_type;
-			$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message) ? htmlspecialchars(nl2br($question[0]->c_wrong_message)) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
-			$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars(nl2br($question[0]->c_right_message)) : JText::_('COM_QUIZ_ANSWER_CORRECT');
+			$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message) ? htmlspecialchars($question[0]->c_wrong_message) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
+			$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_CORRECT');
 			
-			$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = (($question[0]->c_type==8)&&($question->c_right_message)) ? htmlspecialchars(nl2br($question[0]->c_right_message)) : JText::_('COM_QUIZ_ANSWER_ACCEPTED');  
+			$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = (($question[0]->c_type==8)&&($question->c_right_message)) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_ACCEPTED');  
 				
 			$query = "SELECT template_name FROM #__quiz_templates WHERE id = '".$quiz->c_skin."'";
 			$database->SetQuery( $query );
@@ -2065,17 +2065,17 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$q_data_count = 4;
 				
 				$jq_language = array();
-				$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars(nl2br($quiz->c_wrong_message)) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
-				$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars(nl2br($quiz->c_right_message)) : JText::_('COM_QUIZ_ANSWER_CORRECT');
+				$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars($quiz->c_wrong_message) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
+				$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars($quiz->c_right_message) : JText::_('COM_QUIZ_ANSWER_CORRECT');
 				
 				$query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($quest_id)."'";
 				$database->SetQuery( $query );
 				$question = $database->LoadObjectList();
 		
-				$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message) ? htmlspecialchars(nl2br($question[0]->c_wrong_message)) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
-				$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars(nl2br($question[0]->c_right_message)) : JText::_('COM_QUIZ_ANSWER_CORRECT');
+				$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message) ? htmlspecialchars($question[0]->c_wrong_message) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
+				$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_CORRECT');
 				
-				$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] =(($question[0]->c_type==8) && ($question[0]->c_right_message)) ? htmlspecialchars(nl2br($question[0]->c_right_message)) : JText::_('COM_QUIZ_ANSWER_ACCEPTED');				
+				$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] =(($question[0]->c_type==8) && ($question[0]->c_right_message)) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_ACCEPTED');				
 				
 				if ($cur_tmpl) {				
 					if (count($q_data) > 0) {
@@ -2199,8 +2199,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$quest_num = $i + 1;
 
 					$jq_language = array();
-					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars(nl2br($quiz->c_wrong_message)) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
-					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars(nl2br($quiz->c_right_message)) : JText::_('COM_QUIZ_ANSWER_CORRECT');
+					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars($quiz->c_wrong_message) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
+					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars($quiz->c_right_message) : JText::_('COM_QUIZ_ANSWER_CORRECT');
 		
 					$query = "SELECT template_name FROM #__quiz_templates WHERE id = '".$quiz->c_skin."'";
 					$database->SetQuery( $query );
@@ -2317,20 +2317,20 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$question = $database->LoadObjectList();
 				
 				$jq_language = array();
-				$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message)?htmlspecialchars(nl2br($question[0]->c_wrong_message)):JText::_('COM_QUIZ_ANSWER_INCORRECT');
-				$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars(nl2br($question[0]->c_right_message)):JText::_('COM_QUIZ_ANSWER_CORRECT');
+				$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message)?htmlspecialchars($question[0]->c_wrong_message):JText::_('COM_QUIZ_ANSWER_INCORRECT');
+				$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars($question[0]->c_right_message):JText::_('COM_QUIZ_ANSWER_CORRECT');
 					
-				if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars(nl2br($question[0]->c_partially_message));
-				elseif ($question[0]->c_wrong_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars(nl2br($question[0]->c_wrong_message));
+				if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars($question[0]->c_partially_message);
+				elseif ($question[0]->c_wrong_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars($question[0]->c_wrong_message);
 				else $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = $jq_language['COM_QUIZ_ANSWER_INCORRECT'];
 					
 				if ($got_one_correct) {
-					if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = htmlspecialchars(nl2br($question[0]->c_partially_message));
+					if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = htmlspecialchars($question[0]->c_partially_message);
 				}
 					
 				$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = JText::_('COM_QUIZ_ANSWER_ACCEPTED');
 				if(($question[0]->c_type==8)&&($question[0]->c_right_message)) 
-				$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = htmlspecialchars(nl2br($question[0]->c_right_message));					
+				$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = htmlspecialchars($question[0]->c_right_message);					
 		
 				if ($cur_tmpl) {
 					

@@ -8,7 +8,7 @@
   <authorUrl>www.joomplace.com</authorUrl>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-  <version>3.4.1.027</version>
+  <version>3.4.1.035</version>
   <files folder="packages">
     <file type="component" id="com_joomlaquiz">com_joomlaquiz_expert.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_lastten.zip</file>
@@ -31,5 +31,6 @@
     <file type="plugin" id="truefalse" group="joomlaquiz">plg_truefalse.zip</file>
     <file type="plugin" id="quiz_content" group="content">quiz_content_plugin.zip</file>
     <file type="plugin" id="quiz-xtd-button" group="content">quiz-xtd-button.zip</file>
+    <file type="plugin" id="plg_installer_joomplace" group="installer">plg_installer_joomplace.zip</file>
   </files>
 </extension>

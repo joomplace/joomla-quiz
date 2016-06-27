@@ -286,13 +286,17 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 			$answer = $data['data']['c_score'];
 		else 
 			$answer = 0;
+
+		$fontFamily = $data['pdf']->getFontFamily();
 					
 		$data['pdf']->Ln();
-		$data['pdf']->setStyle('b', true);
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', true);
 		$str = "  Scores:";
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-		
-		$data['pdf']->setStyle('b', false);
+
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', false);
 		$str = $answer;
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 				

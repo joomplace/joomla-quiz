@@ -18,6 +18,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	var $_name		= 'dalliclick';
 	
 	public function onCreateQuestion(&$data) {
+
 		
 		$database = JFactory::getDBO();
 		$query = "SELECT c_id as value, c_choice as text, '0' as c_right, '0' as c_review FROM #__quiz_t_dalliclick WHERE c_question_id = '".$data['q_data']->c_id."'";
@@ -27,7 +28,8 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 			$query .=  "\n ORDER BY ordering";
 		$database->SetQuery( $query );
 		$choice_data = $database->LoadObjectList();
-		
+
+
 		foreach($choice_data as $t=>$cd) {
 			JoomlaquizHelper::JQ_GetJoomFish($choice_data[$t]->text, 'quiz_t_dalliclick', 'c_choice', $choice_data[$t]->value);
 		}
@@ -76,8 +78,8 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 			jq_jQuery('.dc_layout').addClass(cls);
 		};
 		";
-		
-		if ($data['q_data']->c_qform && JoomlaquizHelper::jq_strpos($data['ret_add'], '{x}') !== false) {				
+
+		if ($data['q_data']->c_qform && JoomlaquizHelper::jq_strpos($data['ret_add'], '{x}') !== false) {
 			$data['ret_add'] = '<form onsubmit=\'javascript: return false;\' name=\'quest_form'.$data['q_data']->c_id.'\'>'.str_replace('{x}', $qhtml, $data['ret_add']).'</form>';
 			$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div style="width:100%;clear:both;" id="div_qoption'.$data['q_data']->c_id.'"><!-- x --></div>]]></quest_data_user>' . "\n";
 		} else {
@@ -88,7 +90,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		$data['ret_str'] .= "\t" . '<img_height>'.$h.'</img_height>' . "\n";
 		if(!$data['q_data']->sq_delayed) $data['q_data']->sq_delayed = 1;
 		$data['ret_str'] .= "\t" . '<sq_delayed>'.$data['q_data']->sq_delayed.'</sq_delayed>' . "\n";
-		
+
+
+
+
 		return $data['ret_str'];
 	}
 	
@@ -186,6 +191,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 					$database->SetQuery($query);
 					$database->query();
 				}
+
 				
 				$data['score'] = $c_quest_score;
 
@@ -374,7 +380,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 					$w = $h = $width;
 				}
 			}
-		}		
+		}
 		
 		$review_data = array();
 		$review_data['choice_data'] = $choice_data;
@@ -408,6 +414,8 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetPdf(&$data){
+
+		$fontFamily = $data['pdf']->getFontFamily();
 		
 		for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {
 			if($data['data']['c_choice'][$j]['c_choice_id']) {
@@ -419,21 +427,25 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 			}
 			
 			$data['pdf']->Ln();
-			$data['pdf']->setStyle('b', true);
+			$data['pdf']->setFont($fontFamily, 'B');
+			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-	
-			$data['pdf']->setStyle('b', false);
+
+			$data['pdf']->setFont($fontFamily, 'B');
+			//$data['pdf']->setStyle('b', false);
 			$str = $data['c_choice'][$j]['c_choice'];
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 	
 		}
 
 		$data['pdf']->Ln();
-		$data['pdf']->setStyle('b', true);
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', true);
 		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
-		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);	
-		$data['pdf']->setStyle('b', false);
+		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 				

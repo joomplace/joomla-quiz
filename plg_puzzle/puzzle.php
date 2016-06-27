@@ -259,6 +259,8 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetPdf(&$data){
+
+		$fontFamily = $data['pdf']->getFontFamily();
 		
 		if($data['data']['c_score']) 
 			$answer = $data['data']['c_score'];
@@ -266,11 +268,13 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 			$answer = 0;
 					
 		$data['pdf']->Ln();
-		$data['pdf']->setStyle('b', true);
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', true);
 		$str = "  Scores:";
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-		
-		$data['pdf']->setStyle('b', false);
+
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', false);
 		$str = $answer;
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 				

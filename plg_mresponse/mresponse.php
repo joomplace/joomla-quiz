@@ -357,6 +357,8 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetPdf(&$data){
+
+		$fontFamily = $data['pdf']->getFontFamily();
 		
 		for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {
 			if($data['data']['c_choice'][$j]['c_choice_id']) {
@@ -368,21 +370,25 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 			}
 					
 			$data['pdf']->Ln();
-			$data['pdf']->setStyle('b', true);
+			$data['pdf']->setFont($fontFamily, 'B');
+			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-			
-			$data['pdf']->setStyle('b', false);
+
+			$data['pdf']->setFont($fontFamily, 'B');
+			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_choice'][$j]['c_choice'];
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 			
 		}
 
 		$data['pdf']->Ln();
-		$data['pdf']->setStyle('b', true);
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', true);
 		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
-		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);	
-		$data['pdf']->setStyle('b', false);
+		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 				

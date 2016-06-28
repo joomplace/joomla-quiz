@@ -145,7 +145,7 @@ class JoomlaquizModelResults extends JModelList
 				else {
 					if (stripos(trim($search), 'code:') === 0)
 					{
-						$query->where('CONCAT(sq.c_id,sq.c_student_id,sq.c_total_score) = "'.base_convert(str_replace('code:','',trim($search)),36,10).'"');
+						$query->where('CONCAT("'.JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').'",sq.c_id,sq.c_student_id,sq.c_total_score) = "'.base_convert(str_replace('code:','',trim($search)),36,10).'"');
 					}
 					else {
 						$search = $db->Quote('%'.$db->escape($search, true).'%');

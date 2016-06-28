@@ -292,13 +292,17 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str = JText::_('COM_QUIZ_PDF_USPENT');
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-		$pdf->setStyle('b', true);
+		$fontFamily = $pdf->getFontFamily();
+
+		$pdf->setFont($fontFamily, 'B');
+		//$pdf->setStyle('b', true);
 		$str = str_pad($tot_min, 2, "0", STR_PAD_LEFT) . ":" . str_pad(
 				$tot_sec, 2, "0", STR_PAD_LEFT
 			);
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-		$pdf->setStyle('b', false);
+		$pdf->setFont($fontFamily, 'B');
+		//$pdf->setStyle('b', false);
 		$str = JText::_('COM_QUIZ_PDF_QTIME');
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
@@ -341,12 +345,14 @@ class JoomlaquizModelPrintresult extends JModelList
 			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
 
 			$pdf->Ln();
-			$pdf->setStyle('b', true);
+			$pdf->setFont($fontFamily, 'B');
+			//$pdf->setStyle('b', true);
 			$str = ($i + 1) . ".[" . number_format($data['c_score'],1) . '/' . number_format($data['c_point'],1)
 				. "]";
 			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-			$pdf->setStyle('b', false);
+			$pdf->setFont($fontFamily, 'B');
+			//$pdf->setStyle('b', false);
 			$str = $data['c_question'];
 			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 

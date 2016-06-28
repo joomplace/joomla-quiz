@@ -30,14 +30,6 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 			JoomlaquizHelper::JQ_GetJoomFish($match_data[$t]->c_right_text, 'quiz_t_matching', 'c_right_text', $match_data[$t]->c_id);
 			JoomlaquizHelper::JQ_GetJoomFish($match_data[$t]->c_left_text, 'quiz_t_matching', 'c_left_text', $match_data[$t]->c_id);
 		}
-
-		/*Change language before ajax post*/
-		$lang = JFactory::getLanguage();
-		$extension = 'com_joomlaquiz';
-		$base_dir = JPATH_SITE;
-		$language_tag = $lang->getTag();;
-		$reload = true;
-		$lang->load($extension, $base_dir, $language_tag, $reload);
 						
 		$shuffle_match = $match_data;
 		shuffle($shuffle_match);
@@ -384,22 +376,28 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetPdf(&$data){
+
+		$fontFamily = $data['pdf']->getFontFamily();
 		
 		$data['pdf']->Ln();
-		$data['pdf']->setStyle('b', true);
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', true);
 		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-		
-		$data['pdf']->setStyle('b', false);
+
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', false);
 		$data['pdf']->Ln();
 				
 		for($j=0,$k='A';$j < count($data['data']['c_matching']);$j++,$k++) {			
 			$data['pdf']->Ln();
-			$data['pdf']->setStyle('b', true);
+			$data['pdf']->setFont($fontFamily, 'B');
+			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-			
-			$data['pdf']->setStyle('b', false);
+
+			$data['pdf']->setFont($fontFamily, 'B');
+			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_matching'][$j]['c_left_text']." - ".$data['data']['c_matching'][$j]['c_sel_text']."";				
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 		}

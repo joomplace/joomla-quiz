@@ -239,6 +239,8 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetPdf(&$data){
+
+		$fontFamily = $data['pdf']->getFontFamily();
 		
 		if($data['data']['is_correct']) 
 			$answer = JText::_('COM_QUIZ_PDF_RIGHT');
@@ -246,11 +248,13 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 			$answer = ' '.JText::_('COM_QUIZ_PDF_WRONG');
 					
 		$data['pdf']->Ln();
-		$data['pdf']->setStyle('b', true);
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', true);
 		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-		
-		$data['pdf']->setStyle('b', false);
+
+		$data['pdf']->setFont($fontFamily, 'B');
+		//$data['pdf']->setStyle('b', false);
 		$str = $answer;
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 				

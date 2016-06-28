@@ -116,21 +116,25 @@ class jq_pdf {
 		//set margins
 		$this->_engine->SetMargins($this->_margin_left, $this->_margin_top, $this->_margin_right);
 		//set auto page breaks
+		
 		$this->_engine->SetAutoPageBreak(TRUE, $this->_margin_bottom);
 		$this->_engine->SetHeaderMargin($this->_margin_header);
 		$this->_engine->SetFooterMargin($this->_margin_footer);
 		$this->_engine->setImageScale($this->_image_scale); 
 		$this->_engine->setRTL($this->_isRTL);
+
 		$this->_engine->setHeaderData('', 0, $config->sitename, $config->live_site." . "._PDF_GENERATED .' '. JHtml::_('date', time() , 'j F, Y, H:i' ) );	
 		
 		// Set PDF Header and Footer fonts
 		$font = 'freesans';
-	
+
 		$this->_engine->setHeaderFont(array($font, '', 7));
 		$this->_engine->setFooterFont(array($font, '', 7));
+		
 	}
 	
 	function cleanText($text) {
+
 		$text = trim(strip_tags($text));
 		$text = str_replace("\t",'', $text);
 		$text = str_replace("&nbsp;",' ', $text);
@@ -171,7 +175,7 @@ class jq_pdf {
 	
 	function decodeHTML( $string ) {
 		$string = strtr( $string, array_flip($this->get_html_translation_table_my( ) ) );
-		$string = preg_replace( "/&#([0-9]+);/me", "chr('\\1')", $string );
+		//$string = preg_replace( "/&#([0-9]+);/me", "chr('\\1')", $string );
 		return $string;
 	}
 }

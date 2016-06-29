@@ -48,6 +48,8 @@ class JoomlaQuiz_template_class extends JoomlaQuizTemplateClass {
 		
 		if ( JoomlaquizHelper::jq_substr($live_url, strlen($live_url)-1, 1) !== '/')
 			$live_url .= '/';
+
+		$tmpl_folder = 'joomlaquiz_t3_bs3';
 		
 		$hide_result_panel = JText::_('COM_QUIZ_HIDE_RESULT_PANEL');
 		$show_result_panel = JText::_('COM_QUIZ_SHOW_RESULT_PANEL');

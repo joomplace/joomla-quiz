@@ -215,7 +215,7 @@ class JoomlaquizModelPrintresult extends JModelList
 
 		$pdf = &$pdf_doc->_engine;
 
-		$pdf->AliasNbPages();
+		$pdf->getAliasNbPages();
 		$pdf->AddPage();
 
 		$pdf->SetFontSize(10);

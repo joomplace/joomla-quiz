@@ -495,7 +495,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 		$c_qform[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_DROP_DOWN'));
 		$c_qform = JHTML::_('select.genericlist', $c_qform, 'jform[c_qform]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_qform) ? intval( $row->c_qform ) : 0)); 
 		$lists['c_qform']['input'] = $c_qform;
-		$lists['c_qform']['label'] = JText::_('COM_JOOMLAQUIZ_DISPLAY_STYLE');
+		$lists['c_qform']['label'] = '<label class="hasTooltip control-label" title data-original-title="'.JText::_('COM_JOOMLAQUIZ_IF_THE_DISPLAY').'" for="c_qform" id="c_qform-lbl" style="width:156px;">'.JText::_('COM_JOOMLAQUIZ_DISPLAY_STYLE').'</label>';
 			
 		$c_layout = array();
 		$c_layout[] = JHTML::_('select.option', 0, JText::_('COM_JOOMLAQUIZ_VERTICAL'));

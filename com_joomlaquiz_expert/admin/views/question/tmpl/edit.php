@@ -135,7 +135,11 @@ $ordering_list = $this->ordering_list;
 			if(count($this->add_form)){
 				foreach($this->add_form as $for => $item){?>
 				<div class="control-group">
+				<?php if ($for=='c_qform') 
+			              echo $item['label'];
+				      else {?>					
 					<label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $item['label']?></label>
+				<?php }?>
 					<div class="controls">
 						<?php echo $item['input']?>
 					</div>

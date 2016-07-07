@@ -589,6 +589,8 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 					
 					$new_field->ordering = $field_order;
 					$new_field->a_point = floatval($_POST['jq_a_points'][$mcounter]);
+					if($new_field->a_point < 0)
+						$new_field->a_point = 0;
 					$new_field->c_quiz_id	= intval($_POST['jform']['c_quiz_id']);
 					$database->setQuery("SELECT COUNT(c_id) FROM #__quiz_t_choice WHERE c_id = '".$new_field->c_id."'");
 					$exists = $database->loadResult();

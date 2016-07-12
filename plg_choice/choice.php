@@ -368,7 +368,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 				$correct_answer .= $k." ";
 			}
 
-			$fontFamily = $data['pdf']->getFontFamily();
+			$fontFamily = 'freesans';
 					
 			$data['pdf']->Ln();
 

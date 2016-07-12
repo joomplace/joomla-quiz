@@ -183,7 +183,7 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
-		$fontFamily = $data['pdf']->getFontFamily();
+		$fontFamily = 'freesans';
 		
 		$data['pdf']->Ln();
 		$data['pdf']->setFont($fontFamily, 'B');

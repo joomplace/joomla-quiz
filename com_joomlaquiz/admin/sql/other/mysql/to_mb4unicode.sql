@@ -60,14 +60,10 @@ ALTER TABLE `#__quiz_t_category` CHANGE `c_instruction` `c_instruction` text CHA
 ALTER TABLE `#__quiz_t_choice` CHANGE `c_choice` `c_choice` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_t_choice` CHANGE `c_right` `c_right` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "0";
 ALTER TABLE `#__quiz_t_choice` CHANGE `c_incorrect_feed` `c_incorrect_feed` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
-ALTER TABLE `#__quiz_t_dalliclick` CHANGE `c_choice` `c_choice` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
-ALTER TABLE `#__quiz_t_dalliclick` CHANGE `c_right` `c_right` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
-ALTER TABLE `#__quiz_t_dalliclick` CHANGE `c_incorrect_feed` `c_incorrect_feed` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_t_ext_hotspot` CHANGE `c_paths` `c_paths` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_t_faketext` CHANGE `c_text` `c_text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_t_matching` CHANGE `c_left_text` `c_left_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_t_matching` CHANGE `c_right_text` `c_right_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
-ALTER TABLE `#__quiz_t_memory` CHANGE `c_img` `c_img` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_t_qtypes` CHANGE `c_qtype` `c_qtype` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_t_qtypes` CHANGE `c_type` `c_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_t_question` CHANGE `c_question` `c_question` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL  DEFAULT "";

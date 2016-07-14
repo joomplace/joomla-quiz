@@ -240,7 +240,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
-		$fontFamily = 'freesans';
+		$fontFamily = $data['pdf']->getFontFamily();
 		
 		if($data['data']['is_correct']) 
 			$answer = JText::_('COM_QUIZ_PDF_RIGHT');

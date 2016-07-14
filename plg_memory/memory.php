@@ -287,7 +287,7 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 		else 
 			$answer = 0;
 
-		$fontFamily = 'freesans';
+		$fontFamily = $data['pdf']->getFontFamily();
 					
 		$data['pdf']->Ln();
 		$data['pdf']->setFont($fontFamily, 'B');

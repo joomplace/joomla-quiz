@@ -399,6 +399,17 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 			$query = "SELECT * FROM #__quiz_t_question WHERE c_quiz_id = ".$quiz->c_id;
 			$database->SetQuery($query);
 			$quest_data = $database->LoadObjectList();
+
+			$query = "SELECT `c_question_id` FROM #__quiz_t_pbreaks";
+			$database->SetQuery($query);
+			$pbreaks_data = $database->LoadObjectList();
+
+			$pbreaks = array();
+
+			foreach ($pbreaks_data as $array) {
+				array_push($pbreaks, $array->c_question_id);
+			}
+
 			$quiz_xml .= "\n\t\t\t\t<quiz_questions>";
 			for ($j=0, $nj=count($quest_data); $j < $nj; $j++) {
 				$quest = $quest_data[$j];
@@ -408,6 +419,12 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 				$quiz_xml .= "\n\t\t\t\t\t\t<question_image><![CDATA[".$quest->c_image."]]></question_image>";
 				$quiz_xml .= "\n\t\t\t\t\t\t<question_rmess><![CDATA[".$quest->c_right_message."]]></question_rmess>";
 				$quiz_xml .= "\n\t\t\t\t\t\t<question_wmess><![CDATA[".$quest->c_wrong_message."]]></question_wmess>";
+
+
+				if (array_search($quest->c_id, $pbreaks) === false) $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[0]]></question_pbeaks>";
+				else $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[1]]></question_pbeaks>";
+
+
 				$quiz_xml .= "\n\t\t\t\t\t</quiz_question>";
 				if($quest->c_image) 
 				{
@@ -1047,6 +1064,18 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 											echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 											exit();
 										}
+
+										if ($q_quest->question_pbeaks) {
+											/*Input pbreaks for questions*/
+											$lastId = $database->insertid();
+											$query = "INSERT INTO `#__quiz_t_pbreaks` (`c_id`, `c_quiz_id`, `c_question_id`) VALUES ('', " . $db->quote($new_quiz_id) . ", " . $db->quote($lastId) . ")";
+											$database->setQuery($query);
+											if (!$database->execute()) {
+												echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+												exit();
+											}
+										}
+
 										if($q_quest->question_image) $quiz_images[] = $q_quest->question_image;
 										$new_quest_id = $database->insertid();
 									}
@@ -1060,6 +1089,17 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 											echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 											exit();
 										}
+
+										if ($q_quest->question_pbeaks) {
+											/*Input pbreaks for questions*/
+											$query = "INSERT INTO `#__quiz_t_pbreaks` (`c_id`, `c_quiz_id`, `c_question_id`) VALUES ('', " . $db->quote($new_quiz_id) . ", " . $db->quote($q_quest->id) . ")";
+											$database->setQuery($query);
+											if (!$database->execute()) {
+												echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+												exit();
+											}
+										}
+
 										if($q_quest->question_image) $quiz_images[] = $q_quest->question_image;
 										$new_quest_id = $q_quest->id;
 									}

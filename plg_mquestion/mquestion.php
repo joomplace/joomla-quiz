@@ -397,6 +397,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
+		$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
 		
 		$data['pdf']->Ln();

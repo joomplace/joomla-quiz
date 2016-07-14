@@ -292,6 +292,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str = JText::_('COM_QUIZ_PDF_USPENT');
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
+		$pdf->SetFont('freesans');
 		$fontFamily = $pdf->getFontFamily();
 
 		$pdf->setFont($fontFamily, 'B');

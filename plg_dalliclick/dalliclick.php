@@ -415,6 +415,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
+		$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
 		
 		for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {

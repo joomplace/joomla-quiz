@@ -363,8 +363,9 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetPdf(&$data){
-		
-		$fontFamily = 'freesans';
+
+		$data['pdf']->SetFont('freesans');
+		$fontFamily = $data['pdf']->getFontFamily();
 		
 		$data['pdf']->Ln();
 		$data['pdf']->setFont($fontFamily, 'B');

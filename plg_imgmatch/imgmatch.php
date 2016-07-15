@@ -313,7 +313,8 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
-		$fontFamily = 'freesans';
+		$data['pdf']->SetFont('freesans');
+		$fontFamily = $data['pdf']->getFontFamily();
 		
 		if($data['data']['c_score']) 
 			$answer = $data['data']['c_score'];

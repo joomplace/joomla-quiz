@@ -34,8 +34,12 @@ JHtml::_('script', 'system/core.js', true, true);
 			?>
 			<tr class="sectiontableentry<?php echo $k; ?>">
 				<td align="center"><?php echo ( $pagination->limitstart + $i + 1 ); ?></td>
-				<td align="left">							
-					<span title="<?php echo JFactory::getUser($row->c_student_id)->username; ?>" alt="<?php echo JFactory::getUser($row->c_student_id)->username; ?>" style="cursor: help;"><?php echo JFactory::getUser($row->c_student_id)->name; ?></span>
+				<td align="left">
+					<?php if ($row->name) { ?>
+						<span title="<?php echo JFactory::getUser($row->c_student_id)->username; ?>" alt="<?php echo JFactory::getUser($row->c_student_id)->username; ?>" style="cursor: help;"><?php echo JFactory::getUser($row->c_student_id)->name; ?></span>
+					<?php } else {  ?>
+						<span title="<?php echo $row->user_surname; ?>" alt="<?php echo $row->user_surname; ?>" style="cursor: help;"><?php echo $row->user_name; ?></span>
+					<?php } ?>
 				</td>
 				<td align="left">
 					<a href="<?php echo $link; ?>">								

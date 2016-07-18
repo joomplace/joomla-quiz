@@ -68,6 +68,8 @@ class JoomlaquizModelResults extends JModelList
 			->select($db->qn('sq.c_passing_score','sq_c_passing_score'))
 			->select($db->qn('sq.c_quiz_id'))
 			->select($db->qn('sq.c_student_id'))
+			->select($db->qn('sq.user_name'))
+			->select($db->qn('sq.user_surname'))
 			->select($db->qn('q.c_id'))
 			->select($db->qn('q.c_title'))
 			->select($db->qn('q.c_author'))

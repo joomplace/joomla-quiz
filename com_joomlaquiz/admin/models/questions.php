@@ -428,22 +428,31 @@ class JoomlaquizModelQuestions extends JModelList
 			$quest_id = 0;
 			$opt_ordering = 0;
 
+			if (!$userfileTempName) {
+
+				$app = JFactory::getApplication();
+
+				$app->enqueueMessage('File is not selected.', 'Warning');
+
+				JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions');
+			}
+
 			/*******************PARSE CSV FILE***********************/
-	
+
 			$csv = file_get_contents($userfileTempName);
 			$rows = explode("\r",str_replace("\n","\r",$csv));
 			$rows = array_filter($rows);
-	
+
 			$rowsAssoc = array();
 			$keys = array();
-	
+
 			$i = 0;
-	
+
 			if(!$rows) {
 				$msg = JText::_('COM_JOOMLAQUIZ_UPLOAD_FAILED');
 				echo "<script> alert('".$msg."'); window.history.go(-1); </script>\n"; exit();
 			}
-	
+
 			foreach ($rows as $row){
 				$row = str_getcsv($row);
 				if ($i === 0) $keys = $row;
@@ -456,7 +465,7 @@ class JoomlaquizModelQuestions extends JModelList
 				}
 				$i++;
 			}
-	
+
 			$rows = $rowsAssoc;
 			/*********************************************************/
 

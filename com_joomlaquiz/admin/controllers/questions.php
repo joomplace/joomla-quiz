@@ -235,31 +235,32 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 		
 		public function deleteQuestions() {
 
-			$cids = JFactory::getApplication()->input->get('cids',array(),'array');
-			
-			$cids = explode(',', $cids[0]);
-
-			$model = $this->getModel();
-			$model->delete($cids);
-
-			JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
-		}
+		$cids = JFactory::getApplication()->input->get('cids',array(),'array');
 		
+		$cids = explode(',', $cids[0]);
+
+		$model = $this->getModel();
+		$model->delete($cids);
+
+		JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
+		}
+
 		public function checkComplitedQuestions() {
 
 			$cid = JFactory::getApplication()->input->get('cid',array(),'array');
 
 			$cids = implode( ',', $cid );
 			$database = JFactory::getDBO();
+			if ($cid) {
+				$query = $database->getQuery(true);
+				$query->select($database->qn('c_question_id'))
+					->from($database->qn('#__quiz_r_student_question'))
+					->where($database->qn('c_question_id').' IN ('.implode(',',array_filter($cid)).')')
+					->group($database->qn('c_question_id'));
+					$database->setQuery($query);
+				$q_ids = $database->loadColumn();
+			}
 			
-			$query = $database->getQuery(true);
-			$query->select($database->qn('c_question_id'))
-				->from($database->qn('#__quiz_r_student_question'))
-				->where($database->qn('c_question_id').' IN ('.implode(',',array_filter($cid)).')')
-				->group($database->qn('c_question_id'));
-				$database->setQuery($query);
-			$q_ids = $database->loadColumn();
-
 			if ($q_ids) {
 
 				$query = $database->getQuery(true);
@@ -271,15 +272,17 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 
 				$app = JFactory::getApplication();
 
-				$app->enqueueMessage('Question'.((count($q_ids) > 1)?'s ':' ').strip_tags(implode(', ',$questions)).' have been completed. Do you really want to delete them ?', 'Notice');
-
-				echo 	'<form action="'.JRoute::_('index.php?option=com_joomlaquiz&view=questions&task=questions.deleteQuestions').'" method="post" name="adminForm" id="adminForm">
+				$app->enqueueMessage('Question'.((count($q_ids) > 1)?'s ':' ').strip_tags(implode(', ',$questions)).' have been completed. Do you really want to delete them ?'.
+					'<form action="'.JRoute::_('index.php?option=com_joomlaquiz&view=questions&task=questions.deleteQuestions').'" method="post" name="message-Form" id="message-Form">
 							<div>
+							<br>
 								<button class="btn" type="submit" title="Delete"><i>Delete</i></button>
 								<a class="btn" type="button" title="Cancel" href ='."'".JRoute::_("index.php?option=com_joomlaquiz&view=questions")."'".'><i>Cancel</i></a>
 								<input type="hidden" name="cids" value="'.$cids.'" />
 							</div>
-						</form>';
+						</form>', 'Message');
+
+				JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
 
 				return true;
 			}

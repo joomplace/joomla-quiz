@@ -396,4 +396,14 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name, field_type) {
 			}
 		}
 	//-->
+	
+	/* dumb code here as we`ve not renamed our columns still */
+	var initialgetUrlParam = getUrlParam;
+	getUrlParam = function(){
+		if(arguments[0] == 'view'){
+			return 'lp';
+		}else{
+			return initialgetUrlParam.apply(document, arguments);
+		}
+	}
 </script>

@@ -7,7 +7,7 @@
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
   <authorEmail>support@joomplace.com</authorEmail>
   <authorUrl>www.joomplace.com</authorUrl>
-  <version>3.4.1.038</version>
+  <version>3.5.0.002</version>
   <description>This component manages Quizzes and Quiz Clients</description>
   <scriptfile>script.php</scriptfile>
   <install>

@@ -396,4 +396,14 @@ $input = $app->input;
 			}
 		}
 	//-->
+	
+	/* dumb code here as we`ve not renamed our columns still */
+	var initialgetUrlParam = getUrlParam;
+	getUrlParam = function(){
+		if(arguments[0] == 'view'){
+			return 'lp';
+		}else{
+			return initialgetUrlParam.apply(document, arguments);
+		}
+	}
 </script>

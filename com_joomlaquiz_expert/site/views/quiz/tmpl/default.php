@@ -36,9 +36,9 @@ if ($quiz->template_name) {
 	JoomlaquizHelper::JQ_load_template($quiz->template_name);
 }
 $document = JFactory::getDocument();
-$document->addScript(JURI::root()."components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
-$document->addScript(JURI::root()."components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
-$document->addStyleSheet(JURI::root().'components/com_joomlaquiz/assets/css/joomlaquiz.css');
+$document->addScript(JURI::root(true)."components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
+$document->addScript(JURI::root(true)."components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
+$document->addStyleSheet(JURI::root(true).'components/com_joomlaquiz/assets/css/joomlaquiz.css');
 	
 ?>
 
@@ -46,8 +46,8 @@ $document->addStyleSheet(JURI::root().'components/com_joomlaquiz/assets/css/joom
 <?php echo JText::_('COM_JQ_NOSCRIPT');?>
 </noscript>
 
-<script language="JavaScript" src="<?php echo JURI::root();?>components/com_joomlaquiz/assets/js/bits_mycommon.js" type="text/javascript"></script>
-<script language="JavaScript" src="<?php echo JURI::root();?>components/com_joomlaquiz/assets/js/bits_message.js" type="text/javascript"></script>
+<script language="JavaScript" src="<?php echo JURI::root(true);?>components/com_joomlaquiz/assets/js/bits_mycommon.js" type="text/javascript"></script>
+<script language="JavaScript" src="<?php echo JURI::root(true);?>components/com_joomlaquiz/assets/js/bits_message.js" type="text/javascript"></script>
 <?php
 	include_once(JPATH_SITE.'/components/com_joomlaquiz/views/quiz/tmpl/js/joomlaquiz.js.php');
 ?>

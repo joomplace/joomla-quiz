@@ -224,8 +224,11 @@ class JoomlaquizModelResults extends JModelList
 			case 6: //Fill the blank
 				$query = "SELECT SUM(points) FROM #__quiz_t_blank WHERE c_question_id = '". $row->c_question_id ."'";
 				break;
-			default:
+			case 10: //Muiltiple question
 				$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = '" . $row->c_question_id . "'";
+				break;
+			default:
+				$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = '" . $row->c_question_id . "' AND c_right = 1";
 		}
 
 		$database->SetQuery($query);

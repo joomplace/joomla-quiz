@@ -47,7 +47,7 @@ var kol_main_elems = 0;
 var main_ids_array = new Array(kol_main_elems); //for likert quest
 // *** MESSAGES ***
 var mes_complete_this_part = '<?php echo addslashes( JText::_('COM_MES_COMPLETE_THIS_PART'))?>';
-var mes_loading = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/loading1.gif" border="0" alt="" title="" />';
+var mes_loading = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/loading1.gif" border="0" alt="" title="" />';
 var mes_failed = '<?php echo addslashes( JText::_('COM_QUIZ_FAILED'))?>';
 var mes_please_wait = '<?php echo addslashes( JText::_('COM_MES_PLEASE_WAIT'))?>';
 var mes_time_is_up = '<?php echo addslashes(JText::_('COM_QUIZ_MES_TIMEOUT'))?>';
@@ -88,7 +88,7 @@ var path_elems = new Array();
 var mes_question_is_misconfigured = '<?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IS_CONFIGURED');?>';
 
 <?php
-$live_site = JURI::root();
+$live_site = JURI::root().JUri::root(true);
 if (substr($_SERVER['HTTP_HOST'],0,4) == 'www.') {
 	if (strpos($live_site, 'www.') === false)
 		$live_site = str_replace(substr($_SERVER['HTTP_HOST'],4), $_SERVER['HTTP_HOST'], $live_site);
@@ -898,17 +898,17 @@ function jq_processFeedback(task, is_preview, skip_question){
 						if (prev_correct == '1') { // correct answer
 							<?php if ($quiz->c_slide) { ?>
 								<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/result_panel_true.png" border=0>';
+									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/result_panel_true.png" border=0>';
 								<?php } else {?>
-									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/tick.png" border=0>';
+									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/tick.png" border=0>';
 								<?php }?>
 							<?php } ?>
 						} else { // incorrect answer
 							<?php if ($quiz->c_slide) { ?>
 								<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/result_panel_false.png" border=0>';
+									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/result_panel_false.png" border=0>';
 								<?php } else {?>
-									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/publish_x.png" border=0>';
+									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/publish_x.png" border=0>';
 								<?php }?>
 							<?php } ?>
 
@@ -924,17 +924,17 @@ function jq_processFeedback(task, is_preview, skip_question){
 				if (prev_correct == '1') {
 					<?php if ($quiz->c_slide) { ?>
 						<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/result_panel_true.png" border=0>';
+							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/result_panel_true.png" border=0>';
 						<?php } else {?>
-							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/tick.png" border=0>';
+							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/tick.png" border=0>';
 						<?php } ?>
 					<?php } ?>
 				} else {
 					<?php if ($quiz->c_slide) { ?>
 						<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/result_panel_false.png" border=0>';
+							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/result_panel_false.png" border=0>';
 						<?php } else {?>
-							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root()?>components/com_joomlaquiz/assets/images/publish_x.png" border=0>';
+							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>components/com_joomlaquiz/assets/images/publish_x.png" border=0>';
 						<?php } ?>
 					<?php } ?>
 				}

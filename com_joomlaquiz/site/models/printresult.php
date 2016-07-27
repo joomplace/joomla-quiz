@@ -165,7 +165,7 @@ class JoomlaquizModelPrintresult extends JModelList
 	 *
 	 * @return array
 	 */
-	protected function generatePDF($sid)
+	public function generatePDF($sid)
 	{
 		$appsLib = JqAppPlugins::getInstance();
 		$plugins = $appsLib->loadApplications();

@@ -42,9 +42,25 @@ class JoomlaquizController extends JControllerLegacy
 				$version = substr( $version_info, 0, $version_info_pos );
 				$info = substr( $version_info, $version_info_pos + 1 );
 			}
+
+			$version_arr = explode('.',$version);
+			array_pop($version_arr);
+
+			$jq_version_arr = explode('.',$jq_version);
+			array_pop($jq_version_arr);
+
+			$actual_version = true;
+
+			foreach ($version_arr as $key => $value) {
+				if ((int)$value < (int)$jq_version_arr[$key]) {
+					$actual_version = false;
+					break;
+				}
+			}
+
 			if($s->error || $s->status != 200){
 		    	echo '<font color="red">Connection to update server failed: ERROR: ' . $s->error . ($s->status == -100 ? 'Timeout' : $s->status).'</font>';
-		    } else if($version == $jq_version){
+			} else if($actual_version){
 		    	echo '<font color="green">' . $version . '</font>' . $info;
 		    } else {
 		    	echo '<font color="red">' . $version . '</font>&nbsp;<a href="http://www.joomplace.com/members-area.html" target="_blank">(Upgrade to the latest version)</a>' ;

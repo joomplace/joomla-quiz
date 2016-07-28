@@ -141,7 +141,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				$font_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $font_text);
 				$font_text = str_replace("#course#",$this->revUni($stu_quiz->c_title), $font_text);
 				$stu_datetime = strtotime($stu_quiz->c_date_time) + $stu_quiz->c_total_time;
-
+				
 				if (count($cb_fields)) {
 					foreach($cb_fields as $cb_field) {	
 						if ($cb_data && isset($cb_data->$cb_field))
@@ -243,7 +243,6 @@ class JoomlaquizModelPrintcert extends JModelList
 
 					break;
 				}
-
 				$query = "SELECT * FROM #__quiz_cert_fields WHERE cert_id = '{$certif->id}' ORDER BY c_id";
 				$database->setQuery($query);
 				$fields = $database->loadObjectList();
@@ -306,12 +305,20 @@ class JoomlaquizModelPrintcert extends JModelList
 							$font_text = str_replace('#date#', date('Y-m-d', $stu_datetime), $font_text);
 							
 							$field->f_text = $font_text;
-						}
+						} 
 			
 						$font = JPATH_SITE . "/media/".(isset($field->font)? $field->font: 'arial.ttf');
-						if ($field->shadow) imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2, $grey, $font, $field->f_text);
 						
+						/*if ($field->shadow) imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2, $grey, $font, $field->f_text);
+				
 						imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
+						*/
+						$set = 150;
+						$max_width = imagesx($im);
+						$this->write_multiline_text($im, $field->text_h, $field->text_x + $ad, $field->text_y, $black, $font, $grey, $field->shadow, $field->f_text, $max_width-$set);
+						
+						
+						
 					}
 				}
 
@@ -385,7 +392,8 @@ class JoomlaquizModelPrintcert extends JModelList
 	/*
 		to use this function to match need to be reconstructed.
 	*/
-	function write_multiline_text($image, $font_size, $color, $font, $text, $start_x, $start_y, $max_width) { 
+
+	function write_multiline_text ($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width) { 
 		//split the string 
 		//build new string word for word 
 		//check everytime you add a word if string still fits 
@@ -407,15 +415,17 @@ class JoomlaquizModelPrintcert extends JModelList
 				$i--; 
 				$tmp_string = ""; 
 				$start_xx = $start_x + round(($max_width - $curr_width - $start_x) / 2);        
+				if ($shadow) imagettftext($image, $font_size, 0, $start_xx, $start_y, $grey, $font, $string);
 				imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string); 
 
 				$string = ""; 
-				$start_y += abs($dim[5]) * 2; 
+				$start_y += abs($dim[5]) * 1.2; 
 				$curr_width = 0;
 			} 
 		} 
 
 		$start_xx = $start_x + round(($max_width - $dim[4] - $start_x) / 2);        
+		if ($shadow) imagettftext($image, $font_size, 0, $start_xx, $start_y, $grey, $font, $string);
 		imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
-	}
+	} 
 }

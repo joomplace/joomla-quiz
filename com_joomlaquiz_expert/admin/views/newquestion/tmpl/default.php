@@ -65,11 +65,15 @@ $countOfQuest = sizeof($this->questions);
 		<?php while($i < count($this->questions)):?>
 			<tr>
 				<td width="50%">
-					<label for="new_qtype_id_<?php echo $this->questions[$i]->c_id?>"><input type="radio" onclick="isChecked(this.checked);" name="new_qtype_id" id="new_qtype_id_<?php echo $this->questions[$i]->c_id?>" value="<?php echo $this->questions[$i]->c_id?>" <?php echo ($new_qtype_id == $this->questions[$i]->c_id? ' checked="checked" ': '')?> /> <?php echo $this->questions[$i]->c_qtype;?></label>
+					<label for="new_qtype_id_<?php echo $this->questions[$i]->c_id?>"><input type="radio" onclick="isChecked(this.checked);" name="new_qtype_id" id="new_qtype_id_<?php echo $this->questions[$i]->c_id?>" value="<?php echo $this->questions[$i]->c_id?>" <?php echo ($new_qtype_id == $this->questions[$i]->c_id? ' checked="checked" ': '')?> />
+						<?php echo JText::_('COM_JOOMLAQUIZ_'.preg_replace("/[^a-zA-Z0-9]/", "_", $this->questions[$i]->c_qtype));?>
+					</label>
 				</td>
 				<td width="50%">
 					<?php if(isset($this->questions[$i+1])):?>
-					<label for="new_qtype_id_<?php echo $this->questions[$i+1]->c_id?>"><input type="radio" onclick="isChecked(this.checked);" name="new_qtype_id" id="new_qtype_id_<?php echo $this->questions[$i+1]->c_id?>" value="<?php echo $this->questions[$i+1]->c_id?>" <?php echo ($new_qtype_id == $this->questions[$i+1]->c_id? ' checked="checked" ': '')?> /> <?php echo $this->questions[$i+1]->c_qtype;?></label>
+					<label for="new_qtype_id_<?php echo $this->questions[$i+1]->c_id?>"><input type="radio" onclick="isChecked(this.checked);" name="new_qtype_id" id="new_qtype_id_<?php echo $this->questions[$i+1]->c_id?>" value="<?php echo $this->questions[$i+1]->c_id?>" <?php echo ($new_qtype_id == $this->questions[$i+1]->c_id? ' checked="checked" ': '')?> />
+						<?php echo JText::_('COM_JOOMLAQUIZ_'.preg_replace("/[^a-zA-Z0-9]/", "_", $this->questions[$i+1]->c_qtype));?>
+					</label>
 					<?php endif;?>
 				</td>
 			</tr>

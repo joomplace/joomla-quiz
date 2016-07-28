@@ -428,6 +428,15 @@ class JoomlaquizModelQuestions extends JModelList
 			$quest_id = 0;
 			$opt_ordering = 0;
 
+			if (!$userfileTempName) {
+
+				$app = JFactory::getApplication();
+
+				$app->enqueueMessage('File is not selected.', 'Warning');
+
+				JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions');
+			}
+
 			/*******************PARSE CSV FILE***********************/
 
 			$csv = file_get_contents($userfileTempName);

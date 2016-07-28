@@ -313,9 +313,9 @@ class JoomlaquizModelPrintcert extends JModelList
 				
 						imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
 						*/
-						$set = 150;
+
 						$max_width = imagesx($im);
-						$this->write_multiline_text($im, $field->text_h, $field->text_x + $ad, $field->text_y, $black, $font, $grey, $field->shadow, $field->f_text, $max_width-$set);
+						$this->write_multiline_text($im, $field->text_h, $field->text_x + $ad, $field->text_y, $black, $font, $grey, $field->shadow, $field->f_text, $max_width-$certif->cert_offset);
 						
 						
 						

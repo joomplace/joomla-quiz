@@ -46,6 +46,9 @@
 		<field name="text_size" type="text" class="input-xlarge" size="30"
 			label="COM_JOOMLAQUIZ_FONTSIZE"
 			required="false" labelclass="control-label" />
+		<field name="cert_offset" type="text" class="input-xlarge" size="30"
+			label="COM_JOOMLAQUIZ_OFFSET"
+			required="false" labelclass="control-label" /> 
 		
 		<field name="rules" type="rules" label="JFIELD_RULES_LABEL"
 			translate_label="false" class="inputbox" filter="rules"

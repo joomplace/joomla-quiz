@@ -79,6 +79,52 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=move_questions');
 		}
 		
+		public function move_question_cat(){
+			$cid = $this->input->get('cid', array(), 'array');
+			if (!is_array( $cid ) || count( $cid ) < 1) {
+				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
+				exit;
+			}
+			
+			$_SESSION['com_joomlaquiz.move.questions.cids'] = $cid;
+			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=move_questions_cat');
+		}
+		
+		public function move_question_cat_ok(){
+			$database = JFactory::getDBO();
+			$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];
+			$catMove = strval( JFactory::getApplication()->input->get('catmove') );
+			$cids = implode( ',', $cid );
+			$total = count( $cid );
+			
+			$query = "SELECT distinct c_ques_cat FROM #__quiz_t_question WHERE c_id IN ( $cids )";
+			$database->SetQuery( $query );
+			$ch_cat = $database->LoadObjectList();
+
+			$query = "UPDATE #__quiz_t_question"
+			. "\n SET c_ques_cat = '$catMove'"
+			. "WHERE c_id IN ( $cids )"
+			;
+			$database->setQuery( $query );
+			if ( !$database->execute() ) {
+				echo "<script> alert('". $database->getErrorMsg() ."'); window.history.go(-1); </script>\n";
+				exit();
+			}
+
+			if (count($ch_cat)) {
+				foreach ($ch_cat as $c_cat) {
+					JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($c_cat->c_ques_cat);
+				}
+			}
+			JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($catMove);
+			
+			$database->setQuery("SELECT `title` FROM #__categories WHERE id = '".$catMove."'");
+			$c_title = $database->loadResult();
+			
+			$msg = $total .JText::_('COM_JOOMLAQUIZ_QUESTION_MOVED_TO').$c_title;
+			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions', $msg );
+		}
+		
 		public function move_question(){
 			$database = JFactory::getDBO();
 			$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];

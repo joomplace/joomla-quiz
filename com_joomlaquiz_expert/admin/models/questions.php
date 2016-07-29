@@ -138,6 +138,20 @@ class JoomlaquizModelQuestions extends JModelList
 		return $items;
 	}
 	
+	public function getMoveQuestionsCat(){
+		$db = JFactory::getDBO();
+		
+		$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];
+		$cids = implode( ',', $cid );
+		$query = "SELECT a.c_question, b.title"
+		. "\n FROM #__quiz_t_question AS a LEFT JOIN #__categories AS b ON b.id = a.c_ques_cat"
+		. "\n WHERE a.c_id IN ( $cids )"
+		;
+				
+		$db->setQuery( $query );
+		return $db->loadObjectList();
+	}
+	
 	public function getCopyQuestions(){
 		$db = JFactory::getDBO();
 		

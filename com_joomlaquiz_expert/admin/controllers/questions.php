@@ -95,6 +95,20 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions', $msg );
 		}
 		
+		public function copy_questions_cat()
+		{
+			$cid = $this->input->get('cid', array(), 'array');
+			$_SESSION['com_joomlaquiz.move.questions.cids'] = $cid;
+			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=copy_questions_cat');
+		}
+		
+		public function copy_questions_cat_ok()
+		{
+			$model = $this->getModel();
+			$msg = $model->copyQuestionsCat();
+			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions', $msg);
+		}
+		
 		public function move_question_sel(){
 			$cid = $this->input->get('cid', array(), 'array');
 			if (!is_array( $cid ) || count( $cid ) < 1) {

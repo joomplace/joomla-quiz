@@ -24,15 +24,16 @@ class JoomlaquizModelPrintresult extends JModelList
 		$my = JFactory::getUser();
 		
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get('stu_quiz_id', 0 ) );
-		$user_unique_id = strval( JFactory::getApplication()->input->get( 'user_unique_id', '') );
+		$user_unique_id = JFactory::getApplication()->input->get( 'user_unique_id', '', 'STRING');
+		$unique_pass_id = JFactory::getApplication()->input->get( 'unique_pass_id', '', 'STRING');
 		
-		$query = "SELECT c_quiz_id, c_student_id, unique_id FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+		$query = "SELECT c_quiz_id, c_student_id, unique_id, unique_pass_id FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 		$database->SetQuery($query);
 		$st_quiz_data = $database->LoadObjectList();
 		
 		if (count($st_quiz_data)) {
 			$st_quiz_data = $st_quiz_data[0];
-			if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id))  ||  $my->authorise('core.manage','com_joomlaquiz')) {		
+			if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id || $unique_pass_id == $st_quiz_data->unique_pass_id))  ||  $my->authorise('core.manage','com_joomlaquiz')) {		
 				$this->JQ_PrintPDF($stu_quiz_id);
 				die();
 			}

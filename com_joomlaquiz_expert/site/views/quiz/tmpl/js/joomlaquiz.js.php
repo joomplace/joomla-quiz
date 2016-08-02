@@ -184,8 +184,8 @@ function jq_CreateQuestions() {
 
 		<?php if ($quiz->c_show_quest_pos) { ?>
 			<?php
-				if(preg_match("/t3_bs3/", $quiz->template_name)){
-				?>	
+				if(preg_match("/t3_bs3/", $quiz->template_name) || preg_match("/pretty_green/", $quiz->template_name)){
+				?>
 					question_info = question_info.replace("<!-- Z -->", (questions[i].cur_quest_num/quiz_count_quests)*100).replace("<!-- Z -->", (questions[i].cur_quest_num/quiz_count_quests)*100);
 					question_info = question_info.replace("<!-- QUESTION_X_Y -->", mes_quest_number.replace("{X}", questions[i].cur_quest_num).replace("{Y}", quiz_count_quests));
 					question_info = getProgressBar(questions[i].cur_quest_num, quiz_count_quests, question_info);

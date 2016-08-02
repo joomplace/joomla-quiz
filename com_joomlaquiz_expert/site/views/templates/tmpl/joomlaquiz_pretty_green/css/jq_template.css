@@ -441,7 +441,8 @@ blockquote span{
 	margin-top: -40px;/* moves on one level with .jq_time_tick_container */
 }
 .jq_question_info_container{
-	text-align: left;
+	/*text-align: left;*/
+	text-align: center;
 	line-height: 18px;
 	*text-align:left;
 	position: relative;/* for .jq_points_container */
@@ -453,6 +454,10 @@ blockquote span{
 }
 	
 /*------------- progressbar ----------------*/
+.progress-striped .bar {
+	background-color: #6d9f2c !important;
+}
+
 .jq_progressbar{
 	width: 100%;
 	margin: 10px 0;

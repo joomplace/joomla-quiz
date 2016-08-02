@@ -186,9 +186,14 @@ class JoomlaquizModelAjaxaction extends JModelList
 			
 			if (!$stu_quiz_id) {
 
-				$user_name = addslashes(JRequest::getString('uname', ''));
-				$user_surname = addslashes(JRequest::getString('usurname', ''));
-				$user_email = addslashes(JRequest::getString('uemail', ''));
+				if ($my->id) {
+					$user_name = $my->username;
+					$user_email = $my->email;
+				} else {
+					$user_name = addslashes(JRequest::getString('uname', ''));
+					$user_surname = addslashes(JRequest::getString('usurname', ''));
+					$user_email = addslashes(JRequest::getString('uemail', ''));
+				}
 				
 				JPluginHelper::importPlugin('content');
 				$dispatcher = JEventDispatcher::getInstance();

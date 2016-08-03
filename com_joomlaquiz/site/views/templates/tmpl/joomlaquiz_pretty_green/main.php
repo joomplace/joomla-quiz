@@ -23,12 +23,12 @@ class JoomlaQuiz_template_class extends JoomlaQuizTemplateClass {
 	public static function JQ_MainScreen($descr) {
 		
 		$document 	= JFactory::getDocument();
-		$document->addStyleSheet(JURI::root().'components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/css/jq_template.css');
-		$document->addStyleSheet(JURI::root().'components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/css/choosen.css');
-		$document->addScript(JURI::root()."components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
-		$document->addScript(JURI::root()."components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
-		$document->addScript(JURI::root().'components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/js/choosen.js');
-		$document->addScript(JURI::root()."components/com_joomlaquiz/assets/js/raphael.js");
+		$document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/css/jq_template.css');
+		$document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/css/choosen.css');
+		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
+		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
+		$document->addScript(JURI::root(true).'/components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/js/choosen.js');
+		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/raphael.js");
 		
 		$live_site = JURI::root();
 		if (JoomlaquizHelper::jq_substr($_SERVER['HTTP_HOST'],0,4) == 'www.') {

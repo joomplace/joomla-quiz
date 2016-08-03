@@ -18,11 +18,11 @@ class JoomlaquizViewResults extends JViewLegacy
 	protected $pagination;
 	protected $state;
     public $messageTrigger = false;
+
     function display($tpl = null) 
 	{
         $document = JFactory::getDocument();
         $document->addScript('components/com_joomlaquiz/assets/js/js.js');
-
 
 		$layout = $this->getLayout();
         $this->messageTrigger = $this->get('CurrDate');

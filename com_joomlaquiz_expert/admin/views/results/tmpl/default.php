@@ -35,6 +35,11 @@ $sortFields = $this->getSortFields();
 		}
 		Joomla.tableOrdering(order, dirn, '');
 	}
+
+	Joomla.submitbutton = function( task ) {
+		Joomla.submitform( task );
+		document.getElementsByName("task")[0].value = "";
+	}
 </script>
 <?php echo $this->loadTemplate('menu');?>
 <form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=results'); ?>" method="post" name="adminForm" id="adminForm">

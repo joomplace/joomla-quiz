@@ -12,6 +12,7 @@
    <field Field="text_size" Type="tinyint(4)" Null="NO" Key="" Default="10" Extra="" />
    <field Field="crtf_text" Type="text" Null="NO" Key="" Extra="" />
    <field Field="text_font" Type="varchar(255)" Null="NO" Key="" Extra="" />
+    <field Field="cert_offset" Type="int(4)" Null="NO" Key="" Default="0" Extra="" />
    <key Table="#__quiz_certificates" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="id" Collation="A" Null="" Index_type="BTREE" Comment="" />
   </table_structure>
   <table_structure name="#__quiz_cert_fields">
@@ -508,9 +509,9 @@
    <key Table="#__quiz_t_text" Non_unique="1" Key_name="c_blank_id" Seq_in_index="1" Column_name="c_blank_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
   </table_structure>
   <table_data name="#__quiz_certificates">
-   <record id="1" cert_name="Certificate Green" cert_file="certificate_green.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font=""  />
-   <record id="2" cert_name="Certificate Blue" cert_file="certificate_blue.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font=""  />
-   <record id="3" cert_name="Certificate Beige" cert_file="certificate_beige.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font=""  />
+   <record id="1" cert_name="Certificate Green" cert_file="certificate_green.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font="" cert_offset="100" />
+   <record id="2" cert_name="Certificate Blue" cert_file="certificate_blue.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font="" cert_offset="150" />
+   <record id="3" cert_name="Certificate Beige" cert_file="certificate_beige.jpg" crtf_align="0" crtf_shadow="0" text_x="0" text_y="0" text_size="10" crtf_text="" text_font="" cert_offset="200" />
   </table_data>
   <table_data name="#__quiz_cert_fields">
    <record c_id="1" cert_id="2" f_text="For the successful completion of quiz:" text_x="170" text_y="520" text_h="20" shadow="0" font="arial.ttf"  />

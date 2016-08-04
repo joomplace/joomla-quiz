@@ -68,41 +68,14 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$this->setRedirect( "index.php?option=com_joomlaquiz&view=questions", $ii.JText::_('COM_JOOMLAQUIZ_QUESTION_UPLOAD') );
 		}
 		
-		public function move_question_cat(){
-			$cid = $this->input->get('cid', array(), 'array');
-			$_SESSION['com_joomlaquiz.move.questions.cids'] = $cid;
-			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=move_questions_cat');
-		}
-		
-		public function move_question_cat_ok(){
-			$database = JFactory::getDBO();
-			$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];
-			$catMove = strval( JFactory::getApplication()->input->get('catmove') );
-			$cids = implode( ',', $cid );
-			$total = count( $cid );
-		
-			$query = "UPDATE #__quiz_t_question"
-			. "\n SET c_ques_cat = '$catMove'"
-			. "WHERE c_id IN ( $cids )"
-			;
-			$database->setQuery( $query );
-			$database->execute();
-				
-			$database->setQuery("SELECT `title` FROM #__categories WHERE id = '".$catMove."'");
-			$c_title = $database->loadResult();
-			
-			$msg = $total .JText::_('COM_JOOMLAQUIZ_QUESTION_MOVED_TO').$c_title;
+		public function move_question_cat()
+		{
+			$model = $this->getModel();
+			$msg = $model->moveQuestionsCat();
 			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions', $msg );
 		}
 		
 		public function copy_questions_cat()
-		{
-			$cid = $this->input->get('cid', array(), 'array');
-			$_SESSION['com_joomlaquiz.move.questions.cids'] = $cid;
-			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=copy_questions_cat');
-		}
-		
-		public function copy_questions_cat_ok()
 		{
 			$model = $this->getModel();
 			$msg = $model->copyQuestionsCat();

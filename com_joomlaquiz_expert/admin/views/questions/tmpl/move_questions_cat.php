@@ -76,6 +76,7 @@ Joomla.submitbutton = function(task)
 				</tbody>
 			</table>
 			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="cid" value="<?php echo $this->cid; ?>" />
 			<?php echo JHtml::_('form.token'); ?>
 		</fieldset>
 	</div>

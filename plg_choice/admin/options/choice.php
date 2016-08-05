@@ -1,3 +1,14 @@
+<?php 
+		$editor = JFactory::getEditor();
+ ?>
+
+<style type="text/css">
+	.mce-edit-area iframe
+	{
+		width: 450px !important;
+		height: 150px !important;
+	}
+</style>
 <table class="table table-striped" id="qfld_tbl" cellpadding="10">
 	<tr>
 		<th width="20px" align="center"><?php echo JText::_('COM_JOOMLAQUIZ_SHARP');?></th>
@@ -11,11 +22,11 @@
 	</tr>
 					
 	<?php
-	$k = 0; $ii = 1; $ind_last = count($return['choices']);
+	$k = 0; $ii = 0; $ind_last = count($return['choices']);
 	foreach ($return['choices'] as $frow) { 
 		if ($wysiwyg)  { ?>
 			<tr class="<?php echo "row$k"; ?>">
-				<td align="center" valign="top"><?php echo $ii?></td>
+				<td align="center" valign="top"><?php echo $ii+1?></td>
 				<td valign="top" align="<?php echo ($q_om_type != 10 ? 'center' : 'left')?>">
 					<?php
 					if($q_om_type != 10) {
@@ -45,11 +56,13 @@
 				<td valign="top"><?php if ($ii > 1) { ?><a href="javascript: void(0);" onclick="javascript:Up_tbl_row(this); return false;" title="<?php echo JText::_('COM_JOOMLAQUIZ_MOVE_UP');?>"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="<?php echo JText::_('COM_JOOMLAQUIZ_MOVE_UP');?>"></a><?php } ?></td>
 				<td valign="top"><?php if ($ii < $ind_last) { ?><a href="javascript: void(0);" onclick="javascript:Down_tbl_row(this); return false;" title="<?php echo JText::_('COM_JOOMLAQUIZ_MOVE_DOWN');?>"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/downarrow.png"  border="0" alt="<?php echo JText::_('COM_JOOMLAQUIZ_MOVE_DOWN');?>"></a><?php } ?></td>
 				<td align="left" valign="top"><input type="text" name="jq_a_points[]" value="<?php echo $frow->a_point;?>" maxlength="10" /></td>
-				<td valign="top"><?php if($q_om_type == 1){?><textarea cols="50" rows="5" name="jq_incorrect_feed[]"><?php echo htmlspecialchars(stripslashes($frow->c_incorrect_feed))?></textarea><?php }?></td>
+				<td valign="top">
+					<?php echo $editor->display( 'jq_incorrect_feed['.$ii.']', $frow->c_incorrect_feed, 500, 170, '20', '10' ) ; ?>
+				</td>
 			</tr>
 		<?php } else { ?>
 			<tr class="<?php echo "row$k"; ?>">
-				<td align="center" valign="top" ><?php echo $ii?></td>
+				<td align="center" valign="top" ><?php echo $ii+1?></td>
 				<td valign="top" align="<?php echo ($q_om_type != 10 ? 'center' : 'left')?>">
 					<?php
 						if($q_om_type != 10) {
@@ -76,7 +89,9 @@
 				<td valign="top"><?php if ($ii > 1) { ?><a href="javascript: void(0);" onClick="javascript:Up_tbl_row(this); return false;" title="<?php echo JText::_('COM_JOOMLAQUIZ_MOVE_UP');?>"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="<?php echo JText::_('COM_JOOMLAQUIZ_MOVE_UP');?>"></a><?php } ?></td>
 				<td valign="top"><?php if ($ii < $ind_last) { ?><a href="javascript: void(0);" onClick="javascript:Down_tbl_row(this); return false;" title="<?php echo JText::_('COM_JOOMLAQUIZ_MOVE_DOWN');?>"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/downarrow.png"  border="0" alt="<?php echo JText::_('COM_JOOMLAQUIZ_MOVE_DOWN');?>"></a><?php } ?></td>
 				<td align="left" valign="top"><input type="text" name="jq_a_points[]" value="<?php echo $frow->a_point;?>" maxlength="10" /></td>
-				<td><?php if($q_om_type == 1){?><textarea cols="50" rows="5" name="jq_incorrect_feed[]"><?php echo htmlspecialchars(stripslashes($frow->c_incorrect_feed))?></textarea><?php }?></td>
+				<td>
+					<?php echo $editor->display( 'jq_incorrect_feed['.$ii.']', $frow->c_incorrect_feed, 500, 170, '20', '10' ); ?>
+				</td>
 			</tr>
 		<?php }
 		$k = 1 - $k; $ii ++;
@@ -100,15 +115,13 @@
 				<td valign="top" rowspan="2" width="30%" style="padding-left:15px;">
 					<!---incorect answer message for each choice-->						
 					<?php echo JText::_('COM_JOOMLAQUIZ_FEEDBACK_MESSAGE');?><br />
-					<div>
-						<textarea rows="5" id="wr_mess" cols="50" name="c_wrong_message_var" ></textarea>
-					</div>						
+					<div><?php echo $editor->display( 'new_incorrect_feed', '', 500, 170, '20', '10' ) ; ?></div>					
 				</td>
 				<?php } ?>
 				<td  align="left" width="auto" valign="top" rowspan="2">
 					<br />
 					<div>
-						<input class="modal-button btn" type="button" name="add_new_field" style="width:70px;margin-left:10px;" value="Add" onclick="javascript:Add_new_tbl_field('test_0', 'qfld_tbl', 'jq_hid_fields[]');" />
+						<input class="modal-button btn" type="button" name="add_new_field" style="width:70px;margin-left:10px;" value="Add" onclick="javascript:Add_new_tbl_field('test_0', 'qfld_tbl', 'jq_hid_fields[]', <?php echo $ii ; ?>);" />
 					</div>
 				</td>
 			</tr>
@@ -138,9 +151,7 @@
 				<td align="left" valign="top" rowspan="2" width="30%">						
 					<!---incorect answer message for each choice-->						
 					<?php echo JText::_('COM_JOOMLAQUIZ_FEEDBACK_MESSAGE');?><br />
-					<div>
-						<textarea rows="5" id="wr_mess" cols="50" name="c_wrong_message_var" ></textarea>
-					</div>						
+					<div id="new_editor"><?php echo $editor->display( 'new_incorrect_feed', '', 500, 170, '20', '10' ) ; ?></div>
 				</td>
 				<?php }?>
 				<td align="left" rowspan="2" valign="top" width="auto">
@@ -158,5 +169,6 @@
 					</div>
 				</td>					
 			</tr>
+			<?php echo JHtml::_('form.token'); ?>
 		</table>
 <?php } ?>

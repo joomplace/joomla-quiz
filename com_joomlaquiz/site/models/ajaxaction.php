@@ -1337,6 +1337,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						}
 						$tmp = '';
 						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $tmp)){
+							$is_attempts = true;
 							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 						}
 					
@@ -1363,10 +1364,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 						
 						$tmp = '';
 						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp)){
+							$is_attempts = true;
 							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='"."index.php?option=com_joomlaquiz&view=quiz&lid={$lid}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId()."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 
 						}
 					} elseif (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $tmp)){
+						$is_attempts = true;
 						$plugin = (isset($_REQUEST['plug'])) ? $_REQUEST['plug'] : 0;
 						
 						$href = ($plugin) ? JRoute::_('index.php'.$plugin) : JRoute::_("index.php?option=com_joomlaquiz&view=quiz&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId());
@@ -1397,7 +1400,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						JoomlaquizHelper::JQ_Email($stu_quiz_id, $user->email);
 					}
 					
-					if ($quiz->c_enable_review && $reviewAccessGranted && $user_passed) {
+					if ($quiz->c_enable_review && $reviewAccessGranted && ($user_passed || !$is_attempts)) {
 						$query = "UPDATE #__quiz_r_student_quiz SET allow_review = 1 WHERE c_id = '".$stu_quiz_id."' AND c_rel_id = '".$rel_id."' AND c_order_id = '".$package_id."' AND c_quiz_id = '".$quiz_id."' AND c_student_id = '".$my->id."'";
 						$database->SetQuery( $query );
 						$database->execute();

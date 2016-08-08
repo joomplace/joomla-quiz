@@ -26,7 +26,7 @@ Joomla.submitbutton = function(task)
 <form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&layout=move_questions_cat'); ?>" enctype="multipart/form-data" method="post" name="adminForm" id="questions-form" class="form-validate">
 	<div id="j-main-container" class="span10 form-horizontal">
 		<fieldset>
-			<legend><?php echo JText::_('COM_JOOMLAQUIZ_MOVE_QUESTION2');?></legend>
+			<legend><?php echo JText::_($this->movecopy);?></legend>
 			<div style="float:left;margin-right:10px;">
 				<strong><?php echo JText::_('COM_JOOMLAQUIZ_COPY_TO_QUESTION_TO_CAT');?></strong>
 			</div>

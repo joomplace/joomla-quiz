@@ -68,6 +68,29 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$this->setRedirect( "index.php?option=com_joomlaquiz&view=questions", $ii.JText::_('COM_JOOMLAQUIZ_QUESTION_UPLOAD') );
 		}
 		
+		public function movecat()
+		{	
+			JFactory::getApplication()->input->set('layout', 'move_questions_cat');
+			$view = $this->getView('questions', 'html');
+			$view->setLayout(JFactory::getApplication()->input->getCmd('layout'));
+			$model = $this->getModel();
+			$view->setModel($model, true);
+			$view->display();
+			
+		}
+		
+		public function move_to_cat()
+		{	
+			JFactory::getApplication()->input->set('act', 'move');
+			$this->movecat();
+		}
+		
+		public function copy_to_cat()
+		{	
+			JFactory::getApplication()->input->set('act', 'copy');
+		    $this->movecat();	
+		}
+		
 		public function move_question_cat()
 		{
 			$model = $this->getModel();

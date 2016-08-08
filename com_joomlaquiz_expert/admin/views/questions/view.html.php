@@ -62,15 +62,14 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				$this->questCatFields = JHTML::_('select.genericlist', $this->get("QuestionCategories"), 'catmove', 'class="input-medium" size="1"', 'value', 'text', 0); 
 				$this->move_questions_cat = $this->get('MoveQuestionsCat');
 				$this->cid = implode( ',', JFactory::getApplication()->input->get('cid', array(), 'array'));
-				$this->addMoveCatToolBar();
-			}elseif($layout == 'copy_questions_cat'){
-				$submenu = 'copy_questions_cat';
-				JoomlaquizHelper::showTitle($submenu);
-				
-				$this->questCatFields = JHTML::_('select.genericlist', $this->get("QuestionCategories"), 'catcopy', 'class="input-medium" size="1"', 'value', 'text', 0); 
-				$this->copy_questions_cat = $this->get('MoveQuestionsCat');
-				$this->cid = implode( ',', JFactory::getApplication()->input->get('cid', array(), 'array'));
-				$this->addCopyQuestToolBar();
+				$act = JFactory::getApplication()->input->getCmd('act');
+				if ($act=='move'){
+					$this->movecopy = 'COM_JOOMLAQUIZ_MOVE_QUESTION2';
+					$this->addMoveCatToolBar();
+				}else{
+					$this->movecopy = 'COM_JOOMLAQUIZ_COPY_QUESTIONS';
+					$this->addCopyQuestToolBar();
+				}
 			}elseif($layout == 'uploadquestions'){
 				$submenu = 'uploadquestions';
 				JoomlaquizHelper::showTitle($submenu);
@@ -191,9 +190,9 @@ class JoomlaquizViewQuestions extends JViewLegacy
         JToolBarHelper::deleteList('', 'questions.checkComplitedQuestions');
 		JToolBarHelper::divider();
 		JToolBarHelper::custom('questions.move_question_sel', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE', true);
-		JToolBarHelper::custom('move_to_cat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', true);
+		JToolBarHelper::custom('questions.move_to_cat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', true);
 		JToolBarHelper::custom('questions.copy_question_sel', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY', true);
-		JToolBarHelper::custom('copy_to_cat', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY_CAT', true);
+		JToolBarHelper::custom('questions.copy_to_cat', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY_CAT', true);
 		JToolBarHelper::custom('questions.quizzes', 'previous.png', 'previous_f2.png', 'COM_JOOMLAQUIZ_QUIZZES', false);
 		JToolBarHelper::custom('questions.hotspot_converter', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_HOTSPOT_CONVERTER', true);
         $bar->appendButton( 'Custom', '<div class="btn-group"><a class="btn btn-small" onclick="javascript: tb_start(this);return false;" href="index.php?option=com_joomlaquiz&amp;tmpl=component&amp;view=configuration&amp;KeepThis=true&amp;TB_iframe=true&amp;height=350&amp;width=700" href="#"><i class="icon-options"></i>'.JText::_('COM_JOOMLAQUIZ_OPTIONS').'</a></div>');

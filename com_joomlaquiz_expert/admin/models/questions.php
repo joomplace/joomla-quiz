@@ -191,7 +191,7 @@ class JoomlaquizModelQuestions extends JModelList
 	{
 		$database = JFactory::getDBO();
 		$cids = JFactory::getApplication()->input->get('cid', string, 'string');
-		$catCopy =  JFactory::getApplication()->input->get('catcopy',9,'int');
+		$catCopy =  JFactory::getApplication()->input->get('catmove',9,'int');
 		$total = 0;			
 		$query = "SELECT * FROM #__quiz_t_question WHERE c_id IN ( $cids )";
 		$database->setQuery( $query );

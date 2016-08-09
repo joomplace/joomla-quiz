@@ -68,6 +68,50 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$this->setRedirect( "index.php?option=com_joomlaquiz&view=questions", $ii.JText::_('COM_JOOMLAQUIZ_QUESTION_UPLOAD') );
 		}
 		
+		public function moveCopyToCat()
+		{	
+		    JFactory::getApplication()->input->set('view', 'questions');
+			JFactory::getApplication()->input->set('layout', 'move_questions_cat');
+			$grandad = $this->getGrandParent($this);
+			$grandad::display();
+		}
+		
+		
+		public function getGrandParent($thing)
+		{
+            if (is_object($thing)){
+                $thing = get_class($thing);
+            }
+            return get_parent_class(get_parent_class($thing));
+        }
+		
+		public function moveToCat()
+		{	    
+			JFactory::getApplication()->input->set('act', 'move');
+		    $this->moveCopyToCat();	
+		}
+		
+		public function copyToCat()
+		{	
+			JFactory::getApplication()->input->set('act', 'copy');
+			$this->moveCopyToCat();	
+		    
+		}
+		
+		public function moveQuestionsCat()
+		{
+			$model = $this->getModel();
+			$msg = $model->moveQuestionsCat();
+			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions', $msg );
+		}
+		
+		public function copyQuestionsCat()
+		{
+			$model = $this->getModel();
+			$msg = $model->copyQuestionsCat();
+			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions', $msg);
+		}
+		
 		public function move_question_sel(){
 			$cid = $this->input->get('cid', array(), 'array');
 			if (!is_array( $cid ) || count( $cid ) < 1) {

@@ -55,6 +55,20 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				$this->move_questions = $this->get('MoveQuestions');
 				
 				$this->addMoveToolBar();
+			}elseif($layout == 'move_questions_cat'){
+				$submenu = 'move_questions_cat';
+				JoomlaquizHelper::showTitle($submenu);
+				$this->questCatFields = JHTML::_('select.genericlist', $this->get("QuestionCategories"), 'catmove', 'class="input-medium" size="1"', 'value', 'text', 0); 
+				$this->move_questions_cat = $this->get('MoveQuestionsCat');
+				$this->cid = implode( ',', JFactory::getApplication()->input->get('cid', array(), 'array'));
+				$act = JFactory::getApplication()->input->getCmd('act');
+				if ($act=='move'){
+					$this->movecopy = 'COM_JOOMLAQUIZ_MOVE_QUESTION2';
+					$this->addMoveCatToolBar();
+				}else{
+					$this->movecopy = 'COM_JOOMLAQUIZ_COPY_QUESTIONS';
+					$this->addCopyQuestToolBar();
+				}
 			}elseif($layout == 'uploadquestions'){
 				$submenu = 'uploadquestions';
 				JoomlaquizHelper::showTitle($submenu);
@@ -142,6 +156,18 @@ class JoomlaquizViewQuestions extends JViewLegacy
 		JToolBarHelper::custom('questions.move_question', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE', false);
 	}
 	
+	protected function addMoveCatToolBar()
+	{
+		JToolBarHelper::cancel('question.cancel', 'JTOOLBAR_CANCEL');
+		JToolBarHelper::custom('questions.moveQuestionsCat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', false);
+	}
+	
+	protected function addCopyQuestToolBar()
+	{
+		JToolBarHelper::cancel('question.cancel', 'JTOOLBAR_CANCEL');
+		JToolBarHelper::custom('questions.copyQuestionsCat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_COPY_CAT', false);
+	}
+	
 	protected function addUploadquestToolBar()
 	{
 		JToolBarHelper::cancel('questions.cancel', 'JTOOLBAR_CANCEL');
@@ -163,7 +189,9 @@ class JoomlaquizViewQuestions extends JViewLegacy
         JToolBarHelper::deleteList('', 'questions.checkComplitedQuestions');
 		JToolBarHelper::divider();
 		JToolBarHelper::custom('questions.move_question_sel', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE', true);
+		JToolBarHelper::custom('questions.moveToCat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', true);
 		JToolBarHelper::custom('questions.copy_question_sel', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY', true);
+		JToolBarHelper::custom('questions.copyToCat', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY_CAT', true);
 		JToolBarHelper::custom('questions.quizzes', 'previous.png', 'previous_f2.png', 'COM_JOOMLAQUIZ_QUIZZES', false);
 		JToolBarHelper::custom('questions.hotspot_converter', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_HOTSPOT_CONVERTER', true);
         $bar->appendButton( 'Custom', '<div class="btn-group"><a class="btn btn-small" onclick="javascript: tb_start(this);return false;" href="index.php?option=com_joomlaquiz&amp;tmpl=component&amp;view=configuration&amp;KeepThis=true&amp;TB_iframe=true&amp;height=350&amp;width=700" href="#"><i class="icon-options"></i>'.JText::_('COM_JOOMLAQUIZ_OPTIONS').'</a></div>');

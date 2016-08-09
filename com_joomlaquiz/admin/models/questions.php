@@ -138,6 +138,67 @@ class JoomlaquizModelQuestions extends JModelList
 		return $items;
 	}
 	
+		public function getMoveQuestionsCat(){
+		$db = JFactory::getDBO();
+    	$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$cids = implode( ',', $cid );
+		$query = "SELECT a.c_question, b.title"
+		. "\n FROM #__quiz_t_question AS a LEFT JOIN #__categories AS b ON b.id = a.c_ques_cat"
+		. "\n WHERE a.c_id IN ( $cids )"
+		;			
+		$db->setQuery( $query );
+		return $db->loadObjectList();
+	}
+	
+	public function moveQuestionsCat()
+	{
+	    $database = JFactory::getDBO();
+		$cids = JFactory::getApplication()->input->get('cid', string, 'string');
+		$catMove = JFactory::getApplication()->input->get('catmove',9,'int');
+		$total = count( explode(',',$cids) );
+		$query = "UPDATE #__quiz_t_question"
+		. "\n SET c_ques_cat = '$catMove'"
+		. "WHERE c_id IN ( $cids )"
+		;
+		$database->setQuery( $query );
+		$database->execute();
+				
+		$database->setQuery("SELECT `title` FROM #__categories WHERE id = '".$catMove."'");
+		$c_title = $database->loadResult();
+		
+		return $total.JText::_('COM_JOOMLAQUIZ_QUESTION_MOVED_TO').$c_title;
+					
+	}
+	
+	public function copyQuestionsCat()
+	{
+		$database = JFactory::getDBO();
+		$cids = JFactory::getApplication()->input->get('cid', string, 'string');
+		$catCopy =  JFactory::getApplication()->input->get('catmove',9,'int');
+		$total = 0;			
+		$query = "SELECT * FROM #__quiz_t_question WHERE c_id IN ( $cids )";
+		$database->setQuery( $query );
+		$quests_to_copy = $database->loadObjectList();
+		foreach ($quests_to_copy as $q) {
+			if($q->c_ques_cat != $catCopy){
+				$profile = new stdClass();
+				$profile->c_quiz_id     = $q->c_quiz_id;
+				$profile->c_question    = $q->c_question;
+				$profile->c_type        = $q->c_type;
+				$profile->c_ques_cat    = $catCopy;
+				$profile->published     = 1;
+				$database->insertObject('#__quiz_t_question', $profile);
+				$total++;
+			}
+								
+		}
+			
+		$database->setQuery("SELECT `title` FROM #__categories WHERE id = '".$catCopy."'");
+		$c_title = $database->loadResult();
+				
+		return $total .JText::_('COM_JOOMLAQUIZ_QUESTION_COPY_TO').$c_title;
+	}
+	
 	public function getCopyQuestions(){
 		$db = JFactory::getDBO();
 		

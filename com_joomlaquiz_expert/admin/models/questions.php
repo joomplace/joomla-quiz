@@ -198,10 +198,14 @@ class JoomlaquizModelQuestions extends JModelList
 		$quests_to_copy = $database->loadObjectList();
 		foreach ($quests_to_copy as $q) {
 			if($q->c_ques_cat != $catCopy){
-				$query = "INSERT INTO #__quiz_t_question (c_quiz_id, c_question, c_type, c_ques_cat, published) VALUES('".$q->c_quiz_id."', '".$q->c_question."', '".$q->c_type."', '".$catCopy."', '1')";
+				$profile = new stdClass();
+				$profile->c_quiz_id     = $q->c_quiz_id;
+				$profile->c_question    = $q->c_question;
+				$profile->c_type        = $q->c_type;
+				$profile->c_ques_cat    = $catCopy;
+				$profile->published     = 1;
+				$database->insertObject('#__quiz_t_question', $profile);
 				$total++;
-				$database->SetQuery( $query );
-				$database->execute();
 			}
 								
 		}

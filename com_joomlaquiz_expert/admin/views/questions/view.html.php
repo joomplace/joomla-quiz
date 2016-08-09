@@ -160,13 +160,13 @@ class JoomlaquizViewQuestions extends JViewLegacy
 	protected function addMoveCatToolBar()
 	{
 		JToolBarHelper::cancel('question.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::custom('questions.move_question_cat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', false);
+		JToolBarHelper::custom('questions.moveQuestionsCat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', false);
 	}
 	
 	protected function addCopyQuestToolBar()
 	{
 		JToolBarHelper::cancel('question.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::custom('questions.copy_questions_cat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_COPY_CAT', false);
+		JToolBarHelper::custom('questions.copyQuestionsCat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_COPY_CAT', false);
 	}
 	
 	protected function addUploadquestToolBar()
@@ -190,9 +190,9 @@ class JoomlaquizViewQuestions extends JViewLegacy
         JToolBarHelper::deleteList('', 'questions.checkComplitedQuestions');
 		JToolBarHelper::divider();
 		JToolBarHelper::custom('questions.move_question_sel', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE', true);
-		JToolBarHelper::custom('questions.move_to_cat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', true);
+		JToolBarHelper::custom('questions.moveToCat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', true);
 		JToolBarHelper::custom('questions.copy_question_sel', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY', true);
-		JToolBarHelper::custom('questions.copy_to_cat', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY_CAT', true);
+		JToolBarHelper::custom('questions.copyToCat', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY_CAT', true);
 		JToolBarHelper::custom('questions.quizzes', 'previous.png', 'previous_f2.png', 'COM_JOOMLAQUIZ_QUIZZES', false);
 		JToolBarHelper::custom('questions.hotspot_converter', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_HOTSPOT_CONVERTER', true);
         $bar->appendButton( 'Custom', '<div class="btn-group"><a class="btn btn-small" onclick="javascript: tb_start(this);return false;" href="index.php?option=com_joomlaquiz&amp;tmpl=component&amp;view=configuration&amp;KeepThis=true&amp;TB_iframe=true&amp;height=350&amp;width=700" href="#"><i class="icon-options"></i>'.JText::_('COM_JOOMLAQUIZ_OPTIONS').'</a></div>');

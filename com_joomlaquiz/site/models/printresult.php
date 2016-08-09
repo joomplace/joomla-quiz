@@ -190,7 +190,7 @@ class JoomlaquizModelPrintresult extends JModelList
 				'COM_JOOMLAQUIZ_ANONYMOUS'
 			);
 		$info['name']     = ($info['name']) ? $info['name']
-			: $info['user_name'] . '' . $info['user_surname'];
+			: $info['user_name'] . ' ' . $info['user_surname'];
 		$info['email']    = ($info['email']) ? $info['email']
 			: $info['user_email'];
 

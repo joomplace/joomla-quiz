@@ -81,6 +81,15 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+
+		<field
+				name="margin_top"
+				type="text"
+				label="COM_JOOMLAQUIZ_CONFIG_MARGIN_TOP"
+				description=""
+				default="0"
+				filter="integer"
+				size="10" />
 	</fieldset>
 		
 	<fieldset name="permissions"

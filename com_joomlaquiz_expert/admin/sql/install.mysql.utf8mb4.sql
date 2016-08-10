@@ -554,6 +554,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_question` (
   `c_right_message` text,
   `c_wrong_message` text,
   `c_feedback` int(11) NOT NULL DEFAULT '0',
+  `c_feedback_pdf` int(2) NOT NULL DEFAULT '0',
   `cq_id` int(11) NOT NULL DEFAULT '0',
   `c_ques_cat` int(11) NOT NULL DEFAULT '0',
   `c_random` char(1) NOT NULL DEFAULT '0',

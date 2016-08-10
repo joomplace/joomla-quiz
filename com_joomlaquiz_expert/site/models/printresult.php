@@ -59,9 +59,9 @@ class JoomlaquizModelPrintresult extends JModelList
 		$appsLib = JqAppPlugins::getInstance();
 		$database = JFactory::getDBO();
 		
-		$query = "SELECT q.c_id c_id, c_question, is_correct, c_point, c_type, c_score, c_feedback_pdf, c_right_message, c_wrong_message"
-		. "\n FROM #__quiz_r_student_question AS sq, #__quiz_t_question AS q"
-		. "\n WHERE sq.c_id = '".$id."' AND sq.c_question_id = q.c_id AND q.published = 1";
+		$query = "SELECT q.c_id c_id, c_question, is_correct, c_point, c_type, c_score, q.c_right_message, q.c_wrong_message, a.c_feedback_pdf"
+		. "\n FROM #__quiz_r_student_question AS sq, #__quiz_t_question AS q, #__quiz_t_quiz AS a"
+		. "\n WHERE sq.c_id = '".$id."' AND sq.c_question_id = q.c_id AND q.published = 1 AND q.c_quiz_id = a.c_id";
 		$database->setQuery( $query );
 		$info = $database->LoadAssocList();
 		$info = $info[0];

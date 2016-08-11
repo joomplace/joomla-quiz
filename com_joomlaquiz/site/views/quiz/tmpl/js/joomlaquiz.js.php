@@ -20,6 +20,7 @@ function ScrollToElement(theElement){
 		try{
 			selectedPosX += theElement.offsetLeft;
 			selectedPosY += theElement.offsetTop;
+			selectedPosY -= margin_top;
 			theElement = theElement.offsetParent;
 		} catch(e){}
 	}
@@ -86,6 +87,7 @@ var quest_timer = 0;
 var circle = null;
 var path_elems = new Array();
 var mes_question_is_misconfigured = '<?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IS_CONFIGURED');?>';
+var margin_top = <?php echo $margin_top ?>;
 
 <?php
 $live_url = JURI::root().JUri::root(true);

@@ -97,14 +97,14 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 		    $this->moveCopyToCat();	
 		}
 		
-		public function move_question_cat()
+		public function moveQuestionsCat()
 		{
 			$model = $this->getModel();
 			$msg = $model->moveQuestionsCat();
 			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions', $msg );
 		}
 		
-		public function copy_questions_cat()
+		public function copyQuestionsCat()
 		{
 			$model = $this->getModel();
 			$msg = $model->copyQuestionsCat();

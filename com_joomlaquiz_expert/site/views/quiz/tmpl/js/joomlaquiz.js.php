@@ -258,7 +258,7 @@ function jq_CreateQuestions() {
 function getProgressBar(x, y, text) {
 	percent = Math.round((100 / y) * x);
 
-	html = '<div class="progress progress-striped active"> <div class="bar" style="width: '+percent+'%;">'+text+'</div> </div>';
+	html = '<div class="progress progress-striped active">'+text+'<div class="bar" style="width: '+percent+'%;"></div> </div>';
 
 	return html;
 }

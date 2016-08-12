@@ -212,21 +212,16 @@ class JoomlaquizModelPrintcert extends JModelList
 					$arr = $this->revUni($arr);
 				}
 				
-				$dim = imagettfbbox($font_size, 0, $font, $font_text);				
-				$max_width = imagesx($im);
+				$max_width = imagesx($im)-$certif->cert_offset;
 				switch(intval($certif->crtf_align)) {
 					case 1:
-					        $start_x = $font_x == 0 ? $font_x : $font_x + round(($max_width - $dim[4] - $font_x) / 2); 
-							$start_x = $start_x < 0 ? $font_x : $start_x;
-							$this->write_multiline_text($im, $font_size, $start_x, $certif->text_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, 3);
+							$this->writeMultilineTextArea($im, $font_size, $font_x, $certif->text_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset,1);
 					  		break;
 					case 2:		
-							$start_x = $start_x + ($max_width - $dim[4]);
-							$start_x = $start_x < 0 ? $font_x : $start_x;
-							$this->write_multiline_text($im, $font_size, $start_x, $font_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, 3);
+							$this->writeMultilineTextArea($im, $font_size, $font_x, $font_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset,2);
 							break;
 					default:
-							$this->write_multiline_text($im, $font_size, $font_x, $font_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, 3, 1);
+							$this->writeMultilineTextArea($im, $font_size, $font_x, $font_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset);
 							break;
 				}
 				$query = "SELECT * FROM #__quiz_cert_fields WHERE cert_id = '{$certif->id}' ORDER BY c_id";
@@ -376,7 +371,7 @@ class JoomlaquizModelPrintcert extends JModelList
 		to use this function to match need to be reconstructed.
 	*/
 
-	function write_multiline_text ($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width, $y = 5, $left = 0)
+	function write_multiline_text ($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width)
 	{ 
 		//split the string 
 		//build new string word for word 
@@ -403,12 +398,67 @@ class JoomlaquizModelPrintcert extends JModelList
 				imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string); 
 
 				$string = ""; 
-				$start_y += abs($dim[$y]) * 1.2; 
+				$start_y += abs($dim[5]) * 1.2; 
 				$curr_width = 0;
 			} 
 		} 
 
-		$left ? $start_xx = $start_x : $start_xx = $start_x + round(($max_width - $dim[4] - $start_x) / 2);        
+		$start_xx = $start_x + round(($max_width - $dim[4] - $start_x) / 2);        
+    	if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
+     	imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
+	}
+}
+
+function writeMultilineTextArea($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width, $offset, $align = 0)
+	{ 
+		$words = explode(" ", $text); 
+		$string = ""; 
+		$tmp_string = ""; 
+		for($i = 0; $i < count($words); $i++) { 
+			$tmp_string .= $words[$i]." "; 
+			$dim = imagettfbbox($font_size, 0, $font, $tmp_string); 
+
+			if($dim[4] < ($max_width - $start_x)) { 
+				$string = $tmp_string;
+				$curr_width = $dim[4];
+			} else { 				
+				$i--; 
+				$tmp_string = ""; 
+				
+				switch ($align){
+					case 0:
+					    $start_xx = $start_x;
+                        break;
+                    case 1:
+					    $start_xx =  $start_x + round(($max_width + $offset - $curr_width - $start_x) / 2);
+                        break;
+                    case 2:
+					    $start_xx =  $start_x + round($max_width + $offset - $curr_width + $dim[6]);
+                        break; 							
+				}
+				if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
+				imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string); 
+
+				if ($dim[3] < 10) $dim[3] = $dim[3]*5;
+				$start_y += abs($dim[3] * 1.5); 
+				$curr_width = 0;
+				$string = ""; 
+			} 
+
+		} 
+		switch ($align){
+					case 0:
+					    $start_xx = $start_x;
+                        break;
+                    case 1:
+					    $start_xx = $start_x + round(($max_width + $offset - $dim[4] - $start_x) / 2);
+                        break;
+                    case 2:
+					    $start_xx =  $start_x + round($max_width + $offset - $dim[4] + $dim[6]);
+						if ($start_xx < 0) $start_xx = 0;
+                        break; 							
+				}
+			   
     	if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
      	imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
 	}

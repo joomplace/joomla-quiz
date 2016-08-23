@@ -221,6 +221,9 @@ class JoomlaquizModelPrintresult extends JModelList
 
 		$pdf->SetFontSize(10);
 
+		$fontFamily = $pdf->getFontFamily();
+		$pdf->setFont($fontFamily, 'B');
+
 		$str = JText::_('COM_QUIZ_PDF_QTITLE') . " " . $info['c_title'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
@@ -291,7 +294,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		$tot_sec = $info['c_total_time'] - $tot_min * 60;
 
 		$str = JText::_('COM_QUIZ_PDF_USPENT');
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Write(5, $pdf_doc->cleanText($str).' ', '', 0);
 
 		$pdf->SetFont('freesans');
 		$fontFamily = $pdf->getFontFamily();
@@ -303,7 +306,7 @@ class JoomlaquizModelPrintresult extends JModelList
 			);
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-		$pdf->setFont($fontFamily, 'B');
+		$pdf->setFont($fontFamily);
 		//$pdf->setStyle('b', false);
 		$str = JText::_('COM_QUIZ_PDF_QTIME');
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);

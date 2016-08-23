@@ -401,12 +401,12 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$fontFamily = $data['pdf']->getFontFamily();
 		
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$data['pdf']->Ln();
 				
@@ -420,12 +420,12 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			}
 					
 			$data['pdf']->Ln();
-			$data['pdf']->setFont($fontFamily, 'B');
+			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-			$data['pdf']->setFont($fontFamily, 'B');
+			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_choice'][$j]['c_choice'] . ' - ' . ($data['data']['c_choice'][$j]['c_choice_id']? $data['data']['c_choice'][$j]['c_title_true']: $data['data']['c_choice'][$j]['c_title_false']);
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

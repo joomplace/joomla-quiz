@@ -373,12 +373,12 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 					
 			$data['pdf']->Ln();
 
-			$data['pdf']->setFont($fontFamily, 'B');
+			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-			$data['pdf']->setFont($fontFamily, 'B');
+			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_choice'][$j]['c_choice'];
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
@@ -386,11 +386,11 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 		}
 
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

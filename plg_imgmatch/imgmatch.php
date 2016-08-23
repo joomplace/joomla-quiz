@@ -322,12 +322,12 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 			$answer = 0;
 					
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = " Scores:";
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$str = $answer;
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

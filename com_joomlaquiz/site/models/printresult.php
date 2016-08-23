@@ -306,7 +306,7 @@ class JoomlaquizModelPrintresult extends JModelList
 			);
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-		$pdf->setFont($fontFamily);
+		$pdf->setFont($fontFamily, 'B');
 		//$pdf->setStyle('b', false);
 		$str = JText::_('COM_QUIZ_PDF_QTIME');
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);

@@ -294,22 +294,22 @@ class JoomlaquizModelPrintresult extends JModelList
 		$tot_sec = $info['c_total_time'] - $tot_min * 60;
 
 		$str = JText::_('COM_QUIZ_PDF_USPENT');
-		$pdf->Write(5, $pdf_doc->cleanText($str).' ', '', 0);
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
 		$pdf->SetFont('freesans');
 		$fontFamily = $pdf->getFontFamily();
 
 		$pdf->setFont($fontFamily, 'B');
 		//$pdf->setStyle('b', true);
-		$str = str_pad($tot_min, 2, "0", STR_PAD_LEFT) . ":" . str_pad(
+		$str = '&nbsp;'.str_pad($tot_min, 2, "0", STR_PAD_LEFT) . ":" . str_pad(
 				$tot_sec, 2, "0", STR_PAD_LEFT
-			);
+			).'&nbsp;';
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
 		$pdf->setFont($fontFamily, 'B');
 		//$pdf->setStyle('b', false);
 		$str = JText::_('COM_QUIZ_PDF_QTIME');
-		$pdf->Write(5, ' '.$pdf_doc->cleanText($str), '', 0);
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
 		if ($info['c_passed'] == 1)

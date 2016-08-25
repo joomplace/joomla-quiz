@@ -216,12 +216,14 @@ class JoomlaquizModelPrintresult extends JModelList
 
 		$pdf = &$pdf_doc->_engine;
 
+		$pdf->SetFont('dejavusans');
+		$fontFamily = $pdf->getFontFamily();
+
 		$pdf->getAliasNbPages();
 		$pdf->AddPage();
 
 		$pdf->SetFontSize(10);
 
-		$fontFamily = $pdf->getFontFamily();
 		$pdf->setFont($fontFamily, 'B');
 
 		$str = JText::_('COM_QUIZ_PDF_QTITLE') . " " . $info['c_title'];
@@ -295,9 +297,6 @@ class JoomlaquizModelPrintresult extends JModelList
 
 		$str = JText::_('COM_QUIZ_PDF_USPENT');
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-
-		$pdf->SetFont('freesans');
-		$fontFamily = $pdf->getFontFamily();
 
 		$pdf->setFont($fontFamily, 'B');
 		//$pdf->setStyle('b', true);

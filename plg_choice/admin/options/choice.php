@@ -5,7 +5,7 @@
 <style type="text/css">
 	.mce-edit-area iframe
 	{
-		width: 450px !important;
+		width: 100% !important;
 		height: 150px !important;
 	}
 </style>

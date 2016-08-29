@@ -26,8 +26,19 @@ class JoomlaquizControllerQuestion extends JControllerForm
         return JFactory::getUser()->authorise('core.edit', 'com_joomlaquiz');             
     }
 	
+	public function getContentEditor($id)
+	{
+		$db = JFactory::getDBO();
+		$query = "SELECT c_choice FROM #__quiz_t_choice WHERE c_id = '".$id."'";
+    	$db->SetQuery( $query );
+		$c = $db->LoadAssocList();
+		return $c[0]["c_choice"];
+	}
+	
 	static public function JQ_editorArea( $name, $content, $hiddenField, $width, $height, $col, $row ) {
 		$editor = JFactory::getEditor();
+		$id = JFactory::getApplication()->input->get( 'id', '' );
+		$content = $content == '' ? $content = self::getContentEditor($id) : $content;
 		echo $editor->display( $hiddenField, $content, $width, $height, $col, $row, array('pagebreak', 'readmore') ) ;
 	}
 	

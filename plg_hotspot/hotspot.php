@@ -240,7 +240,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
-		$data['pdf']->SetFont('freesans');
+		//$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
 		
 		if($data['data']['is_correct']) 
@@ -249,12 +249,12 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 			$answer = ' '.JText::_('COM_QUIZ_PDF_WRONG');
 					
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$str = $answer;
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

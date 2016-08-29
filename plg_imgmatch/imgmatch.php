@@ -313,7 +313,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
-		$data['pdf']->SetFont('freesans');
+		//$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
 		
 		if($data['data']['c_score']) 
@@ -322,12 +322,12 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 			$answer = 0;
 					
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = " Scores:";
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$str = $answer;
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

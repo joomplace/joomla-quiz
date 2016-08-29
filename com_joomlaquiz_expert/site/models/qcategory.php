@@ -105,7 +105,9 @@ class JoomlaquizModelQcategory extends JModelList
 
 			$query = "SELECT *"
 			. "\n FROM `#__quiz_t_quiz`"
-			. "\n WHERE c_category_id = '$cat_id' AND published = 1 ORDER BY c_title "
+			. "\n WHERE c_category_id = '$cat_id' AND published = 1"
+			. "\n AND (one_time != 1 OR c_id NOT IN (SELECT c_quiz_id FROM `#__quiz_r_student_quiz` WHERE `c_student_id` = '".$my->id."' AND c_passed ='1'))"
+			. "\n ORDER BY c_title "
 			;
 			$database->SetQuery( $query );
 			$all_quizzez = $database->loadObjectList('c_id');

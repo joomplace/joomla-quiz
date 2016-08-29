@@ -1304,6 +1304,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$footer_ar[6] = '';			
 					
 					$tmp = '';
+					$db = JFactory::getDbo();
+					$query = $db->getQuery(true);
+					$query->select('1')
+						->from('#__quiz_r_student_quiz')
+						->where($db->qn('c_passed').' = '.$db->q('1'))
+						->where($db->qn('c_quiz_id').' = '.$db->q($quiz->c_id))
+						->where($db->qn('c_student_id').' = '.$db->q($my->id));
 					if($rel_id) {
 						$query = 'SELECT * FROM #__quiz_products WHERE id = ' . $rel_id;
 						$database->setQuery($query);
@@ -1336,7 +1343,14 @@ class JoomlaquizModelAjaxaction extends JModelList
 							}
 						}
 						$tmp = '';
-						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $tmp)){
+						$db = JFactory::getDbo();
+						$query = $db->getQuery(true);
+						$query->select('1')
+							->from('#__quiz_r_student_quiz')
+							->where($db->qn('c_passed').' = '.$db->q('1'))
+							->where($db->qn('c_quiz_id').' = '.$db->q($quiz->c_id))
+							->where($db->qn('c_student_id').' = '.$db->q($my->id));
+						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $tmp) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 							$is_attempts = true;
 							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 						}
@@ -1363,12 +1377,20 @@ class JoomlaquizModelAjaxaction extends JModelList
 						}
 						
 						$tmp = '';
-						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp)){
+						$db = JFactory::getDbo();
+						$query = $db->getQuery(true);
+						$query->select('1')
+							->from('#__quiz_r_student_quiz')
+							->where($db->qn('c_passed').' = '.$db->q('1'))
+							->where($db->qn('c_quiz_id').' = '.$db->q($quiz->c_id))
+							->where($db->qn('c_student_id').' = '.$db->q($my->id));
+						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 							$is_attempts = true;
 							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='"."index.php?option=com_joomlaquiz&view=quiz&lid={$lid}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId()."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 
 						}
-					} elseif (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $tmp)){
+					} elseif (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $tmp)
+						&& (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 						$is_attempts = true;
 						$plugin = (isset($_REQUEST['plug'])) ? $_REQUEST['plug'] : 0;
 						

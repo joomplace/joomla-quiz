@@ -35,6 +35,7 @@ div.correct_answer
 #quest_table
 {
 	border:none !important;
+	width: 100%;
 }
 
 #quest_table tr,td
@@ -49,7 +50,8 @@ div.correct_answer
 
 div.jq_draggable_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
 	background: #bcdb95 !important; /* Old browsers */
@@ -91,7 +93,8 @@ div.jq_draggable_stop_div {
 }
 div.jq_cont_drag_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #9edb64 !important; /* Old browsers */

@@ -91,6 +91,13 @@ var Base64 = {
 function Dalliclick_init()
 {
 	var quest_task = jq_jQuery(response).find('quest_task').text();
+	var div_width = jq_jQuery('.dc_layout').width();
+	var proportion = img_height / img_width;
+
+	var new_img_width = div_width;
+	var new_img_height = div_width * proportion;
+
+	dc_h = new_img_height / 5;
 	dc_html = '';
 	dc_c = 1;
 	squares = new Array();
@@ -106,12 +113,14 @@ function Dalliclick_init()
 	for (var i=1; i<=5; i++){
 		for(var j=1; j<=5; j++){
 			squares.push(dc_c);
-			dc_html += '<div class="square" id="sq_'+dc_c+'" style="width:20%;height:'+(dc_h+1)+'px;"></div>';
+			dc_html += '<div class="square" id="sq_'+dc_c+'" style="width:'+new_img_width/5+'px;height:'+(dc_h+1)+'px;"></div>';
 			++dc_c;
 		}
 		dc_html += '<div class="dc_clear"><!--x--></div>';
 	}
-	jq_jQuery('.cover').prepend(dc_html);
+	jq_jQuery('.cover').prepend(dc_html)
+		.css('width', new_img_width)
+		.css('height', new_img_height);
 	if(quest_task == 'no_attempts'){
 		jq_jQuery('.square').css('opacity', 0);
 	}
@@ -124,9 +133,10 @@ function Dalliclick_init()
 		var pic = new Image();
 		pic.src = imgSrc;
 		pic.onload = function() {
-			ctx.drawImage(pic, 0, 0, img_width, img_height);
+			ctx.drawImage(pic, 0, 0, new_img_width, new_img_height);
 		}
 	}
+
 	if (quest_task != 'no_attempts'){
 		timer_pause = setInterval(readyCounter, 1000);
 	}

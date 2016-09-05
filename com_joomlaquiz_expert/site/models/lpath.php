@@ -142,11 +142,14 @@ class JoomlaquizModelLpath extends JModelList
 					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->short_description, 'content', 'introtext', $lpath_all[$i]->all_id);
 					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->description, 'content', 'fulltext', $lpath_all[$i]->all_id);
 				}
+				if (JoomlaquizHelper::getAttempts($rel_id,$lpath_all[$i]->qid))
+					$link = true;
+				else $link = false;
 
 				$lpath_all[$i]->show_link = $link;
-				if($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {
+				/*if($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {
 					$link = false;
-				}
+				}*/
 			}
 			
 			return array($lpath, $lpath_all);

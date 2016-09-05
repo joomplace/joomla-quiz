@@ -2579,7 +2579,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$c_tmp = $database->LoadObjectList();
 						if (count($c_tmp)) {
 							$c_quest_cur_attempt = (int)$c_tmp[0]->c_attempts;
-							if ($c_quest_cur_attempt >= $c_all_attempts) {
+							if ($c_quest_cur_attempt >= $c_all_attempts && $c_all_attempts != 0) {
 								$ret_str .= "\t" . '<quest_task>no_attempts</quest_task>' . "\n";
 								$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', JText::_('COM_MES_NO_ATTEMPTS'));
 								$ret_str .= "\t" . '<quest_message_box><![CDATA['.$msg_html.']]></quest_message_box>' . "\n";
@@ -2599,7 +2599,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$c_tmp = $database->LoadObjectList();
 				if (count($c_tmp)) {
 					$c_quest_cur_attempt = (int)$c_tmp[0]->c_attempts;
-					if ($c_quest_cur_attempt >= $c_all_attempts) {
+					if ($c_quest_cur_attempt >= $c_all_attempts && $c_all_attempts != 0) {
 						$ret_str .= "\t" . '<quest_task>no_attempts</quest_task>' . "\n";
 						$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', JText::_('COM_MES_NO_ATTEMPTS'));					
 						$ret_str .= "\t" . '<quest_message_box><![CDATA['.$msg_html.']]></quest_message_box>' . "\n";

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
+﻿CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cert_name` varchar(50) NOT NULL,
   `cert_file` varchar(50) NOT NULL,
@@ -14,11 +14,10 @@ CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
-INSERT INTO `#__quiz_certificates` (`id`, `cert_name`, `cert_file`, `crtf_align`, `crtf_shadow`, `text_x`, `text_y`, `text_size`, `crtf_text`, `text_font`, `cert_offset`) VALUES
-('', 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', '', 100),
-('', 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', '', 150),
-('', 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '', 200);
-
+REPLACE INTO `#__quiz_certificates` (`id`, `cert_name`, `cert_file`, `crtf_align`, `crtf_shadow`, `text_x`, `text_y`, `text_size`, `crtf_text`, `text_font`, `cert_offset`) VALUES
+(1, 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', '', 100),
+(2, 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', '', 150),
+(3, 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '', 200);
 
 
 --
@@ -38,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_cert_fields` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=6 ;
 
 
-INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES
+REPLACE INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES
 (1, 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'),
 (2, 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'),
 (3, 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'),
@@ -64,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_configuration` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-INSERT INTO `#__quiz_configuration` (`config_var`, `config_value`) VALUES
+REPLACE INTO `#__quiz_configuration` (`config_var`, `config_value`) VALUES
 ('wysiwyg_options', '0');
 
 
@@ -88,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_dashboard_items` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=4 ;
 
 
-INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
+REPLACE INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
 (1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
 (2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
 (3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
@@ -387,7 +386,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_templates` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=7 ;
 
 
-INSERT INTO `#__quiz_templates` (`id`, `template_name`) VALUES
+REPLACE INTO `#__quiz_templates` (`id`, `template_name`) VALUES
 (1, 'joomlaquiz_standard'),
 (2, 'joomlaquiz_t3_bs3'),
 (3, 'joomlaquiz_blue'),
@@ -525,7 +524,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_qtypes` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=15 ;
 
 
-INSERT INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES
+REPLACE INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES
 (1, 'Multiple Choice', 'choice'),
 (2, 'Multiple Response', 'mresponse'),
 (3, 'True/False', 'truefalse'),
@@ -666,9 +665,9 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=2 ;
 
 
-INSERT INTO `#__quiz_t_quiz` (`c_id`, `c_category_id`, `c_user_id`, `c_author`, `c_full_score`, `c_title`, `c_description`, `c_short_description`, `c_image`, `c_time_limit`, `c_min_after`, `c_passing_score`, `c_created_time`, `c_published`, `c_right_message`, `c_wrong_message`, `c_pass_message`, `c_unpass_message`, `c_enable_review`, `c_email_to`, `c_email_chk`, `c_enable_print`, `c_enable_sertif`, `c_skin`, `c_random`, `c_guest`, `published`, `c_slide`, `c_language`, `c_certificate`, `c_feedback`, `c_pool`, `c_resbycat`, `c_feed_option`, `c_show_quest_pos`, `c_show_quest_points`, `c_show_author`, `c_show_timer`, `c_once_per_day`, `c_emails`, `c_timer_style`, `c_statistic`, `c_metadescr`, `c_keywords`, `c_metatitle`, `c_ismetadescr`, `c_iskeywords`, `c_ismetatitle`, `c_number_times`, `c_pagination`, `c_enable_prevnext`, `paid_check`, `paid_check_descr`, `c_allow_continue`, `c_autostart`, `c_redirect_after`, `c_redirect_delay`, `c_redirect_linktype`, `c_redirect_link`, `c_grading`, `c_ifmanual`, `c_enable_skip`, `c_show_result`, `c_show_qfeedback`, `c_flag`, `c_hide_feedback`, `c_share_buttons`, `c_auto_breaks`, `asset_id`, `c_quiz_access_message`, `c_quiz_certificate_access_message`) VALUES
+REPLACE INTO `#__quiz_t_quiz` (`c_id`, `c_category_id`, `c_user_id`, `c_author`, `c_full_score`, `c_title`, `c_description`, `c_short_description`, `c_image`, `c_time_limit`, `c_min_after`, `c_passing_score`, `c_created_time`, `c_published`, `c_right_message`, `c_wrong_message`, `c_pass_message`, `c_unpass_message`, `c_enable_review`, `c_email_to`, `c_email_chk`, `c_enable_print`, `c_enable_sertif`, `c_skin`, `c_random`, `c_guest`, `published`, `c_slide`, `c_language`, `c_certificate`, `c_feedback`, `c_pool`, `c_resbycat`, `c_feed_option`, `c_show_quest_pos`, `c_show_quest_points`, `c_show_author`, `c_show_timer`, `c_once_per_day`, `c_emails`, `c_timer_style`, `c_statistic`, `c_metadescr`, `c_keywords`, `c_metatitle`, `c_ismetadescr`, `c_iskeywords`, `c_ismetatitle`, `c_number_times`, `c_pagination`, `c_enable_prevnext`, `paid_check`, `paid_check_descr`, `c_allow_continue`, `c_autostart`, `c_redirect_after`, `c_redirect_delay`, `c_redirect_linktype`, `c_redirect_link`, `c_grading`, `c_ifmanual`, `c_enable_skip`, `c_show_result`, `c_show_qfeedback`, `c_flag`, `c_hide_feedback`, `c_share_buttons`, `c_auto_breaks`, `asset_id`, `c_quiz_access_message`, `c_quiz_certificate_access_message`) VALUES
 (0, 0, 62, '', 0, 'Questions Pool', '', '', '', 0, 0, 0, '0000-00-00', '0', '', '', '', '', '', 0, 0, '', '', 1, 0, 0, 0, 1, 0, 0, 0, 0, '0', '0', 1, 1, 0, 1, 0, '', 0, 0, '', '', '', 0, 0, 0, 1, 0, 0, 1, '', 1, 0, 0, 0, 0, '', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', '');
-UPDATE `#__quiz_t_quiz` SET `c_id` = 0 WHERE `c_title` = 'Questions Pool';
+
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_text` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,

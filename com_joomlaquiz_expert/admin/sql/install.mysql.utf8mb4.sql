@@ -618,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_language` int(11) NOT NULL DEFAULT '0',
   `c_certificate` int(11) NOT NULL DEFAULT '0',
   `c_feedback` int(11) NOT NULL DEFAULT '0',
+  `c_feedback_pdf` int(2) NOT NULL DEFAULT '0',
   `c_pool` int(11) NOT NULL DEFAULT '0',
   `c_resbycat` char(1) NOT NULL DEFAULT '0',
   `c_feed_option` char(1) NOT NULL DEFAULT '0',

@@ -128,9 +128,18 @@ class JoomlaquizModelAjaxaction extends JModelList
 		}
 	}
 	
-	public function getMinCountQuiz($rel_id)
+	public function getMinCountQuiz($rel_id,$type,$qid)
 	{
 		$database = JFactory::getDBO(); 
+        if($type != 'l'){
+			$query = "SELECT COUNT(`c_quiz_id`) "
+				. "\n FROM `#__quiz_r_student_quiz`"
+				. "\n WHERE `c_quiz_id` = ".$qid." AND `c_rel_id` = '".$rel_id." '"
+				. "\n GROUP BY `c_quiz_id`"
+				;	
+				$database->SetQuery( $query );
+					return $database->loadResult();
+		}		
 		$query = "SELECT l.`qid`"
 				. "\n FROM `#__quiz_lpath_quiz` as l,`#__quiz_products` as p"
 				. "\n WHERE l.`lid` = p.`rel_id` AND p.`id` = '".$rel_id."'"
@@ -286,7 +295,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 					
 					if(!$quiz->c_allow_continue){
-						$min = $this->getMinCountQuiz($rel_id);
+						$min = $this->getMinCountQuiz($rel_id,$rel_check[0]->type,$quiz_id);
 						$query = "UPDATE `#__quiz_products_stat` SET `attempts` = ".$min." WHERE `uid` = ".$my->id." AND `qp_id` = ".$rel_id." AND `oid` = ".$package_id." ";
 						$database->SetQuery( $query );
 						$database->execute();
@@ -1198,7 +1207,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						}				
 						
 						if($quiz->c_allow_continue){					
-							$min = $this->getMinCountQuiz($rel_id);	
+							$min = $this->getMinCountQuiz($rel_id,$rel_check[0]->type,$quiz_id);	
 							$query = "UPDATE `#__quiz_products_stat` SET `attempts` = ".$min." WHERE `uid` = ".$my->id." AND `qp_id` = ".$rel_id." AND `oid` = ".$package_id." ";
 							$database->SetQuery( $query );
 							$database->execute();
@@ -1217,7 +1226,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						}
 						if($rel_check[0]->type == 'q') {		
 							if($quiz->c_allow_continue){
-								$min = $this->getMinCountQuiz($rel_id);
+								$min = $this->getMinCountQuiz($rel_id,$rel_check[0]->type,$quiz_id);
 								$query = "UPDATE `#__quiz_products_stat` SET `attempts` = ".$min."  WHERE `uid` = ".$my->id." AND `qp_id` = ".$rel_id." AND `oid` = ".$package_id." ";
 								$database->SetQuery( $query );
 								$database->execute();

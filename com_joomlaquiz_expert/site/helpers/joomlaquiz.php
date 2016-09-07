@@ -542,6 +542,8 @@ class JoomlaquizHelper
 				$count = $database->loadResult();
 			if($count == 0)
 				return true;
+			if(!$q->attempts)
+				return true;
 			if ($count < $q->attempts)
     			return true;
 			return false;
@@ -569,7 +571,8 @@ class JoomlaquizHelper
 				if (!$c) $c = array(0);
 				$count = min($c);
 				count($c) != count($q_array) ? $min = 0 : $min = $count[0];
-								
+				if(!$attempts)
+				    return true;				
 				if($min < $attempts){
 					return false;
 				}

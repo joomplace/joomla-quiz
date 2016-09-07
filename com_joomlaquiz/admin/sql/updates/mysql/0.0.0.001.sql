@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_q_chain` (
 `quiz_id` INT(11) NOT NULL DEFAULT '0'
 ) ENGINE = InnoDB  CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-ALTER TABLE `#__quiz_q_chain` ADD COLUMN `user_id` INT(11) NOT NULL DEFAULT '0' AFTER `#__quiz_id`;
+ALTER TABLE `#__quiz_q_chain` ADD COLUMN `user_id` INT(11) NOT NULL DEFAULT '0' AFTER `quiz_id`;
 ALTER TABLE `#__quiz_q_chain` ADD COLUMN `q_chain` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `user_id`;
 ALTER TABLE `#__quiz_q_chain` ADD COLUMN `s_unique_id` VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `q_chain`, ADD PRIMARY KEY (`s_unique_id`);
 

@@ -372,6 +372,14 @@ ALTER TABLE `#__quiz_t_dalliclick` ADD COLUMN `c_incorrect_feed` TEXT CHARACTER 
 ALTER TABLE `#__quiz_t_dalliclick` ADD COLUMN `a_point` FLOAT NOT NULL DEFAULT '0' AFTER `c_incorrect_feed`;
 ALTER TABLE `#__quiz_t_dalliclick` ADD COLUMN `c_quiz_id` INT(11) NOT NULL DEFAULT '0' AFTER `a_point`;
 
+CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (
+`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT,
+PRIMARY KEY (`c_id`)
+) ENGINE = InnoDB  CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+ALTER TABLE `#__quiz_t_ext_hotspot` ADD COLUMN `c_question_id` INT(12) NOT NULL DEFAULT '0' AFTER `c_id`;
+ALTER TABLE `#__quiz_t_ext_hotspot` ADD COLUMN `c_paths` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_question_id`;
+
 CREATE TABLE IF NOT EXISTS `#__quiz_t_memory` (
 `m_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
 PRIMARY KEY (`m_id`)

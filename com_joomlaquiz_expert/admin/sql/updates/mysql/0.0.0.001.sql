@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_feed_option` (
 `quiz_id` INT(11) NOT NULL
 ) ENGINE = InnoDB  CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-ALTER TABLE `#__quiz_feed_option` ADD COLUMN `from_percent` CHAR(3) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `#__quiz_id`;
+ALTER TABLE `#__quiz_feed_option` ADD COLUMN `from_percent` CHAR(3) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `quiz_id`;
 ALTER TABLE `#__quiz_feed_option` ADD COLUMN `to_percent` CHAR(3) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `from_percent`;
 ALTER TABLE `#__quiz_feed_option` ADD COLUMN `fmessage` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `to_percent`;
 

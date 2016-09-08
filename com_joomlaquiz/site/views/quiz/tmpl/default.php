@@ -25,8 +25,6 @@ $lang = JFactory::getLanguage();
 $lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 
 $mainframe = JFactory::getApplication();
-$component_params = JComponentHelper::getParams('com_joomlaquiz');
-$margin_top = $component_params->get('margin_top', 0);
 
 if (!isset($quiz->c_show_quest_points)) {
 	$quiz->c_show_quest_points = 1;

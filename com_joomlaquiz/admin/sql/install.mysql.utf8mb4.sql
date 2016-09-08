@@ -314,6 +314,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_question` (
   `remark` text NOT NULL,
   `reviewed` tinyint(1) NOT NULL DEFAULT '0',
   `c_flag_question` tinyint(2) NOT NULL,
+  `respond_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`c_id`),
   KEY `c_stu_quiz_id` (`c_stu_quiz_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
@@ -654,4 +655,3 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_text` (
   KEY `c_blank_id` (`c_blank_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
-ALTER TABLE `#__quiz_r_student_question` ADD COLUMN `respond_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;

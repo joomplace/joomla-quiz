@@ -25,6 +25,7 @@ $lang = JFactory::getLanguage();
 $lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 
 $mainframe = JFactory::getApplication();
+
 if (!isset($quiz->c_show_quest_points)) {
 	$quiz->c_show_quest_points = 1;
 }

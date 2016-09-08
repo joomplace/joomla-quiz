@@ -173,7 +173,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$qch_ids_type_6 = $database->loadColumn();
 
 		if(count($qch_ids_type_6)) {
-			$query = "SELECT SUM(points) FROM #__quiz_t_blank WHERE c_question_id IN (".implode(',', $qch_ids_type_6).")";
+			$query = "SELECT SUM(points) FROM #__quiz_t_blank WHERE c_question_id IN (".implode(',', $qch_ids_type_6).") AND gtype = 0";
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
 			
@@ -364,16 +364,16 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
-		$data['pdf']->SetFont('freesans');
+		//$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
 		
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily, 'B');
+		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);			
 		for($s=0;$s<count($data['data']['c_blank']);$s++){
-			$data['pdf']->setFont($fontFamily, 'B');
+			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_blank'][$s]['c_answer'].'; ';
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

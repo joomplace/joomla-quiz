@@ -143,6 +143,21 @@ class JoomlaquizModelQuiz extends JModelList
 			return $quiz_params;
 		}
 
+		/* if one time and already passed - clear data and set message */
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select('1')
+			->from('#__quiz_r_student_quiz')
+			->where($db->qn('c_passed').' = '.$db->q('1'))
+			->where($db->qn('c_quiz_id').' = '.$db->q($quiz_params->c_id))
+			->where($db->qn('c_student_id').' = '.$db->q($user->id));
+		if ($quiz_params->one_time == 1 && $db->setQuery($query)->loadResult()) {
+			$quiz_params = new stdClass;
+			$quiz_params->error = 1;
+			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_ALEARY_PASSED').'</p>';
+			return $quiz_params;
+		}
+
 		/* if not bought - clear data and set message */
 		if ($quiz_params && $quiz_params->paid_check == 1 && !$rel_id) {
 			$quiz_params->error = 1;

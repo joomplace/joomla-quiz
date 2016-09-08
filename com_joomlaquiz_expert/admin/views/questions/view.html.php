@@ -55,6 +55,15 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				$this->move_questions = $this->get('MoveQuestions');
 				
 				$this->addMoveToolBar();
+			}elseif($layout == 'move_questions_cat'){
+				$submenu = 'move_questions_cat';
+				JoomlaquizHelper::showTitle($submenu);
+				
+				$questCatFields = JHTML::_('select.genericlist', $this->get("QuestionCategories"), 'catmove', 'class="input-medium" size="1"', 'value', 'text', 0); 
+				$this->questCatFields = $questCatFields;
+				$this->move_questions_cat = $this->get('MoveQuestionsCat');
+				
+				$this->addMoveCatToolBar();
 			}elseif($layout == 'uploadquestions'){
 				$submenu = 'uploadquestions';
 				JoomlaquizHelper::showTitle($submenu);
@@ -98,8 +107,15 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				{
 					$app->setUserState('quizzes.filter.quiz_id', $_REQUEST['quiz_id'] );
 				}
+
+				$qpoll = new stdClass();
+				$qpoll->value = '0';
+				$qpoll->text = JTEXT::_('COM_JOOMLAQUIZ_SUBMENU_QUESTIONS_POOL');
+
+				$quizzes = $this->get("Quizzes");
+				array_unshift($quizzes, $qpoll);
 				
-				$quizzesFields = JHTML::_('select.options', $this->get("Quizzes"), 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
+				$quizzesFields = JHTML::_('select.options', $quizzes, 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
 				
 				JHtmlSidebar::addFilter(
 					JText::_('COM_JOOMLAQUIZ_SELECT_QUIZ'),
@@ -142,6 +158,12 @@ class JoomlaquizViewQuestions extends JViewLegacy
 		JToolBarHelper::custom('questions.move_question', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE', false);
 	}
 	
+	protected function addMoveCatToolBar()
+	{
+		JToolBarHelper::cancel('question.cancel', 'JTOOLBAR_CANCEL');
+		JToolBarHelper::custom('questions.move_question_cat_ok', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', false);
+	}
+	
 	protected function addUploadquestToolBar()
 	{
 		JToolBarHelper::cancel('questions.cancel', 'JTOOLBAR_CANCEL');
@@ -163,6 +185,7 @@ class JoomlaquizViewQuestions extends JViewLegacy
         JToolBarHelper::deleteList('', 'questions.checkComplitedQuestions');
 		JToolBarHelper::divider();
 		JToolBarHelper::custom('questions.move_question_sel', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE', true);
+		JToolBarHelper::custom('questions.move_question_cat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', true);
 		JToolBarHelper::custom('questions.copy_question_sel', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY', true);
 		JToolBarHelper::custom('questions.quizzes', 'previous.png', 'previous_f2.png', 'COM_JOOMLAQUIZ_QUIZZES', false);
 		JToolBarHelper::custom('questions.hotspot_converter', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_HOTSPOT_CONVERTER', true);

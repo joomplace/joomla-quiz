@@ -258,12 +258,19 @@ window.onload = function (){
 				</div>
 			</div>
 			<div class="control-group">
-                <div class="control-group">
-                    <div class="control-label">
-				       <?php echo $this->form->getLabel('c_passing_score'); ?>
-                    </div>
+				<div class="control-label">
+					<?php echo $this->form->getLabel('c_passing_score'); ?>
+				</div>
 				<div class="controls">
 					<?php echo $this->form->getInput('c_passing_score'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('one_time'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('one_time'); ?>
 				</div>
 			</div>
 		</fieldset>
@@ -455,6 +462,14 @@ window.onload = function (){
                 </div>
 				<div class="controls">
 					<?php echo $this->form->getInput('c_feedback'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+                <div class="control-label">
+				    <?php echo $this->form->getLabel('c_feedback_pdf'); ?>
+                </div>
+				<div class="controls">
+					<?php echo $this->form->getInput('c_feedback_pdf'); ?>
 				</div>
 			</div>
 			<div class="control-group">

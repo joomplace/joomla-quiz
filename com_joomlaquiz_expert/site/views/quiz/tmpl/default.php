@@ -25,8 +25,6 @@ $lang = JFactory::getLanguage();
 $lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 
 $mainframe = JFactory::getApplication();
-$component_params = JComponentHelper::getParams('com_joomlaquiz');
-$margin_top = $component_params->get('margin_top', 0);
 	
 if (!isset($quiz->c_show_quest_points)) {
 	$quiz->c_show_quest_points = 1;
@@ -54,8 +52,7 @@ $document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/assets/css
 <?php
 	include_once(JPATH_SITE.'/components/com_joomlaquiz/views/quiz/tmpl/js/joomlaquiz.js.php');
 ?>
-<div class="<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name) ) { echo "jq_quiz_container_tbl_content"; } else { echo 'moduletable joomlaquiz_container';}?>"
->
+<div class="<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name) ) { echo "jq_quiz_container_tbl_content"; } else { echo 'moduletable joomlaquiz_container';}?>">
 <?php if ($quiz->template_name) {
 		if ($is_preview) {
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');

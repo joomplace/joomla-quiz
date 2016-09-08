@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_feed_option` (
 `quiz_id` INT(11) NOT NULL
 ) ENGINE = InnoDB  CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-ALTER TABLE `#__quiz_feed_option` ADD COLUMN `from_percent` CHAR(3) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `#__quiz_id`;
+ALTER TABLE `#__quiz_feed_option` ADD COLUMN `from_percent` CHAR(3) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `quiz_id`;
 ALTER TABLE `#__quiz_feed_option` ADD COLUMN `to_percent` CHAR(3) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `from_percent`;
 ALTER TABLE `#__quiz_feed_option` ADD COLUMN `fmessage` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `to_percent`;
 
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_q_chain` (
 `quiz_id` INT(11) NOT NULL DEFAULT '0'
 ) ENGINE = InnoDB  CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-ALTER TABLE `#__quiz_q_chain` ADD COLUMN `user_id` INT(11) NOT NULL DEFAULT '0' AFTER `#__quiz_id`;
+ALTER TABLE `#__quiz_q_chain` ADD COLUMN `user_id` INT(11) NOT NULL DEFAULT '0' AFTER `quiz_id`;
 ALTER TABLE `#__quiz_q_chain` ADD COLUMN `q_chain` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `user_id`;
 ALTER TABLE `#__quiz_q_chain` ADD COLUMN `s_unique_id` VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `q_chain`, ADD PRIMARY KEY (`s_unique_id`);
 
@@ -371,6 +371,14 @@ ALTER TABLE `#__quiz_t_dalliclick` ADD COLUMN `ordering` INT(11) NOT NULL DEFAUL
 ALTER TABLE `#__quiz_t_dalliclick` ADD COLUMN `c_incorrect_feed` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `ordering`;
 ALTER TABLE `#__quiz_t_dalliclick` ADD COLUMN `a_point` FLOAT NOT NULL DEFAULT '0' AFTER `c_incorrect_feed`;
 ALTER TABLE `#__quiz_t_dalliclick` ADD COLUMN `c_quiz_id` INT(11) NOT NULL DEFAULT '0' AFTER `a_point`;
+
+CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (
+`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT,
+PRIMARY KEY (`c_id`)
+) ENGINE = InnoDB  CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+ALTER TABLE `#__quiz_t_ext_hotspot` ADD COLUMN `c_question_id` INT(12) NOT NULL DEFAULT '0' AFTER `c_id`;
+ALTER TABLE `#__quiz_t_ext_hotspot` ADD COLUMN `c_paths` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_question_id`;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_memory` (
 `m_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,

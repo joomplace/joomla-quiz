@@ -173,7 +173,7 @@ PRIMARY KEY (`id`)
 ) ENGINE = InnoDB  CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 ALTER TABLE `#__quiz_product_info` ADD COLUMN `name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `id`;
-ALTER TABLE `#__quiz_product_info` ADD COLUMN `#__quiz_sku` VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `name`;
+ALTER TABLE `#__quiz_product_info` ADD COLUMN `quiz_sku` VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `name`;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_q_cat` (
 `qc_id` INT(11) NOT NULL AUTO_INCREMENT ,

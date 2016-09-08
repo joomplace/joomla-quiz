@@ -408,7 +408,7 @@ class JoomlaquizModelPrintcert extends JModelList
     	if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
      	imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
 	}
-}
+
 
 function writeMultilineTextArea($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width, $offset, $align = 0)
 	{ 

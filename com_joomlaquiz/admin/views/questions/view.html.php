@@ -98,8 +98,15 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				{
 					$app->setUserState('quizzes.filter.quiz_id', $_REQUEST['quiz_id'] );
 				}
+
+				$qpoll = new stdClass();
+				$qpoll->value = '0';
+				$qpoll->text = JTEXT::_('COM_JOOMLAQUIZ_SUBMENU_QUESTIONS_POOL');
+
+				$quizzes = $this->get("Quizzes");
+				array_unshift($quizzes, $qpoll);
 				
-				$quizzesFields = JHTML::_('select.options', $this->get("Quizzes"), 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
+				$quizzesFields = JHTML::_('select.options', $quizzes, 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
 				
 				JHtmlSidebar::addFilter(
 					JText::_('COM_JOOMLAQUIZ_SELECT_QUIZ'),

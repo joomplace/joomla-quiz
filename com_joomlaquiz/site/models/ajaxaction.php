@@ -1412,7 +1412,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$footer_ar[2] = "<div class='jq_footer_link jq_certificate'><a href='javascript:void(0)' onclick=\"window.open ('".$urlPrefix."task=printcert.get_certificate&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_QUIZ_FIN_BTN_CERTIFICATE')."</a></div>";
 					}
 					if ($quiz->c_enable_print && !$c_manual) {
-						$footer_ar[1] = "<div class='jq_footer_link jq_print'><a href='javascript:void(0)' onclick=\"window.open ('".JURI::root()."index.php?option=com_joomlaquiz&task=printresult.get_pdf&lang="._JQ_JF_LANG."&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_FIN_BTN_PRINT')."</a></div>";
+						$footer_ar[1] = "<div class='jq_footer_link jq_print'><a href='javascript:void(0)' onclick=\"window.open ('".JURI::root(true)."index.php?option=com_joomlaquiz&task=printresult.get_pdf&lang="._JQ_JF_LANG."&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_FIN_BTN_PRINT')."</a></div>";
 					}
 					if ($quiz->c_email_to == 2) {
 						$footer_ar[3] = "<div class='jq_footer_link jq_email'><a href='javascript:void(0)' onclick=\"jq_emailResults();\">".JText::_('COM_QUIZ_FIN_BTN_EMAIL')."</a></div>";
@@ -2579,7 +2579,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$c_tmp = $database->LoadObjectList();
 						if (count($c_tmp)) {
 							$c_quest_cur_attempt = (int)$c_tmp[0]->c_attempts;
-							if ($c_quest_cur_attempt >= $c_all_attempts) {
+							if ($c_quest_cur_attempt >= $c_all_attempts && $c_all_attempts != 0) {
 								$ret_str .= "\t" . '<quest_task>no_attempts</quest_task>' . "\n";
 								$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', JText::_('COM_MES_NO_ATTEMPTS'));
 								$ret_str .= "\t" . '<quest_message_box><![CDATA['.$msg_html.']]></quest_message_box>' . "\n";
@@ -2599,7 +2599,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$c_tmp = $database->LoadObjectList();
 				if (count($c_tmp)) {
 					$c_quest_cur_attempt = (int)$c_tmp[0]->c_attempts;
-					if ($c_quest_cur_attempt >= $c_all_attempts) {
+					if ($c_quest_cur_attempt >= $c_all_attempts && $c_all_attempts != 0) {
 						$ret_str .= "\t" . '<quest_task>no_attempts</quest_task>' . "\n";
 						$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', JText::_('COM_MES_NO_ATTEMPTS'));					
 						$ret_str .= "\t" . '<quest_message_box><![CDATA['.$msg_html.']]></quest_message_box>' . "\n";

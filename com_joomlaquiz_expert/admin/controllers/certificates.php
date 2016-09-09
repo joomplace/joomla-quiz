@@ -39,6 +39,6 @@ class JoomlaquizControllerCertificates extends JControllerAdmin
 			$message_succes = JText::_('COM_JOOMLAQUIZ_CERT_ADD_SAMPLE_MESSAGE');
 			$message_error = JText::_('COM_JOOMLAQUIZ_CERT_ADD_SAMPLE_MESSAGE_ERROR');
 			if ($model->sample_certs()) $this->setRedirect($redirect, $message_succes);
-			else $this->setRedirect($redirect, $message_error);
+			else $this->setRedirect($redirect, $message_error, 'error');
 		}
 }

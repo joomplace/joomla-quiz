@@ -522,6 +522,66 @@ class JoomlaquizHelper
 			return $new_text;
 		}
 		
+		public static function getAttempts($rel_id,$qid)
+		{
+			$database = JFactory::getDBO();
+			$query = "SELECT `attempts` "
+					. "\n FROM `#__quiz_products`"
+			    	. "\n WHERE `id` = '".$rel_id."'"
+				    ;
+									
+			$database->SetQuery( $query );
+			$q = $database->loadObject();
+			
+			$query = "SELECT COUNT(`c_id`) "
+				. "\n FROM `#__quiz_r_student_quiz`"
+				. "\n WHERE `c_quiz_id` = '".$qid."' AND `c_rel_id` = '".$rel_id."'"
+				;
+			
+				$database->SetQuery( $query );
+				$count = $database->loadResult();
+			if($count == 0)
+				return true;
+			if(!$q->attempts)
+				return true;
+			if ($count < $q->attempts)
+    			return true;
+			return false;
+		}
+		
+		public function getLPAttempts($rel_id,$attempts)
+		{
+			$database = JFactory::getDBO();
+			$query = "SELECT l.`qid`"
+					. "\n FROM `#__quiz_lpath_quiz` as l,`#__quiz_products` as p"
+					. "\n WHERE l.`lid` = p.`rel_id` AND p.`id` = '".$rel_id."'"
+					;				
+			$database->SetQuery( $query );
+			$q_array = $database->loadColumn();
+			$q_a = implode(",",$q_array);
+        
+            if($q_a){ 
+				$query = "SELECT COUNT(`c_quiz_id`) "
+						. "\n FROM `#__quiz_r_student_quiz`"
+						. "\n WHERE `c_quiz_id` IN (".$q_a.") AND `c_rel_id` = '".$rel_id." '"
+						. "\n GROUP BY `c_quiz_id`"
+						;
+				$database->SetQuery( $query );
+				$c = $database->loadRowList();
+				if (!$c) $c = array(0);
+				$count = min($c);
+				count($c) != count($q_array) ? $min = 0 : $min = $count[0];
+				if(!$attempts)
+				    return true;		
+				
+				if($min < $attempts){
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
 		public static function isQuizAttepmts($quiz_id, $lid=0, $rel_id=0, $order_id=0, &$msg) {
 		
 			$my = JFactory::getUser();

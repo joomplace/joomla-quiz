@@ -128,6 +128,41 @@ class JoomlaquizModelAjaxaction extends JModelList
 		}
 	}
 	
+	public function getMinCountQuiz($rel_id,$type,$qid)
+	{
+		$database = JFactory::getDBO();
+	
+		if($type != 'l'){
+			$query = "SELECT COUNT(`c_quiz_id`) "
+				. "\n FROM `#__quiz_r_student_quiz`"
+				. "\n WHERE `c_quiz_id` = ".$qid." AND `c_rel_id` = '".$rel_id." '"
+				. "\n GROUP BY `c_quiz_id`"
+				;	
+				$database->SetQuery( $query );
+					return $database->loadResult();
+		}	
+		$query = "SELECT l.`qid`"
+		. "\n FROM `#__quiz_lpath_quiz` as l,`#__quiz_products` as p"
+		. "\n WHERE l.`lid` = p.`rel_id` AND p.`id` = '".$rel_id."'"
+		;
+			
+		$database->SetQuery( $query );
+		$q_array = $database->loadColumn();
+		$q_a = implode(",",$database->loadColumn());
+											
+		$query = "SELECT COUNT(`c_quiz_id`) "
+		. "\n FROM `#__quiz_r_student_quiz`"
+		. "\n WHERE `c_quiz_id` IN (".$q_a.") AND `c_rel_id` = '".$rel_id." '"
+		;			
+		$database->SetQuery( $query );
+		
+		$c = $database->loadRowList();
+		$count = min($c);
+		count($c) != count($q_array) ? $min = 0 : $min = $count[0];
+		
+	return $min;
+	}
+	
 	public function JQ_StartQuiz() {
 		
 		$database = JFactory::getDBO(); 
@@ -265,7 +300,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 					
 					if(!$quiz->c_allow_continue){
-						$query = "UPDATE #__quiz_products_stat SET `attempts` = `attempts`+1 WHERE uid = $my->id AND `qp_id` = $rel_id AND oid = $package_id ";
+						$min = $this->getMinCountQuiz($rel_id,$rel_check[0]->type,$quiz_id);
+						$query = "UPDATE `#__quiz_products_stat` SET `attempts` = ".$min." WHERE `uid` = ".$my->id." AND `qp_id` = ".$rel_id." AND `oid` = ".$package_id." ";
 						$database->SetQuery( $query );
 						$database->execute();
 					}
@@ -1121,7 +1157,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 						}				
 						
 						if($quiz->c_allow_continue){					
-							$query = "UPDATE #__quiz_products_stat SET `attempts` = `attempts`+1 WHERE uid = $my->id AND `qp_id` = $rel_id AND oid = $package_id ";
+							$min = $this->getMinCountQuiz($rel_id,$rel_check[0]->type,$quiz-id);	
+							$query = "UPDATE `#__quiz_products_stat` SET `attempts` = ".$min." WHERE `uid` = ".$my->id." AND `qp_id` = ".$rel_id." AND `oid` = ".$package_id." ";
 							$database->SetQuery( $query );
 							$database->execute();
 						}
@@ -1139,7 +1176,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 						}
 						if($rel_check[0]->type == 'q') {		
 							if($quiz->c_allow_continue){
-								$query = "UPDATE #__quiz_products_stat SET `attempts` = `attempts`+1 WHERE uid = $my->id AND `qp_id` = $rel_id AND oid = $package_id ";
+								$min = $this->getMinCountQuiz($rel_id,$rel_check[0]->type,$quiz-id);
+								$query = "UPDATE `#__quiz_products_stat` SET `attempts` = ".$min."  WHERE `uid` = ".$my->id." AND `qp_id` = ".$rel_id." AND `oid` = ".$package_id." ";
 								$database->SetQuery( $query );
 								$database->execute();
 							}
@@ -1352,7 +1390,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 							->where($db->qn('c_student_id').' = '.$db->q($my->id));
 						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $tmp) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 							$is_attempts = true;
-							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
+							if(JoomlaquizHelper::getAttempts($rel_id,$quiz_id)){	
+								$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
+							}
 						}
 					
 					} else if($lid) {

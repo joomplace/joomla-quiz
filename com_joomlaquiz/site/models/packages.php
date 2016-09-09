@@ -420,6 +420,9 @@ class JoomlaquizModelPackages extends JModelList
 								$data->expired = true;
 								
 							}
+							if(JoomlaquizHelper::getLPAttempts($quiz_products[0]->id,$quiz_products[0]->attempts)){
+								$data->expired = true;
+							}
 						}
 						if ($data->expired)
 							$data->suffix = JText::_('COM_LPATH_EXPIRED');
@@ -448,6 +451,9 @@ class JoomlaquizModelPackages extends JModelList
 				|| ($bq_count && $l_count && $bq_counter_exiped == $bq_count && $l_counter_exiped == $l_count)
 			) {
 				$package->expired = true;
+			}
+			if(!JoomlaquizHelper::getLPAttempts($quiz_products[0]->id,$quiz_products[0]->attempts)){
+				$data->expired = false;
 			}
 
 

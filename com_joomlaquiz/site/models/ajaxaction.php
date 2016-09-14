@@ -1525,6 +1525,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 	                            $pdf = $pdf->Output('results.pdf', 'S');
 	                            $jmail->AddStringAttachment($pdf,'results.pdf');
 								foreach($emails as $email){
+									$jmail->clearAllRecipients();
 								    $jmail->sendMail( $mailfrom, $sitename, trim($email), $subject, $message, 1, NULL, NULL, NULL, NULL, NULL);
 								}
 							}

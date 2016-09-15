@@ -629,6 +629,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `asset_id` int(18) NOT NULL,
   `c_quiz_access_message` text NOT NULL,
   `c_quiz_certificate_access_message` text NOT NULL,
+  `one_time` INT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_user_id` (`c_user_id`),
   KEY `c_author` (`c_author`),

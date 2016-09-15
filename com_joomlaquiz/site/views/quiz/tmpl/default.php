@@ -40,7 +40,8 @@ $document = JFactory::getDocument();
 $document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
 $document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
 $document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/assets/css/joomlaquiz.css');
-	
+
+if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_image);
 ?>
 
 <noscript>

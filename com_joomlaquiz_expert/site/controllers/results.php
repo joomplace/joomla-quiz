@@ -25,6 +25,12 @@ class JoomlaquizControllerResults extends JControllerForm
 		
 		$model = $this->getModel();
 		$quiz_params = $model->getQuizParams();
+
+		/*
+		 * need to generate and set meta data
+		 * and og:data
+		 * depending on quiz_id
+		 */
 		
 		require_once(JPATH_SITE.'/components/com_joomlaquiz/views/quiz/view.html.php');
 		$view = $this->getView("quiz");

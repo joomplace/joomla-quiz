@@ -25,11 +25,8 @@ class JoomlaQuiz_template_class extends JoomlaQuizTemplateClass {
 		$document 	= JFactory::getDocument();
 		$document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/css/jq_template.css');
 		$document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/css/choosen.css');
-		//$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
-		$document->addScript("http://code.jquery.com/ui/1.8.21/jquery-ui.min.js");
-
-		//$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
-		$document->addScript("http://code.jquery.com/ui/1.8.21/jquery-ui.min.js");
+		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
+		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
 		$document->addScript(JURI::root(true).'/components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/js/choosen.js');
 		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/raphael.js");
 		

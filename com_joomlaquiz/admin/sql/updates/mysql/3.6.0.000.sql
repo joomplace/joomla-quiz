@@ -6,3 +6,5 @@ ALTER TABLE `#__quiz_certificates` ADD COLUMN `cert_offset` INT(4) NOT NULL AFTE
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `one_time` INT(1) NOT NULL DEFAULT '0';
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_feedback_pdf` INT(2)  NOT NULL AFTER `c_feedback`;
 ALTER TABLE `#__quiz_r_student_question` ADD COLUMN `respond_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+DELETE FROM `#__quiz_t_quiz` WHERE `c_title` = 'Questions Pool';

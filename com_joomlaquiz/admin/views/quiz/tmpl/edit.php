@@ -465,6 +465,14 @@ window.onload = function (){
 				</div>
 			</div>
 			<div class="control-group">
+                <div class="control-label">
+				    <?php echo $this->form->getLabel('c_feedback_pdf'); ?>
+                </div>
+				<div class="controls">
+					<?php echo $this->form->getInput('c_feedback_pdf'); ?>
+				</div>
+			</div>
+			<div class="control-group">
 				<div class="control-label">
                     <?php echo $this->form->getLabel('c_show_qfeedback'); ?>
                 </div>
@@ -497,6 +505,14 @@ window.onload = function (){
                 </div>
 				<div class="controls">
 					<?php echo $this->form->getInput('c_share_buttons'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $this->form->getLabel('c_image'); ?>
+				</div>
+				<div class="controls">
+					<?php echo $this->form->getInput('c_image'); ?>
 				</div>
 			</div>
 			<div class="control-group">

@@ -1283,7 +1283,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 
 					if((!$is_share || $false_share) && $quiz->c_share_buttons){
-						$social_buttons = '<div id="jq_share"><ul><li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer.php?u='.$share_link.'\', \'_blank\');"></div></li><li><div class="jq_twitter" onclick="window.open(\'http://twitter.com/share?text='.$quiz->c_title.' '.$share_link.'\', \'_blank\');"><!--x--></div></li><li><div class="jq_linkedin" onclick="window.open(\'http://www.linkedin.com/shareArticle?mini=true&url='.$share_link.'\', \'_blank\');"><!--x--></div></li></ul></div>';
+						$sshare_message = (JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id) && JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)!='COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)?(JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)):(JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE'));
+						$user_score_replaced = sprintf($sshare_message, number_format($user_score, 2, '.', ' '), number_format($max_score, 2, '.', ' ')).$quiz->c_title;
+						$social_buttons = '<div id="jq_share"><ul><li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer.php?u='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"></div></li><li><div class="jq_twitter" onclick="window.open(\'http://twitter.com/share?text='.$user_score_replaced.'\', \'_blank\');"><!--x--></div></li><li><div class="jq_linkedin" onclick="window.open(\'http://www.linkedin.com/shareArticle?mini=true&url='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"><!--x--></div></li></ul></div>';
+
 						$results_txt = str_replace('<!-- SOCIAL BUTTONS -->', $social_buttons, $results_txt);
 					}
 					
@@ -1466,7 +1469,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$footer_ar[2] = "<div class='jq_footer_link jq_certificate'><a href='javascript:void(0)' onclick=\"window.open ('".$urlPrefix."task=printcert.get_certificate&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_QUIZ_FIN_BTN_CERTIFICATE')."</a></div>";
 					}
 					if ($quiz->c_enable_print && !$c_manual) {
-						$footer_ar[1] = "<div class='jq_footer_link jq_print'><a href='javascript:void(0)' onclick=\"window.open ('".JURI::root()."index.php?option=com_joomlaquiz&task=printresult.get_pdf&lang="._JQ_JF_LANG."&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_FIN_BTN_PRINT')."</a></div>";
+						$footer_ar[1] = "<div class='jq_footer_link jq_print'><a href='javascript:void(0)' onclick=\"window.open ('".JURI::root(true)."index.php?option=com_joomlaquiz&task=printresult.get_pdf&lang="._JQ_JF_LANG."&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_FIN_BTN_PRINT')."</a></div>";
 					}
 					if ($quiz->c_email_to == 2) {
 						$footer_ar[3] = "<div class='jq_footer_link jq_email'><a href='javascript:void(0)' onclick=\"jq_emailResults();\">".JText::_('COM_QUIZ_FIN_BTN_EMAIL')."</a></div>";
@@ -1578,6 +1581,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 	                            $pdf = $pdf->Output('results.pdf', 'S');
 	                            $jmail->AddStringAttachment($pdf,'results.pdf');
 								foreach($emails as $email){
+									$jmail->clearAllRecipients();
 								    $jmail->sendMail( $mailfrom, $sitename, trim($email), $subject, $message, 1, NULL, NULL, NULL, NULL, NULL);
 								}
 							}
@@ -2632,7 +2636,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$c_tmp = $database->LoadObjectList();
 						if (count($c_tmp)) {
 							$c_quest_cur_attempt = (int)$c_tmp[0]->c_attempts;
-							if ($c_quest_cur_attempt >= $c_all_attempts) {
+							if ($c_quest_cur_attempt >= $c_all_attempts && $c_all_attempts != 0) {
 								$ret_str .= "\t" . '<quest_task>no_attempts</quest_task>' . "\n";
 								$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', JText::_('COM_MES_NO_ATTEMPTS'));
 								$ret_str .= "\t" . '<quest_message_box><![CDATA['.$msg_html.']]></quest_message_box>' . "\n";
@@ -2652,7 +2656,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$c_tmp = $database->LoadObjectList();
 				if (count($c_tmp)) {
 					$c_quest_cur_attempt = (int)$c_tmp[0]->c_attempts;
-					if ($c_quest_cur_attempt >= $c_all_attempts) {
+					if ($c_quest_cur_attempt >= $c_all_attempts && $c_all_attempts != 0) {
 						$ret_str .= "\t" . '<quest_task>no_attempts</quest_task>' . "\n";
 						$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', JText::_('COM_MES_NO_ATTEMPTS'));					
 						$ret_str .= "\t" . '<quest_message_box><![CDATA['.$msg_html.']]></quest_message_box>' . "\n";

@@ -142,7 +142,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				$font_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $font_text);
 				$font_text = str_replace("#course#",$this->revUni($stu_quiz->c_title), $font_text);
 				$stu_datetime = strtotime($stu_quiz->c_date_time) + $stu_quiz->c_total_time;
-
+				
 				if (count($cb_fields)) {
 					foreach($cb_fields as $cb_field) {	
 						if ($cb_data && isset($cb_data->$cb_field))
@@ -180,6 +180,7 @@ class JoomlaquizModelPrintcert extends JModelList
 					$date = $stu_datetime;
 					$format = $str_format;
 					$font_text = str_replace('#date'.$str_format_pre.'#', JHTML::_('date', $date , $format), $font_text);
+					
 					$first_pos = JoomlaquizHelper::jq_strpos( $font_text,'#date');
 				}
 				$font_text = str_replace('#date#', date('Y-m-d', $stu_datetime), $font_text);
@@ -212,38 +213,18 @@ class JoomlaquizModelPrintcert extends JModelList
 					$arr = $this->revUni($arr);
 				}
 				
+				$max_width = imagesx($im)-$certif->cert_offset;
 				switch(intval($certif->crtf_align)) {
 					case 1:
-						for ($i = 0; $i< $count_lines; $i++) {
-							$cur_w = $text_lines_xrights[$i] - $text_lines_xlefts[$i];
-							$ad = intval(($max_w - $cur_w)/2) - intval($max_w/2);
-							if ($allow_shadow) imagettftext($im, $font_size, 0, $font_x + $ad+2, $font_y+2, $grey, $font, $text_array[$i]);
-							imagettftext($im, $font_size, 0, $font_x + $ad, $font_y, $black, $font, $text_array[$i]);
-							$font_y = $font_y + $text_lines_heights[$i] + 3;
-						}
-					break;
+							$this->writeMultilineTextArea($im, $font_size, $font_x, $certif->text_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset,1);
+					  		break;
 					case 2:		
-						for ($i = 0; $i< $count_lines; $i++) {
-							$cur_w = $text_lines_xrights[$i] - $text_lines_xlefts[$i];
-							$ad = 0;
-							if ($allow_shadow) imagettftext($im, $font_size, 0, $font_x + $ad+2, $font_y+2, $grey, $font, $text_array[$i]);
-							imagettftext($im, $font_size, 0, $font_x + $ad, $font_y, $black, $font, $text_array[$i]);
-							$font_y = $font_y + $text_lines_heights[$i] + 3;
-						}
-
-					break;
+							$this->writeMultilineTextArea($im, $font_size, $font_x, $font_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset,2);
+							break;
 					default:
-						for ($i = 0; $i< $count_lines; $i++) {
-							$cur_w = $text_lines_xrights[$i] - $text_lines_xlefts[$i];
-							$ad = intval($max_w - $cur_w) - intval($max_w);
-							if ($allow_shadow) imagettftext($im, $font_size, 0, $font_x + $ad+2, $font_y+2, $grey, $font, $text_array[$i]);
-							imagettftext($im, $font_size, 0, $font_x + $ad, $font_y, $black, $font, $text_array[$i]);
-							$font_y = $font_y + $text_lines_heights[$i] + 3;
-						}
-
-					break;
+							$this->writeMultilineTextArea($im, $font_size, $font_x, $font_y+400, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset);
+							break;
 				}
-
 				$query = "SELECT * FROM #__quiz_cert_fields WHERE cert_id = '{$certif->id}' ORDER BY c_id";
 				$database->setQuery($query);
 				$fields = $database->loadObjectList();
@@ -251,6 +232,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				$ad = 0;		
 				if (is_array($fields) && count($fields)) {
 					foreach($fields as $field){
+					
 						$field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text),$stu_quiz,'');
 						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
 						$field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);
@@ -300,18 +282,25 @@ class JoomlaquizModelPrintcert extends JModelList
 								$date = $stu_datetime;
 								$format = $str_format;
 								$font_text = str_replace('#date'.$str_format_pre.'#', JHTML::_('date', $date , $format), $font_text);
-								
 								$first_pos = JoomlaquizHelper::jq_strpos( $font_text,'#date');
 							}
 							$font_text = str_replace('#date#', date('Y-m-d', $stu_datetime), $font_text);
 							
 							$field->f_text = $font_text;
-						}
+						} 
 			
 						$font = JPATH_SITE . "/media/".(isset($field->font)? $field->font: 'arial.ttf');
-						if ($field->shadow) imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2, $grey, $font, $field->f_text);
 						
+						/*if ($field->shadow) imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2, $grey, $font, $field->f_text);
+				
 						imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
+						*/
+
+						$max_width = imagesx($im);
+						$this->write_multiline_text($im, $field->text_h, $field->text_x + $ad, $field->text_y, $black, $font, $grey, $field->shadow, $field->f_text, $max_width-$certif->cert_offset);
+						
+						
+						
 					}
 				}
 
@@ -381,4 +370,94 @@ class JoomlaquizModelPrintcert extends JModelList
         }
         return $text; 
     }
+	
+
+
+	function write_multiline_text ($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width) { 
+		
+		$words = explode(" ", $text); 
+		$string = ""; 
+		$tmp_string = ""; 
+
+		for($i = 0; $i < count($words); $i++) { 
+			$tmp_string .= $words[$i]." "; 
+
+			//check size of string 
+			$dim = imagettfbbox($font_size, 0, $font, $tmp_string); 
+
+			if($dim[4] < ($max_width - $start_x)) { 
+				$string = $tmp_string; 
+				$curr_width = $dim[4];
+			} else { 
+				$i--; 
+				$tmp_string = ""; 
+				$start_xx = $start_x + round(($max_width - $curr_width - $start_x) / 2);        
+				if ($shadow) imagettftext($image, $font_size, 0, $start_xx, $start_y, $grey, $font, $string);
+				imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string); 
+
+				$string = ""; 
+				$start_y += abs($dim[5]) * 1.2; 
+				$curr_width = 0;
+			} 
+		} 
+
+		$start_xx = $start_x + round(($max_width - $dim[4] - $start_x) / 2);        
+		if ($shadow) imagettftext($image, $font_size, 0, $start_xx, $start_y, $grey, $font, $string);
+		imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
+	} 
+
+
+function writeMultilineTextArea($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width, $offset, $align = 0)
+	{ 
+		$words = explode(" ", $text); 
+		$string = ""; 
+		$tmp_string = ""; 
+		for($i = 0; $i < count($words); $i++) { 
+			$tmp_string .= $words[$i]." "; 
+			$dim = imagettfbbox($font_size, 0, $font, $tmp_string); 
+
+			if($dim[4] < ($max_width - $start_x)) { 
+				$string = $tmp_string;
+				$curr_width = $dim[4];
+			} else { 				
+				$i--; 
+				$tmp_string = ""; 
+				
+				switch ($align){
+					case 0:
+					    $start_xx = $start_x;
+                        break;
+                    case 1:
+					    $start_xx =  $start_x + round(($max_width + $offset - $curr_width - $start_x) / 2);
+                        break;
+                    case 2:
+					    $start_xx =  $start_x + round($max_width + $offset - $curr_width + $dim[6]);
+                        break; 							
+				}
+				if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
+				imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string); 
+
+				if ($dim[3] < 10) $dim[3] = $dim[3]*5;
+				$start_y += abs($dim[3] * 1.5); 
+				$curr_width = 0;
+				$string = ""; 
+			} 
+
+		} 
+		switch ($align){
+					case 0:
+					    $start_xx = $start_x;
+                        break;
+                    case 1:
+					    $start_xx = $start_x + round(($max_width + $offset - $dim[4] - $start_x) / 2);
+                        break;
+                    case 2:
+					    $start_xx =  $start_x + round($max_width + $offset - $dim[4] + $dim[6]);
+						if ($start_xx < 0) $start_xx = 0;
+                        break; 							
+				}
+			   
+    	if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
+     	imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
+	}
 }

@@ -9,17 +9,20 @@ CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
   `text_size` tinyint(4) NOT NULL DEFAULT '10',
   `crtf_text` text NOT NULL,
   `text_font` varchar(255) NOT NULL,
-  `cert_offset` int(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
-REPLACE INTO `#__quiz_certificates` (`id`, `cert_name`, `cert_file`, `crtf_align`, `crtf_shadow`, `text_x`, `text_y`, `text_size`, `crtf_text`, `text_font`, `cert_offset`) VALUES
-(1, 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', '', 100),
-(2, 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', '', 150),
-(3, 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '', 200);
 
--- --------------------------------------------------------
+INSERT INTO `#__quiz_certificates` (`id`, `cert_name`, `cert_file`, `crtf_align`, `crtf_shadow`, `text_x`, `text_y`, `text_size`, `crtf_text`, `text_font`) VALUES
+('', 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', ''),
+('', 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', ''),
+('', 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '');
 
+
+
+--
+-- Структура таблицы `#__quiz_cert_fields`
+--
 
 CREATE TABLE IF NOT EXISTS `#__quiz_cert_fields` (
   `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -31,10 +34,10 @@ CREATE TABLE IF NOT EXISTS `#__quiz_cert_fields` (
   `shadow` tinyint(4) NOT NULL DEFAULT '0',
   `font` varchar(255) DEFAULT 'arial.ttf',
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=6 ;
 
 
-REPLACE INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES
+INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES
 (1, 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'),
 (2, 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'),
 (3, 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'),
@@ -52,27 +55,25 @@ REPLACE INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text
 (15, 3, '#name#', 540, 360, 16, 1, 'arial.ttf');
 
 
--- --------------------------------------------------------
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_configuration` (
   `config_var` varchar(50) NOT NULL DEFAULT '',
   `config_value` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-REPLACE INTO `#__quiz_configuration` (`config_var`, `config_value`) VALUES
+
+INSERT INTO `#__quiz_configuration` (`config_var`, `config_value`) VALUES
 ('wysiwyg_options', '0');
 
--- --------------------------------------------------------
+
 
 CREATE TABLE IF NOT EXISTS `#__quiz_constants` (
   `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `key_value` varchar(255) NOT NULL DEFAULT '',
   `default_value` text NOT NULL,
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 
@@ -83,15 +84,14 @@ CREATE TABLE IF NOT EXISTS `#__quiz_dashboard_items` (
   `icon` varchar(255) NOT NULL,
   `published` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=4 ;
 
 
-REPLACE INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
+INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
 (1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
 (2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
 (3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
 
--- --------------------------------------------------------
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_export` (
@@ -100,9 +100,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_export` (
   `e_date` date NOT NULL DEFAULT '0000-00-00',
   `e_quizes` text NOT NULL,
   PRIMARY KEY (`eid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 
 
@@ -112,9 +111,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_feed_option` (
   `to_percent` char(3) NOT NULL,
   `fmessage` text NOT NULL,
   PRIMARY KEY (`quiz_id`,`from_percent`,`to_percent`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_languages` (
@@ -122,9 +120,9 @@ CREATE TABLE IF NOT EXISTS `#__quiz_languages` (
   `lang_file` varchar(50) DEFAULT NULL,
   `is_default` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_lpath` (
@@ -137,7 +135,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_lpath` (
   `asset_id` int(18) NOT NULL,
   `lp_access_message` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_lpath_quiz` (
@@ -147,9 +146,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_lpath_quiz` (
   `qid` int(11) NOT NULL,
   `order` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `#__quiz_lpath_stage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -162,9 +160,9 @@ CREATE TABLE IF NOT EXISTS `#__quiz_lpath_stage` (
   `stage` int(11) NOT NULL DEFAULT '0',
   `attempts` int(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_payments` (
@@ -180,9 +178,9 @@ CREATE TABLE IF NOT EXISTS `#__quiz_payments` (
   `checked_out_time` datetime DEFAULT '0000-00-00 00:00:00',
   `confirmed_time` datetime DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_pool` (
@@ -190,9 +188,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_pool` (
   `q_cat` int(11) NOT NULL DEFAULT '0',
   `q_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`q_id`,`q_cat`,`q_count`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_products` (
@@ -205,9 +201,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_products` (
   `period_end` date NOT NULL,
   `attempts` int(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_products_stat` (
@@ -220,18 +214,15 @@ CREATE TABLE IF NOT EXISTS `#__quiz_products_stat` (
   `period_end` date NOT NULL DEFAULT '0000-00-00',
   `attempts` int(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `#__quiz_product_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `quiz_sku` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_q_cat` (
@@ -240,9 +231,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_q_cat` (
   `qc_instruction` text NOT NULL,
   `qc_tag` varchar(255) NOT NULL,
   PRIMARY KEY (`qc_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `#__quiz_q_chain` (
   `quiz_id` int(11) NOT NULL DEFAULT '0',
@@ -250,9 +240,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_q_chain` (
   `q_chain` text NOT NULL,
   `s_unique_id` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`s_unique_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_blank` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -261,9 +249,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_blank` (
   `is_correct` tinyint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_sq_id` (`c_sq_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_choice` (
@@ -273,9 +259,16 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_choice` (
   PRIMARY KEY (`c_id`),
   KEY `c_sq_id` (`c_sq_id`),
   KEY `c_choice_id` (`c_choice_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `#__quiz_r_student_dalliclick` (
+  `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `c_sq_id` int(10) NOT NULL,
+  `c_choice_id` int(10) NOT NULL,
+  `c_elapsed_time` int(10) NOT NULL,
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_hotspot` (
@@ -285,9 +278,9 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_hotspot` (
   `c_select_y` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_sq_id` (`c_sq_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_matching` (
@@ -298,9 +291,26 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_matching` (
   PRIMARY KEY (`c_id`),
   KEY `c_sq_id` (`c_sq_id`),
   KEY `c_matching_id` (`c_matching_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
+
+
+CREATE TABLE IF NOT EXISTS `#__quiz_r_student_memory` (
+  `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `c_sq_id` int(11) NOT NULL,
+  `c_mid` int(11) NOT NULL,
+  `c_elapsed_time` int(11) NOT NULL,
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `#__quiz_r_student_puzzle` (
+  `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `c_sq_id` int(11) unsigned NOT NULL,
+  `c_piece` int(10) NOT NULL,
+  `c_elapsed_time` int(10) NOT NULL,
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_question` (
@@ -312,13 +322,12 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_question` (
   `is_correct` tinyint(1) NOT NULL DEFAULT '0',
   `remark` text NOT NULL,
   `reviewed` tinyint(1) NOT NULL DEFAULT '0',
+  `c_elapsed_time` int(10) NOT NULL,
   `c_flag_question` tinyint(2) NOT NULL,
   `respond_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`c_id`),
   KEY `c_stu_quiz_id` (`c_stu_quiz_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_quiz` (
@@ -344,11 +353,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_quiz` (
   `params` varchar(1024) NOT NULL DEFAULT '{}',
   PRIMARY KEY (`c_id`),
   KEY `c_student_id` (`c_student_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_share` (
   `id` int(12) unsigned NOT NULL AUTO_INCREMENT,
@@ -357,10 +362,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_share` (
   `c_user_id` int(12) unsigned NOT NULL,
   `c_share_id` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_survey` (
@@ -369,28 +371,23 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_survey` (
   `c_answer` text NOT NULL,
   PRIMARY KEY (`c_id`),
   KEY `c_sq_id` (`c_sq_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_setup` (
   `c_par_name` varchar(20) NOT NULL DEFAULT '',
   `c_par_value` varchar(255) NOT NULL DEFAULT '',
   UNIQUE KEY `c_par_name` (`c_par_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `#__quiz_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `template_name` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=7 ;
 
 
-
-REPLACE INTO `#__quiz_templates` (`id`, `template_name`) VALUES
+INSERT INTO `#__quiz_templates` (`id`, `template_name`) VALUES
 (1, 'joomlaquiz_standard'),
 (2, 'joomlaquiz_t3_bs3'),
 (3, 'joomlaquiz_blue'),
@@ -398,7 +395,6 @@ REPLACE INTO `#__quiz_templates` (`id`, `template_name`) VALUES
 (5, 'joomlaquiz_pretty_green'),
 (6, 'joomlaquiz_pretty_blue');
 
--- --------------------------------------------------------
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_blank` (
@@ -411,9 +407,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_blank` (
   `gtype` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_question_id` (`c_question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_category` (
@@ -421,9 +416,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_category` (
   `c_category` varchar(255) NOT NULL DEFAULT '',
   `c_instruction` text NOT NULL,
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_choice` (
@@ -437,18 +431,28 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_choice` (
   `c_quiz_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_question_id` (`c_question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `#__quiz_t_dalliclick` (
+  `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `c_choice` text NOT NULL,
+  `c_right` char(1) NOT NULL,
+  `c_question_id` int(10) NOT NULL,
+  `ordering` int(11) NOT NULL,
+  `c_incorrect_feed` text NOT NULL,
+  `a_point` float NOT NULL,
+  `c_quiz_id` int(11) NOT NULL,
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (
   `c_id` int(12) unsigned NOT NULL AUTO_INCREMENT,
   `c_question_id` int(12) NOT NULL,
   `c_paths` text NOT NULL,
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_faketext` (
@@ -457,10 +461,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_faketext` (
   `c_text` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`c_id`),
   KEY `c_quest_id` (`c_quest_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_hotspot` (
@@ -472,9 +473,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_hotspot` (
   `c_height` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_question_id` (`c_question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_matching` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -486,9 +486,17 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_matching` (
   `a_points` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_question_id` (`c_question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `#__quiz_t_memory` (
+  `m_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `c_question_id` int(11) NOT NULL,
+  `a_points` float NOT NULL,
+  `c_img` varchar(50) NOT NULL,
+  `a_pairs` int(10) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`m_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_pbreaks` (
@@ -498,9 +506,15 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_pbreaks` (
   PRIMARY KEY (`c_id`),
   KEY `c_quiz_id` (`c_quiz_id`),
   KEY `c_question_id` (`c_question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `#__quiz_t_puzzle` (
+  `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `c_question_id` int(11) NOT NULL,
+  `c_pieces` int(11) NOT NULL DEFAULT '4',
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_qtypes` (
@@ -508,10 +522,10 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_qtypes` (
   `c_qtype` varchar(50) NOT NULL,
   `c_type` varchar(50) NOT NULL,
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=15 ;
 
 
-REPLACE INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES
+INSERT INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES
 (1, 'Multiple Choice', 'choice'),
 (2, 'Multiple Response', 'mresponse'),
 (3, 'True/False', 'truefalse'),
@@ -521,7 +535,12 @@ REPLACE INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES
 (7, 'Hotspot', 'hotspot'),
 (8, 'Surveys', 'surveys'),
 (9, 'Boilerplate', 'boilerplate'),
-(10, 'Multiple question', 'mquestion');
+(10, 'Multiple question', 'mquestion'),
+(11, 'Jigsaw Puzzle', 'puzzle'),
+(12, 'Image Match', 'imgmatch'),
+(13, 'Memory', 'memory'),
+(14, 'Dalliclick', 'dalliclick');
+
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_question` (
@@ -551,10 +570,20 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_question` (
   `c_manual` tinyint(1) NOT NULL DEFAULT '0',
   `c_penalty` tinyint(4) NOT NULL DEFAULT '0',
   `c_immediate` tinyint(1) NOT NULL DEFAULT '0',
+  `sq_delayed` int(5) NOT NULL DEFAULT '1',
+  `c_width` int(10) NOT NULL DEFAULT '150',
+  `c_timer` int(10) NOT NULL,
+  `c_height` int(10) NOT NULL DEFAULT '150',
+  `c_column` int(11) NOT NULL DEFAULT '1',
+  `c_img_cover` varchar(50) NOT NULL DEFAULT 'tnnophoto.jpg',
+  `c_sec_penalty` int(11) NOT NULL DEFAULT '0',
   `c_detailed_feedback` text NOT NULL,
+  `c_time_limit` int(10) unsigned NOT NULL DEFAULT '0',
+  `c_show_timer` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_quiz_id` (`c_quiz_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+
 
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
@@ -562,7 +591,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_category_id` int(11) unsigned NOT NULL DEFAULT '0',
   `c_user_id` int(11) unsigned NOT NULL DEFAULT '0',
   `c_author` varchar(255) NOT NULL DEFAULT '',
-  `c_full_score` float NOT NULL DEFAULT '0',
+  `c_full_score` int(10) unsigned NOT NULL DEFAULT '0',
   `c_title` varchar(255) NOT NULL DEFAULT '',
   `c_description` text NOT NULL,
   `c_short_description` text,
@@ -589,7 +618,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_language` int(11) NOT NULL DEFAULT '0',
   `c_certificate` int(11) NOT NULL DEFAULT '0',
   `c_feedback` int(11) NOT NULL DEFAULT '0',
-  `c_feedback_pdf` int(2) NOT NULL DEFAULT '0',
   `c_pool` int(11) NOT NULL DEFAULT '0',
   `c_resbycat` char(1) NOT NULL DEFAULT '0',
   `c_feed_option` char(1) NOT NULL DEFAULT '0',
@@ -625,8 +653,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_show_qfeedback` tinyint(3) NOT NULL,
   `c_flag` tinyint(3) NOT NULL,
   `c_hide_feedback` tinyint(3) NOT NULL,
-  `c_auto_breaks` tinyint(5) NOT NULL,
   `c_share_buttons` tinyint(3) NOT NULL,
+  `c_auto_breaks` tinyint(5) NOT NULL,
   `asset_id` int(18) NOT NULL,
   `c_quiz_access_message` text NOT NULL,
   `c_quiz_certificate_access_message` text NOT NULL,
@@ -635,7 +663,12 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   KEY `c_user_id` (`c_user_id`),
   KEY `c_author` (`c_author`),
   KEY `c_category_id` (`c_category_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=2 ;
+
+
+INSERT INTO `#__quiz_t_quiz` (`c_id`, `c_category_id`, `c_user_id`, `c_author`, `c_full_score`, `c_title`, `c_description`, `c_short_description`, `c_image`, `c_time_limit`, `c_min_after`, `c_passing_score`, `c_created_time`, `c_published`, `c_right_message`, `c_wrong_message`, `c_pass_message`, `c_unpass_message`, `c_enable_review`, `c_email_to`, `c_email_chk`, `c_enable_print`, `c_enable_sertif`, `c_skin`, `c_random`, `c_guest`, `published`, `c_slide`, `c_language`, `c_certificate`, `c_feedback`, `c_pool`, `c_resbycat`, `c_feed_option`, `c_show_quest_pos`, `c_show_quest_points`, `c_show_author`, `c_show_timer`, `c_once_per_day`, `c_emails`, `c_timer_style`, `c_statistic`, `c_metadescr`, `c_keywords`, `c_metatitle`, `c_ismetadescr`, `c_iskeywords`, `c_ismetatitle`, `c_number_times`, `c_pagination`, `c_enable_prevnext`, `paid_check`, `paid_check_descr`, `c_allow_continue`, `c_autostart`, `c_redirect_after`, `c_redirect_delay`, `c_redirect_linktype`, `c_redirect_link`, `c_grading`, `c_ifmanual`, `c_enable_skip`, `c_show_result`, `c_show_qfeedback`, `c_flag`, `c_hide_feedback`, `c_share_buttons`, `c_auto_breaks`, `asset_id`, `c_quiz_access_message`, `c_quiz_certificate_access_message`) VALUES
+(0, 0, 62, '', 0, 'Questions Pool', '', '', '', 0, 0, 0, '0000-00-00', '0', '', '', '', '', '', 0, 0, '', '', 1, 0, 0, 0, 1, 0, 0, 0, 0, '0', '0', 1, 1, 0, 1, 0, '', 0, 0, '', '', '', 0, 0, 0, 1, 0, 0, 1, '', 1, 0, 0, 0, 0, '', 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, '', '');
+UPDATE `#__quiz_t_quiz` SET `c_id` = 0 WHERE `c_title` = 'Questions Pool';
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_text` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -646,5 +679,4 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_text` (
   `regexp` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_blank_id` (`c_blank_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;

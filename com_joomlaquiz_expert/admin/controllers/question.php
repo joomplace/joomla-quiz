@@ -29,10 +29,12 @@ class JoomlaquizControllerQuestion extends JControllerForm
 	public function getContentEditor($id)
 	{
 		$db = JFactory::getDBO();
-		$query = "SELECT c_choice FROM #__quiz_t_choice WHERE c_id = '".$id."'";
+		$query = $db->getQuery(true);
+		$query->select($db->qn('c_choice'))
+				->from($db->qn('#__quiz_t_choice'))
+				->where($db->qn('c_id').' = '.$db->q($id));
     	$db->SetQuery( $query );
-		$c = $db->LoadAssocList();
-		return $c[0]["c_choice"];
+		return $db->LoadResult();
 	}
 	
 	static public function JQ_editorArea( $name, $content, $hiddenField, $width, $height, $col, $row ) {

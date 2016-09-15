@@ -33,14 +33,16 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		$query->select($db->qn('c_choice'))
 				->from($db->qn('#__quiz_t_choice'))
 				->where($db->qn('c_id').' = '.$db->q($id));
-    	$db->SetQuery( $query );
+    	$db->setQuery( $query );
 		return $db->LoadResult();
 	}
 	
 	static public function JQ_editorArea( $name, $content, $hiddenField, $width, $height, $col, $row ) {
 		$editor = JFactory::getEditor();
-		$id = JFactory::getApplication()->input->get( 'id', '' );
-		$content = $content == '' ? $content = self::getContentEditor($id) : $content;
+		$id = JFactory::getApplication()->input->get( 'id', 'INT' );
+		if(!$content){
+            $content = self::getContentEditor($id);
+        }
 		echo $editor->display( $hiddenField, $content, $width, $height, $col, $row, array('pagebreak', 'readmore') ) ;
 	}
 	

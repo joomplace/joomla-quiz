@@ -1052,7 +1052,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$share_id = $database->loadResult();
 					}
 
-					$share_link = urlencode(JURI::root().JURI::root(true).'index.php?option=com_joomlaquiz&task=results.sturesult&id='.$stu_quiz_id.'&share_id='.$share_id.JoomlaquizHelper::JQ_GetItemId());
+					$share_link = urlencode(JURI::root().'index.php?option=com_joomlaquiz&task=results.sturesult&id='.$stu_quiz_id.'&share_id='.$share_id.JoomlaquizHelper::JQ_GetItemId());
 				}
 			}
 
@@ -1283,7 +1283,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 
 					if((!$is_share || $false_share) && $quiz->c_share_buttons){
-						$social_buttons = '<div id="jq_share"><ul><li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer.php?u='.$share_link.'\', \'_blank\');"></div></li><li><div class="jq_twitter" onclick="window.open(\'http://twitter.com/share?text='.$quiz->c_title.' '.$share_link.'\', \'_blank\');"><!--x--></div></li><li><div class="jq_linkedin" onclick="window.open(\'http://www.linkedin.com/shareArticle?mini=true&url='.$share_link.'\', \'_blank\');"><!--x--></div></li></ul></div>';
+						$sshare_message = (JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id) && JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)!='COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)?(JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)):(JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE'));
+						$user_score_replaced = sprintf($sshare_message, number_format($user_score, 2, '.', ' '), number_format($max_score, 2, '.', ' ')).$quiz->c_title;
+						$social_buttons = '<div id="jq_share"><ul><li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer.php?u='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"></div></li><li><div class="jq_twitter" onclick="window.open(\'http://twitter.com/share?text='.$user_score_replaced.'\', \'_blank\');"><!--x--></div></li><li><div class="jq_linkedin" onclick="window.open(\'http://www.linkedin.com/shareArticle?mini=true&url='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"><!--x--></div></li></ul></div>';
+
 						$results_txt = str_replace('<!-- SOCIAL BUTTONS -->', $social_buttons, $results_txt);
 					}
 					

@@ -390,9 +390,9 @@ class JoomlaquizModelPrintcert extends JModelList
 			} else { 
 				$i--; 
 				$tmp_string = ""; 
-				$start_xx = $start_x + round(($max_width - $curr_width - $start_x) / 2);        
-				if ($shadow) imagettftext($image, $font_size, 0, $start_xx, $start_y, $grey, $font, $string);
-				imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string); 
+				//$start_xx = $start_x + round(($max_width - $curr_width - $start_x) / 2);        
+				if ($shadow) imagettftext($image, $font_size, 0, $start_x, $start_y, $grey, $font, $string);
+				imagettftext($image, $font_size, 0, $start_x, $start_y, $color, $font, $string); 
 
 				$string = ""; 
 				$start_y += abs($dim[5]) * 1.2; 
@@ -400,9 +400,9 @@ class JoomlaquizModelPrintcert extends JModelList
 			} 
 		} 
 
-		$start_xx = $start_x + round(($max_width - $dim[4] - $start_x) / 2);        
-		if ($shadow) imagettftext($image, $font_size, 0, $start_xx, $start_y, $grey, $font, $string);
-		imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
+		//$start_xx = $start_x + round(($max_width - $dim[4] - $start_x) / 2);        
+		if ($shadow) imagettftext($image, $font_size, 0, $start_x, $start_y, $grey, $font, $string);
+		imagettftext($image, $font_size, 0, $start_x, $start_y, $color, $font, $string);
 	} 
 
 

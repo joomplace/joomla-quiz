@@ -525,27 +525,22 @@ class JoomlaquizHelper
 		public static function getAttempts($rel_id,$qid)
 		{
 			$database = JFactory::getDBO();
-			$query = "SELECT `attempts` "
+			$query = "SELECT `attempts`"
 					. "\n FROM `#__quiz_products`"
-			    	. "\n WHERE `id` = '".$rel_id."'"
-				    ;
-									
-			$database->SetQuery( $query );
+					. "\n WHERE `id` = '".$rel_id."'"
+					;
+			$database->setQuery($query);
 			$q = $database->loadObject();
-			
-			$query = "SELECT COUNT(`c_id`) "
-				. "\n FROM `#__quiz_r_student_quiz`"
-				. "\n WHERE `c_quiz_id` = '".$qid."' AND `c_rel_id` = '".$rel_id."'"
-				;
-				
-				$database->SetQuery( $query );
+
+			$query = "SELECT COUNT(`c_id`)"
+					. "\n FROM `#__quiz_r_student_quiz`"
+					. "\n WHERE `c_quiz_id` = '".$qid."' AND `c_rel_id` = '".$rel_id."'"
+					;
+			$database->setQuery($query);
 				$count = $database->loadResult();
-			if($count == 0)
+			if(!$count || !$q->attempts || $count < $q->attempts){
 				return true;
-			if(!$q->attempts)
-				return true;
-			if ($count < $q->attempts)
-    			return true;
+			}
 			return false;
 		}
 		
@@ -553,31 +548,30 @@ class JoomlaquizHelper
 		{
 			$database = JFactory::getDBO();
 			$query = "SELECT l.`qid`"
-					. "\n FROM `#__quiz_lpath_quiz` as l,`#__quiz_products` as p"
-					. "\n WHERE l.`lid` = p.`rel_id` AND p.`id` = '".$rel_id."'"
-					;				
-			$database->SetQuery( $query );
+					. "\n FROM `#__quiz_lpath_quiz` as l"
+					. "\n LEFT JOIN `#__quiz_products` p ON l.`lid` = p.`rel_id`"
+					. "\n WHERE p.`id` = '".$rel_id."'"
+					;
+			$database->setQuery($query);
 			$q_array = $database->loadColumn();
 			$q_a = implode(",",$q_array);
-        
-            if($q_a){ 
-				$query = "SELECT COUNT(`c_quiz_id`) "
+
+			if($q_a){
+				$query = "SELECT COUNT(`c_quiz_id`)"
 						. "\n FROM `#__quiz_r_student_quiz`"
 						. "\n WHERE `c_quiz_id` IN (".$q_a.") AND `c_rel_id` = '".$rel_id." '"
 						. "\n GROUP BY `c_quiz_id`"
 						;
-				$database->SetQuery( $query );
-				$c = $database->loadRowList();
-				if (!$c) $c = array(0);
-				$count = min($c);
-				count($c) != count($q_array) ? $min = 0 : $min = $count[0];
-				if(!$attempts)
-				    return true;				
+				$database->setQuery($query);
+				$c = $database->loadColumn();
+				if (!$c || !$attempts || count($c) != count($q_array)){
+					return false;
+				}
+				$min = min($c);
 				if($min < $attempts){
 					return false;
 				}
 			}
-			
 			return true;
 		}
 		

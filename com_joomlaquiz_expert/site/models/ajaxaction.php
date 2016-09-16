@@ -130,36 +130,34 @@ class JoomlaquizModelAjaxaction extends JModelList
 	
 	public function getMinCountQuiz($rel_id,$type,$qid)
 	{
-		$database = JFactory::getDBO(); 
-        if($type != 'l'){
+		$database = JFactory::getDBO();
+
+		if($type != 'l'){
 			$query = "SELECT COUNT(`c_quiz_id`) "
 				. "\n FROM `#__quiz_r_student_quiz`"
 				. "\n WHERE `c_quiz_id` = ".$qid." AND `c_rel_id` = '".$rel_id." '"
 				. "\n GROUP BY `c_quiz_id`"
-				;	
-				$database->SetQuery( $query );
-					return $database->loadResult();
-		}		
+				;
+			$database->setQuery($query);
+			return $database->loadResult();
+		}
 		$query = "SELECT l.`qid`"
-				. "\n FROM `#__quiz_lpath_quiz` as l,`#__quiz_products` as p"
-				. "\n WHERE l.`lid` = p.`rel_id` AND p.`id` = '".$rel_id."'"
-				;		
-			$database->SetQuery( $query );
-			$q_array = $database->loadColumn();
-			$q_a = implode(",",$database->loadColumn());
+			. "\n FROM `#__quiz_lpath_quiz` as l"
+			. "\n LEFT JOIN `#__quiz_products` p ON l.`lid` = p.`rel_id`"
+			. "\n WHERE p.`id` = '".$rel_id."'"
+			;
+		$database->setQuery($query);
+		$q_array = $database->loadColumn();
+		$q_a = implode(",",$database->loadColumn());
 
-										
-			$query = "SELECT COUNT(`c_quiz_id`) "
+		$query = "SELECT COUNT(`c_quiz_id`)"
 			. "\n FROM `#__quiz_r_student_quiz`"
 			. "\n WHERE `c_quiz_id` IN (".$q_a.") AND `c_rel_id` = '".$rel_id." '"
-			. "\n GROUP BY `c_quiz_id`"
-			;			
-		$database->SetQuery( $query );
-		
-		$c = $database->loadRowList();
-		$count = min($c);
-		count($c) != count($q_array) ? $min = 0 : $min = $count[0];
-		
+			;
+		$database->setQuery( $query );
+		$c = $database->loadResult();
+		count($c) == count($q_array) ? $min = min($c) : $min = 0;
+
 		return $min;
 	}
 	

@@ -180,19 +180,19 @@ class com_joomlaquizInstallerScript
 		
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 1");
 		if(!$db->loadResult()){
-			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (1, 'Certificate Green', 'certificate_green.jpg')");
+			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file, text_y) VALUES (1, 'Certificate Green', 'certificate_green.jpg', 600)");
 			$db->execute();
 		}
 		
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 2");
 		if(!$db->loadResult()){
-			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (2, 'Certificate Blue', 'certificate_blue.jpg')");
+			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file, text_y) VALUES (2, 'Certificate Blue', 'certificate_blue.jpg', 450)");
 			$db->execute();
 		}
 		
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 3");
 		if(!$db->loadResult()){
-			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (3, 'Certificate Beige', 'certificate_beige.jpg')");
+			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file, text_y) VALUES (3, 'Certificate Beige', 'certificate_beige.jpg', 400)");
 			$db->execute();
 		}
 		

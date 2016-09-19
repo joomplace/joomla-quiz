@@ -127,11 +127,13 @@ function Dalliclick_init()
 	var imgSrc = Base64.decode(jq_jQuery('#imgSrc').val());
 	var dc_image = document.getElementById("dc_image");
 	if((jq_jQuery.browser.msie && jq_jQuery.browser.version < 9) || jq_jQuery.browser.opera){
-		jq_jQuery("<img src='"+imgSrc+"' class='dc_image' width='"+img_width+"' height='"+img_height+"' />").insertBefore(jq_jQuery('#imgSrc'));
+		jq_jQuery("<img src='"+imgSrc+"' class='dc_image' width='"+new_img_width+"' height='"+new_img_height+"' />").insertBefore(jq_jQuery('#imgSrc'));
 	} else {
 		var ctx = dc_image.getContext('2d');
 		var pic = new Image();
 		pic.src = imgSrc;
+		dc_image.width = new_img_width;
+		dc_image.height = new_img_height;
 		pic.onload = function() {
 			ctx.drawImage(pic, 0, 0, new_img_width, new_img_height);
 		}

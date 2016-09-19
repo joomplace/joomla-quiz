@@ -103,8 +103,8 @@ function dragDiv(e){
 	for (i=1; i<=questions[n].kol_drag_elems; i++) {
 		if (i != dr_number) {
 			an_div = jq_getObj('ddiv'+questions[n].cur_quest_id+'_' + i);
-			if ( (questions[n].coord_left[i]) && (questions[n].coord_left[i] != '') ) { an_div.style.left = questions[n].coord_left[i]; }
-			if ( (questions[n].coord_top[i]) && (questions[n].coord_top[i] != '') ) { an_div.style.top = questions[n].coord_top[i]; }
+			/*if ( (questions[n].coord_left[i]) && (questions[n].coord_left[i] != '') ) { an_div.style.left = questions[n].coord_left[i]; }
+			if ( (questions[n].coord_top[i]) && (questions[n].coord_top[i] != '') ) { an_div.style.top = questions[n].coord_top[i]; }*/
 		}
 	}
 	if (!is_on_cont) { questions[n].cont_index = 0; }

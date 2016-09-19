@@ -35,6 +35,7 @@ div.correct_answer
 #quest_table
 {
 	border:none !important;
+	width: 100%;
 }
 
 #quest_table tr,td
@@ -49,7 +50,8 @@ div.correct_answer
 
 div.jq_draggable_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
 	background: #bcdb95 !important; /* Old browsers */
@@ -70,7 +72,8 @@ div.jq_draggable_div {
 }
 div.jq_draggable_stop_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #bcdb95 !important; /* Old browsers */
@@ -91,7 +94,8 @@ div.jq_draggable_stop_div {
 }
 div.jq_cont_drag_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #9edb64 !important; /* Old browsers */
@@ -112,7 +116,8 @@ div.jq_cont_drag_div {
 }
 div.jq_highlight_drag_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #bcdb95 !important; /* Old browsers */
@@ -1114,10 +1119,11 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 .dc_layout {
 	display:table;
 	table-layout:fixed;
+	width: 100%;
 }
 .dc_layout .dc_cover_container,
 .dc_layout .dc_buttons_container {
-	display:table-cell;
+	/*display:table-cell;*/
 	float:none;
 	vertical-align:top;
 }
@@ -1126,6 +1132,9 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 }
 .dc_layout .dc_buttons_container {
 	min-width:120px;
+}
+.dc_layout .dc_buttons_container .jq_mchoice {
+	padding-top: 30px;
 }
 .dc_pda_ver {
 	display:block;

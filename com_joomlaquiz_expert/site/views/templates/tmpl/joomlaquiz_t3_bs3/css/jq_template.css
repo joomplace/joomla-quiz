@@ -34,6 +34,7 @@ div.correct_answer
 
 #quest_table
 {
+	width: 100%;
 	border:none !important;
 }
 
@@ -49,7 +50,8 @@ div.correct_answer
 
 div.jq_draggable_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
 	background: #bcdb95 !important; /* Old browsers */
@@ -70,7 +72,8 @@ div.jq_draggable_div {
 }
 div.jq_draggable_stop_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #bcdb95 !important; /* Old browsers */
@@ -91,7 +94,8 @@ div.jq_draggable_stop_div {
 }
 div.jq_cont_drag_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #9edb64 !important; /* Old browsers */
@@ -112,7 +116,8 @@ div.jq_cont_drag_div {
 }
 div.jq_highlight_drag_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #bcdb95 !important; /* Old browsers */

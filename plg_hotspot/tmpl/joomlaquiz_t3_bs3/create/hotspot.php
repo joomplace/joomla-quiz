@@ -61,10 +61,6 @@ class JoomlaquizViewCreateHotspot
 		var new_w = container_width;
 		var new_h = container_width * proportion;
 		
-		console.log('container_width = '+container_width);
-		console.log('proportion = '+proportion);
-		
-		
 		var paper = Raphael('foo', new_w, new_h);
 		var img = paper.image('{$live_site}images/joomlaquiz/images/{$data['q_data']->c_image}', 0, 0, new_w, new_h);
 		var rect = paper.rect(0, 0, new_w, new_h).attr({fill:'none'});

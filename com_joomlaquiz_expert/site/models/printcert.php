@@ -216,13 +216,13 @@ class JoomlaquizModelPrintcert extends JModelList
 				$max_width = imagesx($im)-$certif->cert_offset;
 				switch(intval($certif->crtf_align)){
 					case 1:
-						$this->writeMultilineTextArea($im, $font_size, $font_x, $font_y, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset,1);
+						$this->writeMultilineText($im, $font_size, $font_x, $font_y, $black, $font, $grey, $allow_shadow, $font_text, $max_width, 'text', $certif->cert_offset,1);
 						break;
 					case 2:
-						$this->writeMultilineTextArea($im, $font_size, $font_x, $font_y, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset,2);
+						$this->writeMultilineText($im, $font_size, $font_x, $font_y, $black, $font, $grey, $allow_shadow, $font_text, $max_width, 'text', $certif->cert_offset,2);
 						break;
 					default:
-						$this->writeMultilineTextArea($im, $font_size, $font_x, $font_y, $black, $font, $grey, $allow_shadow, $font_text, $max_width, $certif->cert_offset);
+						$this->writeMultilineText($im, $font_size, $font_x, $font_y, $black, $font, $grey, $allow_shadow, $font_text, $max_width, 'text', $certif->cert_offset);
 						break;
 				}
 
@@ -296,7 +296,7 @@ class JoomlaquizModelPrintcert extends JModelList
 						imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);*/
 
 						$max_width = imagesx($im);
-						$this->writeMultilineText($im, $field->text_h, $field->text_x + $ad, $field->text_y, $black, $font, $grey, $field->shadow, $field->f_text, $max_width-$certif->cert_offset);
+						$this->writeMultilineText($im, $field->text_h, $field->text_x + $ad, $field->text_y, $black, $font, $grey, $field->shadow, $field->f_text, $max_width-$certif->cert_offset, 'input');
 					}
 				}
 
@@ -370,7 +370,7 @@ class JoomlaquizModelPrintcert extends JModelList
 	/*
 		to use this function to match need to be reconstructed.
 	*/
-	function writeMultilineText($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width)
+	function writeMultilineText($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width, $field, $offset = 0, $align = 0)
 	{
 		$words = explode(" ", $text);
 		$string = "";
@@ -388,59 +388,43 @@ class JoomlaquizModelPrintcert extends JModelList
 			} else{
 				$i--;
 				$tmp_string = "";
-				//$start_xx = $start_x + round(($max_width - $curr_width - $start_x) / 2);
+				switch ($field){
+					case 'input':
+						if ($shadow) imagettftext($image, $font_size, 0, $start_x+2, $start_y+2, $grey, $font, $string);
+						imagettftext($image, $font_size, 0, $start_x, $start_y, $color, $font, $string);
+						$string = "";
+						$start_y += abs($dim[5]) * 1.2;
+						$curr_width = 0;
+						break;
+					case 'text':
+						switch ($align){
+							case 0:
+								$start_xx = $start_x;
+								break;
+							case 1:
+								$start_xx =  $start_x + round(($max_width + $offset - $curr_width - $start_x) / 2);
+								break;
+							case 2:
+								$start_xx =  $start_x + round($max_width + $offset - $curr_width + $dim[6]);
+								break;
+						}
+						if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
+						imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
+
+						if ($dim[3] < 10) $dim[3] = $dim[3]*5;
+						$start_y += abs($dim[3] * 1.5);
+						$curr_width = 0;
+						$string = "";
+				}
+			}
+		}
+
+		switch ($field){
+			case 'input':
 				if ($shadow) imagettftext($image, $font_size, 0, $start_x+2, $start_y+2, $grey, $font, $string);
 				imagettftext($image, $font_size, 0, $start_x, $start_y, $color, $font, $string);
-
-				$string = "";
-				$start_y += abs($dim[5]) * 1.2;
-				$curr_width = 0;
-			}
-		}
-
-		//$start_xx = $start_x + round(($max_width - $dim[4] - $start_x) / 2);
-		if ($shadow) imagettftext($image, $font_size, 0, $start_x+2, $start_y+2, $grey, $font, $string);
-		imagettftext($image, $font_size, 0, $start_x, $start_y, $color, $font, $string);
-	}
-
-
-	function writeMultilineTextArea($image, $font_size, $start_x, $start_y, $color, $font, $grey, $shadow, $text, $max_width, $offset, $align = 0)
-	{
-		$words = explode(" ", $text);
-		$string = "";
-		$tmp_string = "";
-		for($i = 0; $i < count($words); $i++){
-			$tmp_string .= $words[$i]." ";
-			$dim = imagettfbbox($font_size, 0, $font, $tmp_string);
-
-			if($dim[4] < ($max_width - $start_x)){
-				$string = $tmp_string;
-				$curr_width = $dim[4];
-			} else{
-				$i--;
-				$tmp_string = "";
+			case 'text':
 				switch ($align){
-					case 0:
-						$start_xx = $start_x;
-						break;
-					case 1:
-						$start_xx =  $start_x + round(($max_width + $offset - $curr_width - $start_x) / 2);
-						break;
-					case 2:
-						$start_xx =  $start_x + round($max_width + $offset - $curr_width + $dim[6]);
-						break;
-				}
-				if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
-				imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
-
-				if ($dim[3] < 10) $dim[3] = $dim[3]*5;
-				$start_y += abs($dim[3] * 1.5);
-				$curr_width = 0;
-				$string = "";
-			}
-
-		}
-		switch ($align){
 					case 0:
 						$start_xx = $start_x;
 						break;
@@ -451,8 +435,9 @@ class JoomlaquizModelPrintcert extends JModelList
 						$start_xx =  $start_x + round($max_width + $offset - $dim[4] + $dim[6]);
 						if ($start_xx < 0) $start_xx = 0;
 						break;
+				}
+				if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
+				imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
 		}
-		if ($shadow) imagettftext($image, $font_size, 0, $start_xx+2, $start_y+2, $grey, $font, $string);
-		imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
 	}
 }

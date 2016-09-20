@@ -29,17 +29,22 @@ class JoomlaquizControllerQuestion extends JControllerForm
 	public function getContentEditor($id)
 	{
 		$db = JFactory::getDBO();
-		$query = "SELECT c_choice FROM #__quiz_t_choice WHERE c_id = '".$id."'";
-    	$db->SetQuery( $query );
-		$c = $db->LoadAssocList();
-		return $c[0]["c_choice"];
+		$query = $db->getQuery(true);
+		$query->select($db->qn('c_choice'))
+				->from($db->qn('#__quiz_t_choice'))
+				->where($db->qn('c_id').' = '.$db->q($id));
+		$db->setQuery($query);
+		return $db->loadResult();
 	}
 	
-	static public function JQ_editorArea( $name, $content, $hiddenField, $width, $height, $col, $row ) {
+	static public function JQ_editorArea($name, $content, $hiddenField, $width, $height, $col, $row)
+	{
 		$editor = JFactory::getEditor();
-		$id = JFactory::getApplication()->input->get( 'id', '' );
-		$content = $content == '' ? $content = self::getContentEditor($id) : $content;
-		echo $editor->display( $hiddenField, $content, $width, $height, $col, $row, array('pagebreak', 'readmore') ) ;
+		$id = JFactory::getApplication()->input->get('id',0,'INT');
+		if(!$content){
+			$content = self::getContentEditor($id);
+		}
+		echo $editor->display($hiddenField, $content, $width, $height, $col, $row, array('pagebreak', 'readmore'));
 	}
 	
 	public function edit_field(){

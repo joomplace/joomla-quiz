@@ -528,16 +528,15 @@ class JoomlaquizHelper
 		{
 			$user = JFactory::getUser();
 			$database = JFactory::getDBO();
-			$query = "SELECT `p`.`attempts`, COUNT(`q`.`c_id`) as `count`, `pm`.`user_id`"
-					. "\n FROM `#__quiz_products` as p, `#__quiz_r_student_quiz` as q"
-					. "\n LEFT JOIN `#__quiz_payments` AS `pm` ON `pm`.`id` = '".$rel_id."'"
-					. "\n WHERE p.`id` = '".$rel_id."'"
-					//. "\n AND `pm`.`user_id` = `q`.`c_student_id`"
-					. "\n AND `q`.`c_quiz_id` = '".$qid."' AND `q`.`c_rel_id` = '".$rel_id."'"
+			$query = "SELECT  COUNT(`q`.`c_id`) as `count`, `q`.*,`p`.*,`pm`.*"
+					."\n FROM `#__quiz_r_student_quiz` as `q`"
+					."\n RIGHT JOIN `#__quiz_products` AS `p` ON  `p`.`id` = `q`.`c_rel_id`"
+					."\n LEFT JOIN `#__quiz_payments` AS `pm` ON `pm`.`user_id` = `q`.`c_student_id`"
+					."\n WHERE `q`.`c_quiz_id` = '".$qid."'"
 					;
 			$database->setQuery($query);
 			$data = $database->loadAssoc();
-			if(!$data["count"] || !$data["attempts"] || $data["count"] < $data["attempts"]){
+			if($data["count"] < $data["attempts"] || !$data["count"]){
 				return true;
 			}
 			return false;

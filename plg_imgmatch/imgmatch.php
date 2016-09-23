@@ -47,7 +47,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 
 				$data['ret_str'] .= "\t" .'<div class="groupItem" style="background-repeat: no-repeat;cursor:move;float:left;width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;background-image:url('.JURI::root().'images/joomlaquiz/images/resize/'.$shuffle_match[$ii]->c_right_text.');"><div class="headerItem" style="width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;"><input type="hidden" class="jq_right_text" name="rights[]" value="'.$shuffle_match[$ii]->c_right_text.'" /><!--x--></div></div>';
 				$data['ret_str'] .= "\t" .'</div>';
-				$data['ret_str'] .= "\t" .'</div class="tr">';
+				$data['ret_str'] .= "\t" .'</div>';
 				array_push($script_arr,'"#gw_'.$dd_c.'"');
 				array_push($script_arr,'"#gw_'.($dd_c+1).'"');
 				$dd_c = $dd_c + 2;

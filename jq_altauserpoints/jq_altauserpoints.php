@@ -14,12 +14,12 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.plugin.plugin');
 
-class plgSystemJQ_alphauserpoints extends JPlugin
+class plgSystemJQ_altauserpoints extends JPlugin
 { 
 	/*
 	 * Constructor
 	 */
-	function plgSystemJQ_alphauserpoints(&$subject, $config)
+	function plgSystemJQ_altauserpoints(&$subject, $config)
 	{
 		parent::__construct($subject, $config);
 	}
@@ -40,9 +40,9 @@ class plgSystemJQ_alphauserpoints extends JPlugin
 		if(!$this->params->get('use_quiz_rules')){
 			return true;
 		}
-		if (!file_exists(JPATH_SITE . '/components/com_alphauserpoints/helper.php')) 
+		if (!file_exists(JPATH_SITE . '/components/com_altauserpoints/helper.php')) 
 			return;		
-		require_once(JPATH_SITE . '/components/com_alphauserpoints/helper.php');
+		require_once(JPATH_SITE . '/components/com_altauserpoints/helper.php');
 		
 		$user = & JFactory::getUser(); 
 		
@@ -64,7 +64,7 @@ class plgSystemJQ_alphauserpoints extends JPlugin
 			$comment = str_replace('{'.$key.'}', $value, $comment);
 		}
 		
-		AlphaUserPointsHelper::newpoints('plgup_joomlaquizpoints', '', ($add_points_once ? $params['quiz_id'] : ''), $comment, $points);
+		AltaUserPointsHelper::newpoints('plgup_joomlaquizpoints', '', ($add_points_once ? $params['quiz_id'] : ''), $comment, $points);
 	}
 
 	/*
@@ -72,9 +72,9 @@ class plgSystemJQ_alphauserpoints extends JPlugin
 	 * $data contains all available question data on onSaveQuestion
 	*/
 	function onJQuizAnswerSubmitted($data){			
-		if (!file_exists(JPATH_SITE . '/components/com_alphauserpoints/helper.php')) 
+		if (!file_exists(JPATH_SITE . '/components/com_altauserpoints/helper.php')) 
 			return;		
-		require_once(JPATH_SITE . '/components/com_alphauserpoints/helper.php');
+		require_once(JPATH_SITE . '/components/com_altauserpoints/helper.php');
 		
 		$user = & JFactory::getUser(); 
 		
@@ -98,7 +98,7 @@ class plgSystemJQ_alphauserpoints extends JPlugin
 			$comment = str_replace('{'.$key.'}', $value, $comment);
 		}
 		
-		AlphaUserPointsHelper::newpoints('plgup_joomlaquizpoints', '', ($add_points_once ? $data['quiz_id'].'.'.$data['quest_id'] : ''), $comment, $points);
+		AltaUserPointsHelper::newpoints('plgup_joomlaquizpoints', '', ($add_points_once ? $data['quiz_id'].'.'.$data['quest_id'] : ''), $comment, $points);
 		
 	}
 }

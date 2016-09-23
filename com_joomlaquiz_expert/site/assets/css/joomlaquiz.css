@@ -597,6 +597,20 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
     background-size: 100%;
     background-repeat: no-repeat;
 }
+
+#dd_table .tr {
+	width: 100%;
+}
+
+#dd_table .tr:after {
+	content:"";
+	display:block;
+	clear:both;
+}
+
+#dd_table .tr > div {
+	float: left;
+}
 /* Fix Span with "Points for the correct answer @n" */
 @media screen and (max-width: 980px) {
 	.jq_question_info_container { 

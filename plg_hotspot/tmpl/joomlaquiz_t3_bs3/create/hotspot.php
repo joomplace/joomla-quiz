@@ -55,19 +55,46 @@ class JoomlaquizViewCreateHotspot
 		var l = getPosition_x('#foo');
 		var t = getPosition_y('#foo');
 		
-		var paper = Raphael('foo', w, h);
-		var img = paper.image('{$live_site}images/joomlaquiz/images/{$data['q_data']->c_image}', 0, 0, w, h);
-		var rect = paper.rect(0, 0, w, h).attr({fill:'none'});
+		var container_width = jQuery('#jq_quiz_container').width();
+		var proportion = h / w;
+		
+		var new_w = container_width;
+		var new_h = container_width * proportion;
+		
+		var rect_propotion = new_h / h;	
+		
+		var paper = Raphael('foo', new_w, new_h);
+		var img = paper.image('{$live_site}images/joomlaquiz/images/{$data['q_data']->c_image}', 0, 0, new_w, new_h);
+		var rect = paper.rect(0, 0, new_w, new_h).attr({fill:'none'});
 		
 		var drawPolygons = function(){
 				var paths = new Array();
 				path_elems = new Array();
+				path_params = new Array();
 				{$path_str}
+
 				if(paths.length){
 					for(var p = 0;p < paths.length;p++){					
 						path = paper.path();
 						path.attr({fill: 'none', 'stroke': 'none'});
 						path.attr({path: paths[p]});
+						
+						path_params = path.attr('path');
+
+						/* Resize click area */
+						for (var j = 0; j < path_params.length; j++) {
+
+							if (path_params[j][0] == 'L' || path_params[j][0] == 'M') {
+
+								if (Number.isInteger(path_params[j][1])) {
+									path_params[j][1] = path_params[j][1] * rect_propotion;
+								}
+								if (Number.isInteger(path_params[j][2])) path_params[j][2] = path_params[j][2] * rect_propotion;
+
+							}
+						}
+						
+						path.attr('path', path_params);
 						path_elems.push(path);
 					}
 				}

@@ -11,7 +11,28 @@ if (questions[i].cur_quest_type == 4) {
 	questions[i].answ_ids = eval('answ_ids'+questions[i].cur_quest_id);
 	questions[i].cont_index = 0;
 	// *** end of DRAG'and'DROP CODE *** //
+	var zIndex = 599;
 
+	jQuery('.jq_draggable_div').draggable({
+		containment: "#quest_table",
+		snap: '.jq_cont_drag_div',
+		snapMode: "inner",
+		stack: '.jq_cont_drag_div',
+		cursor: 'move'
+	});
+
+	jQuery('.jq_cont_drag_div').droppable({
+		accept: ".jq_draggable_div",
+		greedy: true,
+		tolerance: 'touch',
+		hoverClass: "ui-state-highlight",
+		drop: function( event, ui ) {
+			jQuery(ui.draggable).css('left', '-15%');
+			var top = parseInt(jQuery(ui.draggable).css('top'));
+			(jQuery(ui.draggable).css('top', (top+5)+'px'));
+		},
+	});
+	
 	for(var j =1; j <= questions[i].kol_drag_elems; j++) {
 			jq_jQuery('div#ddiv'+questions[i].cur_quest_id+'_'+j).mouseup(function(event){
 				stopDrag(event);

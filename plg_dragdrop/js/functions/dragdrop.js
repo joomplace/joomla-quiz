@@ -150,3 +150,25 @@ function stopDrag(e){
 
 	drag=false;
 }
+
+function applyDragDrop() {
+	jq_jQuery('.jq_draggable_div').draggable({
+		containment: "#quest_table",
+		snap: '.jq_cont_drag_div',
+		snapMode: "inner",
+		stack: '.jq_cont_drag_div',
+		cursor: 'move'
+	});
+
+	jq_jQuery('.jq_cont_drag_div').droppable({
+		accept: ".jq_draggable_div",
+		greedy: true,
+		tolerance: 'touch',
+		hoverClass: "ui-state-highlight",
+		drop: function( event, ui ) {
+			jQuery(ui.draggable).css('left', '-15%');
+			var top = parseInt(jQuery(ui.draggable).css('top'));
+			(jQuery(ui.draggable).css('top', (top+5)+'px'));
+		},
+	});
+}

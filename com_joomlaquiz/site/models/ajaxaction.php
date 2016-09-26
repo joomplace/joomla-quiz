@@ -404,6 +404,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_id IN ('".implode("','", $qchids)."') AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 				$database->SetQuery($query);
 				$q_data = $database->LoadObjectList();
+
+				$q_data = $this->checkFirstQuestion($q_data);
 				
 				foreach($q_data as $ii => $qchid) {
 					if ($qchid->c_id == $last_id) {

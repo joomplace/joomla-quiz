@@ -1,9 +1,9 @@
 <?php
 /**
 * JoomlaQuiz system plugin for Joomla
-* @version $Id: jq_altauserpoints.php 2009-11-16 17:30:15
+* @version $Id: jq_alphauserpoints.php 2009-11-16 17:30:15
 * @package JoomlaQuiz
-* @subpackage jq_altauserpoints.php
+* @subpackage jq_alphauserpoints.php
 * @author JoomPlace Team
 * @Copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html

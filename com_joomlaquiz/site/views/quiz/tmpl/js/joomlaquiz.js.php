@@ -88,6 +88,7 @@ var circle = null;
 var path_elems = new Array();
 var mes_question_is_misconfigured = '<?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IS_CONFIGURED');?>';
 var margin_top = '<?php echo $this->margin_top?>';
+var qs = getParameter('qs');
 
 <?php
 $live_url = JURI::root().JUri::root(true);
@@ -1244,6 +1245,10 @@ function jq_StartQuiz() {
 	usurname = encodeURIComponent(usurname);
 	uemail = encodeURIComponent(uemail);
 	
+	if (qs) {
+		custom_info = custom_info+'&qs='+qs;
+	}
+
 	jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + custom_info, 1);
 }
 
@@ -1950,6 +1955,20 @@ function JQ_previewQuest() {
 	jq_MakeRequest('&ajax_task=preview_quest&quiz=<?php echo $quiz->c_id?>'+'&preview_id=<?php echo $preview_id?>&quest_id=<?php echo $preview_quest?>', 1);
 }
 <?php } ?>
+
+function getParameter(paramName) {
+	var searchString = window.location.search.substring(1),
+	i, val, params = searchString.split("&");
+
+	for (i=0;i<params.length;i++) {
+		val = params[i].split("=");
+		if (val[0] == paramName) {
+			return val[1];
+		}
+	}
+	return null;
+}
+
 //--><!]]>
 </script>
 <?php

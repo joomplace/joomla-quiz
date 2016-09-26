@@ -303,7 +303,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '".$quiz_id."' AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 			$database->SetQuery($query);
 			$q_data = $database->LoadObjectList();
-			
+
+			$q_data = $this->checkFirstQuestion($q_data);
+
 			//---- pools ---------//
 			switch($quiz->c_pool)
 			{
@@ -3394,6 +3396,22 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$ret_str .= "\t" . '<is_prev>0</is_prev>' . "\n";
 		
 		return $ret_str;
+	}
+
+	private function checkFirstQuestion($q_data) {
+
+		$jinput = JFactory::getApplication()->input;
+		$qs = $jinput->get('qs', '0', 'integer');
+
+		foreach ($q_data as $key => $question) {
+			if ($question->c_id == $qs && $qs) {
+				$temp_question = $question;
+				unset ($q_data[$key]);
+				array_unshift($q_data, $temp_question);
+			}
+		}
+
+		return $q_data;
 	}
 }
 ?>

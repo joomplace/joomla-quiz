@@ -399,6 +399,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$last_id = $qchids[0];
 				}
 
+				$qchids = $qchids ? $qchids : $this->chainGenerate($q_data, true);
+
 				$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_id IN ('".implode("','", $qchids)."') AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 				$database->SetQuery($query);
 				$q_data = $database->LoadObjectList();
@@ -446,10 +448,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 					{
 						if(count($q_data))
 						{
-							foreach($q_data as $q_num)
-							{
-								$chain_str .= $q_num->c_id."*";
-							}
+							$chain_str = $this->chainGenerate($q_data);
+
 							if(strlen($chain_str))
 								{
 									$chain_str = JoomlaquizHelper::jq_substr($chain_str,0,strlen($chain_str)-1);
@@ -1098,7 +1098,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$database->SetQuery($query);
 				$qch_ids = $database->LoadResult();
 				$qch_ids = str_replace('*',',',$qch_ids);
-								
+
+				$qch_ids = $qch_ids ? $qch_ids : $this->chainGenerate('', false, ',', $quiz_id);
+
 				$max_score = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
 												
 				$query = "SELECT 1 FROM #__quiz_t_question AS q, #__quiz_r_student_question AS sq WHERE q.c_id IN (".$qch_ids.") AND q.published = 1 AND q.c_manual = 1 AND q.c_id = sq.c_question_id AND sq.c_stu_quiz_id = '".$stu_quiz_id."' AND sq.reviewed = 0";
@@ -3394,6 +3396,33 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$ret_str .= "\t" . '<is_prev>0</is_prev>' . "\n";
 		
 		return $ret_str;
+	}
+	
+	private function chainGenerate($q_data, $array = true, $delimeter = '*', $quiz_id = false) {
+		$chain_str = '';
+		$chain_arr = array();
+		$database = JFactory::getDBO();
+
+		if ($quiz_id) {
+			$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '".$quiz_id."' AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
+			$database->SetQuery($query);
+			$q_data = $database->LoadObjectList();
+		}
+
+		if ($array) {
+			foreach($q_data as $q_num)
+			{
+				array_push($chain_arr, $q_num->c_id);
+			}
+			return $chain_arr;
+		}
+		else {
+			foreach($q_data as $q_num)
+			{
+				$chain_str .= $q_num->c_id.$delimeter;
+			}
+			return $chain_str;
+		}
 	}
 }
 ?>

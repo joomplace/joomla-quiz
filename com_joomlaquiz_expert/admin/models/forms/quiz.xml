@@ -106,8 +106,17 @@
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field name="c_passing_score" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_PASSING_SCORE2" 
-                 labelclass="control-label">
+			   label="COM_JOOMLAQUIZ_PASSING_SCORE2"
+			   labelclass="control-label">
+		</field>
+		<field name="one_time"
+			   type="radio"
+			   class="btn-group"
+			   label="COM_JOOMLAQUIZ_ONE_TIME"
+			   labelclass="control-label"
+			   default="0">
+			<option value="0">COM_JOOMLAQUIZ_NO</option>
+			<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 	</fieldset>
 	
@@ -314,6 +323,16 @@
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field
+				name="c_feedback_pdf"
+				type="radio"
+				class="btn-group"
+				label="COM_JOOMLAQUIZ_ENABLE_FEEDBACK_IN_PDF"
+				labelclass="control-label"
+				default="0">
+				<option value="0">COM_JOOMLAQUIZ_NO</option>
+				<option value="1">COM_JOOMLAQUIZ_YES</option>
+		</field>
+		<field
 				name="c_show_qfeedback"
 				type="radio"
 				class="btn-group"
@@ -344,6 +363,7 @@
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
+		<field name="c_image" type="media" directory="stories" label="COM_JOOMLAQUIZ_ADD_IMAGE"/>
 		<field name="c_right_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="raw"

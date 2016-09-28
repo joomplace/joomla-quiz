@@ -56,6 +56,13 @@ $sortFields = $this->getSortFields();
                     <label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
                     <?php echo $this->pagination->getLimitBox(); ?>
             </div>
+
+			<div class="btn-group pull-left hidden-phone">
+				<div class="pull-left">
+					<a class="btn" href="javascript:void(0)" OnClick="Joomla.submitbutton('certificates.sample_certs')"><?php echo JText::_('COM_JOOMLAQUIZ_CERT_ADD_SAMPLE');?></a>
+				</div>
+			</div>
+
             <div class="btn-group pull-right hidden-phone">
                     <label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
                     <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">

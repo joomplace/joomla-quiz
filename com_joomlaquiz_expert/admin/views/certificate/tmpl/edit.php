@@ -125,6 +125,12 @@ else
 				</div>
 			</div>
 			<div class="control-group form-inline">
+				<?php echo $this->form->getLabel('cert_offset'); ?>
+				<div class="controls">
+					<?php echo $this->form->getInput('cert_offset'); ?>
+				</div>
+			</div>
+			<div class="control-group form-inline">
 				<table class="table table-striped" id="qfld_tbl">
 					<tr>
 						<th class="center"><?php echo JText::_('COM_JOOMLAQUIZ_TEXT_FIELD');?></th>

@@ -20,6 +20,7 @@ function ScrollToElement(theElement){
 		try{
 			selectedPosX += theElement.offsetLeft;
 			selectedPosY += theElement.offsetTop;
+			selectedPosY -= margin_top;
 			theElement = theElement.offsetParent;
 		} catch(e){}
 	}
@@ -86,6 +87,7 @@ var quest_timer = 0;
 var circle = null;
 var path_elems = new Array();
 var mes_question_is_misconfigured = '<?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IS_CONFIGURED');?>';
+var margin_top = '<?php echo $this->margin_top?>';
 
 <?php
 $live_url = JURI::root().JUri::root(true);
@@ -253,7 +255,7 @@ function jq_CreateQuestions() {
 function getProgressBar(x, y, text) {
 	percent = Math.round((100 / y) * x);
 
-	html = '<div class="progress progress-striped active"> <div class="bar" style="width: '+percent+'%;">'+text+'</div> </div>';
+	html = '<div class="progress progress-striped active">'+text+'<div class="bar" style="width: '+percent+'%;"></div> </div>';
 
 	return html;
 }

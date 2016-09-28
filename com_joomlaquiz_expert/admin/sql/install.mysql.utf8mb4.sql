@@ -324,6 +324,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_question` (
   `reviewed` tinyint(1) NOT NULL DEFAULT '0',
   `c_elapsed_time` int(10) NOT NULL,
   `c_flag_question` tinyint(2) NOT NULL,
+  `respond_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`c_id`),
   KEY `c_stu_quiz_id` (`c_stu_quiz_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
@@ -657,6 +658,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `asset_id` int(18) NOT NULL,
   `c_quiz_access_message` text NOT NULL,
   `c_quiz_certificate_access_message` text NOT NULL,
+  `one_time` INT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_user_id` (`c_user_id`),
   KEY `c_author` (`c_author`),

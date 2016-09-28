@@ -445,8 +445,21 @@ blockquote span{
 .jq_time_tick_container{
 	display:block;
 }
+
+.jq_question_info_container{
+	text-align: center;
+	position: absolute;
+	width: 100%;
+}
 	
 /*------------- progressbar ----------------*/
+.progress {
+	position: relative;
+}
+.progress-striped .bar {
+	background-color: #6d9f2c !important;
+}
+
 .jq_progressbar{
 	width: 100%;
 	margin: 10px 0;

@@ -24,15 +24,16 @@ class JoomlaquizModelPrintresult extends JModelList
 		$my = JFactory::getUser();
 		
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get('stu_quiz_id', 0 ) );
-		$user_unique_id = strval( JFactory::getApplication()->input->get( 'user_unique_id', '') );
+		$user_unique_id = JFactory::getApplication()->input->get( 'user_unique_id', '', 'STRING');
+		$unique_pass_id = JFactory::getApplication()->input->get( 'unique_pass_id', '', 'STRING');
 		
-		$query = "SELECT c_quiz_id, c_student_id, unique_id FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+		$query = "SELECT c_quiz_id, c_student_id, unique_id, unique_pass_id FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 		$database->SetQuery($query);
 		$st_quiz_data = $database->LoadObjectList();
 		
 		if (count($st_quiz_data)) {
 			$st_quiz_data = $st_quiz_data[0];
-			if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id))  ||  $my->authorise('core.manage','com_joomlaquiz')) {		
+			if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id || $unique_pass_id == $st_quiz_data->unique_pass_id))  ||  $my->authorise('core.manage','com_joomlaquiz')) {		
 				$this->JQ_PrintPDF($stu_quiz_id);
 				die();
 			}
@@ -59,9 +60,9 @@ class JoomlaquizModelPrintresult extends JModelList
 		$appsLib = JqAppPlugins::getInstance();
 		$database = JFactory::getDBO();
 		
-		$query = "SELECT q.c_id c_id, c_question, is_correct, c_point, c_type, c_score"
-		. "\n FROM #__quiz_r_student_question AS sq, #__quiz_t_question AS q"
-		. "\n WHERE sq.c_id = '".$id."' AND sq.c_question_id = q.c_id AND q.published = 1";
+		$query = "SELECT q.c_id c_id, c_question, is_correct, c_point, c_type, c_score, q.c_right_message, q.c_wrong_message, a.c_feedback_pdf"
+		. "\n FROM #__quiz_r_student_question AS sq, #__quiz_t_question AS q, #__quiz_t_quiz AS a"
+		. "\n WHERE sq.c_id = '".$id."' AND sq.c_question_id = q.c_id AND q.published = 1 AND q.c_quiz_id = a.c_id";
 		$database->setQuery( $query );
 		$info = $database->LoadAssocList();
 		$info = $info[0];
@@ -189,7 +190,7 @@ class JoomlaquizModelPrintresult extends JModelList
 				'COM_JOOMLAQUIZ_ANONYMOUS'
 			);
 		$info['name']     = ($info['name']) ? $info['name']
-			: $info['user_name'] . '' . $info['user_surname'];
+			: $info['user_name'] . ' ' . $info['user_surname'];
 		$info['email']    = ($info['email']) ? $info['email']
 			: $info['user_email'];
 
@@ -215,28 +216,56 @@ class JoomlaquizModelPrintresult extends JModelList
 
 		$pdf = &$pdf_doc->_engine;
 
+		$pdf->SetFont('dejavusans');
+		$fontFamily = $pdf->getFontFamily();
+
 		$pdf->getAliasNbPages();
 		$pdf->AddPage();
 
 		$pdf->SetFontSize(10);
 
-		$str = JText::_('COM_QUIZ_PDF_QTITLE') . " " . $info['c_title'];
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_QTITLE') . '&nbsp;';
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setFont($fontFamily);
+		$str = $info['c_title'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
-		$str = JText::_('COM_QUIZ_PDF_UNAME') . " " . $info['username'];
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_UNAME') . "&nbsp;";
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setFont($fontFamily);
+		$str =  $info['username'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
-		$str = JText::_('COM_QUIZ_PDF_NAME') . " " . $info['name'];
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_NAME') . "&nbsp;";
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setFont($fontFamily);
+		$str =  $info['name'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
-		$str = JText::_('COM_QUIZ_PDF_UEMAIL') . " " . $info['email'];
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_UEMAIL') . "&nbsp;";
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setFont($fontFamily);
+		$str = $info['email'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
-		$str = JText::_('COM_QUIZ_PDF_USCORE') . " " . $info['c_total_score'];
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_USCORE') . "&nbsp;";
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setFont($fontFamily);
+		$str = $info['c_total_score'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
@@ -276,12 +305,21 @@ class JoomlaquizModelPrintresult extends JModelList
 			}
 		}
 
-		$str = JText::_('COM_QUIZ_PDF_TOTSCORE') . " " . $total;
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_TOTSCORE') . "&nbsp;";
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setFont($fontFamily);
+		$str = $total;
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
-		$str = JText::_('COM_QUIZ_PDF_PASSCORE') . " "
-			. $info['c_passing_score'] . "%";
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_PASSCORE') . "&nbsp;";
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setFont($fontFamily);
+		$str = $info['c_passing_score'] . "%";
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
@@ -289,25 +327,22 @@ class JoomlaquizModelPrintresult extends JModelList
 		$tot_min = floor($info['c_total_time'] / 60);
 		$tot_sec = $info['c_total_time'] - $tot_min * 60;
 
-		$str = JText::_('COM_QUIZ_PDF_USPENT');
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_USPENT') . "&nbsp;";
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-		$pdf->SetFont('freesans');
-		$fontFamily = $pdf->getFontFamily();
-
-		$pdf->setFont($fontFamily, 'B');
-		//$pdf->setStyle('b', true);
-		$str = str_pad($tot_min, 2, "0", STR_PAD_LEFT) . ":" . str_pad(
+		$pdf->setFont($fontFamily);
+		$str = '&nbsp;'.str_pad($tot_min, 2, "0", STR_PAD_LEFT) . ":" . str_pad(
 				$tot_sec, 2, "0", STR_PAD_LEFT
-			);
+			).'&nbsp;';
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-		$pdf->setFont($fontFamily, 'B');
-		//$pdf->setStyle('b', false);
+		$pdf->setFont($fontFamily);
 		$str = JText::_('COM_QUIZ_PDF_QTIME');
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
+		$pdf->setFont($fontFamily, 'B');
 		if ($info['c_passed'] == 1)
 		{
 			$str = $info['name'] . " " . JText::_('COM_QUIZ_PDF_PASQUIZ_BOLD');
@@ -372,6 +407,12 @@ class JoomlaquizModelPrintresult extends JModelList
 			$pdf = $pdf_data['pdf'];
 
 			$pdf->Ln();
+			
+			if ($data['c_feedback_pdf']){
+				$str = $data['is_correct'] ? $data['c_right_message'] : $data['c_wrong_message'];
+				$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+				$pdf->Ln();
+			}
 		}
 
 		return $pdf;

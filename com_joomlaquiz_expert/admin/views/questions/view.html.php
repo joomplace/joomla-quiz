@@ -40,8 +40,9 @@ class JoomlaquizViewQuestions extends JViewLegacy
 			if($layout == 'copy_questions'){
 				$submenu = 'copy_questions';
 				JoomlaquizHelper::showTitle($submenu);
+				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
 								
-				$quizzesFields = JHTML::_('select.genericlist', $this->get("Quizzes"), 'quizcopy', 'class="input-medium" size="1"', 'value', 'text', 0); 
+				$quizzesFields = JHTML::_('select.genericlist', $quizzes, 'quizcopy', 'class="input-medium" size="1"', 'value', 'text', 0); 
 				$this->quizzesFields = $quizzesFields;
 				$this->copy_questions = $this->get('CopyQuestions');
 				
@@ -49,17 +50,28 @@ class JoomlaquizViewQuestions extends JViewLegacy
 			}elseif($layout == 'move_questions'){
 				$submenu = 'move_questions';
 				JoomlaquizHelper::showTitle($submenu);
-				
-				$quizzesFields = JHTML::_('select.genericlist', $this->get("Quizzes"), 'quizmove', 'class="input-medium" size="1"', 'value', 'text', 0); 
+				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
+
+				$quizzesFields = JHTML::_('select.genericlist', $quizzes, 'quizmove', 'class="input-medium" size="1"', 'value', 'text', 0);
 				$this->quizzesFields = $quizzesFields;
 				$this->move_questions = $this->get('MoveQuestions');
 				
 				$this->addMoveToolBar();
+			}elseif($layout == 'move_questions_cat'){
+				$submenu = 'move_questions_cat';
+				JoomlaquizHelper::showTitle($submenu);
+				
+				$questCatFields = JHTML::_('select.genericlist', $this->get("QuestionCategories"), 'catmove', 'class="input-medium" size="1"', 'value', 'text', 0); 
+				$this->questCatFields = $questCatFields;
+				$this->move_questions_cat = $this->get('MoveQuestionsCat');
+				
+				$this->addMoveCatToolBar();
 			}elseif($layout == 'uploadquestions'){
 				$submenu = 'uploadquestions';
 				JoomlaquizHelper::showTitle($submenu);
+				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
 				
-				$quizzesFields = JHTML::_('select.genericlist', $this->get("Quizzes"), 'filter_quiz_id', 'class="input-medium" size="1" ', 'value', 'text', 0);
+				$quizzesFields = JHTML::_('select.genericlist', $quizzes, 'filter_quiz_id', 'class="input-medium" size="1" ', 'value', 'text', 0);
 			
 				$this->quizzesFields = $quizzesFields;
 				
@@ -98,8 +110,10 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				{
 					$app->setUserState('quizzes.filter.quiz_id', $_REQUEST['quiz_id'] );
 				}
-				
-				$quizzesFields = JHTML::_('select.options', $this->get("Quizzes"), 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
+
+				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
+
+				$quizzesFields = JHTML::_('select.options', $quizzes, 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
 				
 				JHtmlSidebar::addFilter(
 					JText::_('COM_JOOMLAQUIZ_SELECT_QUIZ'),
@@ -142,6 +156,12 @@ class JoomlaquizViewQuestions extends JViewLegacy
 		JToolBarHelper::custom('questions.move_question', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE', false);
 	}
 	
+	protected function addMoveCatToolBar()
+	{
+		JToolBarHelper::cancel('question.cancel', 'JTOOLBAR_CANCEL');
+		JToolBarHelper::custom('questions.move_question_cat_ok', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', false);
+	}
+	
 	protected function addUploadquestToolBar()
 	{
 		JToolBarHelper::cancel('questions.cancel', 'JTOOLBAR_CANCEL');
@@ -160,9 +180,10 @@ class JoomlaquizViewQuestions extends JViewLegacy
 		JToolBarHelper::custom('questions.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
 		JToolBarHelper::custom('questions.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
         JToolBarHelper::divider();
-        JToolBarHelper::deleteList('', 'questions.delete');
+        JToolBarHelper::deleteList('', 'questions.checkComplitedQuestions');
 		JToolBarHelper::divider();
 		JToolBarHelper::custom('questions.move_question_sel', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE', true);
+		JToolBarHelper::custom('questions.move_question_cat', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_MOVE_CAT', true);
 		JToolBarHelper::custom('questions.copy_question_sel', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY', true);
 		JToolBarHelper::custom('questions.quizzes', 'previous.png', 'previous_f2.png', 'COM_JOOMLAQUIZ_QUIZZES', false);
 		JToolBarHelper::custom('questions.hotspot_converter', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_HOTSPOT_CONVERTER', true);
@@ -180,5 +201,4 @@ class JoomlaquizViewQuestions extends JViewLegacy
 			'c_title' => JText::_('COM_JOOMLAQUIZ_QUIZ')
 		);
 	}
-	
 }

@@ -223,7 +223,7 @@ $ordering_list = $this->ordering_list;
 			<div class="control-group">
                 <div class="control-label">
 				    <?php echo $this->form->getLabel('c_detailed_feedback'); ?>
-                </div>
+                </div>	
 				<div class="controls">
 					<?php echo $this->form->getInput('c_detailed_feedback'); ?>
 				</div>

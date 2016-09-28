@@ -79,6 +79,52 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=move_questions');
 		}
 		
+		public function move_question_cat(){
+			$cid = $this->input->get('cid', array(), 'array');
+			if (!is_array( $cid ) || count( $cid ) < 1) {
+				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
+				exit;
+			}
+			
+			$_SESSION['com_joomlaquiz.move.questions.cids'] = $cid;
+			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=move_questions_cat');
+		}
+		
+		public function move_question_cat_ok(){
+			$database = JFactory::getDBO();
+			$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];
+			$catMove = strval( JFactory::getApplication()->input->get('catmove') );
+			$cids = implode( ',', $cid );
+			$total = count( $cid );
+			
+			$query = "SELECT distinct c_ques_cat FROM #__quiz_t_question WHERE c_id IN ( $cids )";
+			$database->SetQuery( $query );
+			$ch_cat = $database->LoadObjectList();
+
+			$query = "UPDATE #__quiz_t_question"
+			. "\n SET c_ques_cat = '$catMove'"
+			. "WHERE c_id IN ( $cids )"
+			;
+			$database->setQuery( $query );
+			if ( !$database->execute() ) {
+				echo "<script> alert('". $database->getErrorMsg() ."'); window.history.go(-1); </script>\n";
+				exit();
+			}
+
+			if (count($ch_cat)) {
+				foreach ($ch_cat as $c_cat) {
+					JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($c_cat->c_ques_cat);
+				}
+			}
+			JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($catMove);
+			
+			$database->setQuery("SELECT `title` FROM #__categories WHERE id = '".$catMove."'");
+			$c_title = $database->loadResult();
+			
+			$msg = $total .JText::_('COM_JOOMLAQUIZ_QUESTION_MOVED_TO').$c_title;
+			$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions', $msg );
+		}
+		
 		public function move_question(){
 			$database = JFactory::getDBO();
 			$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];
@@ -233,4 +279,63 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$mainframe->redirect('index.php?option=com_joomlaquiz&view=questions');
 		}
 		
+		public function deleteQuestions() {
+
+		$cids = JFactory::getApplication()->input->get('cids',array(),'array');
+
+		$cids = explode(',', $cids[0]);
+
+		$model = $this->getModel();
+		$model->delete($cids);
+
+		JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
+		}
+
+		public function checkComplitedQuestions() {
+
+			$cid = JFactory::getApplication()->input->get('cid',array(),'array');
+
+			$cids = implode( ',', $cid );
+			$database = JFactory::getDBO();
+			if ($cid) {
+				$query = $database->getQuery(true);
+				$query->select($database->qn('c_question_id'))
+					->from($database->qn('#__quiz_r_student_question'))
+					->where($database->qn('c_question_id').' IN ('.implode(',',array_filter($cid)).')')
+					->group($database->qn('c_question_id'));
+					$database->setQuery($query);
+				$q_ids = $database->loadColumn();
+			}
+
+			if ($q_ids) {
+
+				$query = $database->getQuery(true);
+				$query->select($database->qn('c_question'))
+					->from($database->qn('#__quiz_t_question'))
+					->where($database->qn('c_id').' IN ('.implode(',',array_filter($q_ids)).')');
+					$database->setQuery($query);
+				$questions = $database->loadColumn();
+
+				$app = JFactory::getApplication();
+
+				$app->enqueueMessage('Question'.((count($q_ids) > 1)?'s ':' ').strip_tags(implode(', ',$questions)).' have been completed. Do you really want to delete them ?'.
+					'<form action="'.JRoute::_('index.php?option=com_joomlaquiz&view=questions&task=questions.deleteQuestions').'" method="post" name="message-Form" id="message-Form">
+							<div>
+							<br>
+								<button class="btn" type="submit" title="Delete"><i>Delete</i></button>
+								<a class="btn" type="button" title="Cancel" href ='."'".JRoute::_("index.php?option=com_joomlaquiz&view=questions")."'".'><i>Cancel</i></a>
+								<input type="hidden" name="cids" value="'.$cids.'" />
+							</div>
+						</form>', 'Message');
+
+				JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
+
+				return true;
+			}
+
+			$model = $this->getModel();
+			$model->delete($cid);
+
+			JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
+		}
 }

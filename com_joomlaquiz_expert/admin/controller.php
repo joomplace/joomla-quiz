@@ -52,10 +52,10 @@ class JoomlaquizController extends JControllerLegacy
 			$actual_version = true;
 
 			foreach ($version_arr as $key => $value) {
-				if ((int)$value > (int)$jq_version_arr[$key]){
+				if ((int)$jq_version_arr[$key] > (int)$value){
 					break;
 				}
-				elseif ((int)$value < (int)$jq_version_arr[$key]) {
+				elseif ((int)$jq_version_arr[$key] < (int)$value) {
 					$actual_version = false;
 					break;
 				}

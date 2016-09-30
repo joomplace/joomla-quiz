@@ -363,6 +363,7 @@
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
+		<field name="c_image" type="media" directory="stories" label="COM_JOOMLAQUIZ_ADD_IMAGE"/>
 		<field name="c_right_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="raw"

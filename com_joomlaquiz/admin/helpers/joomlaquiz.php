@@ -272,4 +272,24 @@ class JoomlaquizHelper
 
 			return $categoriesVm;
 		}
+
+		public static function getQuizzesForSelect(){
+			$db = JFactory::getDBO();
+
+			$query = "SELECT c_id AS value, c_title AS text"
+				. "\n FROM #__quiz_t_quiz"
+				. "\n ORDER BY c_title"
+			;
+			$db->setQuery( $query );
+			$quizzes = $db->loadObjectList();
+
+			//Add question pool
+			$qpoll = new stdClass();
+			$qpoll->value = '0';
+			$qpoll->text = JTEXT::_('COM_JOOMLAQUIZ_SUBMENU_QUESTIONS_POOL');
+
+			array_unshift($quizzes, $qpoll);
+
+			return $quizzes;
+		}
 }

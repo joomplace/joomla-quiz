@@ -226,14 +226,25 @@ class JoomlaquizModelCertificates extends JModelList
 	}
 	
 	public function sample_certs() {
-		$database = JFactory::getDBO();
-		$query = "REPLACE INTO `#__quiz_certificates` (`id`, `cert_name`, `cert_file`, `crtf_align`, `crtf_shadow`, `text_x`, `text_y`, `text_size`, `crtf_text`, `text_font`, `cert_offset`) VALUES
-		(1, 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', '', 100),
-(2, 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', '', 150),
-(3, 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '', 200);";
-		$database->setQuery($query);
-		if ($database->execute()) return true;
-		else return false;
-		
+
+		$db = JFactory::getDBO();
+
+		$file_dest = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/other/scripts/question_pool.sql';
+
+		try{
+			$chitem = JSchemaChangeitem::getInstance($db, null, file_get_contents($file_dest));
+		}catch (RuntimeException $e){
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+			return false;
+		}
+
+		if (!$chitem){
+			return false;
+		}
+
+		$chitem->checkStatus = -2;
+		$chitem->fix();
+
+		return true;
 	}
 }

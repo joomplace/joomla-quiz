@@ -224,4 +224,27 @@ class JoomlaquizModelCertificates extends JModelList
 		imagedestroy($im);
 		exit;
 	}
+	
+	public function sample_certs() {
+
+		$db = JFactory::getDBO();
+
+		$file_dest = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/other/scripts/question_pool.sql';
+
+		try{
+			$chitem = JSchemaChangeitem::getInstance($db, null, file_get_contents($file_dest));
+		}catch (RuntimeException $e){
+			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+			return false;
+		}
+
+		if (!$chitem){
+			return false;
+		}
+
+		$chitem->checkStatus = -2;
+		$chitem->fix();
+
+		return true;
+	}
 }

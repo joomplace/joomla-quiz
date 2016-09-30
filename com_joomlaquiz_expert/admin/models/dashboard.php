@@ -65,7 +65,8 @@ class JoomlaquizModelDashboard extends JModelList
 		$db = $this->getDbo();
 		$result = $changeSet->getStatus();
 		$result = $result['unchecked'];
-		$mb4 = $db->hasUTF8mb4Support();
+		//$mb4 = $db->hasUTF8mb4Support();
+		$mb4 = false;
 		foreach($result as $item){
 			if((strpos($item->file, 'mb4')!== false && $mb4) || (strpos($item->file, 'mb4')=== false && !$mb4)){
 				if(!$item->checkQueryExpected || ($item->checkQueryExpected && $db->setQuery($item->checkQuery)->loadObject())){

@@ -173,7 +173,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$qch_ids_type_6 = $database->loadColumn();
 
 		if(count($qch_ids_type_6)) {
-			$query = "SELECT SUM(points) FROM #__quiz_t_blank WHERE c_question_id IN (".implode(',', $qch_ids_type_6).")";
+			$query = "SELECT SUM(points) FROM #__quiz_t_blank WHERE c_question_id IN (".implode(',', $qch_ids_type_6).") AND gtype = 0";
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
 			

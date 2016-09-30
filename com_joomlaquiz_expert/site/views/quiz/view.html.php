@@ -22,6 +22,9 @@ class JoomlaquizViewQuiz extends JViewLegacy
 		$this->is_preview = $is_preview;
 		$this->preview_quest = $preview_quest;
 		$this->preview_id = $preview_id;
+
+		$component_params = JComponentHelper::getParams('com_joomlaquiz');
+		$this->margin_top = $component_params->get('margin_top', 0);
 		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {

@@ -1,1 +1,0 @@
-ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `one_time` INT(1) NOT NULL DEFAULT '0';

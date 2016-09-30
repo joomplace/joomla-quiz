@@ -32,4 +32,13 @@ class JoomlaquizControllerCertificates extends JControllerAdmin
 			
 			return true;
 		}
+
+		public function sample_certs() {
+			$model = $this->getModel("Certificates");
+			$redirect = JRoute::_('index.php?option=com_joomlaquiz&view=certificates', false);
+			$message_succes = JText::_('COM_JOOMLAQUIZ_CERT_ADD_SAMPLE_MESSAGE');
+			$message_error = JText::_('COM_JOOMLAQUIZ_CERT_ADD_SAMPLE_MESSAGE_ERROR');
+			if ($model->sample_certs()) $this->setRedirect($redirect, $message_succes);
+			else $this->setRedirect($redirect, $message_error, 'error');
+		}
 }

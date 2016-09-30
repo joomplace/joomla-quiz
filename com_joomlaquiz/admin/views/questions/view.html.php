@@ -40,8 +40,9 @@ class JoomlaquizViewQuestions extends JViewLegacy
 			if($layout == 'copy_questions'){
 				$submenu = 'copy_questions';
 				JoomlaquizHelper::showTitle($submenu);
+				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
 								
-				$quizzesFields = JHTML::_('select.genericlist', $this->get("Quizzes"), 'quizcopy', 'class="input-medium" size="1"', 'value', 'text', 0); 
+				$quizzesFields = JHTML::_('select.genericlist', $quizzes, 'quizcopy', 'class="input-medium" size="1"', 'value', 'text', 0); 
 				$this->quizzesFields = $quizzesFields;
 				$this->copy_questions = $this->get('CopyQuestions');
 				
@@ -49,8 +50,9 @@ class JoomlaquizViewQuestions extends JViewLegacy
 			}elseif($layout == 'move_questions'){
 				$submenu = 'move_questions';
 				JoomlaquizHelper::showTitle($submenu);
-				
-				$quizzesFields = JHTML::_('select.genericlist', $this->get("Quizzes"), 'quizmove', 'class="input-medium" size="1"', 'value', 'text', 0); 
+				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
+
+				$quizzesFields = JHTML::_('select.genericlist', $quizzes, 'quizmove', 'class="input-medium" size="1"', 'value', 'text', 0);
 				$this->quizzesFields = $quizzesFields;
 				$this->move_questions = $this->get('MoveQuestions');
 				
@@ -58,8 +60,9 @@ class JoomlaquizViewQuestions extends JViewLegacy
 			}elseif($layout == 'uploadquestions'){
 				$submenu = 'uploadquestions';
 				JoomlaquizHelper::showTitle($submenu);
+				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
 				
-				$quizzesFields = JHTML::_('select.genericlist', $this->get("Quizzes"), 'filter_quiz_id', 'class="input-medium" size="1" ', 'value', 'text', 0);
+				$quizzesFields = JHTML::_('select.genericlist', $quizzes, 'filter_quiz_id', 'class="input-medium" size="1" ', 'value', 'text', 0);
 			
 				$this->quizzesFields = $quizzesFields;
 				
@@ -98,8 +101,10 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				{
 					$app->setUserState('quizzes.filter.quiz_id', $_REQUEST['quiz_id'] );
 				}
-				
-				$quizzesFields = JHTML::_('select.options', $this->get("Quizzes"), 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
+
+				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
+
+				$quizzesFields = JHTML::_('select.options', $quizzes, 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
 				
 				JHtmlSidebar::addFilter(
 					JText::_('COM_JOOMLAQUIZ_SELECT_QUIZ'),
@@ -180,5 +185,4 @@ class JoomlaquizViewQuestions extends JViewLegacy
 			'c_title' => JText::_('COM_JOOMLAQUIZ_QUIZ')
 		);
 	}
-	
 }

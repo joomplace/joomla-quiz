@@ -23,40 +23,36 @@ class JoomlaquizModelPrintcert extends JModelList
 		
 		$im = $this->prepareCertificate();
 
+		defined(_PDF_GENERATED) or define(
+		'_PDF_GENERATED', JText::_('COM_JOOMLAQUIZ_PDF_GENERATED')
+		);
+
+		chdir(JPATH_SITE);
+
+		require_once(JPATH_SITE
+			. '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
+
+		$pdf_doc = new jq_pdf();
+
+		$pdf = &$pdf_doc->_engine;
+
+		$pdf->SetFont('dejavusans');
+
 		if ($im) {
 
-			if (preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
-				$UserBrowser = "Opera";
-			} elseif (preg_match('~MSIE ([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
-				$UserBrowser = "IE";
-			} else {
-				$UserBrowser = '';
+			$pdf->AddPage();
+
+			$printcertModel = JModelLegacy::getInstance('Printcert', 'JoomlaquizModel');
+			$certificate = $printcertModel->prepareCertificate();
+
+			if ($certificate) {
+				$pdf->setJPEGQuality(75);
+				$pdf->Image('@'.$certificate, '', '', 180, '', 'PNG', '', '', true, 150, '', false, false, 1, false, false, false);
 			}
-			$file_name = 'Certificate.png';
-
-
-			//header('Content-Type: image/png');
-			header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-			if ($UserBrowser == 'IE') {
-				if (JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')) {
-					header('Content-Disposition: attachment; filename="' . $file_name . '";');
-				} else {
-					header('Content-Disposition: inline; filename="' . $file_name . '";');
-				}
-				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-				header('Pragma: public');
-			} else {
-				if (JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')) {
-					header('Content-Disposition: attachment; filename="' . $file_name . '";');
-				} else {
-					header('Content-Disposition: inline; filename="' . $file_name . '";');
-				}
-				header('Pragma: no-cache');
+			else {
+				$pdf->Write(5, $pdf_doc->cleanText(JText::_('COM_QUIZ_MES_NOTAVAIL')), '', 0);
 			}
-
-			@ob_end_clean();
-			echo $im;
-			exit;
+			$pdf->Output('example_009.pdf', 'D');
 		}
 		else {
 			echo JText::_('COM_QUIZ_MES_NOTAVAIL');

@@ -415,6 +415,19 @@ class JoomlaquizModelPrintresult extends JModelList
 			}
 		}
 
+		$pdf->AddPage();
+
+		$printcertModel = JModelLegacy::getInstance('Printcert', 'JoomlaquizModel');
+		$certificate = $printcertModel->prepareCertificate();
+		
+		if ($certificate) {
+			$pdf->setJPEGQuality(75);
+			$pdf->Image('@'.$certificate, '', '', 180, '', 'PNG', '', '', true, 150, '', false, false, 1, false, false, false);
+		}
+		else {
+			$pdf->Write(5, $pdf_doc->cleanText(JText::_('COM_QUIZ_MES_NOTAVAIL')), '', 0);
+		}
+
 		return $pdf;
 	}
 }

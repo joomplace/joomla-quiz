@@ -21,6 +21,49 @@ class JoomlaquizModelPrintcert extends JModelList
 
 	public function JQ_printCertificate(){
 		
+		$im = $this->prepareCertificate();
+
+		if ($im) {
+
+			if (preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
+				$UserBrowser = "Opera";
+			} elseif (preg_match('~MSIE ([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
+				$UserBrowser = "IE";
+			} else {
+				$UserBrowser = '';
+			}
+			$file_name = 'Certificate.png';
+
+
+			//header('Content-Type: image/png');
+			header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+			if ($UserBrowser == 'IE') {
+				if (JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')) {
+					header('Content-Disposition: attachment; filename="' . $file_name . '";');
+				} else {
+					header('Content-Disposition: inline; filename="' . $file_name . '";');
+				}
+				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+				header('Pragma: public');
+			} else {
+				if (JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')) {
+					header('Content-Disposition: attachment; filename="' . $file_name . '";');
+				} else {
+					header('Content-Disposition: inline; filename="' . $file_name . '";');
+				}
+				header('Pragma: no-cache');
+			}
+
+			@ob_end_clean();
+			echo $im;
+			exit;
+		}
+		else {
+			echo JText::_('COM_QUIZ_MES_NOTAVAIL');
+		}
+	}
+
+	public function prepareCertificate() {
 		$database = JFactory::getDBO();
 		$my = JFactory::getUser();
 		
@@ -315,42 +358,22 @@ class JoomlaquizModelPrintcert extends JModelList
 						imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
 					}
 				}
-
-				if (preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
-					$UserBrowser = "Opera";
-				}
-				elseif (preg_match('~MSIE ([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
-					$UserBrowser = "IE";
-				} else {
-					$UserBrowser = '';
-				}
-				$file_name = 'Certificate.png';
-				header('Content-Type: image/png');
-				header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-				if ($UserBrowser == 'IE') {
-					if(JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')){
-						header('Content-Disposition: attachment; filename="' . $file_name . '";');
-					}else{
-						header('Content-Disposition: inline; filename="' . $file_name . '";');
-					}
-					header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-					header('Pragma: public');
-				} else {
-					if(JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')){
-						header('Content-Disposition: attachment; filename="' . $file_name . '";');
-					}else{
-						header('Content-Disposition: inline; filename="' . $file_name . '";');
-					}
-					header('Pragma: no-cache');
-				}
 				@ob_end_clean();
+				
+				ob_start();
 				imagepng($im);
 				imagedestroy($im);
-				exit;
+				$img_content = ob_get_contents();
+				ob_end_clean();
+
+				header('Content-Type: image/png');
+
+				return $img_content;
 			}
 		}
-		
-		echo JText::_('COM_QUIZ_MES_NOTAVAIL');
+
+		//echo JText::_('COM_QUIZ_MES_NOTAVAIL');
+		return false;
 	}
 	
 	function revUni($text) { 

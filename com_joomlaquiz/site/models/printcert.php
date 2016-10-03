@@ -52,7 +52,7 @@ class JoomlaquizModelPrintcert extends JModelList
 			else {
 				$pdf->Write(5, $pdf_doc->cleanText(JText::_('COM_QUIZ_MES_NOTAVAIL')), '', 0);
 			}
-			$pdf->Output('example_009.pdf', 'D');
+			$pdf->Output('Certificate.pdf', 'D');
 		}
 		else {
 			echo JText::_('COM_QUIZ_MES_NOTAVAIL');

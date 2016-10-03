@@ -20,8 +20,8 @@ class JoomlaquizModelPrintcert extends JModelList
 	protected $rtl = false;
 
 	public function JQ_printCertificate(){
-		
-		$im = $this->prepareCertificate();
+
+		$certificate = $this->prepareCertificate();
 
 		defined(_PDF_GENERATED) or define(
 		'_PDF_GENERATED', JText::_('COM_JOOMLAQUIZ_PDF_GENERATED')
@@ -38,12 +38,11 @@ class JoomlaquizModelPrintcert extends JModelList
 
 		$pdf->SetFont('dejavusans');
 
-		if ($im) {
+		if ($certificate) {
 
 			$pdf->AddPage();
 
 			$printcertModel = JModelLegacy::getInstance('Printcert', 'JoomlaquizModel');
-			$certificate = $printcertModel->prepareCertificate();
 
 			if ($certificate) {
 				$pdf->setJPEGQuality(75);

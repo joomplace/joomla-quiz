@@ -3,8 +3,44 @@
 <head>
     <title></title>
 	<!--[if IE]><script type="text/javascript" src="<?php echo JURI::root();?>plugins/joomlaquiz/puzzle/html/assets/js/excanvas.js"></script><![endif]-->
+	<style>
+		body {
+			width: 90%;
+			margin: 0 auto;
+		}
+		.snappuzzle-wrap { position: relative; display: block; }
+		.snappuzzle-pile { position: relative; }
+		.snappuzzle-piece { cursor: move; }
+		.snappuzzle-slot { position: absolute; background: #fff; border: 1px solid black; opacity: 0.4; transition: 0.2s; }
+		.snappuzzle-slot-hover { background: #eee; }
+
+		.puzzle_image_container {
+			width: 100%;
+			position: relative;
+		}
+		.puzzle_image_container #puzzle_area, .puzzle_image_container #puzzle_parts {
+			width: 50%;
+		}
+		#puzzle_area img {
+			width: 100%;
+		}
+		.correct {
+			opacity: 1 !important;
+		}
+
+	</style>
 	<script type="text/javascript" src="<?php echo JURI::root();?>components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js"></script>
-    <script>		
+	<script type="text/javascript" src="<?php echo JURI::root();?>components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript" src="<?php echo JURI::root();?>components/com_joomlaquiz/assets/js/jquery.ui.touch-punch.min.js"></script>
+
+<!--	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
+
+
+
+
+	<script type="text/javascript" src="<?php echo JURI::root();?>plugins/joomlaquiz/puzzle/html/assets/js/jquery.snap-puzzle.js"></script>
+    <script>
         var PUZZLE_DIFFICULTY;
         var PUZZLE_HOVER_TINT = '#009900';
 		var PUZZLE_HOVER_TINT_OUT = '#990000';
@@ -29,14 +65,27 @@
 		var stu_quiz_id;
 		var c_image;
 		var c_quiz_id;
-		
+
 		function addEvent(elem, type, handler){
 			if (elem.addEventListener){
 				elem.addEventListener(type, handler, false)
 			} else {
 				elem.attachEvent("on"+type, handler)
 			}
-		} 
+		}
+
+		function start_puzzle(x){
+			jq_jQuery('#puzzle_solved').hide();
+			jq_jQuery('#source_image').snapPuzzle({
+				rows: x, columns: x,
+				pile: '#pile',
+				containment: '#puzzle-containment',
+				onComplete: function(){
+					jq_jQuery('#source_image').fadeOut(150).fadeIn();
+					jq_jQuery('#puzzle_solved').show();
+				}
+			});
+		}
 		
         function init(){
 			
@@ -71,6 +120,7 @@
 					url: "<?php echo JURI::root(); ?>index.php?option=com_joomlaquiz&task=ajaxaction.procces",
 					data: "ajax_task=ajax_plugin&plg_task=getdata&quest_type=puzzle" + "&qid=" + quest_id + "&stu_quiz_id=" + stu_quiz_id,
 					success: function(xml){
+						//console.log(xml);
 						var c_attempts = jq_jQuery(xml).find('c_attempts').text();
 						if(!parseInt(c_attempts)){
 							jq_jQuery("body").html("<div id='jq_message_box'></div>");
@@ -87,12 +137,56 @@
 						jq_jQuery("#jq_quest_conteiner").html(c_quest_text);
 						
 						 _img = new Image();
-						addEvent(_img, "load", onImage);
+						//addEvent(_img, "load", onImage);
 						_img.src = "<?php echo JURI::root();?>images/joomlaquiz/images/" + c_image;
+						_img.id = "source_image";
+						_img.classList.add("pure-img");
+						jq_jQuery('#puzzle_area').append(_img);
+
+						jq_jQuery('#source_image').snapPuzzle({
+							rows: 3,
+							columns: 3,
+							pile: '#puzzle_parts',
+							onComplete: function(){
+								setTimeout(gameOver,500);
+							},
+							onCorrect: function (elem) {
+								setScore();
+								sendAjaxSuccess(elem.data('number'));
+							},
+							onDraggable: function () {
+								imageRemove();
+							}
+						});
 					}
 			});
-			
-        }
+		}
+
+		function setScore() {
+			scores += parseInt(point);
+			jq_jQuery("#jq_points").html("<?php echo JText::_('COM_JQ_YOUR_MEMORY_POINTS');?>: " + scores);
+			if(parent.jq_getObj('result_point_'+quest_id)) parent.jq_getObj('result_point_'+quest_id).innerHTML = scores;
+		}
+		
+		function imageRemove () {
+			jq_jQuery('#source_image').attr('src', '');
+		}
+
+		function sendAjaxSuccess(num) {
+			num = (parseInt(num, 36)) / 100;
+			console.log(num);
+			jq_jQuery.ajax({
+				type: "POST",
+				url: "<?php echo JURI::root(); ?>index.php?option=com_joomlaquiz&task=ajaxaction.procces",
+				data: "ajax_task=ajax_plugin&plg_task=addpoints&quest_type=puzzle" + "&quest_id=" + quest_id + "&stu_quiz_id=" + stu_quiz_id + "&quiz_id=" + c_quiz_id + "&ltime=" + quest_timer_sec + "&piece=" + num,
+				success: function(){
+					scores += parseInt(point);
+					jq_jQuery("#jq_points").html("<?php echo JText::_('COM_JQ_YOUR_MEMORY_POINTS');?>: " + scores);
+					if(parent.jq_getObj('result_point_'+quest_id)) parent.jq_getObj('result_point_'+quest_id).innerHTML = scores;
+				}
+			});
+		}
+
         function onImage(e){
             _pieceWidth = Math.floor(_img.width / PUZZLE_DIFFICULTY);
             _pieceHeight = Math.floor(_img.height / PUZZLE_DIFFICULTY);
@@ -411,17 +505,35 @@
 			parent.jq_QuizNextOn();
 			parent.SqueezeBox.close();
 		}
+
+
     </script>
 </head>
 
+<!--   <body onload="init();">  -->
 <body onload="init();">
 	<div id="jq_quest_conteiner"><!--x--></div>
-    <canvas id="canvas"></canvas>
 	<div style="clear:both;"><!--x--></div>
+
+	<table class="puzzle_image_container">
+		<tr>
+			<td id="puzzle_area">
+
+			</td>
+			<td id="puzzle_parts">
+
+			</td>
+		</tr>
+	</table>
+
 	<div id="jq_quest_time_past" style="font-size:17px;display:block;float:left;"></div>
 	<div id="jq_message_box" style="font-size:17px;display:none;float:left;color:red;margin-left:40px;"><?php echo JText::_('COM_QUIZ_TIME_FOR_ANSWERING_HAS_RUN_OUT');?></div>
 	<div id="jq_close_button" style="display:block;float:right;" onclick="clearInterval(quest_timer); jq_Close_PuzzleWindow();"><input type="button" value="<?php echo JText::_('COM_JQ_PUZZLE_CLOSE');?>" style="width:150px;height:35px;background:#CCDDEE;border:1px solid #CCCCCC;" /></div>
 	<div id="jq_points" style="display:block;font-size:18px;float:right;margin-right:25px;"><?php echo JText::_('COM_JQ_YOUR_MEMORY_POINTS');?>: 0</div>
+
+
+
+
 </body>
 
 </html>

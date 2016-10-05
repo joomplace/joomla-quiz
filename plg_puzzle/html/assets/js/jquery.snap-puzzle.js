@@ -75,67 +75,83 @@
                 pieceHeight = that.height() / o.rows,
                 pile = jq_jQuery(o.pile).addClass('snappuzzle-pile'),
                 maxX = pile.width() - pieceWidth,
-                maxY = pile.height() - pieceHeight;
+                maxY = pile.height() - pieceHeight,
+                array_shuffle = [];
 
             o.puzzle_class = puzzle_class;
             that.data('options', o);
+
 			num = 1;
             for (var x=0; x<o.rows; x++) {
                 for (var y=0; y<o.columns; y++) {
-                    jq_jQuery('<div class="snappuzzle-piece '+puzzle_class+'" data-number="'+(num*100).toString(36)+'"/>').data('pos', x+'_'+y).css({
-                        width: pieceWidth,
-                        height: pieceHeight,
-                        position: 'absolute',
-                        left: Math.floor((Math.random()*(maxX+1))),
-                        top: Math.floor((Math.random()*(maxY+1))),
-                        zIndex: Math.floor((Math.random()*10)+1),
-                        backgroundImage: 'url('+src+')',
-                        backgroundPosition: (-y*pieceWidth)+'px '+(-x*pieceHeight)+'px',
-                        backgroundSize: that.width()
-                    }).draggable({
-                        start: function(e, ui){ 
-							jq_jQuery(this).removeData('slot'); 
-							o.onDraggable(that);
-						},
-                        stack: '.snappuzzle-piece',
-                        containment: o.containment
-                    }).appendTo(pile).data('lastSlot', pile);
-
-					num++;
-					
-                    jq_jQuery('<div class="snappuzzle-slot '+puzzle_class+'"/>').data('pos', x+'_'+y).css({
-                        width: pieceWidth,
-                        height: pieceHeight,
-                        left: y*pieceWidth,
-                        top: x*pieceHeight
-                    }).appendTo(puzzle).droppable({
-                        accept: '.'+puzzle_class,
-                        hoverClass: 'snappuzzle-slot-hover',
-                        drop: function(e, ui){
-                            var slot_pos = jq_jQuery(this).data('pos');
-
-                            // prevent dropping multiple pieces on one slot
-                            jq_jQuery('.snappuzzle-piece.'+puzzle_class).each(function(){
-                                if (jq_jQuery(this).data('slot') == slot_pos) slot_pos = false;
-                            });
-                            if (!slot_pos) return false;
-
-                            ui.draggable.data('lastSlot', jq_jQuery(this)).data('slot', slot_pos);
-                            ui.draggable.position({ of: jq_jQuery(this), my: 'left top', at: 'left top' });
-                            if (ui.draggable.data('pos')==slot_pos) {
-                                ui.draggable.addClass('correct');
-								o.onCorrect(ui.draggable);
-								//console.log(ui.draggable.data);
-                                // fix piece
-                                // jq_jQuery(this).droppable('disable').fadeIn().fadeOut();
-                                jq_jQuery(this).droppable('disable').css('opacity', 1);
-                                ui.draggable.css({opacity: 0, cursor: 'default'}).draggable('disable');
-                                if (jq_jQuery('.snappuzzle-piece.correct.'+puzzle_class).length == o.rows*o.columns) o.onComplete(that);
-                            }
-                        }
-                    });
+                    array_shuffle.push([x,y,num]);
+                    num ++;
                 }
             }
+
+            array_shuffle = shuffleArray(array_shuffle);
+
+            array_shuffle.forEach(function (item) {
+                var x = item[0],
+                    y = item[1],
+                    num = item[2];
+
+                jq_jQuery('<div class="snappuzzle-piece '+puzzle_class+'" data-number="'+(num*42).toString(36)+'"/>').data('pos', x+'_'+y).css({
+                    width: pieceWidth,
+                    height: pieceHeight,
+                    position: 'absolute',
+                    left: Math.floor((Math.random()*(maxX+1))),
+                    top: Math.floor((Math.random()*(maxY+1))),
+                    zIndex: Math.floor((Math.random()*10)+1),
+                    backgroundImage: 'url('+src+')',
+                    backgroundPosition: (-y*pieceWidth)+'px '+(-x*pieceHeight)+'px',
+                    backgroundSize: that.width()
+                }).draggable({
+                    start: function(e, ui){
+                        jq_jQuery(this).removeData('slot');
+                        o.onDraggable(that);
+                    },
+                    stack: '.snappuzzle-piece',
+                    containment: o.containment
+                }).appendTo(pile).data('lastSlot', pile);
+
+                jq_jQuery('<div class="snappuzzle-slot '+puzzle_class+'"/>').data('pos', x+'_'+y).css({
+                    width: pieceWidth,
+                    height: pieceHeight,
+                    left: y*pieceWidth,
+                    top: x*pieceHeight
+                }).appendTo(puzzle).droppable({
+                    accept: '.'+puzzle_class,
+                    hoverClass: 'snappuzzle-slot-hover',
+                    drop: function(e, ui){
+                        var slot_pos = jq_jQuery(this).data('pos');
+
+                        // prevent dropping multiple pieces on one slot
+                        jq_jQuery('.snappuzzle-piece.'+puzzle_class).each(function(){
+                            if (jq_jQuery(this).data('slot') == slot_pos) slot_pos = false;
+                        });
+                        if (!slot_pos) return false;
+
+                        ui.draggable.data('lastSlot', jq_jQuery(this)).data('slot', slot_pos);
+                        ui.draggable.position({ of: jq_jQuery(this), my: 'left top', at: 'left top' });
+                        if (ui.draggable.data('pos')==slot_pos) {
+                            ui.draggable.addClass('correct');
+                            o.onCorrect(ui.draggable);
+                            //console.log(ui.draggable.data);
+                            // fix piece
+                            // jq_jQuery(this).droppable('disable').fadeIn().fadeOut();
+                            jq_jQuery(this).droppable('disable').css('opacity', 1);
+                            ui.draggable.css({opacity: 0, cursor: 'default'}).draggable('disable');
+                            if (jq_jQuery('.snappuzzle-piece.correct.'+puzzle_class).length == o.rows*o.columns) o.onComplete(that);
+                        }
+                    }
+                });
+            });
+        }
+
+        function shuffleArray(o){
+            for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+            return o;
         }
 
         return this.each(function(){

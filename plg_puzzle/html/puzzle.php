@@ -38,7 +38,7 @@
 
 
 
-	<script type="text/javascript" src="<?php echo JURI::root();?>plugins/joomlaquiz/puzzle/html/assets/js/jquery.snap-puzzle.js"></script>
+	<script type="text/javascript" src="<?php echo JURI::root();?>plugins/joomlaquiz/puzzle/html/assets/js/jquery.snap-puzzle.min.js"></script>
     <script>
         var PUZZLE_DIFFICULTY;
         var PUZZLE_HOVER_TINT = '#009900';

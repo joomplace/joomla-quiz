@@ -15,8 +15,8 @@ function setDrnDnAnswers(n) {
 			if ( lfield_id > 0 && rfield_id > 0) {
 				an_div = jq_getObj('cdiv'+questions[n].cur_quest_id+'_' + lfield_id);
 				targ = jq_getObj('ddiv'+questions[n].cur_quest_id+'_' + rfield_id);
-				targ.style.left	= parseInt((targ.offsetLeft - an_div.offsetLeft) / -2) + 'px';
-				targ.style.top	= parseInt((an_div.offsetLeft - targ.offsetLeft) + 10) + 'px';
+				//targ.style.left	= parseInt((targ.offsetLeft - an_div.offsetLeft) / -2) + 'px';
+				//targ.style.top	= parseInt((an_div.offsetLeft - targ.offsetLeft) + 10) + 'px';
 				last_drag_id = 'ddiv'+questions[n].cur_quest_id+'_'+rfield_id;
 				last_drag_quest_n = n;
 				questions[n].cont_index = lfield_id;
@@ -48,17 +48,13 @@ function startDrag(e){
 
 	for (i=1; i<=questions[n].kol_drag_elems; i++) {
 		an_div	= jq_getObj('ddiv'+questions[n].cur_quest_id+'_' + i);
-		an_div.style.zIndex = 500;
+		//an_div.style.zIndex = 500;
 	}
-	targ.className = 'jq_draggable_div';
-	targ.style.zIndex = 1000;
-	targ.style.position = 'relative';
+
 	last_drag_id = targ.id;
 	last_drag_id_drag = targ.id;
 	offsetX=e.clientX;
 	offsetY=e.clientY;
-	if(!targ.style.left){targ.style.left='0px'};
-	if(!targ.style.top){targ.style.top='0px'};
 	coordX=parseInt(targ.style.left);
 	coordY=parseInt(targ.style.top);
 	drag=true;
@@ -78,14 +74,13 @@ function dragDiv(e){
 	if (last_drag_id_drag != '') {
 		if (last_drag_id_drag != targ.id) {
 			var ddd = jq_getObj(last_drag_id_drag);
-			ddd.style.left = coordX+e.clientX-offsetX+'px';
-			ddd.style.top = coordY+e.clientY-offsetY+'px';
+			//ddd.style.left = coordX+e.clientX-offsetX+'px';
+			//ddd.style.top = coordY+e.clientY-offsetY+'px';
 			return;
 		}
 	}
 	if (targ.id.substring(0, 4) != 'ddiv') {return;}
-	targ.style.left	= coordX+e.clientX-offsetX+'px';
-	targ.style.top	= coordY+e.clientY-offsetY+'px';
+
 	var is_on_cont = false;
 	for (i=1; i<=questions[n].kol_drag_elems; i++) {
 		an_div = jq_getObj('cdiv'+questions[n].cur_quest_id+'_' + i);
@@ -108,8 +103,8 @@ function dragDiv(e){
 	for (i=1; i<=questions[n].kol_drag_elems; i++) {
 		if (i != dr_number) {
 			an_div = jq_getObj('ddiv'+questions[n].cur_quest_id+'_' + i);
-			if ( (questions[n].coord_left[i]) && (questions[n].coord_left[i] != '') ) { an_div.style.left = questions[n].coord_left[i]; }
-			if ( (questions[n].coord_top[i]) && (questions[n].coord_top[i] != '') ) { an_div.style.top = questions[n].coord_top[i]; }
+			/*if ( (questions[n].coord_left[i]) && (questions[n].coord_left[i] != '') ) { an_div.style.left = questions[n].coord_left[i]; }
+			if ( (questions[n].coord_top[i]) && (questions[n].coord_top[i] != '') ) { an_div.style.top = questions[n].coord_top[i]; }*/
 		}
 	}
 	if (!is_on_cont) { questions[n].cont_index = 0; }
@@ -126,23 +121,25 @@ function stopDrag(e){
 	var is_all_ids = 1;
 	if (dr_obj) {
 		var dr_number = parseInt(last_drag_id.substring(last_drag_id.indexOf('_')+1));
-		dr_obj.className = 'jq_draggable_div';
+		//dr_obj.className = 'jq_draggable_div';
 		if (questions[n].cont_index) {
-			dr_obj.style.position = 'relative';
-			dr_obj.style.left = '-57px';
+			//dr_obj.style.position = 'relative';
+			//dr_obj.style.left = '-57px';
 
-			dr_obj.style.top = parseInt((questions[n].cont_index - 1)*56 - (56*(dr_number - 1)) + 7) + 'px';
+			//dr_obj.style.top = parseInt((questions[n].cont_index - 1)*56 - (56*(dr_number - 1)) + 7) + 'px';
 
 			questions[n].ids_in_cont[questions[n].cont_index - 1] = dr_number;
 
-			dr_obj.className = 'jq_draggable_stop_div';
+
+
+			//dr_obj.className = 'jq_draggable_stop_div';
 		}
 
 		questions[n].cont_for_ids[dr_number - 1] = questions[n].cont_index;
 		questions[n].coord_left[dr_number] = dr_obj.style.left;
 		questions[n].coord_top[dr_number] = dr_obj.style.top;
 
-		dr_obj.style.zIndex = 499;
+		//dr_obj.style.zIndex = 499;
 	}
 	last_drag_id_drag = '';
 	for (i=1; i<=questions[n].kol_drag_elems; i++) {
@@ -152,4 +149,26 @@ function stopDrag(e){
 	last_drag_quest_n = -1;
 
 	drag=false;
+}
+
+function applyDragDrop() {
+	jq_jQuery('.jq_draggable_div').draggable({
+		containment: "#quest_table",
+		snap: '.jq_cont_drag_div',
+		snapMode: "inner",
+		stack: '.jq_cont_drag_div',
+		cursor: 'move'
+	});
+
+	jq_jQuery('.jq_cont_drag_div').droppable({
+		accept: ".jq_draggable_div",
+		greedy: true,
+		tolerance: 'touch',
+		hoverClass: "ui-state-highlight",
+		drop: function( event, ui ) {
+			jQuery(ui.draggable).css('left', '-15%');
+			var top = parseInt(jQuery(ui.draggable).css('top'));
+			(jQuery(ui.draggable).css('top', (top+5)+'px'));
+		},
+	});
 }

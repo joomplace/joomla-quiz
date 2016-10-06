@@ -1114,10 +1114,11 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 .dc_layout {
 	display:table;
 	table-layout:fixed;
+	width: 100%;
 }
 .dc_layout .dc_cover_container,
 .dc_layout .dc_buttons_container {
-	display:table-cell;
+	/*display:table-cell;*/
 	float:none;
 	vertical-align:top;
 }
@@ -1126,6 +1127,9 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 }
 .dc_layout .dc_buttons_container {
 	min-width:120px;
+}
+.dc_layout .dc_buttons_container .jq_mchoice {
+	padding-top: 30px;
 }
 .dc_pda_ver {
 	display:block;

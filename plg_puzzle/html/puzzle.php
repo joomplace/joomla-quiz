@@ -133,7 +133,7 @@
 							jq_jQuery("#jq_message_box").fadeIn();
 							return true;
 						}
-						PUZZLE_DIFFICULTY = jq_jQuery(xml).find('puzzle_difficulty').text();
+						PUZZLE_DIFFICULTY = getPuzzleDifficulty(xml);
 						quest_timer_sec = parseInt(jq_jQuery(xml).find('quest_time').text());
 						point = jq_jQuery(xml).find('c_point').text();
 						c_image = jq_jQuery(xml).find('c_image').text();
@@ -158,7 +158,7 @@
 		}
 
 		function sendAjaxSuccess(num) {
-			num = (parseInt(num, 36)) / 42;
+			num = (parseInt(num, 36)) / 100;
 			jq_jQuery.ajax({
 				type: "POST",
 				url: "<?php echo JURI::root(); ?>index.php?option=com_joomlaquiz&task=ajaxaction.procces",
@@ -184,8 +184,7 @@
 		function action_start() {
 			if (!start) {
 				start = true;
-				setInterval("timerStep()", 1000);
-
+				if (quest_timer_sec && parseInt(quest_timer_sec) > 1) setInterval("timerStep()", 1000);
 				jq_jQuery.ajax({
 					type: "POST",
 					url: "<?php echo JURI::root(); ?>index.php?option=com_joomlaquiz&task=ajaxaction.procces",
@@ -196,6 +195,7 @@
 
 		function timerStep()
 		{
+			quest_timer_sec = parseInt(quest_timer_sec);
 			if(quest_timer_sec <= 0 ){
 				clearInterval(quest_timer);
 				jq_jQuery('#jq_message_box').fadeIn();
@@ -222,6 +222,12 @@
 		{
 			parent.jq_QuizNextOn();
 			parent.SqueezeBox.close();
+		}
+
+		function getPuzzleDifficulty(xml) {
+			PUZZLE_DIFFICULTY = parseInt(jq_jQuery(xml).find('puzzle_difficulty').text());
+			if (PUZZLE_DIFFICULTY) return PUZZLE_DIFFICULTY;
+			else return 4;
 		}
 
 

@@ -43,13 +43,13 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 		}
 		
 		if($cols && $cc && $check_pairs){
-			$qhtml = '<table id="memory_tbl" cellpadding="3" cellspacing="3">';
+			$qhtml = '<table id="memory_tbl" cellpadding="3" cellspacing="3" style="width: 100%;">';
 			for($r=0; $r<=$rows-1; $r++){
 				$qhtml .= '<tr>';
 				for($c = 0; $c <= $cols-1; $c++){
 					$qhtml .= '<td align="center">';
 					$qhtml .= '<a href="javascript:void(0);" onclick="javascript:showimage('.(($cc*$r)+$c).')" style="outline:none;" >';
-					$qhtml .= '<img src="'.JURI::root().'images/joomlaquiz/images/memory/'.$data['q_data']->c_img_cover.'" name="img'.(($cc*$r)+$c).'" border="0" width="'.$q_data->c_width.'" height="'.$data['q_data']->c_height.'" style="'.($q_data->c_width?'width:'.$q_data->c_width.'px;':'').' '.($data['q_data']->c_height?'height:'.$data['q_data']->c_height.'px;':'').'">';
+					$qhtml .= '<img src="'.JURI::root().'images/joomlaquiz/images/memory/'.$data['q_data']->c_img_cover.'" name="img'.(($cc*$r)+$c).'" border="0" width="'.$data['q_data']->c_width.'" height="'.$data['q_data']->c_height.'" style="'.($data['q_data']->c_width?'width:'.$data['q_data']->c_width.'px;':'').' '.($data['q_data']->c_height?'height:'.$data['q_data']->c_height.'px;':'').'">';
 					$qhtml .= '</a></td>';
 				}
 				$qhtml .= '</tr>';

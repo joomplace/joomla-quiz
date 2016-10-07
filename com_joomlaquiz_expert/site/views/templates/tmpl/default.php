@@ -22,6 +22,33 @@ abstract class JoomlaQuizTemplateClass {
 		$document->addStyleSheet(JURI::root().'components/com_joomlaquiz/views/templates/tmpl/'.JoomlaQuiz_template_class::JQ_getTemplateName().'/css/jq_template.css');		
 		$document->addScript(JURI::root()."components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js"); 
 		$document->addScript(JURI::root()."components/com_joomlaquiz/assets/js/raphael.js");
+		$document->addStyleDeclaration('
+        #jq_results_panel_table li > a{
+            border: 1px solid #ddd;
+        }
+        #jq_results_panel_table li > a.correct,
+        #jq_results_panel_table li > a.wrong{
+            color: #fff;
+        }
+        #jq_results_panel_table li > a.wrong{
+            background: red;
+        }
+        #jq_results_panel_table li > a.correct{
+            background: green;
+        }
+        td.jq_input_pos {
+            padding: 1px 6px;
+        }
+        .answered_row{
+            background: #f3dede;
+            border: 1px solid #f12727!important;
+            border-radius: 4px!important;
+        }
+        .correct_answer_row{
+            background: #6fab6f;
+            border: 1px solid #008000!important;
+        }
+        ');
 
 		$live_site = JURI::root();
 		if (JoomlaquizHelper::jq_substr($_SERVER['HTTP_HOST'],0,4) == 'www.') {
@@ -45,6 +72,7 @@ abstract class JoomlaQuizTemplateClass {
 		$hide_result_panel = JText::_('COM_QUIZ_HIDE_RESULT_PANEL');
 		$show_result_panel = JText::_('COM_QUIZ_SHOW_RESULT_PANEL');
 		$flag_question = JText::_('COM_QUIZ_FLAG_QUESTION');
+		$panel_script = self::getPanelScripts();
 		$jq_tmpl_html = <<<EOFTMPL
 		
 <script language="JavaScript" type="text/javascript">
@@ -92,68 +120,7 @@ function JQ_MM_preloadImages() {
 	}
 }
 
-//'jq_results_panel_table' - id of the table with user results
-function jq_ShowPanel_go() {
-	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
-	var jq_quiz_r = jq_getObj('jq_results_panel_table');
-	start_index = 0;
-	end_index = jq_quiz_r.rows.length;
-	if (jq_quiz_r.rows[start_index]) {
-		for (var i=start_index; i<jq_quiz_r.rows.length; i++) {
-			jq_quiz_r.rows[i].style.visibility = 'hidden';
-			//jq_quiz_r.rows[i].style.display = 'none';
-		}
-	}
-	var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
-	if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'hidden'; jq_quiz_c_cont.style.display = 'none'; }
-	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'visible'; jq_quiz_r_c.style.display = 'block'; }
-	if (jq_quiz_r) { jq_quiz_r.style.visibility = 'visible'; }
-	tbl_max_step = end_index;
-	setTimeout("jq_StepShowPanel(0)", 100);
-	jq_jQuery("#jq_panel_link").html("{$hide_result_panel}");
-	jq_jQuery(".jq_quiz_task_container").css("visibility", "hidden");
-}
-
-function jq_StepShowPanel(row_index) {
-	var jq_quiz_r_c = jq_getObj('jq_results_panel_table');
-	if (jq_quiz_r_c.rows[row_index]) {
-		jq_quiz_r_c.rows[row_index].style.visibility = 'visible';
-	}
-	
-	if ((row_index + 1) < tbl_max_step) {
-		setTimeout("jq_StepShowPanel("+(row_index + 1)+")", 100);
-	}
-}
-
-function jq_StepHidePanel(row_index) {
-	var jq_quiz_r_c = jq_getObj('jq_results_panel_table');
-	if (jq_quiz_r_c.rows[row_index]) {
-		jq_quiz_r_c.rows[row_index].style.visibility = 'hidden';
-	}
-	
-	if ((row_index - 1) >= 0) {
-		setTimeout("jq_StepHidePanel("+(row_index - 1)+")", 100);
-	} else {
-		var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
-		if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'hidden'; jq_quiz_r_c.style.display = 'none';}
-		var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
-		if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'visible'; jq_quiz_c_cont.style.display = 'block';}
-		jq_jQuery("#jq_panel_link").html("{$show_result_panel}");
-		jq_jQuery(".jq_quiz_task_container").css("visibility", "visible");
-	}	
-}
-
-function jq_HidePanel_go() {
-	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
-	var jq_quiz_r = jq_getObj('jq_results_panel_table');
-	start_index = 0;
-	end_index = jq_quiz_r.rows.length;
-	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'visible'; jq_quiz_r_c.style.display = 'block';}
-	if (jq_quiz_r) { jq_quiz_r.style.visibility = 'visible'; //jq_quiz_r.style.display = 'table';
-	}
-	tbl_max_step = end_index;
-	setTimeout("jq_StepHidePanel("+end_index+")", 50);
-}
+{$panel_script}
 
 //list here all  template images
 JQ_MM_preloadImages(
@@ -385,7 +352,7 @@ EOFTMPL;
 						{$msg}
 EOF_MSG;
 		return $jq_tmpl_html;
-	} 
+	}
 	
 	public static function JQ_createQuestion($qdata, $data){
 		
@@ -463,14 +430,77 @@ EOF_MSG;
 	}
 	
 	public static function JQ_panel_start(){
-		$panel_str = '<table id="jq_results_panel_table" width="100%" style="padding: 0px 20px 0px 20px">';
+		$panel_str = '<div id="jq_results_panel_table" class="nav nav-pills" width="100%" style="padding: 0px 20px 0px 20px">';
 		
+		return $panel_str;
+	}
+
+	public static function JQ_panel_finish(){
+		$panel_str = '</table>';
+
 		return $panel_str;
 	}
 	
 	public static function JQ_panel_data($panel_row, $all_quests, $cquests, $stu_quiz_id, $k, $n){
-		$panel_str = '<tr class="sectiontableentry'.$k.'"><td><a href="javascript:void(0)" onClick="javascript:JQ_gotoQuestionOn('.$panel_row->c_id.')">'.$panel_row->c_question.'</a></td><td width="25px" align="center"><div id="result_point_'.$panel_row->c_id.'">-</div></td><td width="25px" align="center"><div id="quest_result_'.$panel_row->c_id.'">'.($stu_quiz_id && in_array($panel_row->c_id, $all_quests)? (in_array($panel_row->c_id, $cquests)?"<img src='".JURI::root()."components/com_joomlaquiz/assets/images/tick.png' border=0>":"<img src='".JURI::root()."components/com_joomlaquiz/assets/images/publish_x.png' border=0>"):'-').'</div></td></tr>';
-		
+	    ob_start();
+        ?>
+        <li>
+            <a class="<?php echo ($stu_quiz_id && in_array($panel_row->c_id, $all_quests)? (in_array($panel_row->c_id, $cquests)?'correct':'wrong'):'') ?> hasTip" title="<?php //echo ($panel_row->c_question); ?>" id="quest_result_<?php echo $panel_row->c_id ?>" href="javascript:void(0)" onclick="JQ_gotoQuestionOn(<?php echo $panel_row->c_id ?>)"><?php echo $n ?></a>
+        </li>
+        <?php
+        $panel_str = ob_get_contents();
+        ob_end_clean();
+		//$panel_str = '<tr class="sectiontableentry'.$k.'"><td><a href="javascript:void(0)" onClick="javascript:JQ_gotoQuestionOn('.$panel_row->c_id.')">'.$panel_row->c_question.'</a></td><td width="25px" align="center"><div id="result_point_'.$panel_row->c_id.'">-</div></td><td width="25px" align="center"><div id="quest_result_'.$panel_row->c_id.'">'.($stu_quiz_id && in_array($panel_row->c_id, $all_quests)? (in_array($panel_row->c_id, $cquests)?"<img src='".JURI::root()."components/com_joomlaquiz/assets/images/tick.png' border=0>":"<img src='".JURI::root()."components/com_joomlaquiz/assets/images/publish_x.png' border=0>"):'-').'</div></td></tr>';
 		return $panel_str;
+	}
+
+	public static function getPanelScripts($show_result_panel='',$hide_result_panel=''){
+		return "
+function jq_ShowPanel_go() {
+	
+	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
+	var jq_quiz_r = jq_getObj('jq_results_panel_table');
+	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'visible'; jq_quiz_r_c.style.display = 'block'; }
+	if (jq_quiz_r) { jq_quiz_r.style.visibility = 'visible'; }
+	jq_jQuery(\"#jq_panel_link\").html(\"".$hide_result_panel."\");
+}
+
+function jq_StepShowPanel(row_index) {
+	var jq_quiz_r_c = jq_getObj('jq_results_panel_table');
+	if (jq_quiz_r_c.rows[row_index]) {
+		jq_quiz_r_c.rows[row_index].style.visibility = 'visible';
+	}
+	
+	if ((row_index + 1) < tbl_max_step) {
+		setTimeout(\"jq_StepShowPanel(\"+(row_index + 1)+\")\", 100);
+	}
+}
+
+function jq_StepHidePanel(row_index) {
+	var jq_quiz_r_c = jq_getObj('jq_results_panel_table');
+	if (jq_quiz_r_c.rows[row_index]) {
+		jq_quiz_r_c.rows[row_index].style.visibility = 'hidden';
+	}
+	
+	if ((row_index - 1) >= 0) {
+		setTimeout(\"jq_StepHidePanel(\"+(row_index - 1)+\")\", 100);
+	} else {
+	}	
+}
+
+function jq_HidePanel_go() {
+	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
+	var jq_quiz_r = jq_getObj('jq_results_panel_table');
+	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'visible'; jq_quiz_r_c.style.display = 'block';}
+	if (jq_quiz_r) { jq_quiz_r.style.visibility = 'visible'; jq_quiz_r.style.display = 'block';
+	}
+    var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
+    if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'hidden'; jq_quiz_r_c.style.display = 'none';}
+    var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
+    if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'visible'; jq_quiz_c_cont.style.display = 'block';}
+    jq_jQuery(\"#jq_panel_link\").html(\"".$show_result_panel."\");
+    jq_jQuery(\".jq_quiz_task_container\").css(\"visibility\", \"visible\");
+}
+		";
 	}
 }

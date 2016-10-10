@@ -339,9 +339,17 @@ class JoomlaquizModelQuestions extends JModelList
 				$query->where('(a.c_question LIKE '.$search.')');
 			}
 		}
-				
-		$quiz_id = $this->getState('filter.quiz_id');
+
+		$app = JFactory::getApplication();
+		$filter_quiz_id = $app->getUserState('filter_quiz_id');
 		
+		if (!$filter_quiz_id) {
+			$quiz_id = $this->getState('filter.quiz_id');
+		}
+		else {
+			$quiz_id = $filter_quiz_id;
+		}
+
 		if(isset($_REQUEST['quiz_id']) && $_REQUEST['quiz_id'] != ''){
 			$this->setState('filter.quiz_id', $_REQUEST['quiz_id']);
 			$quiz_id = $_REQUEST['quiz_id'];

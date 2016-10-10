@@ -80,7 +80,12 @@ class JoomlaquizViewQuestions extends JViewLegacy
 				$submenu = 'questions';
 				JoomlaquizHelper::showTitle($submenu);
 				$this->addToolBar();
-					
+
+				if(isset($_REQUEST['quiz_id']) && $app->getUserState('quizzes.filter.quiz_id') != $_REQUEST['quiz_id'])
+				{
+					$app->setUserState('filter_quiz_id', $_REQUEST['quiz_id'] );
+				}
+
 				$items 		= $this->get('Items');
 				$pagination = $this->get('Pagination');
 				$state		= $this->get('State');
@@ -105,11 +110,6 @@ class JoomlaquizViewQuestions extends JViewLegacy
 					'filter_enabled',
 					$enabledFields
 				);
-				
-				if(isset($_REQUEST['quiz_id']) && $app->getUserState('quizzes.filter.quiz_id') != $_REQUEST['quiz_id'])
-				{
-					$app->setUserState('quizzes.filter.quiz_id', $_REQUEST['quiz_id'] );
-				}
 
 				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
 

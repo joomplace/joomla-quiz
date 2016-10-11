@@ -145,7 +145,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$min = 0;
         $query = "SELECT COUNT(`lq`.`qid`) as `c`"
             ."\n FROM `#__quiz_lpath_quiz` as `lq`"
-            ."\n LEFT JOIN `jos_quiz_products` as `p` on `p`.`id` = '".$rel_id."'"
+            ."\n LEFT JOIN `#__quiz_products` as `p` on `p`.`id` = '".$rel_id."'"
             ."\n LEFT JOIN `#__quiz_payments` as `pm` on `pm`.`pid` = `p`.`pid`"
             ."\n WHERE `lq`.`lid` = `p`.`rel_id` AND `pm`.`user_id` = '".$user->id."'"
 			;
@@ -154,7 +154,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 
         $query = "SELECT COUNT(`r`.`c_id`) AS `left`"
             ."\n FROM `#__quiz_r_student_quiz` as `r`"
-            ."\n LEFT JOIN `jos_quiz_products` as `p` on `p`.`id` = '".$rel_id."'"
+            ."\n LEFT JOIN `#__quiz_products` as `p` on `p`.`id` = '".$rel_id."'"
             ."\n WHERE `r`.`c_rel_id` = `p`.`id` AND `r`.`c_student_id` = '".$user->id."'"
             ."\n GROUP BY `r`.`c_quiz_id`";
         $database->setQuery($query);

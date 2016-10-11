@@ -92,10 +92,17 @@ function Dalliclick_init()
 {
 	var quest_task = jq_jQuery(response).find('quest_task').text();
 	var div_width = jq_jQuery('.dc_layout').width();
+	var img_width_source = jq_jQuery(response).find('img_width_source').text();
+	var img_height_source = jq_jQuery(response).find('img_height_source').text();
 	var proportion = img_height / img_width;
 
-	var new_img_width = div_width;
-	var new_img_height = div_width * proportion;
+	if (div_width > img_width_source && img_width_source) {
+		var new_img_width = img_width_source;
+		var new_img_height = img_width_source * proportion;
+	} else {
+		var new_img_width = div_width;
+		var new_img_height = div_width * proportion;
+	}
 
 	dc_h = new_img_height / 5;
 	dc_html = '';
@@ -145,6 +152,7 @@ function Dalliclick_init()
 	if (quest_task == 'no_attempts'){
 		jq_jQuery('.dc_button').attr('disabled', 'disabled');
 	}
+	jq_jQuery('.dc_button').css('width', new_img_width+'px');
 }
 
 function readyCounter()

@@ -17,7 +17,7 @@ class JoomlaquizViewCreateDalliclick
 	public static function getQuestionContent($qdata, $data){
 		
 		$jq_tmpl_html = "<input type='hidden' value='0' name='c_qform'  /> \n ";
-		$jq_tmpl_html .= "<div class='dc_buttons_container'><table align='left' class='jq_mchoice'> \n";
+		$jq_tmpl_html .= "<div class='dc_buttons_container'><table class='jq_mchoice'> \n";
 		foreach ($qdata as $qone) {
 			if (!isset($qone->text)) continue;
 					

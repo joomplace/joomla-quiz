@@ -142,16 +142,28 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$database->setQuery($query);
 			return $database->loadResult();
 		}
-		$query = "SELECT IF(`r`.`c_id`,`p`.`attempts` - COUNT(`lq`.`qid`),`p`.`attempts`) AS `attempts_left`, `lq`.*,`r`.*,`p`.*,`pm`.`user_id`"
-				."\n FROM `#__quiz_lpath_quiz` AS `lq`"
-				."\n LEFT JOIN `#__quiz_r_student_quiz` AS `r` ON `r`.`c_quiz_id` = `lq`.`qid`"
-				."\n LEFT JOIN `#__quiz_products` AS `p` ON `lq`.`lid` = `p`.`rel_id`"
-				."\n LEFT JOIN `#__quiz_payments` AS `pm` ON `pm`.`id` = `p`.`rel_id`"
-				."\n WHERE `pm`.`user_id` = ".$user->id
-				."\n GROUP BY `lq`.`qid`";
-		$database->setQuery($query);
-		$c = $database->loadObject();
-		return $c->attempts - $c->attempts_left;
+		$min = 0;
+        $query = "SELECT COUNT(`lq`.`qid`) as `c`"
+            ."\n FROM `#__quiz_lpath_quiz` as `lq`"
+            ."\n LEFT JOIN `jos_quiz_products` as `p` on `p`.`id` = '".$rel_id."'"
+            ."\n LEFT JOIN `#__quiz_payments` as `pm` on `pm`.`pid` = `p`.`pid`"
+            ."\n WHERE `lq`.`lid` = `p`.`rel_id` AND `pm`.`user_id` = '".$user->id."'"
+			;
+        $database->setQuery($query);
+        $c = $database->loadResult();
+
+        $query = "SELECT COUNT(`r`.`c_id`) AS `left`"
+            ."\n FROM `#__quiz_r_student_quiz` as `r`"
+            ."\n LEFT JOIN `jos_quiz_products` as `p` on `p`.`id` = '".$rel_id."'"
+            ."\n WHERE `r`.`c_rel_id` = `p`.`id` AND `r`.`c_student_id` = '".$user->id."'"
+            ."\n GROUP BY `r`.`c_quiz_id`";
+        $database->setQuery($query);
+        $data = $database->loadColumn();
+
+        if(count($data) == (int)$c){
+            $min = min($data);
+        }
+		return $min;
 	}
 	
 	public function JQ_StartQuiz() {

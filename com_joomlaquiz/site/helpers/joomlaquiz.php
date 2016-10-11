@@ -528,34 +528,43 @@ class JoomlaquizHelper
 		{
 			$user = JFactory::getUser();
 			$database = JFactory::getDBO();
-			$query = "SELECT  COUNT(`q`.`c_id`) as `count`, `q`.*,`p`.*,`pm`.*"
+			$query = "SELECT  COUNT(`q`.`c_id`) as `c`, `p`.`attempts`"
 					."\n FROM `#__quiz_r_student_quiz` as `q`"
-					."\n RIGHT JOIN `#__quiz_products` AS `p` ON  `p`.`id` = `q`.`c_rel_id`"
-					."\n LEFT JOIN `#__quiz_payments` AS `pm` ON `pm`.`user_id` = `q`.`c_student_id`"
-					."\n WHERE `q`.`c_quiz_id` = '".$qid."'"
+					."\n LEFT JOIN `#__quiz_products` AS `p` ON  `p`.`rel_id` = '".$rel_id."'"
+					."\n INNER JOIN `#__quiz_payments` AS `pm` ON `pm`.`user_id` = '".$user->id."'"
+					."\n WHERE `q`.`c_quiz_id` = '".$qid."' AND `q`.`c_student_id` = '".$user->id."' AND `q`.`c_rel_id` = `p`.`id`"
 					;
 			$database->setQuery($query);
-			$data = $database->loadAssoc();
-			if($data["count"] < $data["attempts"] || !$data["count"]){
+			$data = $database->loadObject();
+
+			if($data->c < $data->attempts || !$data->c || !$data->attempts){
 				return true;
 			}
 			return false;
 		}
 		
-		public function getLPAttempts()
+		public function getLPAttempts($rel_id, $attempts)
 		{
 			$user = JFactory::getUser();
 			$database = JFactory::getDBO();
-			$query = "SELECT IF(`r`.`c_id`,`p`.`attempts` - COUNT(`lq`.`qid`),`p`.`attempts`) AS `attempts_left`, `lq`.*,`r`.*,`p`.*,`pm`.`user_id`"
-					."\n FROM `#__quiz_lpath_quiz` AS `lq`"
-					."\n LEFT JOIN `#__quiz_r_student_quiz` AS `r` ON `r`.`c_quiz_id` = `lq`.`qid`"
-					."\n LEFT JOIN `#__quiz_products` AS `p` ON `lq`.`lid` = `p`.`rel_id`"
-					."\n LEFT JOIN `#__quiz_payments` AS `pm` ON `pm`.`id` = `p`.`rel_id`"
-					."\n WHERE `pm`.`user_id` = '".$user->id."'"
-					."\n GROUP BY `lq`.`qid`";
-			$database->setQuery($query);
-			$c = $database->loadObject();
-			if ($c->attempts_left || !$c){
+			$query = "SELECT COUNT(`lq`.`qid`) as `c`"
+						."\n FROM `#__quiz_lpath_quiz` as `lq`"
+						."\n LEFT JOIN `#__quiz_products` as `p` on `p`.`rel_id` = `lq`.`lid`"
+						."\n LEFT JOIN `#__quiz_payments` as `pm` on `pm`.`pid` = `p`.`pid`"
+						."\n WHERE `lq`.`lid` = '".$rel_id."' AND `pm`.`user_id` = '".$user->id."'"
+						;
+            $database->setQuery($query);
+            $count = $database->loadResult();
+
+            $query = "SELECT COUNT(`r`.`c_id`) AS `left`"
+                    ."\n FROM `#__quiz_r_student_quiz` as `r`"
+                    ."\n LEFT JOIN `#__quiz_products` as `p` on `p`.`rel_id` = '".$rel_id."'"
+                    ."\n WHERE `r`.`c_rel_id` = `p`.`id` AND `r`.`c_student_id` = '".$user->id."'"
+                    ."\n GROUP BY `r`.`c_quiz_id`";
+            $database->setQuery($query);
+            $data = $database->loadColumn();
+
+			if (min($data) <  $attempts || !$data || !$attempts || count($data) < $count ){
 				return false;
 			}
 			return true;

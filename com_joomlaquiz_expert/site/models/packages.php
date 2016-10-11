@@ -420,8 +420,8 @@ class JoomlaquizModelPackages extends JModelList
 								$data->expired = true;
 								
 							}
-							if(JoomlaquizHelper::getLPAttempts()){
-								$data->expired = true;
+							if(!JoomlaquizHelper::getLPAttempts($data->rel_id, $attempts)){
+								$data->expired = false;
 							}
 						}
 						if ($data->expired)
@@ -453,7 +453,7 @@ class JoomlaquizModelPackages extends JModelList
 				$package->expired = true;
 			}
 
-			if(!JoomlaquizHelper::getLPAttempts()){
+			if(!JoomlaquizHelper::getLPAttempts($data->rel_id, $attempts)){
 				$package->expired = false;
 			}
 

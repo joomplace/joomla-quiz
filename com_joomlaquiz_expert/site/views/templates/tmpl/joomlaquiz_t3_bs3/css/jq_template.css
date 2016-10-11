@@ -1047,9 +1047,9 @@ td.jq_calculus_custom_empty_cell{
 .lt-ie8 .square {
 	behavior:url(/components/com_joomlaquiz/boxsizing.php);
 }
-.dc_buttons_container {
+/*.dc_buttons_container {
     margin-left: 10px;
-}
+}*/
 
 .dc_buttons_container table
 {
@@ -1145,7 +1145,7 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 	margin:auto;
 }
 .dc_buttons_container .jq_input_pos {
-	padding: 5px 10px;
+	padding: 5px 0;
 }
 .jq_survey
 {

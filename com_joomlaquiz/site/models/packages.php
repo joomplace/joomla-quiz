@@ -420,8 +420,10 @@ class JoomlaquizModelPackages extends JModelList
 								$data->expired = true;
 								
 							}
-							if(!JoomlaquizHelper::getLPAttempts($data->rel_id, $attempts)){
-								$data->expired = false;
+							if ($lpath[$data->rel_id]->paid_check) {
+								if(!JoomlaquizHelper::getLPAttempts($data->rel_id, $attempts)){
+									$data->expired = false;
+								}
 							}
 						}
 						if ($data->expired)
@@ -452,10 +454,11 @@ class JoomlaquizModelPackages extends JModelList
 			) {
 				$package->expired = true;
 			}
-			if(!JoomlaquizHelper::getLPAttempts($data->rel_id, $attempts)){
-				$package->expired = false;
+			if ($lpath[$data->rel_id]->paid_check) {
+				if(!JoomlaquizHelper::getLPAttempts($data->rel_id, $attempts)){
+					$package->expired = false;
+				}
 			}
-
 			$packages[] = $package;
 			unset($package);
 		}

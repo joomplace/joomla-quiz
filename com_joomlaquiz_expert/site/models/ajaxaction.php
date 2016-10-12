@@ -448,7 +448,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					{
 						if(count($q_data))
 						{
-							$chain_str = $this->chainGenerate($q_data);
+							$chain_str = $this->chainGenerate($q_data, false);
 
 							if(strlen($chain_str))
 								{

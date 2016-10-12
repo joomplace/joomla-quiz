@@ -448,7 +448,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 					{
 						if(count($q_data))
 						{
-							$chain_str = $this->chainGenerate($q_data, false);
+							foreach($q_data as $q_num)
+							{
+								$chain_str .= $q_num->c_id."*";
+							}
+
+							$chain_str = $chain_str ? $chain_str : $this->chainGenerate($q_data, false);
 
 							if(strlen($chain_str))
 								{

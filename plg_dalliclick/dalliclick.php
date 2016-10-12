@@ -57,6 +57,9 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 				if($img_data[0] == $img_data[1]){
 					$w = $h = $width;
 				}
+			} else {
+				$w = $width;
+				$h = ($img_data[1] / $img_data[0]) * $width;
 			}
 		}					
 		$dc_img = base64_encode(JURI::root()."images/joomlaquiz/images/".$data['q_data']->c_image);

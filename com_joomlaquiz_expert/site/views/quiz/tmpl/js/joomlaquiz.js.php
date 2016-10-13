@@ -1925,7 +1925,7 @@ function jq_UpdateTaskDiv(task, skip_question) {
 
 	jq_jQuery('.jq_quiz_task_container').html(task_container);
 
-	<?php if ($quiz->c_slide) { ?>
+	<?php if ($quiz->c_slide && 0) { ?>
 	if (result_is_shown == 1) { jq_ShowPanel(); }
 	<?php } ?>
 	if (task == 'finish') {

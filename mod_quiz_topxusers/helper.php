@@ -19,7 +19,7 @@ class modTopxusersHelper
 	 */
 	public static function getResult(&$params)
 	{
-		$database = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$my = JFactory::getUser();
 		
 		$result = array();
@@ -29,21 +29,37 @@ class modTopxusersHelper
 		if ($v_content_count == 0) {
 			$v_content_count = 5;
 		}
-		
-		$query = "SELECT qtq.c_title, qrsq.c_total_score, u.name, u.username, u.id FROM #__quiz_t_quiz qtq, #__quiz_r_student_quiz qrsq, #__users u WHERE qtq.c_id = qrsq.c_quiz_id and qrsq.c_passed = '1' and qrsq.c_student_id = u.id ";
+
+		$query = $db->getQuery(true);
+		$query->select(array('qtq.c_title, qrsq.c_total_score, u.name, qrsq.user_name as username, u.id'));
+		$query->from($db->qn('#__quiz_r_student_quiz', 'qrsq'));
 		if ($quiz_id) {
 			$quiz_ids = explode( ',', $quiz_id );
 			if(count($quiz_ids)){
-				$query .= "\n AND ( qtq.c_id=" . implode( " OR qtq.c_id=", $quiz_ids ) . " )";
+				$query->join('LEFT', $db->qn('#__quiz_t_quiz', 'qtq') . ' ON (' . $db->qn('qtq.c_id') . ' = ' . $db->qn('qrsq.c_quiz_id') . ') AND ( qtq.c_id=' . implode( ' OR qtq.c_id=', $quiz_ids ) . ' )');
+
+				foreach ($quiz_ids as $key => $value) {
+					$quiz_ids[$key] = $db->q($value);
+				}
+
+				$query->where($db->qn('qtq.c_id') . ' IN (' . implode(',',$quiz_ids).')');
 			}
 		}
-		$query .= "ORDER BY qrsq.c_total_score DESC, u.name ASC LIMIT 0,".$v_content_count;
-		$database->SetQuery($query);
-		$result = $database->LoadObjectList();
+		else {
+			$query->join('LEFT', $db->qn('#__quiz_t_quiz', 'qtq') . ' ON (' . $db->qn('qtq.c_id') . ' = ' . $db->qn('qrsq.c_quiz_id') . ')');
+		}
+
+		$query->join('LEFT', $db->qn('#__users', 'u') . ' ON (' . $db->qn('u.id') . ' = ' . $db->qn('qrsq.c_student_id') . ')');
+		$query->where($db->qn('qrsq.c_passed') . ' =  1', 'AND');
+		$query->where($db->qn('qrsq.user_name') . ' !=  ""');
+		$query->order($db->qn('qrsq.c_total_score') . ' DESC');
+		$query->order($db->qn('u.name') . ' ASC');
+
+		$db->SetQuery($query, 0, $v_content_count);
+		$result = $db->LoadObjectList();
 		if (count($result) == 0) {
 			$result = array(); 
-		}		
-		
+		}
 		return $result;
 	}
 }

@@ -49,7 +49,7 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 				for($c = 0; $c <= $cols-1; $c++){
 					$qhtml .= '<td align="center">';
 					$qhtml .= '<a href="javascript:void(0);" onclick="javascript:showimage('.(($cc*$r)+$c).')" style="outline:none;" >';
-					$qhtml .= '<img src="'.JURI::root().'images/joomlaquiz/images/memory/'.$data['q_data']->c_img_cover.'" name="img'.(($cc*$r)+$c).'" border="0" width="'.$data['q_data']->c_width.'" height="'.$data['q_data']->c_height.'" style="'.($data['q_data']->c_width?'width:'.$data['q_data']->c_width.'px;':'width: auto;').' '.($data['q_data']->c_height?'height:'.$data['q_data']->c_height.'px;':'').'">';
+					$qhtml .= '<img src="'.JURI::root().'images/joomlaquiz/images/memory/'.$data['q_data']->c_img_cover.'" name="img'.(($cc*$r)+$c).'" border="0" style="'.($data['q_data']->c_width ? 'width:'.$data['q_data']->c_width.'px;' : 'width: auto;').' '.($data['q_data']->c_height ? 'height:'.$data['q_data']->c_height.'px;' : '').'">';
 					$qhtml .= '</a></td>';
 				}
 				$qhtml .= '</tr>';

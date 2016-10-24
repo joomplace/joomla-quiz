@@ -79,7 +79,31 @@ class JoomlaquizModelPrintcert extends JModelList
 				$database->SetQuery("SELECT * FROM #__quiz_certificates WHERE id = '".$stu_quiz->c_certificate."'");
 				$certif = $database->LoadObjectList();
 				$certif = $certif[0];
-				
+
+				$preg = array();
+				preg_match_all ('{answerfor#(\d*)}', $certif->crtf_text, $preg);
+
+				if ($preg[1]) {
+					$survey_type = '8';
+					foreach ($preg[1] as $q_id) {
+						$query = $database->getQuery(true);
+						$query->select($database->qn(array('qrss.c_answer')));
+						$query->from($database->qn('#__quiz_r_student_question', 'qrsq'));
+						$query->join('LEFT', $database->qn('#__quiz_r_student_survey', 'qrss') . ' ON (' . $database->qn('qrsq.c_id') . ' = ' . $database->qn('qrss.c_sq_id') . ')');
+						$query->join('LEFT', $database->qn('#__quiz_t_question', 'qtq') . ' ON (' . $database->qn('qtq.c_id') . ' = ' . $database->qn('qrsq.c_question_id') . ')');
+						$query->where($database->qn('qrsq.c_question_id') . ' = ' . $database->q($q_id));
+						$query->where($database->qn('qrsq.c_stu_quiz_id') . ' = ' . $database->q($stu_quiz_id));
+						$query->where($database->qn('qtq.c_type') . ' = ' . $database->q($survey_type));
+						$query->order('qrsq.c_id DESC');
+
+						$database->SetQuery( $query );
+						$quest = $database->loadObject();
+						if ($quest) {
+							$certif->crtf_text = preg_replace('/{answerfor#' . $q_id . '}/', $quest->c_answer, $certif->crtf_text);
+						}
+					}
+				}
+
 				$loadFile = JPATH_SITE . "/images/joomlaquiz/images/" . $certif->cert_file;
 				$im_fullsize = getimagesize($loadFile);
 				if ($im_fullsize[2] == 1) {
@@ -252,6 +276,30 @@ class JoomlaquizModelPrintcert extends JModelList
 				$ad = 0;		
 				if (is_array($fields) && count($fields)) {
 					foreach($fields as $field){
+
+						$preg = array();
+						preg_match_all ('{answerfor#(\d*)}', $field->f_text, $preg);
+
+						if ($preg[1]) {
+							$survey_type = '8';
+							foreach ($preg[1] as $q_id) {
+								$query = $database->getQuery(true);
+								$query->select($database->qn(array('qrss.c_answer')));
+								$query->from($database->qn('#__quiz_r_student_question', 'qrsq'));
+								$query->join('LEFT', $database->qn('#__quiz_r_student_survey', 'qrss') . ' ON (' . $database->qn('qrsq.c_id') . ' = ' . $database->qn('qrss.c_sq_id') . ')');
+								$query->join('LEFT', $database->qn('#__quiz_t_question', 'qtq') . ' ON (' . $database->qn('qtq.c_id') . ' = ' . $database->qn('qrsq.c_question_id') . ')');
+								$query->where($database->qn('qrsq.c_question_id') . ' = ' . $database->q($q_id));
+								$query->where($database->qn('qrsq.c_stu_quiz_id') . ' = ' . $database->q($stu_quiz_id));
+								$query->where($database->qn('qtq.c_type') . ' = ' . $database->q($survey_type));
+								$query->order('qrsq.c_id DESC');
+
+								$database->SetQuery( $query );
+								$quest = $database->loadObject();
+								if ($quest) {
+									$field->f_text = preg_replace('/{answerfor#' . $q_id . '}/', $quest->c_answer, $field->f_text);
+								}
+							}
+						}
 					
 						$field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text),$stu_quiz,'');
 						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);

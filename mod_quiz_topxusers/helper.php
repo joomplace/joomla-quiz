@@ -25,13 +25,14 @@ class modTopxusersHelper
 		$result = array();
 		$v_content_count 	= intval( $params->get( 'quiz_count', 10 ) );
 		$quiz_id		 	= trim( $params->get( 'quizid' ) );
+		$m_user_display     = intval( $params->get( 'user_display', 0 ) );
 		
 		if ($v_content_count == 0) {
 			$v_content_count = 5;
 		}
 
 		$query = $db->getQuery(true);
-		$query->select(array('qrsq.c_id, qtq.c_title, qrsq.c_total_score, u.name, qrsq.user_name as username, u.id'));
+		$query->select(array('qrsq.c_id, qtq.c_title, qrsq.c_total_score, u.name, u.username as alt_username, qrsq.user_name as username, u.id'));
 		$query->from($db->qn('#__quiz_r_student_quiz', 'qrsq'));
 		if ($quiz_id) {
 			$quiz_ids = explode( ',', $quiz_id );
@@ -57,6 +58,13 @@ class modTopxusersHelper
 
 		$db->SetQuery($query, 0, $v_content_count);
 		$result = $db->LoadObjectList();
+
+		if (!$m_user_display) {
+			foreach ($result as $i => $user) {
+				$result[$i]->username = $result[$i]->username ? $result[$i]->username : $result[$i]->alt_username;
+			}
+		}
+
 		if (count($result) == 0) {
 			$result = array(); 
 		}

@@ -31,7 +31,7 @@ class modTopxusersHelper
 		}
 
 		$query = $db->getQuery(true);
-		$query->select(array('qtq.c_title, qrsq.c_total_score, u.name, qrsq.user_name as username, u.id'));
+		$query->select(array('qrsq.c_id, qtq.c_title, qrsq.c_total_score, u.name, qrsq.user_name as username, u.id'));
 		$query->from($db->qn('#__quiz_r_student_quiz', 'qrsq'));
 		if ($quiz_id) {
 			$quiz_ids = explode( ',', $quiz_id );
@@ -53,7 +53,7 @@ class modTopxusersHelper
 		$query->where($db->qn('qrsq.c_passed') . ' =  1', 'AND');
 		$query->where($db->qn('qrsq.user_name') . ' !=  ""');
 		$query->order($db->qn('qrsq.c_total_score') . ' DESC');
-		$query->order($db->qn('u.name') . ' ASC');
+		$query->order($db->qn('qrsq.c_id') . ' DESC');
 
 		$db->SetQuery($query, 0, $v_content_count);
 		$result = $db->LoadObjectList();

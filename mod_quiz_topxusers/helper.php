@@ -63,6 +63,10 @@ class modTopxusersHelper
 			foreach ($result as $i => $user) {
 				$result[$i]->username = $result[$i]->username ? $result[$i]->username : $result[$i]->alt_username;
 			}
+		} else {
+			foreach ($result as $i => $user) {
+				$result[$i]->name = $result[$i]->name ? $result[$i]->name : JText::_('MOD_JOOMLAQUIZ_MOD_GUEST');
+			}
 		}
 
 		if (count($result) == 0) {

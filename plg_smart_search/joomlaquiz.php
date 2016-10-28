@@ -57,33 +57,18 @@ class PlgFinderJoomlaquiz extends FinderIndexerAdapter
 	 */
 	protected function index(FinderIndexerResult $item, $format = 'html')
 	{
-		/*
+		
 		if (JComponentHelper::isEnabled($this->extension) == false)
 		{
 		    return;
 		}
-		*/
+		
 
 		// Prepare the item
 		$item->access = 1;
 
 		// Define these items as songs
 		$item->addTaxonomy('Type', 'Joomlaquiz');
-
-		// Add artist information
-		//$item->addInstruction(FinderIndexer::META_CONTEXT, 'artist');
-		//$item->addTaxonomy('Artist', $item->artist);
-
-		// Set language
-		//$item->setLanguage();
-		//$item->addTaxonomy('Language', $item->language);
-
-		//$item->id = $item->c_id;
-		//unset($item->c_id);
-		//$item->title = $item->c_title;
-		//unset($item->c_title);
-		///$item->description = $item->c_description;
-		//unset($item->c_description);
 
 		// Set URLs
 		$item->route = 'index.php?option=com_joomlaquiz&view=quiz&quiz_id=' . $item->id;
@@ -104,8 +89,7 @@ class PlgFinderJoomlaquiz extends FinderIndexerAdapter
 	 */
 	protected function setup()
 	{
-		//require_once JPATH_SITE.'/components/com_music/helpers/route.php';
-
+		
 		return true;
 	}
 
@@ -119,18 +103,10 @@ class PlgFinderJoomlaquiz extends FinderIndexerAdapter
 	protected function getListQuery($query = null)
 	{
 		$db = JFactory::getDbo();
-
 		$query = $db->getQuery(true);
 		$query->select('a.c_id as id, a.c_title as title, a.c_description as description, a.published');
-		//$query->select('a.c_id, a.c_title, a.c_description, a.published');
-		//$query->select('p.name AS artist');
 		$query->from($db->quoteName($this->table, 'a'));
-		//$query->innerJoin($db->quoteName('#__music_artists', 'p')
-		//	. ' ON (' . $db->quoteName('a.artist_id') . '=' . $db->quoteName('p.id') . ')');
-
-		//$debugQuery = str_replace('#__', $db->getPrefix(), trim($query));
-		//echo "[SONGS]\n" . $debugQuery . "\n[/SONGS]\n";
-
+		
 		return $query;
 	}
 

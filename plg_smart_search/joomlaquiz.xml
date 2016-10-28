@@ -18,12 +18,4 @@
 		<language tag="en-GB">en-GB.plg_finder_joomlaquiz.ini</language>
 		<language tag="en-GB">en-GB.plg_finder_joomlaquiz.sys.ini</language>
 	</languages>
-
-	<config>
-	    <fields name="params">
-		    <fieldset name="basic">
-		        <field name="test" type="email" />
-            </fieldset>
-        </fields>
-    </config>
 </extension>

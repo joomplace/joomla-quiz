@@ -25,13 +25,14 @@ class modTopxusersHelper
 		$result = array();
 		$v_content_count 	= intval( $params->get( 'quiz_count', 10 ) );
 		$quiz_id		 	= trim( $params->get( 'quizid' ) );
+		$m_user_display     = intval( $params->get( 'user_display', 0 ) );
 		
 		if ($v_content_count == 0) {
 			$v_content_count = 5;
 		}
 
 		$query = $db->getQuery(true);
-		$query->select(array('qtq.c_title, qrsq.c_total_score, u.name, qrsq.user_name as username, u.id'));
+		$query->select(array('qrsq.c_id, qtq.c_title, qrsq.c_total_score, u.name, u.username as alt_username, qrsq.user_name as username, u.id'));
 		$query->from($db->qn('#__quiz_r_student_quiz', 'qrsq'));
 		if ($quiz_id) {
 			$quiz_ids = explode( ',', $quiz_id );
@@ -53,10 +54,21 @@ class modTopxusersHelper
 		$query->where($db->qn('qrsq.c_passed') . ' =  1', 'AND');
 		$query->where($db->qn('qrsq.user_name') . ' !=  ""');
 		$query->order($db->qn('qrsq.c_total_score') . ' DESC');
-		$query->order($db->qn('u.name') . ' ASC');
+		$query->order($db->qn('qrsq.c_id') . ' DESC');
 
 		$db->SetQuery($query, 0, $v_content_count);
 		$result = $db->LoadObjectList();
+
+		if (!$m_user_display) {
+			foreach ($result as $i => $user) {
+				$result[$i]->username = $result[$i]->username ? $result[$i]->username : $result[$i]->alt_username;
+			}
+		} else {
+			foreach ($result as $i => $user) {
+				$result[$i]->name = $result[$i]->name ? $result[$i]->name : JText::_('MOD_JOOMLAQUIZ_MOD_GUEST');
+			}
+		}
+
 		if (count($result) == 0) {
 			$result = array(); 
 		}

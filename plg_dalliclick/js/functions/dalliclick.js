@@ -91,6 +91,20 @@ var Base64 = {
 function Dalliclick_init()
 {
 	var quest_task = jq_jQuery(response).find('quest_task').text();
+	var div_width = jq_jQuery('.dc_layout').width();
+	var img_width_source = jq_jQuery(response).find('img_width_source').text();
+	var img_height_source = jq_jQuery(response).find('img_height_source').text();
+	var proportion = img_height / img_width;
+
+	if (div_width > img_width_source && img_width_source) {
+		var new_img_width = img_width_source;
+		var new_img_height = img_width_source * proportion;
+	} else {
+		var new_img_width = div_width;
+		var new_img_height = div_width * proportion;
+	}
+
+	dc_h = new_img_height / 5;
 	dc_html = '';
 	dc_c = 1;
 	squares = new Array();
@@ -106,33 +120,39 @@ function Dalliclick_init()
 	for (var i=1; i<=5; i++){
 		for(var j=1; j<=5; j++){
 			squares.push(dc_c);
-			dc_html += '<div class="square" id="sq_'+dc_c+'" style="width:20%;height:'+(dc_h+1)+'px;"></div>';
+			dc_html += '<div class="square" id="sq_'+dc_c+'" style="width:'+new_img_width/5+'px;height:'+(dc_h+1)+'px;"></div>';
 			++dc_c;
 		}
 		dc_html += '<div class="dc_clear"><!--x--></div>';
 	}
-	jq_jQuery('.cover').prepend(dc_html);
+	jq_jQuery('.cover').prepend(dc_html)
+		.css('width', new_img_width)
+		.css('height', new_img_height);
 	if(quest_task == 'no_attempts'){
 		jq_jQuery('.square').css('opacity', 0);
 	}
 	var imgSrc = Base64.decode(jq_jQuery('#imgSrc').val());
 	var dc_image = document.getElementById("dc_image");
 	if((jq_jQuery.browser.msie && jq_jQuery.browser.version < 9) || jq_jQuery.browser.opera){
-		jq_jQuery("<img src='"+imgSrc+"' class='dc_image' width='"+img_width+"' height='"+img_height+"' />").insertBefore(jq_jQuery('#imgSrc'));
+		jq_jQuery("<img src='"+imgSrc+"' class='dc_image' width='"+new_img_width+"' height='"+new_img_height+"' />").insertBefore(jq_jQuery('#imgSrc'));
 	} else {
 		var ctx = dc_image.getContext('2d');
 		var pic = new Image();
 		pic.src = imgSrc;
+		dc_image.width = new_img_width;
+		dc_image.height = new_img_height;
 		pic.onload = function() {
-			ctx.drawImage(pic, 0, 0, img_width, img_height);
+			ctx.drawImage(pic, 0, 0, new_img_width, new_img_height);
 		}
 	}
+
 	if (quest_task != 'no_attempts'){
 		timer_pause = setInterval(readyCounter, 1000);
 	}
 	if (quest_task == 'no_attempts'){
 		jq_jQuery('.dc_button').attr('disabled', 'disabled');
 	}
+	jq_jQuery('.dc_button').css('width', new_img_width+'px');
 }
 
 function readyCounter()

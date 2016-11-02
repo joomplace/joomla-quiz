@@ -34,6 +34,7 @@ div.correct_answer
 
 #quest_table
 {
+	width: 100%;
 	border:none !important;
 }
 
@@ -49,7 +50,8 @@ div.correct_answer
 
 div.jq_draggable_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
 	background: #bcdb95 !important; /* Old browsers */
@@ -70,7 +72,8 @@ div.jq_draggable_div {
 }
 div.jq_draggable_stop_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #bcdb95 !important; /* Old browsers */
@@ -91,7 +94,8 @@ div.jq_draggable_stop_div {
 }
 div.jq_cont_drag_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #9edb64 !important; /* Old browsers */
@@ -112,7 +116,8 @@ div.jq_cont_drag_div {
 }
 div.jq_highlight_drag_div {
     position:relative;
-    width:250px;
+    /*width:250px;*/
+	width: 95%;
     height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #bcdb95 !important; /* Old browsers */
@@ -1047,9 +1052,9 @@ td.jq_calculus_custom_empty_cell{
 .lt-ie8 .square {
 	behavior:url(/components/com_joomlaquiz/boxsizing.php);
 }
-.dc_buttons_container {
+/*.dc_buttons_container {
     margin-left: 10px;
-}
+}*/
 
 .dc_buttons_container table
 {
@@ -1114,10 +1119,11 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 .dc_layout {
 	display:table;
 	table-layout:fixed;
+	width: 100%;
 }
 .dc_layout .dc_cover_container,
 .dc_layout .dc_buttons_container {
-	display:table-cell;
+	/*display:table-cell;*/
 	float:none;
 	vertical-align:top;
 }
@@ -1126,6 +1132,9 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 }
 .dc_layout .dc_buttons_container {
 	min-width:120px;
+}
+.dc_layout .dc_buttons_container .jq_mchoice {
+	padding-top: 30px;
 }
 .dc_pda_ver {
 	display:block;
@@ -1141,7 +1150,7 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 	margin:auto;
 }
 .dc_buttons_container .jq_input_pos {
-	padding: 5px 10px;
+	padding: 5px 0;
 }
 .jq_survey
 {

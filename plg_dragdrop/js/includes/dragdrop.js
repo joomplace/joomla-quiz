@@ -11,7 +11,10 @@ if (questions[i].cur_quest_type == 4) {
 	questions[i].answ_ids = eval('answ_ids'+questions[i].cur_quest_id);
 	questions[i].cont_index = 0;
 	// *** end of DRAG'and'DROP CODE *** //
+	var zIndex = 599;
 
+	applyDragDrop();
+	
 	for(var j =1; j <= questions[i].kol_drag_elems; j++) {
 			jq_jQuery('div#ddiv'+questions[i].cur_quest_id+'_'+j).mouseup(function(event){
 				stopDrag(event);

@@ -57,6 +57,9 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 				if($img_data[0] == $img_data[1]){
 					$w = $h = $width;
 				}
+			} else {
+				$w = $width;
+				$h = ($img_data[1] / $img_data[0]) * $width;
 			}
 		}					
 		$dc_img = base64_encode(JURI::root()."images/joomlaquiz/images/".$data['q_data']->c_image);
@@ -88,6 +91,12 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		
 		$data['ret_str'] .= "\t" . '<img_width>'.$w.'</img_width>' . "\n";
 		$data['ret_str'] .= "\t" . '<img_height>'.$h.'</img_height>' . "\n";
+
+		if ($img_data) {
+			$data['ret_str'] .= "\t" . '<img_width_source>'.$img_data[0].'</img_width_source>' . "\n";
+			$data['ret_str'] .= "\t" . '<img_height_source>'.$img_data[1].'</img_height_source>' . "\n";
+		}
+		
 		if(!$data['q_data']->sq_delayed) $data['q_data']->sq_delayed = 1;
 		$data['ret_str'] .= "\t" . '<sq_delayed>'.$data['q_data']->sq_delayed.'</sq_delayed>' . "\n";
 

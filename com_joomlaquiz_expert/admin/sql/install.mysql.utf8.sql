@@ -1,4 +1,4 @@
-﻿CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
+CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cert_name` varchar(50) NOT NULL,
   `cert_file` varchar(50) NOT NULL,

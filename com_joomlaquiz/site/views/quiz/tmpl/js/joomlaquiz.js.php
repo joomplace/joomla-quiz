@@ -432,7 +432,8 @@ function pingServer() {
 		setInterval('pingServer()',<?php echo JComponentHelper::getParams('com_joomlaquiz')->get('lttrack',15)*1000 ?>);
 	}else{
 		jq_jQuery.ajax({
-			url: "<?php echo JRoute::_('index.php?option=com_joomlaquiz&task=quiz.ping&sid='); ?>"+stu_quiz_id
+			data: {sid:stu_quiz_id},
+			url: "<?php echo JRoute::_('index.php?option=com_joomlaquiz&task=quiz.ping'); ?>"
 		});
 	}
 }

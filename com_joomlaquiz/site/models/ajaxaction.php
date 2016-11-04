@@ -21,6 +21,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 	public function JQ_analizeAjaxRequest(){
 	
 		$jq_task = JFactory::getApplication()->input->get('ajax_task', '');
+		JFactory::getDocument()->setType('xml');
 		$this->JQ_process_ajax($jq_task);
 		exit();
 	}

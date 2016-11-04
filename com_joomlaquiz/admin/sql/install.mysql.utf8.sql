@@ -370,6 +370,9 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_quiz` (
   `c_max_score` decimal(12,2) NOT NULL DEFAULT '0.00',
   `user_name` varchar(50) NOT NULL,
   `user_surname` varchar(100) NOT NULL,
+  `respond_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_left` int(11) NOT NULL DEFAULT '0',
+  `past_time` int(11) NOT NULL DEFAULT '0',
   `params` varchar(1024) NOT NULL DEFAULT '{}',
   PRIMARY KEY (`c_id`),
   KEY `c_student_id` (`c_student_id`)

@@ -87,7 +87,7 @@ var result_is_shown = 0;
 var max_quiz_time = <?php echo ($quiz->c_time_limit)?($quiz->c_time_limit * 60):3600000; ?>;
 var timer_style = <?php echo ($quiz->c_timer_style);?>;
 var quiz_blocked = 0;
-var url_prefix = 'index.php?option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&tmpl=component&task=ajaxaction.procces';
+var url_prefix = '<?php $route_mp = JRoute::_('index.php?option=com_joomlaquiz'.JoomlaquizHelper::JQ_GetItemId()); $route_mp .= (strpos($route_mp,'?')?'&':'?'); echo trim($route_mp,'/'); ?>tmpl=component&task=ajaxaction.procces';
 var limit_time = 0;
 var quest_timer_sec = 0;
 var quest_timer = 0;
@@ -322,7 +322,7 @@ function pagination_go(page_num) {
 	var url = jq_clean_amp('&stu_quiz_id='+stu_quiz_id+'&ajax_task=showpage&quest_per_page='+jq_getObj('quest_per_page').value+'&limitstart='+page_num+'&quiz=<?php echo $quiz->c_id?>');
 
 	lp_url_prefix2 = jq_clean_amp("tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces" + url_prefix2);
-	var post_target = jq_clean_amp('<?php echo JUri::root(true) ?>/index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
+	var post_target = jq_clean_amp('<?php echo JUri::root(true) ?>/<?php echo trim($route_mp,'/'); ?>task=ajaxaction.procces');
 	http_request.open("POST", jq_clean_amp(post_target), true);
 	http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	http_request.send(jq_clean_amp(lp_url_prefix2 + url));
@@ -404,7 +404,7 @@ function jq_MakeRequest(url, do_clear, silent) {
 	<?php } ?>
 
 	lp_url_prefix2 = jq_clean_amp("tmpl=component&lang=<?php echo _JQ_JF_LANG;?>&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces" + url_prefix2);
-	var post_target = jq_clean_amp('<?php echo JUri::root(true) ?>/index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
+	var post_target = jq_clean_amp('<?php echo JUri::root(true) ?>/<?php echo trim($route_mp,'/'); ?>task=ajaxaction.procces');
 	http_request.open("POST", post_target, true);
 	http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	http_request.send(jq_clean_amp(lp_url_prefix2 + url));
@@ -1678,7 +1678,7 @@ function setFlag(qid){
 	var f_checked = (document.getElementById('c_flag').checked) ? 1 : 0;
 	jq_jQuery.ajax({
 		type: "POST",
-		url: "index.php?option=com_joomlaquiz&task=ajaxaction.flag_question&tmpl=component",
+		url: "<?php echo trim($route_mp,'/'); ?>task=ajaxaction.flag_question&tmpl=component",
 		data: { quiz_id: <?php echo $quiz->c_id;?>, quest_id: qid, stu_quiz_id: stu_quiz_id, flag_quest: f_checked},
 		success: function(data){
 			

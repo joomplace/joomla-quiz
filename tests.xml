@@ -8,7 +8,7 @@
   <authorUrl>www.joomplace.com</authorUrl>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-  <version>3.6.1.000</version>
+  <version>3.6.1.001</version>
   <files folder="packages">
     <file id="tests">tests.zip</file>
   </files>

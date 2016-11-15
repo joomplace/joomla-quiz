@@ -31,6 +31,7 @@ class InstallComponentCest
 
 	protected function installExtension(AcceptanceTester $I)
 	{
+		$this->goLaptop($I);
 		$I->comment('I go to Extension -> Manager -> Install');
 		$I->amOnPage('/administrator/index.php?option=com_installer');
 		$I->waitForElement('#package', 10);
@@ -42,9 +43,9 @@ class InstallComponentCest
 			$I->waitForElement('.alert.alert-success', 120);
 			$I->dontSee('.alert.alert-error');
 			$I->dontSee('.alert.alert-warning');
-			$I->makeScreenshot('install_successMobile');
-			$this->goLaptop($I);
 			$I->makeScreenshot('install_successLaptop');
+			$this->goMobile($I);
+			$I->makeScreenshot('install_successMobile');
 			$this->goiPad($I);
 			$I->makeScreenshot('install_successiPad');
 		}catch (\Exception $e) {

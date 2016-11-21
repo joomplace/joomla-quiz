@@ -7,7 +7,7 @@
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.6.1.000</version>
+	<version>3.6.2.000</version>
 	<isapplication>false</isapplication>
 	<isbrowsable>false</isbrowsable>
 	<description>Added Memory question type</description>

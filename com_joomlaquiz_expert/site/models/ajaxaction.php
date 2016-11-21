@@ -674,6 +674,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if($qch_ids) {
 					$query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
 					$database->SetQuery( $query );
+					/* answered questions */
 					$q_ids = $database->loadColumn();
 
 					if (!count($q_ids)) {
@@ -682,14 +683,18 @@ class JoomlaquizModelAjaxaction extends JModelList
 													
 					$quest_answer = count($q_ids);
 					$quest_num = $quest_answer;
+					/* in chain ids */
 					$qchids = explode('*',$qch_ids);
+					/* answered questions without current */
 					$q_ids = array_diff($q_ids, $quest_ids);
-					$qchids = array_diff($qchids, $q_ids);
+					if(1){
+						/* chain without answered questions, but with current */
+						$qchids = array_diff($qchids, $q_ids);
+					}
 					$qchids = array_values($qchids);
 					$q_total = count($qchids);
 					
 					$qnum = 0;
-
 					if(count($qchids)){
 						$quest_pos = array_search(end($quest_ids), $qchids);
 						if(!isset($qchids[$quest_pos + 1]) && ($quest_pos+1) >= count($qchids) ){
@@ -2789,15 +2794,14 @@ class JoomlaquizModelAjaxaction extends JModelList
 		}
 		
 		$is_last = 0;
-			
+
 			if (!$seek_quest_id && $stu_quiz_id && is_array($all_quests) && count($all_quests) && is_array($qchids) && count($qchids)) {
 				$query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
 				$database->SetQuery( $query );
 				$q_ids = $database->loadColumn();
-
 				if (is_array($q_ids) && count($q_ids)) {
 					$diff = array_diff ($qchids, $q_ids);
-					if (count($diff) && count($diff) == 1) {
+					if (count($diff) && count($diff) == 1 && $diff[0]==$q_data->c_id) {
 						$is_last = 1;
 					}
 				}else{

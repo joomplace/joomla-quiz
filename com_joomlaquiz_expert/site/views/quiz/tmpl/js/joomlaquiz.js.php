@@ -1794,19 +1794,23 @@ function jq_UpdateTaskDiv(task, skip_question, is_last = false) {
 
 		case 'next_last':
 			var is_prev = parseInt(response.getElementsByTagName('is_prev')[0].firstChild.data);
-			<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-			
-			<?php if ($quiz->c_enable_skip==1) { ?>
-			<?php if ($quiz->c_enable_prevnext) {?>if (is_prev) task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
-			task_container = task_container + jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
-			<?php } else { ?>
-			<?php if ($quiz->c_enable_prevnext) {?>if (is_prev) task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
-			task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
-			<?php } ?>
-			
-			var qid = jq_jQuery('.error_messagebox_quest').attr('id');
-			ShowMessage(qid, 1, last_quest_warning_message);           //Last question message
-			
+			<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){ ?>
+
+				<?php if ($quiz->c_enable_skip==1) { ?>
+					<?php if ($quiz->c_enable_prevnext) {?>
+						if (is_prev) task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');
+					<?php }?>
+					task_container = task_container + jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+				<?php } else { ?>
+					<?php if ($quiz->c_enable_prevnext) { ?>
+						if (is_prev) task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');
+					<?php }?>
+					task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+				<?php } ?>
+
+				var qid = jq_jQuery('.error_messagebox_quest').attr('id');
+				ShowMessage(qid, 1, last_quest_warning_message);           //Last question message
+
 			<?php } else {?>
 			ShowMessage('error_messagebox', 1, last_quest_warning_message);           //Last question message
 

@@ -304,7 +304,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '".$quiz_id."' AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 			$database->SetQuery($query);
 			$q_data = $database->LoadObjectList();
-			
+
+			$q_data = $this->checkFirstQuestion($q_data);
+
 			//---- pools ---------//
 			switch($quiz->c_pool)
 			{
@@ -403,6 +405,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_id IN ('".implode("','", $qchids)."') AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 				$database->SetQuery($query);
 				$q_data = $database->LoadObjectList();
+
+				$q_data = $this->checkFirstQuestion($q_data);
 				
 				foreach($q_data as $ii => $qchid) {
 					if ($qchid->c_id == $last_id) {
@@ -1046,8 +1050,18 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$qch_ids = str_replace('*',',',$qch_ids);
 								
 				$max_score = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
-												
-				$query = "SELECT 1 FROM #__quiz_t_question AS q, #__quiz_r_student_question AS sq WHERE q.c_id IN (".$qch_ids.") AND q.published = 1 AND q.c_manual = 1 AND q.c_id = sq.c_question_id AND sq.c_stu_quiz_id = '".$stu_quiz_id."' AND sq.reviewed = 0";
+
+				$query = $database->getQuery(true);
+				$query->select(1);
+				$query->from($database->qn('#__quiz_t_question', 'q'));
+				$query->from($database->qn('#__quiz_r_student_question', 'sq'));
+				$query->where($database->qn('q.c_id').' IN ('.$qch_ids.')');
+				$query->where($database->qn('q.published').' = '.$database->q('1'));
+				$query->where($database->qn('q.c_manual').' = '.$database->q('1'));
+				$query->where($database->qn('q.c_id').' = '.$database->qn('sq.c_question_id'));
+				$query->where($database->qn('sq.c_stu_quiz_id').' = '.$database->q($stu_quiz_id));
+				$query->where($database->qn('sq.reviewed').' = '.$database->q('0'));
+				
 				$database->SetQuery( $query );
 				$c_manual = (int)$database->LoadResult();
 				
@@ -3402,6 +3416,22 @@ class JoomlaquizModelAjaxaction extends JModelList
         $ret_str .= "\t" . '</feedback>' . "\n";
 
         return $ret_str;
+	}
+
+	private function checkFirstQuestion($q_data) {
+
+		$jinput = JFactory::getApplication()->input;
+		$qs = $jinput->get('qs', '0', 'integer');
+
+		foreach ($q_data as $key => $question) {
+			if ($question->c_id == $qs && $qs) {
+				$temp_question = $question;
+				unset ($q_data[$key]);
+				array_unshift($q_data, $temp_question);
+			}
+		}
+
+		return $q_data;
 	}
 }
 ?>

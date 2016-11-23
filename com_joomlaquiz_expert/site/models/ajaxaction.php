@@ -687,7 +687,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$qchids = explode('*',$qch_ids);
 					/* answered questions without current */
 					$q_ids = array_diff($q_ids, $quest_ids);
-					if(1){
+					if(0){
 						/* chain without answered questions, but with current */
 						$qchids = array_diff($qchids, $q_ids);
 					}
@@ -703,18 +703,23 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$quest_pos++;
 						}
 
-						for($i = $quest_pos; $i < $q_total; $i++){
-							$database->setQuery("SELECT `c_attempts` FROM #__quiz_t_question WHERE `c_id` = '".$qchids[$i]."'");
-							$all_attempts = $database->loadResult();
-								
-							$query = "SELECT `c_attempts` FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qchids[$i]."'";
-							$database->SetQuery( $query );
-							$c_attempts = $database->LoadResult();
+						/* give a nothing about attempts */
+						if(1){
+							$qnum = $qchids[$quest_pos];
+						}else{
+							for($i = $quest_pos; $i < $q_total; $i++){
+								$database->setQuery("SELECT `c_attempts` FROM #__quiz_t_question WHERE `c_id` = '".$qchids[$i]."'");
+								$all_attempts = $database->loadResult();
 
-							/* $c_attempts < $all_attempts && $qchids[$i] != end($quest_ids) */
-							if($c_attempts < $all_attempts && ($qchids[$i] != end($quest_ids) || count($qchids)==1)){
-								$qnum = $qchids[$i];
-								break;
+								$query = "SELECT `c_attempts` FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qchids[$i]."'";
+								$database->SetQuery( $query );
+								$c_attempts = $database->LoadResult();
+
+								/* $c_attempts < $all_attempts && $qchids[$i] != end($quest_ids) */
+								if($c_attempts < $all_attempts && ($qchids[$i] != end($quest_ids) || count($qchids)==1)){
+									$qnum = $qchids[$i];
+									break;
+								}
 							}
 						}
 					}

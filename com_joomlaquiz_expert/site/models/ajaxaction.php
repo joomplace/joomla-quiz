@@ -695,7 +695,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$q_total = count($qchids);
 
 					$qnum = 0;
-					if(count($qchids) && array_diff($qchids, $q_ids)){
+					if(count($qchids) && array_diff($qchids, $q_ids, $quest_ids)){
 						$quest_pos = array_search(end($quest_ids), $qchids);
 						if(!isset($qchids[$quest_pos + 1]) && ($quest_pos+1) >= count($qchids) ){
 							$quest_pos = 0;

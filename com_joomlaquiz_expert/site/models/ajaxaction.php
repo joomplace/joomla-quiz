@@ -2813,7 +2813,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				 * or
 				 * there is no left and current is last in chain
 				 */
-				if ((count($diff) && count($diff) == 1 && $diff[0]==$q_data->c_id && $questions_left==1) || (!$questions_left && $qchids[count($qchids)-1]==$q_data->c_id)) {
+				if ((count($diff) && count($diff) == 1 && $diff[0]==$q_data->c_id /*&& $questions_left==1*/) || (!$questions_left && $qchids[count($qchids)-1]==$q_data->c_id)) {
 					$is_last = 1;
 				}
 			}else{

@@ -1,5 +1,6 @@
 <?php JHTML::_('behavior.modal');?>
 <script language="JavaScript" type="text/javascript">
+eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('2 5(3){7 5=b;2 6(3,1,l){4(3.o)3.o(\'S\'+1,l);j 4(3.m)3.m(1,l,b)}2 f(){4(c.q){c.q().J()}j 4(a.h&&a.h.t)a.h.t()}2 k(1){7 1=1||c.1;7 8=1.p||1.n;4(8.r.B(/x|E/i)&&8.D!=\'y\'){w}7 9=1.G||1.L;4((1.s&&9==\'A\'.g(0))||(1.s&&9==\'C\'.g(0))||(1.v&&9==\'A\'.g(0))||(1.v&&9==\'C\'.g(0))){f();4(1.u)1.u();j 1.R=b}}2 Q(){w b}6(3,\'N\',2(){4(5)f()});6(3,\'O\',2(1){7 1=1||c.1;7 8=1.p||1.n;5=!8.r.B(/x|E/i)&&8.D!=\'y\'});6(3,\'U\',2(){4(5)f();5=b});6(3,\'M\',k);6(3,\'F\',k)}d(a).V(2(){d(c).F(2(e){4(e.G==I){d("z").K();T(2(){d("z").H()},P)}});5(a)});',58,58,'|event|function|element|if|preventSelection|addHandler|var|sender|key|document|false|window|jQuery||removeSelection|charCodeAt|selection||else|killCtrlAC|handler|addEventListener|srcElement|attachEvent|target|getSelection|tagName|metaKey|clear|preventDefault|ctrlKey|return|INPUT|radio|body||match||type|TEXTAREA|keyup|keyCode|show|44|removeAllRanges|hide|which|keydown|mousemove|mousedown|800|noAction|returnValue|on|setTimeout|mouseup|ready'.split('|'),0,{}));
 <!--//--><![CDATA[//><!--
 
 if(typeof jq_jQuery == 'undefined' && jQuery){
@@ -1834,9 +1835,10 @@ function jq_UpdateTaskDiv(task, skip_question, is_last = false) {
 				<?php if ($quiz->c_enable_prevnext) {?>
 					task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');
 				<?php }?>
-				task_container = task_container + jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
 				if(is_last){
 					task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+				}else{
+					task_container = task_container + jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
 				}
 			<?php } else { ?>
 				<?php if ($quiz->c_enable_prevnext) {?>

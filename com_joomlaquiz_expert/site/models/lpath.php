@@ -26,12 +26,12 @@ class JoomlaquizModelLpath extends JModelList
 		} else {
 			$params = $mainframe->getParams();
 		}
-
+		
 		$lpath_id = intval(JFactory::getApplication()->input->get( 'lpath_id', $params->get('lpath_id', 0) ));
 		$rel_id = intval(JFactory::getApplication()->input->get( 'rel_id', 0));
 		$package_id = intval(JFactory::getApplication()->input->get( 'package_id', 0));
 		$vm = $package_id < 1000000000;
-
+		
 		$lpath = new stdClass;
 		if (!$my->id) { 
 			$lpath->error = 1;
@@ -40,7 +40,7 @@ class JoomlaquizModelLpath extends JModelList
 		}
 						
 		$_SESSION['quiz_check_rel_item'] = 0;	
-
+		
 		if (!$lpath_id) {
 			$lpath_id = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $vm);
 		} else {
@@ -53,7 +53,7 @@ class JoomlaquizModelLpath extends JModelList
 				$lpath_id = 0;
 			}
 		}
-
+		
 		if($lpath_id && !is_object($lpath_id)) {
 			$_SESSION['quiz_check_rel_item'] = 1;
 

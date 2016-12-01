@@ -413,6 +413,8 @@ class JoomlaquizModelPackages extends JModelList
 								$database->SetQuery( $query );
 								$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
 							}else{
+                                $quiz_attempts = JoomlaquizHelper::getQuizAttemptCount($order->id, $data->rel_id, $data->id);
+                                $quiz_quantity = JoomlaquizHelper::getQuizCount($order->id);
                             }
 
 							$data->suffix .= ($data->suffix ? ' ' : '') . sprintf(JText::_('COM_LPATH_ATTEMPTS'), $data->attempts);

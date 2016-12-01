@@ -165,6 +165,7 @@ class JoomlaquizModelPackages extends JModelList
 			}
 			
 			$products_stat = array();
+			//BADATTEMPT
 			if ($order->vm) {
 					$query = "SELECT *"
 					. "\n FROM #__quiz_products_stat"
@@ -411,11 +412,20 @@ class JoomlaquizModelPackages extends JModelList
 								
 								$database->SetQuery( $query );
 								$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
-							}
-							$data->suffix .= ($data->suffix ? ' ' : '') . sprintf(JText::_('COM_LPATH_ATTEMPTS'), $data->attempts * $product_quantity);
-							
+							}else{
+                                $quiz_attempts = JoomlaquizHelper::getQuizAttemptCount($order->id, $data->rel_id, $data->id);//попыток разрешено
+                                $quiz_quantity = JoomlaquizHelper::getQuizCount($order->id);//всего quiz
+                            }
+
+							$data->suffix .= ($data->suffix ? ' ' : '') . sprintf(JText::_('COM_LPATH_ATTEMPTS'), $data->attempts);
+
 							$attempts = (!empty($products_stat) && array_key_exists($data->id, $products_stat) && $products_stat[$data->id]->attempts ? $products_stat[$data->id]->attempts : 0);
-							if(($data->attempts * $product_quantity) <= $attempts) {
+
+							if(
+							    ($order->vm && ($data->attempts * $product_quantity) <= $attempts)
+                                ||
+                                (!$order->vm && ($data->attempts * $quiz_quantity) <= $quiz_attempts)
+                            ){
 								$l_counter_exiped++;
 								$data->expired = true;
 								

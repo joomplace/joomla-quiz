@@ -526,18 +526,18 @@ class JoomlaquizHelper
 		
 			$my = JFactory::getUser();
 			$database = JFactory::getDBO();
-			
+
 			if (!$quiz_id)
 				return false;
 			
 			$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '{$quiz_id}'";
 			$database->setQuery($query);
 			$quiz = $database->loadObjectList();
-			
+
 			if (!isset($quiz[0])) 
 				return false;
 			$quiz = $quiz[0];
-			
+
 			$unique_pass_str = '';
 			if (!$my->id && isset($_COOKIE['quizupi'][$quiz_id])) {	
 				$unique_pass_id = $_COOKIE['quizupi'][$quiz_id];
@@ -557,7 +557,7 @@ class JoomlaquizHelper
 			$dispatcher = JEventDispatcher::getInstance();
 			list($cust_params) = $dispatcher->trigger('onQuizCustomFieldsFromUser');
 			if(!$cust_params) $cust_params = '{}';
-			
+
 			//stand alone quiz	or  free learn path
 			if (!$order_id && !$rel_id) {
 				if ($quiz->c_number_times) {			
@@ -565,7 +565,7 @@ class JoomlaquizHelper
 					$query = "SELECT COUNT(*) FROM #__quiz_r_student_quiz WHERE `c_quiz_id` = '".$quiz_id."' ". ($quiz->c_allow_continue ? ' AND c_finished = 1 ': ''). " AND {$unique_pass_str} AND `params` = ".$database->quote($cust_params)." ";
 					$database->SetQuery( $query );
 					$number_times_passed = (int)$database->loadResult();
-					
+
 					if ($number_times_passed < $quiz->c_number_times) {
 						return true;
 					} elseif ($quiz->c_min_after) {
@@ -614,7 +614,7 @@ class JoomlaquizHelper
 				$query = "SELECT attempts FROM `#__quiz_products` WHERE `id` = '{$rel_id}' ";		
 				$database->SetQuery( $query );
 				$product_params_attempts = (int)$database->loadResult();
-				
+
 				$product_quantity = 1;
 				if ($order_id < 1000000000) {
 					$query = "SELECT vm_oi.product_quantity"
@@ -626,11 +626,14 @@ class JoomlaquizHelper
 				
 					$database->SetQuery( $query );
 					$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
-				}
-				
+				}else{
+                    //$product_quantity = JoomlaquizHelper::getQuizCount($order_id-1000000000);
+                }
+
 				if (!$product_params_attempts)
 					return true;
-				
+                //BADATTEMPT
+                /*
 				if($rel_check[0]->type == 'l') {
 					$query = "SELECT attempts FROM #__quiz_lpath_stage WHERE uid = '{$my->id}' AND oid = '{$order_id}' AND rel_id = '{$rel_id}' AND lpid = '{$rel_check[0]->rel_id}' AND qid = '{$quiz_id}'";
 				} else {
@@ -638,11 +641,13 @@ class JoomlaquizHelper
 				}
 				$database->SetQuery( $query );
 				$products_stats_attempts = (int)$database->loadResult();
-				
+				*/
+                $products_stats_attempts = JoomlaquizHelper::getQuizAttemptCount($order_id-1000000000, 0, $rel_id, $quiz_id);
+
 				if ($products_stats_attempts < $product_params_attempts * $product_quantity)
 					return true;
 			}
-			
+
 			return false;
 		}
 		
@@ -689,6 +694,7 @@ class JoomlaquizHelper
 			$product_data = $rel_check[0];
 					
 			$products_stat = array();
+            //BADATTEMPT
 			$query = "SELECT *"
 			. "\n FROM #__quiz_products_stat"
 			. "\n WHERE uid = '{$my->id}' AND qp_id = '{$rel_id}' "
@@ -771,11 +777,17 @@ class JoomlaquizHelper
 				;
 				$database->SetQuery( $query );
 				$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
-			}
+			}else{
+			    //???
+                //$quiz_attempts = JoomlaquizHelper::getQuizAttemptCount($package_id-1000000000, $product_data->rel_id, $rel_id);
+            }
 			
 			$attempts = (!empty($products_stat) && array_key_exists($rel_id, $products_stat) && $products_stat[$rel_id]->attempts ? $products_stat[$rel_id]->attempts : 0);
-			if($product_data->attempts && ($product_data->attempts * $product_quantity) <= $attempts) {
-				$quiz_params[0]->error = 1;
+
+			if(
+                ($vm && $product_data->attempts && ($product_data->attempts * $product_quantity) <= $attempts)
+            ) {
+				$quiz_params[0]->error = 1;//this place
 				$quiz_params[0]->message = '<p align="left">'.JText::_('COM_ACCESS_EXPIRED').'</p>';
 				return $quiz_params[0];
 			}
@@ -792,6 +804,57 @@ class JoomlaquizHelper
 
 			return $lpath_id;
 		}
+
+		public static function getQuizCount($product_id = 0){
+		    //колво quiz включ. в продукт
+            $db = JFactory::getDBO();
+            $user = JFactory::getUser();
+            $query = $db->getQuery(true);
+            $query->select($db->qn('lpq.qid').' AS quiz_id')
+                ->from($db->qn('#__quiz_payments'). ' AS p')
+                ->join('INNER',$db->qn("#__quiz_products").' AS qp ON qp.pid = p.pid')
+                ->join('LEFT',$db->qn("#__quiz_lpath").' AS lp ON lp.id = qp.rel_id')
+                ->join('LEFT',$db->qn("#__quiz_lpath_quiz")." AS lpq ON lpq.type = 'q' AND lpq.lid = lp.id")
+                ->where($db->qn('p.id') . ' = ' . $db->q($product_id))
+                ->where($db->qn('user_id') . ' = ' . $db->q($user->id))
+                ->group($db->qn('lpq.qid'));
+            $db->setQuery($query);
+            $res = $db->loadObjectList();
+		    return count($res);
+        }
+
+		public static function getQuizAttemptCount($payment_id = 0, $lpath_id = 0, $rel_id = 0, $quiz_id = 0){
+            //колво попыток по продукту
+            //если не указан quiz - по всему продукту
+            $db = JFactory::getDBO();
+            $user = JFactory::getUser();
+            $query = $db->getQuery(true);
+            $query->select('COUNT('.$db->qn('c_quiz_id').') AS count_quiz_id')
+                ->from($db->qn('#__quiz_r_student_quiz'). ' AS sq')
+                ->join('LEFT',$db->qn("#__quiz_lpath_quiz")." AS lpq ON lpq.type = 'q' AND lpq.qid = sq.c_quiz_id")
+                ->join('LEFT',$db->qn("#__quiz_products").' AS qp ON qp.rel_id = lpq.lid AND qp.id = sq.c_rel_id')
+                ->join('LEFT',$db->qn('#__quiz_payments'). ' AS p ON p.pid = qp.pid and p.id = (sq.c_order_id-1000000000)')
+                ->join('LEFT',$db->qn("#__quiz_t_quiz").' AS qtq ON qtq.c_id = lpq.qid')
+                ->where($db->qn('user_id') . ' = ' . $db->q($user->id))
+                ->where('IF((c_allow_continue=1 AND c_finished=1)OR(c_allow_continue=0),1,0) = 1');//check allow continue quiz
+            if($payment_id > 0){
+                $query->where($db->qn('p.id') . ' = ' . $db->q($payment_id));
+            }
+            if($lpath_id > 0){
+                $query->where($db->qn('lpq.lid') . ' = ' . $db->q($lpath_id));
+            }
+            if($rel_id > 0){
+                $query->where($db->qn('sq.c_rel_id') . ' = ' . $db->q($rel_id));
+                $query->where($db->qn('qp.id') . ' = ' . $db->q($rel_id));
+            }
+            if($quiz_id > 0){
+                $query->where($db->qn('c_quiz_id') . ' = ' . $db->q($quiz_id));
+            }
+            $db->setQuery($query);
+            $quiz = $db->loadObject();
+
+            return $quiz->count_quiz_id;
+        }
 		
 		public static function getTotalScore($qch_ids, $quiz_id){
 			
@@ -880,4 +943,5 @@ class JoomlaquizHelper
 				}
 			}
 		}
+
 }

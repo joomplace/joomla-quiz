@@ -190,6 +190,7 @@ class JoomlaquizModelQuiz extends JModelList
 			
 			$product_stat = array();
 			$query->clear();
+			//BADATTEMPT
 			$query->select('*')
 				->from($db->qn('#__quiz_products_stat'))
 				->where($db->qn('uid').' = '.$db->q($user->id))
@@ -301,7 +302,7 @@ class JoomlaquizModelQuiz extends JModelList
 			$quiz_params->lid_data = $db->loadObject();
 			
 			$tmp = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp);
+			//$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp);
 			
 			$wait_time = '';
 			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);

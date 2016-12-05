@@ -2438,7 +2438,15 @@ class JoomlaquizModelAjaxaction extends JModelList
 		
 		return '<task>blank_feedback</task>';
 	}
-		
+
+    private function JQ_GetLastQuestionID($cIds = []){
+        $database = JFactory::getDBO();
+        $query = "SELECT c_id, ordering FROM `#__quiz_t_question` WHERE  c_id IN ('" . $cIds . "') AND published = 1 ORDER by ordering DESC, c_id";
+        $database->SetQuery($query);
+        $questions = $database->loadObject();
+        return $questions->c_id;
+    }
+
 	public function JQ_GetQuestData($q_data, $i_quiz_id, $stu_quiz_id = 0) {
 		
 		$database = JFactory::getDBO();
@@ -2780,7 +2788,14 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$is_last = 1;
 				}
 			}
-			
+
+
+        $lastQuestionId = $this->JQ_GetLastQuestionID(implode("','", $qchids));
+        if ($q_data->c_id == $lastQuestionId) {
+            $is_last = 1;
+        } else {
+            $is_last = 0;
+        }
 		
 		$ret_str .= "\t" . '<is_last>'.$is_last.'</is_last>' . "\n";
 		$ret_str .= "\t" . '<skip_type>'.$quiz->c_enable_skip.'</skip_type>' . "\n";

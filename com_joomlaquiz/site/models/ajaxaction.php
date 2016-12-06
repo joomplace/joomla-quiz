@@ -2439,12 +2439,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 		return '<task>blank_feedback</task>';
 	}
 
-    private function JQ_GetLastQuestionID($cIds = []){
+    private function JQ_GetLastQuestionID($quizId = 0){
         $database = JFactory::getDBO();
-        $query = "SELECT c_id, ordering FROM `#__quiz_t_question` WHERE  c_id IN ('" . $cIds . "') AND published = 1 ORDER by ordering DESC, c_id";
+        $query = "SELECT c_id, ordering FROM `#__quiz_t_question` WHERE  c_quiz_id='".(int)$quizId."' AND published = 1 ORDER by ordering DESC, c_id";
         $database->SetQuery($query);
         $questions = $database->loadObject();
-        return $questions->c_id;
+        if($questions){
+            return $questions->c_id;
+        }else{
+            return 0;
+        }
     }
 
 	public function JQ_GetQuestData($q_data, $i_quiz_id, $stu_quiz_id = 0) {
@@ -2769,7 +2773,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			
 			/* page breaking end */		
 		}
-
+/*
 		$is_last = 0;
 		
 			if (!$seek_quest_id && $stu_quiz_id && is_array($all_quests) && count($all_quests) && is_array($qchids) && count($qchids)) {
@@ -2788,12 +2792,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$is_last = 1;
 				}
 			}
-
-
-        $lastQuestionId = $this->JQ_GetLastQuestionID(implode("','", $qchids));
-        if ($q_data->c_id == $lastQuestionId) {
+*/
+        $lastQuestionId = $this->JQ_GetLastQuestionID($i_quiz_id);
+        if($q_data->c_id == $lastQuestionId){
             $is_last = 1;
-        } else {
+        }else{
             $is_last = 0;
         }
 		

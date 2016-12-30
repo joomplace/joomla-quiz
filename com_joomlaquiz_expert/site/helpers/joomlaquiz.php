@@ -780,7 +780,7 @@ class JoomlaquizHelper
 			if(
                 ($vm && $product_data->attempts && ($product_data->attempts * $product_quantity) <= $attempts)
             ) {
-				$quiz_params[0]->error = 1;//this place
+				$quiz_params[0]->error = 1;
 				$quiz_params[0]->message = '<p align="left">'.JText::_('COM_ACCESS_EXPIRED').'</p>';
 				return $quiz_params[0];
 			}

@@ -626,13 +626,10 @@ class JoomlaquizHelper
 				
 					$database->SetQuery( $query );
 					$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
-				}else{
-                    //$product_quantity = JoomlaquizHelper::getQuizCount($order_id-1000000000);
-                }
+				}
 
 				if (!$product_params_attempts)
 					return true;
-                //BADATTEMPT
                 /*
 				if($rel_check[0]->type == 'l') {
 					$query = "SELECT attempts FROM #__quiz_lpath_stage WHERE uid = '{$my->id}' AND oid = '{$order_id}' AND rel_id = '{$rel_id}' AND lpid = '{$rel_check[0]->rel_id}' AND qid = '{$quiz_id}'";
@@ -694,7 +691,6 @@ class JoomlaquizHelper
 			$product_data = $rel_check[0];
 					
 			$products_stat = array();
-            //BADATTEMPT
 			$query = "SELECT *"
 			. "\n FROM #__quiz_products_stat"
 			. "\n WHERE uid = '{$my->id}' AND qp_id = '{$rel_id}' "
@@ -777,10 +773,7 @@ class JoomlaquizHelper
 				;
 				$database->SetQuery( $query );
 				$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
-			}else{
-			    //???
-                //$quiz_attempts = JoomlaquizHelper::getQuizAttemptCount($package_id-1000000000, $product_data->rel_id, $rel_id);
-            }
+			}
 			
 			$attempts = (!empty($products_stat) && array_key_exists($rel_id, $products_stat) && $products_stat[$rel_id]->attempts ? $products_stat[$rel_id]->attempts : 0);
 
@@ -943,5 +936,4 @@ class JoomlaquizHelper
 				}
 			}
 		}
-
 }

@@ -189,7 +189,6 @@ class JoomlaquizModelQuiz extends JModelList
 			
 			$product_stat = array();
 			$query->clear();
-			//BADATTEMPT
 			$query->select('*')
 				->from($db->qn('#__quiz_products_stat'))
 				->where($db->qn('uid').' = '.$db->q($user->id))

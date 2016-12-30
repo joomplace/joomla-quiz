@@ -165,7 +165,6 @@ class JoomlaquizModelPackages extends JModelList
 			}
 			
 			$products_stat = array();
-			//BADATTEMPT
 			if ($order->vm) {
 					$query = "SELECT *"
 					. "\n FROM #__quiz_products_stat"

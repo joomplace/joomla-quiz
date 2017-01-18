@@ -145,13 +145,25 @@ class JoomlaquizHelper
 				$vName == 'questcategories'
 			);
 			JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_CATEGORIES_LPATH'),
+                'index.php?option=com_categories&extension=com_joomlaquiz.lpath',
+                $vName == 'lpathscategories'
+            );
+			JHtmlSidebar::addEntry(
 				JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_QUIZ'),
 				'index.php?option=com_joomlaquiz&view=quizzes',
-				$vName == 'quizzes');
+				$vName == 'quizzes'
+			);
 			JHtmlSidebar::addEntry(
 				JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_QUEST'),
 				'index.php?option=com_joomlaquiz&view=questions',
-				$vName == 'questions');
+				$vName == 'questions'
+			);
+			JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_LPATH'),
+                'index.php?option=com_joomlaquiz&view=lpaths',
+                $vName == 'lpaths'
+            );
 		}
 
 		public static function addQuizzesSubmenu($vName)
@@ -175,6 +187,11 @@ class JoomlaquizHelper
 				'index.php?option=com_joomlaquiz&view=lpaths',
 				$vName == 'lpaths'
 			);
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_CATEGORIES_LPATH'),
+                'index.php?option=com_categories&extension=com_joomlaquiz.lpath',
+                $vName == 'lpathscategories'
+            );
 		}
 		
 		public static function addQuestionsSubmenu($vName)

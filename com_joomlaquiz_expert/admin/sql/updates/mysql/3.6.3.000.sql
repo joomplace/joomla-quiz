@@ -1,0 +1,1 @@
+ALTER TABLE `#__quiz_lpath` ADD COLUMN `category` int(11) DEFAULT NULL;

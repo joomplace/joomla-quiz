@@ -13,7 +13,6 @@ defined('_JEXEC') or die;
 
 class modAvailablelpHelper
 {
-
 	public static function getResult()
 	{
         $user_id = JFactory::getUser()->id;
@@ -21,16 +20,43 @@ class modAvailablelpHelper
         $result = array();
 
         $query = $db->getQuery(true);
-        $query = 'SELECT ql.id,ql.title AS title, c.title AS category
-                  FROM l9o6i_quiz_lpath ql 
-                  RIGHT JOIN l9o6i_categories c ON (c.id = ql.category) 
-                  WHERE ql.id NOT IN ( 
-                      SELECT qls.lpid 
-                      FROM l9o6i_quiz_lpath_stage qls 
-                      WHERE qls.uid = ' . $user_id . ')';
+        $query = 'SELECT COUNT(`r`.`lid`) AS `dif`, `r`.`lid`, `r`.`stage`, `r`.`uid`
+                    FROM
+                    (
+                        SELECT COUNT(`l`.`lid`), `l`.*, `s`.`uid`, IF(`s`.`stage` IS NULL OR `s`.`stage` = 0,0,1) AS `stage`
+                        FROM `#__quiz_lpath_quiz` AS `l`
+                        LEFT JOIN 
+                        (
+                            SELECT *
+                            FROM `#__quiz_lpath_stage`
+                            WHERE `uid` = ' . $user_id . '
+                        ) AS `s` ON `s`.`qid` = `l`.`qid` AND `s`.`type` = `l`.`type` AND `s`.`lpid` = `l`.`lid`
+                        GROUP BY `l`.`lid`,`s`.`stage`
+                    ) AS `r` 
+                    GROUP BY `r`.`lid`';
         $db->SetQuery($query);
-        $result = $db->LoadObjectList();
+        $result = $db->loadAssocList();
 
-        return $result;
+        $lid_array =  array();
+
+        foreach ($result as $item) {
+            if ($item['dif'] == 1 && $item['stage'] == 0) {
+                $lid_array[] = $item['lid'];
+            }
+        }
+
+        $final_result = array();
+        if ($lid_array) {
+            $query = $db->getQuery(true);
+            $query->select(array('ql.id', 'ql.title AS title', 'c.title AS category'))
+                ->from($db->qn('#__quiz_lpath', 'ql'))
+                ->join('right', $db->qn('#__categories', 'c') . ' ON (' . $db->qn('ql.category') . ' = ' . $db->qn('c.id') . ')')
+                ->where($db->qn('ql.published') . ' = 1')
+                ->where($db->qn('ql.id') . ' IN (' . implode(",", $lid_array) . ')');
+            $db->SetQuery($query);
+            $final_result = $db->loadObjectList();
+        }
+
+        return $final_result;
 	}
 }

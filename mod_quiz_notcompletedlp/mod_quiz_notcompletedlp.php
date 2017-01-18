@@ -9,13 +9,10 @@
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
-// no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 $document 	= JFactory::getDocument();
-//$document->addStyleSheet(JURI::root().'components/com_joomlaquiz/assets/css/joomlaquiz.css');
 
-// Include the syndicate functions only once
 require_once __DIR__ . '/helper.php';
 
 $result = modNotcompletedlpHelper::getResult();

@@ -574,6 +574,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_min_after` int(10) unsigned NOT NULL DEFAULT '0',
   `c_passing_score` float NOT NULL DEFAULT '0',
   `c_created_time` date NOT NULL DEFAULT '0000-00-00',
+  `c_credit` float NOT NULL DEFAULT '0',
   `c_published` char(1) NOT NULL DEFAULT '0',
   `c_right_message` text NOT NULL,
   `c_wrong_message` text NOT NULL,

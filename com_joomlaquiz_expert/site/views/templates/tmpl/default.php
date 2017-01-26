@@ -290,6 +290,13 @@ EOFTMPL;
 				<td class="jq_result_key" valign="top">'.JText::_('COM_QUIZ_RES_MES_PAS_SCORE').'</td>
 				<td class="jq_result_value"><!-- PASSING SCORE --></td>
 			</tr>	
+			
+			<!-- CREDIT -->
+			<tr class="sectiontableentry1">
+				<td class="jq_result_key" valign="top">'.JText::_('COM_QUIZ_CREDIT').'</td>
+				<td class="jq_result_value"><!-- CREDIT --></td>
+			</tr>
+			<!-- CREDIT -->
 				
 			<tr class="sectiontableentry1">
 				<td class="jq_result_key" valign="top">'.JText::_('COM_QUIZ_RES_MES_TIME').'</td>

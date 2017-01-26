@@ -1690,6 +1690,14 @@ function setFlag(qid){
 }
 
 function jq_QuizNextFinish() { //send 'TASK = next'
+    //Add popup if at the conclusion of the survey is not all questions have answers
+	var is_last = parseInt(response.getElementsByTagName('is_last')[0].firstChild.data);
+	if(!is_last){
+		if(!confirm("<?php echo JText::_('COM_QUIZ_POPUP_EXIT'); ?>")){
+			return;
+		}
+	}
+
 <?php if ($is_preview) { ?>
 	var jq_task = 'next_preview';
 	<?php } else { ?>

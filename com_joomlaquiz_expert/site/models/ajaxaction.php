@@ -694,7 +694,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$qchids = array_values($qchids);
 					$q_total = count($qchids);
 
-					$questions_left = count(array_diff($qchids, $q_ids, $quest_ids));
+					$questions_left = array_diff($qchids, $q_ids, $quest_ids);
 
 					$qnum = 0;
 					if(count($qchids)){
@@ -1272,6 +1272,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$results_txt = str_replace('<!-- TOTAL USER SCORE -->', sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), number_format($user_score, 2, '.', ' '), number_format($max_score, 2, '.', ' '), number_format($user_score_percent, 2, '.', ' ')), $results_txt);
 					$results_txt = str_replace('<!-- PASSING SCORE -->', sprintf(JText::_('COM_QUIZ_RES_MES_PAS_SCORE_TPL'), number_format($nugno_score,2 , '.', ' '), number_format($quiz_info->c_passing_score, 2, '.', ' ')), $results_txt);
 					$results_txt = str_replace('<!-- SPENT TIME -->', $tot_time, $results_txt);
+                    $results_txt = str_replace('<!-- CREDIT -->', $quiz_info->c_credit, $results_txt);
 
 					if ($c_resbycat) {
 						$results_txt = str_replace('<!-- SCORE BY CATEGORIES -->', $c_resbycat, $results_txt);
@@ -2262,7 +2263,25 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$ret_str .= "\t" . '<user_unique_id><![CDATA['.$user_unique_id.']]></user_unique_id>' . "\n";
 							$ret_str .= "\t" . '<stu_quiz_id><![CDATA['.$stu_quiz_id.']]></stu_quiz_id>' . "\n";
 							$ret_str .= "\t" . '<task>seek_quest</task>' . "\n";
-							$ret_str .= $this->JQ_GetQuestData($q_data[$i], $quiz_id, $stu_quiz_id);
+
+                            $query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
+                            $database->SetQuery( $query );
+                            /* answered questions */
+                            $q_ids = $database->loadColumn();
+
+                            if (!count($q_ids)) {
+                                $q_ids = array(0);
+                            }
+
+                            $quest_answer = count($q_ids);
+                            $quest_ids = array($seek_quest_id);
+                            /* answered questions without current */
+                            $q_ids = array_diff($q_ids, $quest_ids);
+                            $qchids = array_values($qchids);
+
+                            $questions_left = array_diff($qchids, $q_ids, $quest_ids);
+
+							$ret_str .= $this->JQ_GetQuestData($q_data[$i], $quiz_id, $stu_quiz_id,$questions_left);
 							$ret_str .= $this->JQ_GetPanelData($quiz_id, $q_data, $stu_quiz_id);
 						}
 					}
@@ -2426,14 +2445,32 @@ class JoomlaquizModelAjaxaction extends JModelList
 				}
 				$q_id = $quest;			
 			}
-			
+
+
 			if ($q_id) {
+
+                $quest_ids = array($q_id);
+
+                $query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
+                $database->SetQuery( $query );
+                /* answered questions */
+                $q_ids = $database->loadColumn();
+
+                if (!count($q_ids)) {
+                    $q_ids = array(0);
+                }
+                /* answered questions without current */
+                $q_ids = array_diff($q_ids, $quest_ids);
+                $qchids = array_values($all_quiz_quests);
+
+                $questions_left = array_diff($qchids, $q_ids, $quest_ids);
+
 				$query = "SELECT * FROM `#__quiz_t_question` WHERE `c_id` = '{$q_id}' AND published = 1";
 				$database->SetQuery($query);
 				$q_data = $database->loadObjectList();
 				$q_data = $q_data[0];
 				$ret_str .= "\t" . '<task>prev</task>' . "\n";
-				$ret_str .= $this->JQ_GetQuestData($q_data, $quiz_id, $stu_quiz_id);
+				$ret_str .= $this->JQ_GetQuestData($q_data, $quiz_id, $stu_quiz_id, $questions_left);
 			}
 		}
 		
@@ -2477,8 +2514,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 		return '<task>blank_feedback</task>';
 	}
 
-	public function JQ_GetQuestData($q_data, $i_quiz_id, $stu_quiz_id = 0, $questions_left = 0) {
-
+	public function JQ_GetQuestData($q_data, $i_quiz_id, $stu_quiz_id = 0, $questions_left = array()) {
+	    $un_answered = $questions_left;
+        $questions_left = count($questions_left);
 		$database = JFactory::getDBO();
 		$ret_str = '';
 		$seek_quest_id = intval( JFactory::getApplication()->input->get( 'seek_quest_id', 0 ) );
@@ -2826,7 +2864,14 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$is_last = 1;
 			}
 		}
-
+		unset($un_answered[array_search($q_data->c_id,$un_answered)]);
+		$un_answered = implode(',',array_map(function($k){
+            return $k+1;
+        },array_keys($un_answered)));
+		if($un_answered){
+            $is_last = ($q_data->c_id == $qchids[count($qchids)-1])?1:0;
+        }
+		$ret_str .= "\t" . '<un_answered>'.$un_answered.'</un_answered>' . "\n";
 		$ret_str .= "\t" . '<is_last>'.$is_last.'</is_last>' . "\n";
 		$ret_str .= "\t" . '<skip_type>'.$quiz->c_enable_skip.'</skip_type>' . "\n";
 		$ret_str .= "\t" . '<quest_count>'.(int)$quest_count.'</quest_count>' . "\n";

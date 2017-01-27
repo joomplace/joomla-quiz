@@ -694,7 +694,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$qchids = array_values($qchids);
 					$q_total = count($qchids);
 
-					$questions_left = array_diff($qchids, $q_ids, $quest_ids);
+					$questions_left = array_diff($qchids, $q_ids);
 
 					$qnum = 0;
 					if(count($qchids)){
@@ -2279,7 +2279,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                             $q_ids = array_diff($q_ids, $quest_ids);
                             $qchids = array_values($qchids);
 
-                            $questions_left = array_diff($qchids, $q_ids, $quest_ids);
+                            $questions_left = array_diff($qchids, $q_ids);
 
 							$ret_str .= $this->JQ_GetQuestData($q_data[$i], $quiz_id, $stu_quiz_id,$questions_left);
 							$ret_str .= $this->JQ_GetPanelData($quiz_id, $q_data, $stu_quiz_id);
@@ -2463,7 +2463,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                 $q_ids = array_diff($q_ids, $quest_ids);
                 $qchids = array_values($all_quiz_quests);
 
-                $questions_left = array_diff($qchids, $q_ids, $quest_ids);
+                $questions_left = array_diff($qchids, $q_ids);
 
 				$query = "SELECT * FROM `#__quiz_t_question` WHERE `c_id` = '{$q_id}' AND published = 1";
 				$database->SetQuery($query);

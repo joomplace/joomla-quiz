@@ -1699,7 +1699,6 @@ function jq_QuizNextFinish() {
 	if(un_answered){
 	  un_answered = un_answered.split(',');
   }
-  debugger;
 	var text = "Attention!\n";
 	if(un_answered.length){
 	  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT'); ?>: " + un_answered.join(', ') + "\n";

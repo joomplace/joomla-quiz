@@ -1621,14 +1621,25 @@ function jq_QuizExit(){
 	window.location.href = "<?php echo getenv("HTTP_REFERER"); ?>";
 }
 
-function jq_QuizNextFinish() { //send 'TASK = next'
+function jq_QuizNextFinish() {
 	//Add popup if at the conclusion of the survey is not all questions have answers
-	var is_last = parseInt(response.getElementsByTagName('is_last')[0].firstChild.data);
-	if(!is_last){
+	var un_answered = jQuery(response).find('un_answered').text();
+	if(un_answered){
+		un_answered = un_answered.split(',');
+	}
+	var text = "Attention!\n";
+	if(un_answered.length){
+		text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1'); ?>: " + un_answered.join(', ') + "\n";
+	}
+	text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART2'); ?>";
+	if(!confirm(text)){
+		return;
+	}else{
 		if(!confirm("<?php echo JText::_('COM_QUIZ_POPUP_EXIT'); ?>")){
 			return;
 		}
 	}
+
 <?php if ($is_preview) { ?>
 	var jq_task = 'next_preview';
 	<?php } else { ?>

@@ -1695,17 +1695,22 @@ function jq_QuizExit(){
 }
 
 function jq_QuizNextFinish() {
+	//Add popup if at the conclusion of the survey is not all questions have answers
 	var un_answered = jQuery(response).find('un_answered').text();
 	if(un_answered){
 	  un_answered = un_answered.split(',');
   }
 	var text = "Attention!\n";
 	if(un_answered.length){
-	  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT'); ?>: " + un_answered.join(', ') + "\n";
+	  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1'); ?>: " + un_answered.join(', ') + "\n";
   }
-  text+="Press 'OK' to submit, and 'Cancel' if you'd like to continue with questions";
+  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART2'); ?>";
   if(!confirm(text)){
     return;
+  }else{
+	  if(!confirm("<?php echo JText::_('COM_QUIZ_POPUP_EXIT'); ?>")){
+		  return;
+	  }
   }
 
 <?php if ($is_preview) { ?>

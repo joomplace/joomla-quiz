@@ -1255,7 +1255,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$results_txt = str_replace('<!-- TOTAL USER SCORE -->', sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), number_format($user_score, 2, '.', ' '), number_format($max_score, 2, '.', ' '), number_format($user_score_percent, 2, '.', ' ')), $results_txt);
 					$results_txt = str_replace('<!-- PASSING SCORE -->', sprintf(JText::_('COM_QUIZ_RES_MES_PAS_SCORE_TPL'), number_format($nugno_score,2 , '.', ' '), number_format($quiz_info->c_passing_score, 2, '.', ' ')), $results_txt);
 					$results_txt = str_replace('<!-- SPENT TIME -->', $tot_time, $results_txt);
-                    $results_txt = str_replace('<!-- CREDIT -->', $quiz_info->c_credit, $results_txt);
+
+                    if($user_passed) {
+                        $results_txt = str_replace('<!-- CREDIT -->', $quiz_info->c_credit, $results_txt);
+                    }
 
 					if ($c_resbycat) {
 						$results_txt = str_replace('<!-- SCORE BY CATEGORIES -->', $c_resbycat, $results_txt);

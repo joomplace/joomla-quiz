@@ -288,11 +288,7 @@
 				label="COM_JOOMLAQUIZ_DELAY_BEFORE" 
 				labelclass="control-label">
 		</field>
-		<field name="c_credit" type="text" default="" size="10"
-			   label="COM_JOOMLAQUIZ_CREDIT"
-			   labelclass="control-label">
-		</field>
-		<field name="c_grading" type="list" default="0" label="COM_JOOMLAQUIZ_QUIZ_GRADING"
+		<field name="c_grading" type="list" default="0" label="COM_JOOMLAQUIZ_QUIZ_GRADING" 
 		labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_DEFAULT</option>
 			<option value="1">COM_JOOMLAQUIZ_FIRST_ATTEMP</option>

@@ -133,8 +133,9 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 					$c_quest_score = ($c_quest_score>0) ? $c_quest_score : 0;
 				}
 			}
-			
-			$data['c_all_attempts'] = $ddd[0]->c_attempts;
+			if ($ddd[0]->c_attempts) {
+				$data['c_all_attempts'] = $ddd[0]->c_attempts;
+			}
 		}
 		$data['c_quest_cur_attempt'] = 0;
 		$query = "SELECT c_id, c_attempts FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' and c_question_id = '".$data['quest_id']."'";
@@ -143,7 +144,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		
 		if (count($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
-			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts'] && $data['c_all_attempts']) {
+			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
 				$data['is_no_attempts'] = 1;
 			}

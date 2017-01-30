@@ -116,9 +116,6 @@ $sortFields = $this->getSortFields();
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_TOTAL_SCORE', 'c_full_score', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JText::_('COM_JOOMLAQUIZ_CREDIT_WITHOUT_COLON'); ?>
-					</th>
-					<th>
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_PASSING_SCORE', 'c_passing_score', $listDirn, $listOrder); ?>
 					</th>
 					<th>
@@ -213,11 +210,6 @@ $sortFields = $this->getSortFields();
                         <div class="pull-left">
                             <?php echo $item->c_full_score; ?>
                         </div>
-					</td>
-					<td class="has-context">
-						<div class="pull-left">
-							<?php echo $item->c_credit; ?>
-						</div>
 					</td>
 					<td class="has-context">
                         <div class="pull-left">

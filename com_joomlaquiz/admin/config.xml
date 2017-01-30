@@ -31,26 +31,16 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-
-		<field
-			name="ignore_disconect"
-			type="radio"
-			default="1"
-			class="btn-group"
-			label="Ignore disconnect"
-			description="Ignore disconnect while tracking user time"
-			>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-
+		
 		<field 
 			name="lttrack" 
-			type="text"
-			default="20"
+			type="integer" 
+			default="15" 
 			label="COM_JOOMLAQUIZ_REALTIME_TRACK_INT" 
-			description=""
-			filter="integer"
+			description="" 
+			first="5" 
+			last="75" 
+			step="10" 
 		/>
 
 		<field 

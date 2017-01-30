@@ -7,7 +7,7 @@
     <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
     <authorEmail>support@joomplace.com</authorEmail>
     <authorUrl>www.joomplace.com</authorUrl>
-    <version>3.6.2.005</version>
+    <version>1.1.0</version>
     <description>JOOMLAQUIZ ALTA USER POINTS PLUGIN</description>
     <files>
         <filename plugin="jq_altauserpoints">jq_altauserpoints.php</filename>
@@ -19,42 +19,117 @@
     <config>
         <fields name="params">
             <fieldset name="basic">
-                <field name="use_quiz_rules" type="radio" default="1" label="JQ_PARAM_USE_QUIZ_RULES" description="JQ_PARAM_USE_QUIZ_RULES_DESCR" class="btn-group">
+                <field 
+					name="use_quiz_rules" 
+					type="radio" 
+					default="1" 
+					label="JQ_PARAM_USE_QUIZ_RULES"
+					description="JQ_PARAM_USE_QUIZ_RULES_DESCR" 
+					class="btn-group"
+				>
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
             </fieldset>
             <fieldset name="quiz">
-                <field name="comment" type="text" default="JQ_PARAM_DEFAULT_COMPLETED" size="60" label="JQ_PARAM_COMMENT_LABEL" description="JQ_PARAM_COMMENT_DESCR"/>
-                <field name="points_rule" type="list" default="always" label="JQ_PARAM_POINTSRULE_LABEL" description="JQ_PARAM_POINTSRULE_DESCR">
+                <field 
+					name="comment" 
+					type="text" 
+					default="JQ_PARAM_DEFAULT_COMPLETED" 
+					size="60"
+					label="JQ_PARAM_COMMENT_LABEL" 
+					description="JQ_PARAM_COMMENT_DESCR"
+				/>
+                <field 
+					name="points_rule" 
+					type="list" 
+					default="always" 
+					label="JQ_PARAM_POINTSRULE_LABEL"
+					description="JQ_PARAM_POINTSRULE_DESCR"
+				>
                     <option value="always">JQ_PARAM_POINTSRULE_OPT_ALWAYS</option>
                     <option value="onsuccess">JQ_PARAM_POINTSRULE_OPT_ONSUCCESS</option>
                 </field>
-                <field name="fixed_points" type="radio" default="0" label="JQ_PARAM_FIXEDPOINTS_LABEL" description="JQ_PARAM_FIXEDPOINTS_DESCR" class="btn-group">
+                <field 
+					name="fixed_points" 
+					type="radio" 
+					default="0" 
+					label="JQ_PARAM_FIXEDPOINTS_LABEL"
+					description="JQ_PARAM_FIXEDPOINTS_DESCR" 
+					class="btn-group"
+				>
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="add_points_once" type="radio" default="0" label="JQ_PARAM_POINTSONETIME_LABEL" description="JQ_PARAM_POINTSONETIME_DESCR" class="btn-group">
+                <field 
+					name="add_points_once" 
+					type="radio" 
+					default="0" 
+					label="JQ_PARAM_POINTSONETIME_LABEL"
+					description="JQ_PARAM_POINTSONETIME_DESCR" 
+					class="btn-group"
+				>
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="points" type="text" size="5" default="1" label="JQ_PARAM_POINTS_LABEL" description="JQ_PARAM_POINTS_DESCR"/>
+                <field 
+					name="points" 
+					type="text" 
+					size="5" 
+					default="1" 
+					label="JQ_PARAM_POINTS_LABEL"
+					description="JQ_PARAM_POINTS_DESCR"
+				/>
             </fieldset>
             <fieldset name="question">
-                <field name="question_comment" type="text" default="JQ_PARAM_QUESTION_DEFAULT_COMPLETED" size="60" label="JQ_PARAM_COMMENT_LABEL" description="JQ_PARAM_QUESTION_COMMENT_DESCR"/>
-                <field name="question_points_rule" type="list" default="onsuccess" label="JQ_PARAM_QUESTION_POINTSRULE_LABEL" description="JQ_PARAM_QUESTION_POINTSRULE_DESCR">
+                <field 
+					name="question_comment" 
+					type="text" 
+					default="JQ_PARAM_QUESTION_DEFAULT_COMPLETED" 
+					size="60"
+					label="JQ_PARAM_COMMENT_LABEL" 
+					description="JQ_PARAM_QUESTION_COMMENT_DESCR"
+				/>
+                <field 
+					name="question_points_rule" 
+					type="list" 
+					default="onsuccess" 
+					label="JQ_PARAM_QUESTION_POINTSRULE_LABEL"
+					description="JQ_PARAM_QUESTION_POINTSRULE_DESCR"
+				>
                     <option value="always">JQ_PARAM_QUESTION_POINTSRULE_OPT_ALWAYS</option>
                     <option value="onsuccess">JQ_PARAM_QUESTION_POINTSRULE_OPT_ONSUCCESS</option>
                 </field>
-                <field name="question_fixed_points" type="radio" default="0" label="JQ_PARAM_QUESTION_FIXEDPOINTS_LABEL" description="JQ_PARAM_QUESTION_FIXEDPOINTS_DESCR" class="btn-group">
+                <field 
+					name="question_fixed_points" 
+					type="radio" 
+					default="0" 
+					label="JQ_PARAM_QUESTION_FIXEDPOINTS_LABEL"
+                    description="JQ_PARAM_QUESTION_FIXEDPOINTS_DESCR" 
+					class="btn-group"
+				>
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="question_add_points_once" type="radio" default="0" label="JQ_PARAM_QUESTION_POINTSONETIME_LABEL" description="JQ_PARAM_QUESTION_POINTSONETIME_DESCR" class="btn-group">
+                <field 
+					name="question_add_points_once" 
+					type="radio" 
+					default="0" 
+					label="JQ_PARAM_QUESTION_POINTSONETIME_LABEL"
+					description="JQ_PARAM_QUESTION_POINTSONETIME_DESCR" 
+					class="btn-group"
+				>
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
-                <field name="question_points" type="text" size="5" default="1" label="JQ_PARAM_QUESTION_POINTS_LABEL" description="JQ_PARAM_QUESTION_POINTS_DESCR"/>
+                <field 
+					name="question_points" 
+					type="text" 
+					size="5" 
+					default="1" 
+					label="JQ_PARAM_QUESTION_POINTS_LABEL"
+					description="JQ_PARAM_QUESTION_POINTS_DESCR"
+				/>
             </fieldset>
         </fields>
     </config>

@@ -7,7 +7,7 @@
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.6.2.005</version>
+	<version>2.0.9</version>
 	<description>JoomlaQuiz plugin for Community Builder.</description>
 	<files>
 		<filename plugin="cb_myquizzes">cb_myquizzes.php</filename>
@@ -21,9 +21,9 @@
     <tabs>
     	<tab name="CB Joomlaquiz Tab" description="" class="getCommunityMyQuizzes" fields="0" position="cb_main" displaytype="tab">
 			<params>
-				<param name="category" type="text" default="" label="Category" description="Show only quizzes form categories listed in this textfield (seperated by comma eg. 1,2,3). Leave it blank to display all quizzes."/>
-				<param name="limit" type="text" default="50" label="Limit" description="Limit the length of the quiz short description (default is 50)."/>
-				<param name="count" type="text" default="10" label="Count" description="The number of quizzes to display per page(default is 10)"/>
+				<param name="category" type="text" default="" label="Category" description="Show only quizzes form categories listed in this textfield (seperated by comma eg. 1,2,3). Leave it blank to display all quizzes." />
+				<param name="limit" type="text" default="50" label="Limit" description="Limit the length of the quiz short description (default is 50)." />
+				<param name="count" type="text" default="10" label="Count" description="The number of quizzes to display per page(default is 10)" />
 				<param name="introtext" type="list" default="0" label="Short description" description="Select whether to display the short description of the quiz.">
 					<option value="1">Yes</option>
 					<option value="0">No</option>

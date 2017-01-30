@@ -277,16 +277,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_choice` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `#__quiz_r_student_dalliclick` (
-  `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `c_sq_id` int(10) NOT NULL,
-  `c_choice_id` int(10) NOT NULL,
-  `c_elapsed_time` int(10) NOT NULL,
-  PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_hotspot` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -312,25 +302,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_matching` (
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `#__quiz_r_student_puzzle` (
-  `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `c_sq_id` int(11) unsigned NOT NULL,
-  `c_piece` int(10) NOT NULL,
-  `c_elapsed_time` int(10) NOT NULL,
-  PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS `#__quiz_r_student_memory` (
-  `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `c_sq_id` int(11) NOT NULL,
-  `c_mid` int(11) NOT NULL,
-  `c_elapsed_time` int(11) NOT NULL,
-  PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_question` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -370,9 +341,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_quiz` (
   `c_max_score` decimal(12,2) NOT NULL DEFAULT '0.00',
   `user_name` varchar(50) NOT NULL,
   `user_surname` varchar(100) NOT NULL,
-  `respond_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `time_left` int(11) NOT NULL DEFAULT '0',
-  `past_time` int(11) NOT NULL DEFAULT '0',
   `params` varchar(1024) NOT NULL DEFAULT '{}',
   PRIMARY KEY (`c_id`),
   KEY `c_student_id` (`c_student_id`)
@@ -603,7 +571,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_min_after` int(10) unsigned NOT NULL DEFAULT '0',
   `c_passing_score` float NOT NULL DEFAULT '0',
   `c_created_time` date NOT NULL DEFAULT '0000-00-00',
-  `c_credit` float NOT NULL DEFAULT '0',
   `c_published` char(1) NOT NULL DEFAULT '0',
   `c_right_message` text NOT NULL,
   `c_wrong_message` text NOT NULL,

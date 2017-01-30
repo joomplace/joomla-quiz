@@ -80,35 +80,4 @@ class JoomlaquizControllerQuiz extends JControllerForm
 		}
 
 	}
-
-	public function ping(){
-		$diff = JComponentHelper::getParams('com_joomlaquiz')->get('lttrack',15);
-		$sid = JFactory::getApplication()->input->get('sid',0,'INT');
-		$ignore_disconect = JComponentHelper::getParams('com_joomlaquiz')->get('ignore_disconect',1);
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select('*, UNIX_TIMESTAMP() as `timestamp`, NOW() as `now`')
-			->from('#__quiz_r_student_quiz')
-			->where($db->qn('c_id').' = '.$db->q($sid));
-		$obj = $db->setQuery($query)->loadObject();
-
-		$res_diff = $obj->timestamp - strtotime($obj->respond_at);
-
-		if(!$ignore_disconect && $res_diff > $diff*2){
-			$res_diff = $diff;
-		}
-
-		if($obj->time_left > 0){
-			$obj->past_time += $res_diff;
-		}
-		if($res_diff){
-			$obj->time_left -= $res_diff;
-		}
-		if(!$obj->c_total_time){
-			$obj->respond_at = $obj->now;
-		}
-		unset($obj->timestamp);
-		unset($obj->now);
-		$db->updateObject('#__quiz_r_student_quiz',$obj,'c_id');
-	}
 }

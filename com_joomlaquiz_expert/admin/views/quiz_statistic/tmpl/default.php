@@ -27,14 +27,14 @@ function secondsToWords($seconds)
         $ret .= "$hours ".JText::_('JHOURS').' ';
     }
     /*** get the minutes ***/
-    $minutes = (intval($seconds) / 60)%60;
+    $minutes = bcmod((intval($seconds) / 60),60);
     if($minutes > 0)
     {
         $ret .= "$minutes ".JText::_('JMINUTES').' ';
     }
   
     /*** get the seconds ***/
-    $seconds = intval($seconds)%60;
+    $seconds = bcmod(intval($seconds),60);
     if($seconds > 0)
     {
 		$ret .= "$seconds ".JText::_('JSECONDS');
@@ -69,11 +69,14 @@ function secondsToWords($seconds)
             <th width="7%">
                 <?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_TOTAL_SCORE', 'total_score', $listDirn, $listOrder); ?>
             </th>
-            <th colspan="2" style="text-align: center;" width="40%">
+            <th style="text-align: center;" width="40%">
                 <?php  echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_PROGRESS', 'progress', $listDirn, $listOrder); ?>
             </th>
+            <th style="text-align: center;" width="">
+                <?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_PROGRESS', 'progress', $listDirn, $listOrder); ?>
+            </th>
             <th width="">
-                <?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_TIME_PASSED', 'past_time', $listDirn, $listOrder); ?>
+                <?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_RESPOND_AGO', 'respond_at', $listDirn, $listOrder); ?>
             </th>
             <th style="text-align: center;" width="7%">
                 <?php  echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_STARTED', 'start_at', $listDirn, $listOrder); ?>
@@ -105,7 +108,7 @@ function secondsToWords($seconds)
                         <?php echo ($row->passed ? $row->passed : '0' ).'/'.($row->total ? $row->total : '0'); ?>
                     </td>
                     <td>
-                        <?php echo secondsToWords($row->past_time); ?>
+                        <?php echo secondsToWords(time() - $row->respond_at); ?>
                     </td>
                     <td style="text-align: center;">
 						<?php echo JHtml::_('date.relative',$row->start_at,null, JFactory::getDate()); ?>(<?php echo JHtml::_('date',$row->start_at,'H:i:s'); ?>)
@@ -128,6 +131,6 @@ jQuery(document).ready(function($){
 			$('#adminForm table tbody').html($(data).find('#adminForm table tbody').html());
 		});
 	}
-	setInterval(refreshTable,<?php echo JComponentHelper::getParams('com_joomlaquiz')->get('lttrack_up',1)?JComponentHelper::getParams('com_joomlaquiz')->get('lttrack_up',1):1; ?>0000);
+	setInterval(refreshTable,<?php echo JComponentHelper::getParams('com_joomlaquiz')->get('lttrack_up',1)?JComponentHelper::getParams('com_joomlaquiz')->get('lttrack_up',1):1; ?>000);
 });
 </script>

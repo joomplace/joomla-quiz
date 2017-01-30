@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe

@@ -65,7 +65,6 @@ class JoomlaquizModelQuiz_statistic extends JModelList {
         $query->select(array(
             'q.c_title AS title',
             'sq.c_id AS id',
-            'sq.past_time AS past_time',
             'sq.c_student_id AS user_id',
             'qsq.passed AS passed',
             'qsq.total_score AS total_score',
@@ -73,15 +72,15 @@ class JoomlaquizModelQuiz_statistic extends JModelList {
             'qtq.total AS total',
             'qsq.passed/qtq.total AS progress',
             'sq.c_date_time AS start_at',
-            'unix_timestamp(sq.respond_at) AS respond_at'
+            'unix_timestamp(qsq.respond_at) AS respond_at'
         ));
         $query->from($db->qn("#__quiz_r_student_quiz", "sq"));
-        //$query->where($db->qn('sq.c_passed') . ' = '. $db->quote('0'));
+        $query->where($db->qn('sq.c_passed') . ' = '. $db->quote('0'));
         $query->join('LEFT','(' . $subquery . ') AS `qsq` ON ' . $db->qn('qsq.c_stu_quiz_id') . ' = ' . $db->qn('sq.c_id') );
         $query->join('LEFT','(' . $subquery2 . ') AS `qtq` ON ' . $db->qn('qtq.c_quiz_id') . ' = ' . $db->qn('sq.c_quiz_id') );
         $query->join('LEFT',$db->qn('#__quiz_t_quiz').' AS `q` ON ' . $db->qn('q.c_id') . ' = ' . $db->qn('sq.c_quiz_id') );
 
-        $query->where(' (unix_timestamp(NOW()) - '.JComponentHelper::getParams('com_joomlaquiz')->get('lttrack',15).') < unix_timestamp(sq.respond_at)');
+		$query->where(' (NOW() - INTERVAL '.JComponentHelper::getParams('com_joomlaquiz')->get('lttrack',15).' MINUTE) < qsq.respond_at');
 		$query->where(' !`sq`.`c_total_time` ');
 
         // Filter: like / search

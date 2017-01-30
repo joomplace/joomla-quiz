@@ -1698,7 +1698,7 @@ function jq_QuizNextFinish() {
   }
 	var text = "Attention!\n";
 	if(un_answered.length){
-	  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1'); ?>: " + un_answered.join(', ') + "\n";
+	  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1'); ?> " + un_answered.join(', ') + "\n";
   }
   text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART2'); ?>";
   if(!confirm(text)){

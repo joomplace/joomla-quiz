@@ -687,7 +687,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					/* in chain ids */
 					$qchids = explode('*',$qch_ids);
 					/* answered questions without current */
-					$q_ids = array_diff($q_ids, $quest_ids);
+//					$q_ids = array_diff($q_ids, $quest_ids);
 					if(0){
 						/* chain without answered questions, but with current */
 						$qchids = array_diff($qchids, $q_ids);

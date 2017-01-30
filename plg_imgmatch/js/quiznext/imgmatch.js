@@ -13,12 +13,7 @@ case '12':
 		}
 	});
 							
-	if (!complete) {
-		try{ ScrollToElement(jq_getObj('quest_div'+questions[n].cur_quest_id));} catch(e) {}
-		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 1, mes_complete_this_part);
-		setTimeout("jq_releaseBlock()", 1000);
-		return false;
-	} else {
+	if (complete) {
 		answer = URLencode(answer.substring(0, answer.length - 3));
 		clearInterval(quest_timer);
 		jq_jQuery('.jq_quest_time_past').html('');

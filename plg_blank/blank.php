@@ -100,9 +100,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 					}
 
 				}
-				if ($ddd[0]->c_attempts) {
-					$data['c_all_attempts'] = $ddd[0]->c_attempts; 
-				}
+				$data['c_all_attempts'] = $ddd[0]->c_attempts;
 				
 				if ($ddd2[0]->gtype && count($ddd2) == $is_correct_t)
 					$is_correct_q++;
@@ -124,7 +122,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		
 		if (count($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
-			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
+			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts'] && $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
 				$data['is_no_attempts'] = 1;
 			}

@@ -200,9 +200,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 				list($cust_params) = $dispatcher->trigger('onQuizCustomFieldsRetrieve');
 				if(!$cust_params) $cust_params = '{}';
 				
-				$quiz_time = JHtml::_('date',time(),'Y-m-d H:i:s');
-				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params)"
-			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', '".$quiz_time."', '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).")";
+				$quiz_time = JHtml::_('date',time(), 'Y-m-d H:i:s');
+				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params, time_left)"
+			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', '".$quiz_time."', '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).", ".$database->quote($quiz->c_time_limit*60).")";
 				$database->SetQuery($query);
 				$database->query();
 				$stu_quiz_id = $database->insertid();
@@ -293,6 +293,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$database->execute();		
 				}			
 			} else { 
+				$query = "UPDATE #__quiz_r_student_quiz SET `respond_at` = NOW() WHERE c_id = '$stu_quiz_id'";
+				$database->setQuery($query)->execute();
 				$query = "SELECT unique_id  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
 				$database->SetQuery($query);
 				$user_unique_id = $database->loadResult();
@@ -360,11 +362,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 			if ($old_quiz) {
 				$ret_str = '';
 
-				$query = "SELECT c_date_time  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
+				$query = "SELECT past_time FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
 				$database->SetQuery($query);
-				$c_date_time = $database->loadResult();
+				$past_time = $database->loadResult();
 				
-				$ret_str .= "\t" . '<quiz_past_time>'.intval(strtotime(JHtml::_('date',time(), 'Y-m-d H:i:s'))-strtotime($c_date_time)).'</quiz_past_time>' . "\n";
+				$ret_str .= "\t" . '<quiz_past_time>'.$past_time.'</quiz_past_time>' . "\n";
 
 				$ret_str .= "\t" . '<task>seek_quest</task>' . "\n";
 				$ret_str .= "\t" . '<stu_quiz_id>'.$stu_quiz_id.'</stu_quiz_id>' . "\n";
@@ -506,13 +508,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if ($cur_tmpl && ($quiz_id) && ($stu_quiz_id) && is_array($quest_ids) && count($quest_ids)) {
 			//'time is up' check
 			if ($quiz->c_time_limit) {
-				$quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
-				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
-				$database->SetQuery( $query );
-				$quiz_time2 = $database->LoadResult();
-				$quiz_time2a = strtotime($quiz_time2);
-				$user_time = $quiz_time1 - $quiz_time2a;
-				if ($user_time > ($quiz->c_time_limit * 60)) {
+				$query = "SELECT time_left FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+				$database->setQuery( $query );
+				$time_left = $database->loadResult();
+				if ($time_left <= 0) {
 					return $this->JQ_TimeIsUp($quiz, $stu_quiz_id);
 				}
 			}
@@ -560,49 +559,98 @@ class JoomlaquizModelAjaxaction extends JModelList
 					
 					$c_quest_cur_attempt = null;
 					$c_all_attempts = null;
-					
-					$this->JQ_SaveAnswer($stu_quiz_id, $quest_id, $answer, $qtype, $c_penalty, $is_avail, $is_correct, $is_no_attempts, $questtype1_answer_incorrect, $got_one_correct, $c_quest_cur_attempt, $c_all_attempts, $timer);
-					
-					$j = 0;
-						
-					$is_avail = 1;
-					if (($c_quest_cur_attempt + 1) >= $c_all_attempts) { 
-						$is_avail = 0; 
-					}
-		
-					$jq_language = array();
-					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars(nl2br($quiz->c_wrong_message)): JText::_('COM_QUIZ_ANSWER_INCORRECT');
-					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars(nl2br($quiz->c_right_message)): JText::_('COM_QUIZ_ANSWER_CORRECT');
-								
-					$query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($quest_id)."' AND published = 1";
-					$database->SetQuery( $query );
-					$question = $database->LoadObjectList();
-			
-					$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message)?htmlspecialchars(nl2br($question[0]->c_wrong_message)):$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
-					$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars(nl2br($question[0]->c_right_message)):$jq_language['COM_QUIZ_ANSWER_CORRECT'];
-					
-					if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars(nl2br($question[0]->c_partially_message));
-					elseif ($question[0]->c_wrong_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars(nl2br($question[0]->c_wrong_message));
-					else $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = $jq_language['COM_QUIZ_ANSWER_INCORRECT'];
-					
-					
-					if ($got_one_correct) {
-						if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = htmlspecialchars(nl2br($question[0]->c_partially_message));
-					}
-					
-					$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = JText::_('COM_QUIZ_ANSWER_ACCEPTED');
-					if(($question[0]->c_type==8)&&($question[0]->c_right_message)) 
-						$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = htmlspecialchars(nl2br($question[0]->c_right_message));					
-		
-					if ($cur_tmpl) {
-						
-						JoomlaquizHelper::JQ_load_template($cur_tmpl);
-						$feedback_count++;
 
-                        $ret_str .= $this->feedback($database, $blank_fbd, $blank_fbd_count, $answer, $quest_id, $c_quest_cur_attempt, $c_all_attempts, $quiz, $question, $qtype, $is_no_attempts, $is_correct, $jq_language, $got_one_correct, $questtype1_answer_incorrect, $is_avail);
+					if($answer && $answer!='false'){
+						$this->JQ_SaveAnswer($stu_quiz_id, $quest_id, $answer, $qtype, $c_penalty, $is_avail, $is_correct, $is_no_attempts, $questtype1_answer_incorrect, $got_one_correct, $c_quest_cur_attempt, $c_all_attempts, $timer);
 
+						$j = 0;
+
+						$is_avail = 1;
+						if (($c_quest_cur_attempt + 1) >= $c_all_attempts) {
+							$is_avail = 0;
+						}
+
+						$jq_language = array();
+						$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($quiz->c_wrong_message) ? htmlspecialchars($quiz->c_wrong_message): JText::_('COM_QUIZ_ANSWER_INCORRECT');
+						$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($quiz->c_right_message) ? htmlspecialchars($quiz->c_right_message): JText::_('COM_QUIZ_ANSWER_CORRECT');
+
+						$query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($quest_id)."' AND published = 1";
+						$database->SetQuery( $query );
+						$question = $database->LoadObjectList();
+
+						$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message)?htmlspecialchars($question[0]->c_wrong_message):$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
+						$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars($question[0]->c_right_message):$jq_language['COM_QUIZ_ANSWER_CORRECT'];
+
+						if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars($question[0]->c_partially_message);
+						elseif ($question[0]->c_wrong_message) $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = htmlspecialchars($question[0]->c_wrong_message);
+						else $jq_language['COM_QUIZ_PARTIALLY_CORRECT'] = $jq_language['COM_QUIZ_ANSWER_INCORRECT'];
+
+
+						if ($got_one_correct) {
+							if ($question[0]->c_partially_message) $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = htmlspecialchars($question[0]->c_partially_message);
+						}
+
+						$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = JText::_('COM_QUIZ_ANSWER_ACCEPTED');
+						if(($question[0]->c_type==8)&&($question[0]->c_right_message))
+							$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] = htmlspecialchars($question[0]->c_right_message);
+
+						if ($cur_tmpl) {
+
+							JoomlaquizHelper::JQ_load_template($cur_tmpl);
+							$feedback_count++;
+							$ret_str .= "\t" . '<feedback>' . "\n";
+
+							$c_detailed_feedback = "";
+
+							if (!$quiz->c_show_qfeedback && !$is_no_attempts && ($quiz->c_feedback && $question[0]->c_feedback )&& $qtype != 9 && !$question[0]->c_immediate) {
+								$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', (($is_correct)?(($qtype == 8)?$jq_language['COM_QUIZ_ANSWER_ACCEPTED']:$jq_language['COM_QUIZ_ANSWER_CORRECT']): ($got_one_correct? $jq_language['COM_QUIZ_PARTIALLY_CORRECT']:$jq_language['COM_QUIZ_ANSWER_INCORRECT'])));
+								if($qtype == 1)
+								{
+									//$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', (($is_correct)?(($questtype1_answer_incorrect)?$questtype1_answer_incorrect:$jq_language['COM_QUIZ_ANSWER_CORRECT']):(($questtype1_answer_incorrect)?($questtype1_answer_incorrect):($jq_language['COM_QUIZ_ANSWER_INCORRECT']))));
+									$msg_html = ($is_correct)?$jq_language['COM_QUIZ_ANSWER_CORRECT']:$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
+									$msg_html .= ($questtype1_answer_incorrect)?'<br/>'.$questtype1_answer_incorrect:'';
+
+									$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', $msg_html );
+								}
+								$ret_str .= "\t" . '<quest_feedback>1</quest_feedback>' . "\n";
+								$ret_str .= "\t" . '<quest_feedback_repl_func>0</quest_feedback_repl_func>' . "\n";
+								if ($blank_fbd && $blank_fbd_count) {
+									$ret_str .= "\t" .  $blank_fbd;
+									$ret_str .= "\t" . '<blank_fbd_count>'.$blank_fbd_count.'</blank_fbd_count>' . "\n";
+								}
+
+							} else {
+								$ret_str .= "\t" . '<quest_feedback>0</quest_feedback>' . "\n";
+								$ret_str .= "\t" . '<quest_feedback_repl_func><![CDATA[jq_QuizContinue();]]></quest_feedback_repl_func>' . "\n";
+								$msg_html = ' ';
+							}
+
+							if ($is_no_attempts == 1 && $answer) {
+								$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', JText::_('COM_MES_NO_ATTEMPTS'));
+								$is_correct = 0;
+							}
+
+							if(!$is_correct){
+								$query = "SELECT c_detailed_feedback from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";
+								$database->SetQuery( $query );
+								$c_detailed_feedback = '</br>'.$database->LoadResult();
+							}
+
+							$ret_str .= "\t" . '<quiz_prev_correct>'.$is_correct.'</quiz_prev_correct>' . "\n";
+							$ret_str .= "\t" . '<quiz_message_box><![CDATA['.$msg_html.$c_detailed_feedback.']]></quiz_message_box>' . "\n";
+							$ret_str .= "\t" . '<quiz_allow_attempt>'.$is_avail.'</quiz_allow_attempt>' . "\n";
+							$ret_str .= "\t" . '<feedback_quest_id>'.$quest_id.'</feedback_quest_id>' . "\n";
+							$ret_str .= "\t" . '<feedback_quest_type>'.$qtype.'</feedback_quest_type>' . "\n";
+
+							if($is_correct OR (!$is_correct &&  ($c_quest_cur_attempt + 1) >= $c_all_attempts) ){
+								$ret_str .= "\t" . '<feedback_show_flag>1</feedback_show_flag>' . "\n";
+							} else {
+								$ret_str .= "\t" . '<feedback_show_flag>0</feedback_show_flag>' . "\n";
+							}
+
+							$ret_str .= "\t" . '</feedback>' . "\n";
+						}
 					}
-
 				}
 
 				$ret_str .= "\t" . '<feedback_count>'.$feedback_count.'</feedback_count>' . "\n";
@@ -630,7 +678,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$q_total = count($qchids);
 					
 					$qnum = 0;
-					
+
 					if(count($qchids)){
 						$quest_pos = array_search(end($quest_ids), $qchids);
 						if(!isset($qchids[$quest_pos + 1]) && ($quest_pos+1) >= count($qchids) ){
@@ -638,7 +686,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						}else{
 							$quest_pos++;
 						}
-						
+
 						for($i = $quest_pos; $i < $q_total; $i++){
 							$database->setQuery("SELECT `c_attempts` FROM #__quiz_t_question WHERE `c_id` = '".$qchids[$i]."'");
 							$all_attempts = $database->loadResult();
@@ -646,8 +694,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$query = "SELECT `c_attempts` FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qchids[$i]."'";
 							$database->SetQuery( $query );
 							$c_attempts = $database->LoadResult();
-							
-							if($c_attempts < $all_attempts && $qchids[$i] != end($quest_ids)  ){
+
+							/* $c_attempts < $all_attempts && $qchids[$i] != end($quest_ids) */
+							if($c_attempts < $all_attempts && ($qchids[$i] != end($quest_ids) || count($qchids)==1)){
 								$qnum = $qchids[$i];
 								break;
 							}
@@ -671,9 +720,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 				} else {
 
 					$ret_str .= "\t" . '<task>finish</task>' . "\n";
-					if ($is_no_attempts == 1) {
-						$ret_str = "\t" . '<task>finish</task>' . "\n";
-					}
 					
 					$query = "SELECT sum(c_score) FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
 					$database->SetQuery( $query );
@@ -728,14 +774,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if ($cur_tmpl && ($quiz_id) && ($stu_quiz_id) && is_array($quest_ids) && count($quest_ids)) {
 			//'time is up' check
 			if ($quiz->c_time_limit) {
-				$user_time = 0;
-				$quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
-				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
-				$database->SetQuery( $query );
-				$quiz_time2 = $database->LoadResult();
-				$quiz_time2a = strtotime($quiz_time2);
-				$user_time = $quiz_time1 - $quiz_time2a;
-				if ($user_time > ($quiz->c_time_limit * 60)) {
+				$query = "SELECT time_left FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+				$database->setQuery( $query );
+				$time_left = $database->loadResult();
+				if ($time_left <= 0) {
 					return $this->JQ_TimeIsUp($quiz, $stu_quiz_id);
 				}
 			}
@@ -743,7 +785,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$query = "SELECT c_quiz_id, c_student_id, unique_id FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 			$database->SetQuery($query);
 			$st_quiz_data = $database->LoadObjectList();
-			
+
+			$quiz_time =JHtml::_('date',time(), 'Y-m-d H:i:s');
 			$start_quiz = 0;
 			if (count($st_quiz_data)) {
 				$start_quiz = $st_quiz_data[0]->c_quiz_id;
@@ -1212,6 +1255,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$results_txt = str_replace('<!-- TOTAL USER SCORE -->', sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), number_format($user_score, 2, '.', ' '), number_format($max_score, 2, '.', ' '), number_format($user_score_percent, 2, '.', ' ')), $results_txt);
 					$results_txt = str_replace('<!-- PASSING SCORE -->', sprintf(JText::_('COM_QUIZ_RES_MES_PAS_SCORE_TPL'), number_format($nugno_score,2 , '.', ' '), number_format($quiz_info->c_passing_score, 2, '.', ' ')), $results_txt);
 					$results_txt = str_replace('<!-- SPENT TIME -->', $tot_time, $results_txt);
+
+                    if($user_passed) {
+                        $results_txt = str_replace('<!-- CREDIT -->', $quiz_info->c_credit, $results_txt);
+                    }
 
 					if ($c_resbycat) {
 						$results_txt = str_replace('<!-- SCORE BY CATEGORIES -->', $c_resbycat, $results_txt);
@@ -2127,14 +2174,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (($quiz_id) && ($stu_quiz_id) && ($seek_quest_id)) {
 			//'time is up' check
 			if ($quiz->c_time_limit) {
-				$user_time = 0;
-				$quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
-				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
-				$database->SetQuery( $query );
-				$quiz_time2 = $database->LoadResult();
-				$quiz_time2a = strtotime($quiz_time2);
-				$user_time = $quiz_time1 - $quiz_time2a;
-				if ($user_time > ($quiz->c_time_limit * 60)) {
+				$query = "SELECT time_left FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+				$database->setQuery( $query );
+				$time_left = $database->loadResult();
+				if ($time_left <= 0) {
 					return $this->JQ_TimeIsUp($quiz, $stu_quiz_id);
 				}
 			}
@@ -2193,14 +2236,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 						JoomlaquizHelper::JQ_load_template($cur_tmpl);
 						if (isset($q_data[$i])) {
 
-							$query = "SELECT c_date_time  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
+
+							$query = "SELECT past_time FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
 							$database->SetQuery($query);
-							$c_date_time = $database->loadResult();
-							if ($c_date_time) {							
-								$ret_str .= "\t" . '<quiz_past_time>'.intval(strtotime(JHtml::_('date',time(), 'Y-m-d H:i:s'))-strtotime($c_date_time)).'</quiz_past_time>' . "\n";
-							} else {
-								$ret_str .= "\t" . '<quiz_past_time>0</quiz_past_time>' . "\n";
-							}
+							$past_time = $database->loadResult();
+
+							$ret_str .= "\t" . '<quiz_past_time>'.$past_time.'</quiz_past_time>' . "\n";
 
 							$quiz_count_quests = count($q_data);
 
@@ -2757,6 +2798,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if (is_array($q_ids) && count($q_ids)) {
 					$diff = array_diff ($qchids, $q_ids);
 					if (count($diff) && count($diff) == 1) {
+						$is_last = 1;
+					}
+				}else{
+					if(count($qchids)==1){
 						$is_last = 1;
 					}
 				}

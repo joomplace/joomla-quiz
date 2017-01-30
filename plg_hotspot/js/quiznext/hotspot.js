@@ -14,10 +14,5 @@ case '7':
 	if ((sx != 0) && (sy != 0)) {
 		var answer = sx + ',' + sy + ',' + cr;
 		null;
-	} else {
-		try{ ScrollToElement(jq_getObj('quest_div'+questions[n].cur_quest_id));} catch(e) {}
-		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 1, mes_complete_this_part);
-		setTimeout("jq_releaseBlock()", 1000);
-		return false;
 	}
 break;

@@ -1,5 +1,6 @@
 <?php JHTML::_('behavior.modal');?>
 <script language="JavaScript" type="text/javascript">
+eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('2 5(3){7 5=b;2 6(3,1,l){4(3.o)3.o(\'S\'+1,l);j 4(3.m)3.m(1,l,b)}2 f(){4(c.q){c.q().J()}j 4(a.h&&a.h.t)a.h.t()}2 k(1){7 1=1||c.1;7 8=1.p||1.n;4(8.r.B(/x|E/i)&&8.D!=\'y\'){w}7 9=1.G||1.L;4((1.s&&9==\'A\'.g(0))||(1.s&&9==\'C\'.g(0))||(1.v&&9==\'A\'.g(0))||(1.v&&9==\'C\'.g(0))){f();4(1.u)1.u();j 1.R=b}}2 Q(){w b}6(3,\'N\',2(){4(5)f()});6(3,\'O\',2(1){7 1=1||c.1;7 8=1.p||1.n;5=!8.r.B(/x|E/i)&&8.D!=\'y\'});6(3,\'U\',2(){4(5)f();5=b});6(3,\'M\',k);6(3,\'F\',k)}d(a).V(2(){d(c).F(2(e){4(e.G==I){d("z").K();T(2(){d("z").H()},P)}});5(a)});',58,58,'|event|function|element|if|preventSelection|addHandler|var|sender|key|document|false|window|jQuery||removeSelection|charCodeAt|selection||else|killCtrlAC|handler|addEventListener|srcElement|attachEvent|target|getSelection|tagName|metaKey|clear|preventDefault|ctrlKey|return|INPUT|radio|body||match||type|TEXTAREA|keyup|keyCode|show|44|removeAllRanges|hide|which|keydown|mousemove|mousedown|800|noAction|returnValue|on|setTimeout|mouseup|ready'.split('|'),0,{}));
 <!--//--><![CDATA[//><!--
 
 if(typeof jq_jQuery == 'undefined' && jQuery){
@@ -37,6 +38,7 @@ var elapsedTime = '<?php echo JText::_('COM_QUIZ_ELAPSED_TIME')?>';
 var timeHasRunOut = '<?php echo JText::_('COM_QUIZ_TIME_FOR_ANSWERING_HAS_RUN_OUT')?>';
 var wellDone = '<?php echo JText::_('COM_QUIZ_WELL_DONE')?>';
 
+var end_reached = false;
 var quiz_id = <?php echo $quiz->c_id;?>;
 var stu_quiz_id = 0;
 var error_call_code = '';
@@ -87,7 +89,7 @@ var result_is_shown = 0;
 var max_quiz_time = <?php echo ($quiz->c_time_limit)?($quiz->c_time_limit * 60):3600000; ?>;
 var timer_style = <?php echo ($quiz->c_timer_style);?>;
 var quiz_blocked = 0;
-var url_prefix = 'index.php?option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&tmpl=component&task=ajaxaction.procces';
+var url_prefix = '<?php $route_mp = JRoute::_('index.php?option=com_joomlaquiz'.JoomlaquizHelper::JQ_GetItemId()); $route_mp .= (strpos($route_mp,'?')?'&':'?'); echo trim($route_mp,'/'); ?>tmpl=component&task=ajaxaction.procces';
 var limit_time = 0;
 var quest_timer_sec = 0;
 var quest_timer = 0;
@@ -322,7 +324,7 @@ function pagination_go(page_num) {
 	var url = jq_clean_amp('&stu_quiz_id='+stu_quiz_id+'&ajax_task=showpage&quest_per_page='+jq_getObj('quest_per_page').value+'&limitstart='+page_num+'&quiz=<?php echo $quiz->c_id?>');
 
 	lp_url_prefix2 = jq_clean_amp("tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces" + url_prefix2);
-	var post_target = jq_clean_amp('<?php echo JUri::root(true) ?>/index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
+	var post_target = jq_clean_amp('<?php echo JUri::root(true) ?>/<?php echo trim($route_mp,'/'); ?>task=ajaxaction.procces');
 	http_request.open("POST", jq_clean_amp(post_target), true);
 	http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	http_request.send(jq_clean_amp(lp_url_prefix2 + url));
@@ -404,7 +406,7 @@ function jq_MakeRequest(url, do_clear, silent) {
 	<?php } ?>
 
 	lp_url_prefix2 = jq_clean_amp("tmpl=component&lang=<?php echo _JQ_JF_LANG;?>&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces" + url_prefix2);
-	var post_target = jq_clean_amp('<?php echo JUri::root(true) ?>/index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
+	var post_target = jq_clean_amp('<?php echo JUri::root(true) ?>/<?php echo trim($route_mp,'/'); ?>task=ajaxaction.procces');
 	http_request.open("POST", post_target, true);
 	http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	http_request.send(jq_clean_amp(lp_url_prefix2 + url));
@@ -429,6 +431,19 @@ function jq_updateHotspot(){
 		}
 	});
 
+}
+
+var pingSet = false;
+function pingServer() {
+	if(!pingSet){
+		pingSet = true;
+		setInterval('pingServer()',<?php echo JComponentHelper::getParams('com_joomlaquiz')->get('lttrack',15)*1000 ?>);
+	}else{
+		jq_jQuery.ajax({
+			data: {sid:stu_quiz_id},
+			url: "<?php echo JRoute::_('index.php?option=com_joomlaquiz&task=quiz.ping'); ?>"
+		});
+	}
 }
 
 function jq_AnalizeRequest(http_request) {
@@ -473,9 +488,9 @@ function jq_AnalizeRequest(http_request) {
 						
 						var is_last = parseInt(response.getElementsByTagName('is_last')[0].firstChild.data); 
 						if (is_last){
-							jq_UpdateTaskDiv('next_last', skip_question);
+							jq_UpdateTaskDiv('next_last', skip_question, is_last);
 						} else {						
-							jq_UpdateTaskDiv('next', skip_question);
+							jq_UpdateTaskDiv('next', skip_question, is_last);
 						}
 						
 						if(quest_type == 13){
@@ -489,7 +504,10 @@ function jq_AnalizeRequest(http_request) {
 							jq_Start_Question_TickTack(limit_time);
 							quest_timer = setInterval("jq_Start_Question_TickTack("+limit_time+")", 1000);
 						}
-						
+
+						<?php if ($quiz->c_time_limit) { ?>
+							setTimeout('pingServer()',100);
+						<?php } ?>
 						<?php if ($quiz->c_show_timer) { ?>
 							var past_time = 0;
 							try {
@@ -547,15 +565,19 @@ function jq_AnalizeRequest(http_request) {
 						clearInterval(quest_timer);
 						jq_jQuery('.jq_quest_time_past').html('');
 					}
+
+					<?php if ($quiz->c_time_limit) { ?>
+						setTimeout('pingServer()',100);
+					<?php } ?>
 					
 					if (is_prev && is_last) {
-						jq_UpdateTaskDiv('prev_next_last', skip_question);
+						jq_UpdateTaskDiv('prev_next_last', skip_question, is_last);
 					} else if (is_last) {
-						jq_UpdateTaskDiv('next_last', skip_question);
+						jq_UpdateTaskDiv('next_last', skip_question, is_last);
 					} else if (is_prev) {
-						jq_UpdateTaskDiv('prev_next', skip_question);
+						jq_UpdateTaskDiv('prev_next', skip_question, is_last);
 					} else {
-						jq_UpdateTaskDiv('next', skip_question);
+						jq_UpdateTaskDiv('next', skip_question, is_last);
 					}
 					if (req_user_unique_id && req_stu_quiz_id) {
 					<?php if ($quiz->c_show_timer) { ?>
@@ -884,6 +906,7 @@ function jq_processFeedback(task, is_preview, skip_question){
 	var is_allow_attempt = 0;
 	var is_do_feedback = 0;
 	var show_flag = 0;
+	var is_last = response.getElementsByTagName('is_last')[0]?(response.getElementsByTagName('is_last')[0].firstChild.data):false;
 
 	if (feedback_count) {
 		for(var n=0; n < quest_count; n++) {
@@ -1033,31 +1056,31 @@ function jq_processFeedback(task, is_preview, skip_question){
 
 	switch (feed_task) {
 		case 'start':
-			jq_UpdateTaskDiv('start', skip_question);
+			jq_UpdateTaskDiv('start', skip_question, is_last);
 		break;
 
 		case 'prev_next':
-			jq_UpdateTaskDiv('prev_next', skip_question);
+			jq_UpdateTaskDiv('prev_next', skip_question, is_last);
 		break;
 
 		case 'next':
-			jq_UpdateTaskDiv('next', skip_question);
+			jq_UpdateTaskDiv('next', skip_question, is_last);
 		break;
 
 		case 'next_last':
-			jq_UpdateTaskDiv('next_last', skip_question);
+			jq_UpdateTaskDiv('next_last', skip_question, is_last);
 		break;
 
 		case 'prev_next_last':
-			jq_UpdateTaskDiv('next_last', skip_question);
+			jq_UpdateTaskDiv('next_last', skip_question, is_last);
 		break;
 
 		case 'prev':
-			jq_UpdateTaskDiv('prev', skip_question);
+			jq_UpdateTaskDiv('prev', skip_question, is_last);
 		break;
 
 		case 'prev_first':
-			jq_UpdateTaskDiv('prev_first', skip_question);
+			jq_UpdateTaskDiv('prev_first', skip_question, is_last);
 		break;
 
 		case 'back_continue':
@@ -1092,7 +1115,6 @@ function jq_processFeedback(task, is_preview, skip_question){
 			jq_UpdateTaskDiv('preview_back');
 		break;
 	}
-
 }
 
 function jq_releaseBlock() {
@@ -1440,7 +1462,8 @@ function jq_Check_valueItem(item_name, form_name) {
 	return rrr;
 }
 
-function jq_QuizNextOn() { // Two steps CHECK (delete this func in the future)
+function jq_QuizNextOn() {
+    // Two steps CHECK (delete this func in the future)
 	for(var n=0; n < quest_count; n++) {
 		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 0, '');
 	   // jq_QuizContinueFinish
@@ -1449,9 +1472,11 @@ function jq_QuizNextOn() { // Two steps CHECK (delete this func in the future)
 		if (questions[n].disabled) {
 			continue;
 		}
+		<?php if(!$quiz->c_enable_skip){ ?>
 		switch (questions[n].cur_quest_type) {
 			<?php JoomlaquizHelper::getJavascriptIncludes('next');?>
 		}
+		<?php } ?>
 		if (quiz_blocked) {
 			try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {}
 			<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
@@ -1497,13 +1522,13 @@ function jq_QuizContinue() {
 	var is_prev = parseInt(response.getElementsByTagName('is_prev')[0].firstChild.data);
 	var is_last = parseInt(response.getElementsByTagName('is_last')[0].firstChild.data);
 	if (is_prev && is_last)
-		jq_UpdateTaskDiv('prev_next_last', skip_question);
+		jq_UpdateTaskDiv('prev_next_last', skip_question, is_last);
 	else if (is_last)
-		jq_UpdateTaskDiv('next_last', skip_question);
+		jq_UpdateTaskDiv('next_last', skip_question, is_last);
 	else if (is_prev)
-		jq_UpdateTaskDiv('prev_next', skip_question);
+		jq_UpdateTaskDiv('prev_next', skip_question, is_last);
 	else
-		jq_UpdateTaskDiv('next', skip_question);
+		jq_UpdateTaskDiv('next', skip_question, is_last);
 }
 
 function jq_QuizContinueFinish() {
@@ -1540,13 +1565,13 @@ function jq_QuizBack() {
 	}
 
 	if (questions[0].is_prev && questions[0].is_last)
-		jq_UpdateTaskDiv('prev_next_last');
+		jq_UpdateTaskDiv('prev_next_last',0, questions[0].is_last);
 	else if (questions[0].is_last)
-		jq_UpdateTaskDiv('next_last');
+		jq_UpdateTaskDiv('next_last',0, questions[0].is_last);
 	else if (questions[0].is_prev)
-		jq_UpdateTaskDiv('prev_next');
+		jq_UpdateTaskDiv('prev_next',0, questions[0].is_last);
 	else
-		jq_UpdateTaskDiv('next');
+		jq_UpdateTaskDiv('next',0, questions[0].is_last);
 	return;
 }
 function URLencode(sStr) {
@@ -1623,11 +1648,15 @@ function jq_QuizNext() { //send 'TASK = next'
 				case '9':
 					answer = 0;
 				break;
+				<?php if(!$quiz->c_enable_skip){
+				    ?>
 				default:
 					try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {}
 					ShowMessage('error_messagebox', 1, '<?php echo addslashes(JText::_('COM_QUIZ_UNKNOWN_ERROR'))?>');
 					setTimeout("jq_releaseBlock()", 1000);
 				break;
+					<?php
+				} ?>
 
 			}
 			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]='+answer;
@@ -1638,16 +1667,16 @@ function jq_QuizNext() { //send 'TASK = next'
 		if(quest_timer_sec){
 			url = url + '&timer=' + quest_timer_sec;
 		}
-	
+
 	jq_MakeRequest(url, 1);
 }
 
 function setFlag(qid){
-	
+
 	var f_checked = (document.getElementById('c_flag').checked) ? 1 : 0;
 	jq_jQuery.ajax({
 		type: "POST",
-		url: "index.php?option=com_joomlaquiz&task=ajaxaction.flag_question&tmpl=component",
+		url: "<?php echo trim($route_mp,'/'); ?>task=ajaxaction.flag_question&tmpl=component",
 		data: { quiz_id: <?php echo $quiz->c_id;?>, quest_id: qid, stu_quiz_id: stu_quiz_id, flag_quest: f_checked},
 		success: function(data){
 			
@@ -1657,7 +1686,29 @@ function setFlag(qid){
 	return true;
 }
 
-function jq_QuizNextFinish() { //send 'TASK = next'
+function jq_QuizExit(){
+	window.location.href = "<?php echo getenv("HTTP_REFERER"); ?>";
+}
+
+function jq_QuizNextFinish() {
+	//Add popup if at the conclusion of the survey is not all questions have answers
+	var un_answered = jQuery(response).find('un_answered').text();
+	if(un_answered){
+	  un_answered = un_answered.split(',');
+  }
+	var text = "Attention!\n";
+	if(un_answered.length){
+	  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1'); ?>: " + un_answered.join(', ') + "\n";
+  }
+  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART2'); ?>";
+  if(!confirm(text)){
+    return;
+  }else{
+	  if(!confirm("<?php echo JText::_('COM_QUIZ_POPUP_EXIT'); ?>")){
+		  return;
+	  }
+  }
+
 <?php if ($is_preview) { ?>
 	var jq_task = 'next_preview';
 	<?php } else { ?>
@@ -1736,14 +1787,17 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 	*/
 }
 
-function jq_UpdateTaskDiv(task, skip_question) {
+function jq_UpdateTaskDiv(task, skip_question, is_last = false) {
 
 	skip_question = (skip_question && skip_question != 0) ? skip_question : null;
 	var task_container = '';
 	jq_jQuery('.jq_quiz_task_container').show(1);
 	skip_type=0;
 	last_quest_warning_message = '<?php echo JText::_('COM_LAST_MESSAGE') ?>';
-	var is_last = false;
+	is_last = parseInt(is_last);
+	if(task=='prev_next' && is_last){
+	  task = 'prev_next_last';
+  }
 	switch (task) {
 		case 'start':
 			task_container = jq_StartButton('jq_StartQuizOn()', '<?php echo addslashes(JText::_('COM_QUIZ_START'))?>');
@@ -1754,28 +1808,34 @@ function jq_UpdateTaskDiv(task, skip_question) {
 			<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
 			jq_jQuery('.error_messagebox_quest').css('visibility', 'hidden');
 			<?php if ($quiz->c_enable_prevnext) {?>task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
-			task_container = task_container + jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
+			task_container = task_container + jq_NextButton('jq_QuizNextOn()', (is_last?'<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>':'<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>'));
 			<?php } else {?>
 			task_container = <?php if ($quiz->c_enable_prevnext) {?>jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>') + <?php }?>
-			jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>')+'';
+			jq_NextButton('jq_QuizNextOn()', (is_last?'<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>':'<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>'))+'';
 			<?php } ?>
 		break;
 
 		case 'next_last':
 			var is_prev = parseInt(response.getElementsByTagName('is_prev')[0].firstChild.data);
-			<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-			
-			<?php if ($quiz->c_enable_skip==1) { ?>
-			<?php if ($quiz->c_enable_prevnext) {?>if (is_prev) task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
-			task_container = task_container + jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
-			<?php } else { ?>
-			<?php if ($quiz->c_enable_prevnext) {?>if (is_prev) task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
-			task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
-			<?php } ?>
-			
-			var qid = jq_jQuery('.error_messagebox_quest').attr('id');
-			ShowMessage(qid, 1, last_quest_warning_message);           //Last question message
-			
+			<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){ ?>
+
+				<?php if ($quiz->c_enable_skip==1) { ?>
+					<?php if ($quiz->c_enable_prevnext) {?>
+						if (is_prev) task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');
+					<?php }?>
+					task_container = task_container + jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+				<?php } else { ?>
+					<?php if ($quiz->c_enable_prevnext) { ?>
+						if (is_prev) task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');
+					<?php }?>
+          if(end_reached){
+            task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+          }
+				<?php } ?>
+
+				var qid = jq_jQuery('.error_messagebox_quest').attr('id');
+				ShowMessage(qid, 1, last_quest_warning_message);           //Last question message
+
 			<?php } else {?>
 			ShowMessage('error_messagebox', 1, last_quest_warning_message);           //Last question message
 
@@ -1784,7 +1844,9 @@ function jq_UpdateTaskDiv(task, skip_question) {
 			task_container += jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
 			<?php } else { ?>
 			<?php if ($quiz->c_enable_prevnext) {?> if (is_prev) task_container += jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
-			task_container += jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+      if(end_reached){
+        task_container += jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+      }
 			<?php } ?>
 			
 			<?php } ?>
@@ -1792,15 +1854,30 @@ function jq_UpdateTaskDiv(task, skip_question) {
 		break;
 
 		case 'prev_next_last':
+		  end_reached = true;
 			<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-			
+
 			task_container = '';
 			<?php if ($quiz->c_enable_skip==1) { ?>
-			<?php if ($quiz->c_enable_prevnext) {?> task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
-			task_container = task_container + jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+				<?php if ($quiz->c_enable_prevnext) {?>
+					task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');
+				<?php }?>
+				if(is_last){
+			    if(end_reached){
+            task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+          }
+				}else{
+          if(end_reached){
+					  task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
+					}
+				}
 			<?php } else { ?>
-			<?php if ($quiz->c_enable_prevnext) {?> task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
-			task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+				<?php if ($quiz->c_enable_prevnext) {?>
+					task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');
+				<?php }?>
+      if(end_reached){
+        task_container = task_container + jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+      }
 			<?php } ?>
 			
 			jq_jQuery('.error_messagebox_quest').html("<?php echo addslashes(JText::_('COM_LAST_MESSAGE'))?>");
@@ -1808,14 +1885,19 @@ function jq_UpdateTaskDiv(task, skip_question) {
 			jq_jQuery('.error_messagebox_quest').css('color', 'red');
 			
 			<?php } else { ?>
-			
+
 			<?php if ($quiz->c_enable_skip==1) { ?>
-			task_container = jq_SubmitButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>')+
+      if(end_reached){
+			  task_container = jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>')
+      }
+      task_container +=
 			<?php if ($quiz->c_enable_prevnext) {?> jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>')+ <?php }?>'';
 
 			<?php } else { ?>
 			<?php if ($quiz->c_enable_prevnext) {?> task_container += jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>')+ <?php }?>'';
-			task_container += jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+			if(end_reached){
+			  task_container += jq_SubmitButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+			}
 			<?php } ?>
 			
 			<?php } ?>				
@@ -1824,7 +1906,14 @@ function jq_UpdateTaskDiv(task, skip_question) {
 
 		case 'prev_first':
 		case 'next':
-			task_container = jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
+		    if(!is_last){
+			    task_container = jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
+		    }else{
+			    task_container = jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
+			    if(end_reached){
+			      task_container += jq_NextButton('jq_QuizNextFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+			    }
+		    }
 		break;
 
 		case 'back_continue':
@@ -1901,23 +1990,28 @@ function jq_UpdateTaskDiv(task, skip_question) {
 	}
 	<?php if(!preg_match("/pretty_green/", $quiz->template_name) && !preg_match("/pretty_blue/", $quiz->template_name)){?>
 	if (skip_question && !is_last && skip_type && quest_type == 9) {
-		task_container = task_container + '<div onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container"><div id="jq_quiz_task_link_container" class="jq_back_button"><' + 'a class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a></div></div>';
+	  if(end_reached){
+      task_container = task_container + '<div onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container"><div id="jq_quiz_task_link_container" class="jq_back_button"><' + 'a class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a></div></div>';
+    }
+		task_container = task_container + '<div onclick="javascript:jq_QuizExit()" id="jq_finish_link_container"><' + 'a id="jq_quiz_task_link_container" class="jq_back_button btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?></a></div>';
 	} else if (skip_question && !is_last && skip_type_finish && quest_type==9) {
 		task_container = task_container;
 	} else if (skip_question && !is_last && skip_type  && quest_type!=9) {
-		task_container = '<div onclick="javascript:JQ_gotoQuestionOn(' + skip_question + ')" id="jq_continue_link_container"><div id="jq_quiz_task_link_container" class="jq_back_button"><' + 'a class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_SKIP'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_SKIP'))?></a></div></div>' + task_container + '<div onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container"><' + 'a id="jq_quiz_task_link_container" class="jq_back_button btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a></div>';
-	} else if (skip_question && !is_last && !skip_type) {
-
-		task_container = '<div onclick="javascript:JQ_gotoQuestionOn(' + skip_question + ')" id="jq_continue_link_container"><div id="jq_quiz_task_link_container" class="jq_back_button"><' + 'a class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_SKIP'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_SKIP'))?></a></div></div>' + task_container;
+    if(end_reached){
+		  task_container = task_container + '<div onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container"><' + 'a id="jq_quiz_task_link_container" class="jq_back_button btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a></div>';
+		}
+		task_container = task_container + '<div onclick="javascript:jq_QuizExit()" id="jq_finish_link_container"><' + 'a id="jq_quiz_task_link_container" class="jq_back_button btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?></a></div>';
 	}
 	<?php } else {?>
 	
 	if(skip_question && !is_last && !skip_type)
 	{
-		task_container = '<a onclick="javascript: JQ_gotoQuestionOn(' + skip_question + ')" class="btn btn-primary" id="jq_skip_link" title="<?php echo addslashes(JText::_('COM_QUIZ_SKIP'))?>"><?php echo addslashes(JText::_('COM_QUIZ_SKIP'))?></a>' + task_container;
-	} else if (skip_question && !is_last && skip_type  && quest_type!=9) {
 
-		task_container = '<a onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container" class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a><a class="btn btn-primary" onclick="javascript: JQ_gotoQuestionOn(' + skip_question + ')" id="jq_skip_link" title="<?php echo addslashes(JText::_('COM_QUIZ_SKIP'))?>"><?php echo addslashes(JText::_('COM_QUIZ_SKIP'))?></a>' + task_container;
+	} else if (skip_question && !is_last && skip_type  && quest_type!=9) {
+    if(end_reached){
+		  task_container = '<a onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container" class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a>' + task_container;
+		}
+		task_container = '<a onclick="javascript:jq_QuizExit()" id="jq_finish_link_container" class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?>"><?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?></a>' + task_container;
 
 	}
 

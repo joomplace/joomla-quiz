@@ -1285,6 +1285,15 @@ function jq_StartQuizOn() {
 			return false;
 		}
 	}
+	if(document.getElementById('jq_user_age') && document.getElementById('jq_user_age').value == ''){
+		alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_AGE_PLEASE',true);?>');
+		return false;
+	}
+
+	if(document.getElementById('jq_user_ocupation') && document.getElementById('jq_user_ocupation').value == ''){
+		alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_OCUPATION_PLEASE');?>');
+		return false;
+	}
 
 	if (!quiz_blocked) {
 		jq_jQuery('#jq_quiz_container1').css('opacity', 0.7);
@@ -1304,8 +1313,10 @@ function jq_StartQuiz() {
 	var uname = (document.getElementById('jq_user_name') && document.getElementById('jq_user_name').value != '') ? document.getElementById('jq_user_name').value : '';
 	var usurname = (document.getElementById('jq_user_surname') && document.getElementById('jq_user_surname').value != '') ? document.getElementById('jq_user_surname').value : '';
 	var uemail = (document.getElementById('jq_user_email') && document.getElementById('jq_user_email').value != '') ? document.getElementById('jq_user_email').value : '';
+	var uage = (document.getElementById('jq_user_age') && document.getElementById('jq_user_age').value != '') ? document.getElementById('jq_user_age').value : '';
+	var uocupation = (document.getElementById('jq_user_ocupation') && document.getElementById('jq_user_ocupation').value != '') ? document.getElementById('jq_user_ocupation').value : '';
 	var custom_info = '';
-	<?php 
+	<?php
 		JPluginHelper::importPlugin('content');
 		$dispatcher = JEventDispatcher::getInstance();
 		$dispatcher->trigger('onQuizCustomFieldsRenderJS');
@@ -1314,12 +1325,14 @@ function jq_StartQuiz() {
 	uname = encodeURIComponent(uname);
 	usurname = encodeURIComponent(usurname);
 	uemail = encodeURIComponent(uemail);
+	uage = encodeURIComponent(uage);
+	uocupation = encodeURIComponent(uocupation);
 
 	if (qs) {
 		custom_info = custom_info+'&qs='+qs;
 	}
 	
-	jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + custom_info, 1);
+	jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + '&uage=' + uage + '&uocupation=' + uocupation + custom_info, 1);
 }
 
 function JQ_gotoQuestionOn(qid) {

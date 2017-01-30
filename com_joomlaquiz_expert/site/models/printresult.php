@@ -189,10 +189,14 @@ class JoomlaquizModelPrintresult extends JModelList
 			: JText::_(
 				'COM_JOOMLAQUIZ_ANONYMOUS'
 			);
-		$info['name']     = ($info['name']) ? $info['name']
-			: $info['user_name'] . ' ' . $info['user_surname'];
-		$info['email']    = ($info['email']) ? $info['email']
-			: $info['user_email'];
+        $info['name'] = ($info['name']) ? $info['name']
+            : $info['user_name'] . ' ' . $info['user_surname'];
+        $info['email'] = ($info['email']) ? $info['email']
+            : $info['user_email'];
+        $info['age'] = ($info['age']) ? $info['age']
+            : $info['user_age'];
+        $info['ocupation'] = ($info['ocupation']) ? $info['ocupation']
+            : $info['user_ocupation'];
 
 		JoomlaquizHelper::JQ_GetJoomFish(
 			$info['c_title'], 'quiz_t_quiz', 'c_title', $info['c_quiz_id']
@@ -246,14 +250,33 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str = JText::_('COM_QUIZ_PDF_NAME') . "&nbsp;";
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-		$pdf->setFont($fontFamily);
-		$str =  $info['name'];
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
+        $pdf->setFont($fontFamily);
+        $str =  $info['name'];
+        $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+        $pdf->Ln();
+        /////
+        $pdf->setFont($fontFamily, 'B');
+        $str = JText::_('COM_QUIZ_PDF_UAGE') . "&nbsp;";
+        $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
+        $pdf->setFont($fontFamily);
+        $str = $info['age'];
+        $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+        $pdf->Ln();
+
+        $pdf->setFont($fontFamily, 'B');
+        $str = JText::_('COM_QUIZ_PDF_OCUPATION') . "&nbsp;";
+        $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+        $pdf->setFont($fontFamily);
+        $str = $info['ocupation'];
+        $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+        $pdf->Ln();
+        //////
 		$pdf->setFont($fontFamily, 'B');
 		$str = JText::_('COM_QUIZ_PDF_UEMAIL') . "&nbsp;";
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
 
 		$pdf->setFont($fontFamily);
 		$str = $info['email'];

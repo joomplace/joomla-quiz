@@ -438,13 +438,16 @@ class JoomlaquizModelQuiz extends JModelList
 				$username_field = '<label for="jq_user_name">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_NAME').'</label><input style="max-width:100%;" type="text" size="35" name="jq_user_name" id="jq_user_name" class="inputbox jq_inputbox" value=""/>';
 				$usersurname_field = '<label for="jq_user_surname">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_SURNAME').'</label><input style="max-width:100%;" type="text" size="35" name="jq_user_surname" id="jq_user_surname" class="inputbox jq_inputbox" value=""/>';
 				$email_field = '<label for="jq_user_email">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_EMAIL').'</label><input style="max-width:100%;" type="text" size="35" name="jq_user_email" id="jq_user_email" class="jq_inputbox" value=""/>';
-
+                $age_field = '<label for="jq_user_age">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_AGE').'</label><input style="max-width:100%;" type="text" size="35" name="jq_user_age" id="jq_user_age" class="inputbox jq_inputbox" value=""/>';
+                $ocupation_field = '<label for="jq_user_ocupation">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_OCUPATION').'</label><input style="max-width:100%;" type="text" size="35" name="jq_user_ocupation" id="jq_user_ocupation" class="inputbox jq_inputbox" value=""/>';
 			} else {
-				$username_field = $usersurname_field = $email_field = '';
+				$username_field = $usersurname_field = $email_field = $age_field = $ocupation_field = '';
 			}
 			$quiz_params->c_description = preg_replace('/#name#/', $username_field, $quiz_params->c_description, 1);
 			$quiz_params->c_description = preg_replace('/#surname#/', $usersurname_field, $quiz_params->c_description, 1);
 			$quiz_params->c_description = preg_replace('/#email#/', $email_field, $quiz_params->c_description, 1);
+            $quiz_params->c_description = preg_replace('/#age#/', $age_field, $quiz_params->c_description, 1);
+            $quiz_params->c_description = preg_replace('/#ocupation#/', $ocupation_field, $quiz_params->c_description, 1);
 			
 			JPluginHelper::importPlugin('content');
 			$dispatcher = JEventDispatcher::getInstance();

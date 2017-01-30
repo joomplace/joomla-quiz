@@ -61,12 +61,14 @@ class JoomlaquizModelResult extends JModelList
 			$user_info = $database->LoadObjectList();
 
          if(empty($user_info[0]->name)||empty($user_info[0]->username)){
-                $query = "SELECT user_email,user_name FROM #__quiz_r_student_quiz WHERE c_id='$qid'";
+                $query = "SELECT user_email, user_name, user_age, user_ocupation FROM #__quiz_r_student_quiz WHERE c_id='$qid'";
                 $database->SetQuery( $query );
                 $unreg_user_info = $database->LoadObjectList();
                 $user_info[0] = new stdClass();
                 $user_info[0]->name = $unreg_user_info[0]->user_name;
                 $user_info[0]->email = $unreg_user_info[0]->user_email;
+                ($unreg_user_info[0]->user_age)?$user_info[0]->age = $unreg_user_info[0]->user_age:'';
+                ($unreg_user_info[0]->user_ocupation)?$user_info[0]->ocupation = $unreg_user_info[0]->user_ocupation:'';
             }
 			
 			if (count($user_info)) { $lists['user'] = $user_info[0];}

@@ -29,6 +29,33 @@ class JoomlaQuiz_template_class extends JoomlaQuizTemplateClass {
 		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
 		$document->addScript(JURI::root(true).'/components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/js/choosen.js');
 		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/raphael.js");
+        $document->addStyleDeclaration('
+        #jq_results_panel_table li > a{
+            border: 1px solid #ddd;
+        }
+        #jq_results_panel_table li > a.correct,
+        #jq_results_panel_table li > a.wrong{
+            color: #fff;
+        }
+        #jq_results_panel_table li > a.wrong{
+            background: red;
+        }
+        #jq_results_panel_table li > a.correct{
+            background: green;
+        }
+        td.jq_input_pos {
+            padding: 1px 6px;
+        }
+        .answered_row{
+            background: #f3dede;
+            border: 1px solid #f12727!important;
+            border-radius: 4px!important;
+        }
+        .correct_answer_row{
+            background: #6fab6f;
+            border: 1px solid #008000!important;
+        }
+        ');
 
 		$live_site = JURI::root();
 		if (JoomlaquizHelper::jq_substr($_SERVER['HTTP_HOST'],0,4) == 'www.') {
@@ -54,6 +81,7 @@ class JoomlaQuiz_template_class extends JoomlaQuizTemplateClass {
 		$flag_question = JText::_('COM_QUIZ_FLAG_QUESTION');
 		
 		$tmpl_folder = static::JQ_getTemplateName();
+        $panel_script = self::getPanelScripts($show_result_panel,$hide_result_panel);
 		$jq_tmpl_html = <<<EOFTMPL
 		
 <script language="JavaScript" type="text/javascript">
@@ -101,68 +129,7 @@ function JQ_MM_preloadImages() {
 	}
 }
 
-//'jq_results_panel_table' - id of the table with user results
-function jq_ShowPanel_go() {
-	
-	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
-	var jq_quiz_r = jq_getObj('jq_results_panel_table');
-	start_index = 0;
-	end_index = jq_quiz_r.rows.length;
-	if (jq_quiz_r.rows[start_index]) {
-		for (var i=start_index; i<jq_quiz_r.rows.length; i++) {
-			jq_quiz_r.rows[i].style.visibility = 'hidden';
-		}
-	}
-	var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
-	if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'hidden'; jq_quiz_c_cont.style.display = 'none'; }
-	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'visible'; jq_quiz_r_c.style.display = 'block'; }
-	if (jq_quiz_r) { jq_quiz_r.style.visibility = 'visible'; }
-	tbl_max_step = end_index;
-	setTimeout("jq_StepShowPanel(0)", 100);
-	jq_jQuery("#jq_panel_link").html("<i class='jq_quize_arrow_little'><!--x--></i>{$hide_result_panel}");
-	jq_jQuery(".jq_quiz_task_container").css("visibility", "hidden");
-}
-
-function jq_StepShowPanel(row_index) {
-	var jq_quiz_r_c = jq_getObj('jq_results_panel_table');
-	if (jq_quiz_r_c.rows[row_index]) {
-		jq_quiz_r_c.rows[row_index].style.visibility = 'visible';
-	}
-	
-	if ((row_index + 1) < tbl_max_step) {
-		setTimeout("jq_StepShowPanel("+(row_index + 1)+")", 100);
-	}
-}
-
-function jq_StepHidePanel(row_index) {
-	var jq_quiz_r_c = jq_getObj('jq_results_panel_table');
-	if (jq_quiz_r_c.rows[row_index]) {
-		jq_quiz_r_c.rows[row_index].style.visibility = 'hidden';
-	}
-	
-	if ((row_index - 1) >= 0) {
-		setTimeout("jq_StepHidePanel("+(row_index - 1)+")", 100);
-	} else {
-		var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
-		if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'hidden'; jq_quiz_r_c.style.display = 'none';}
-		var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
-		if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'visible'; jq_quiz_c_cont.style.display = 'block';}
-		jq_jQuery("#jq_panel_link").html("<i class='jq_quize_arrow_little'><!--x--></i>{$show_result_panel}");
-		jq_jQuery(".jq_quiz_task_container").css("visibility", "visible");
-	}	
-}
-
-function jq_HidePanel_go() {
-	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
-	var jq_quiz_r = jq_getObj('jq_results_panel_table');
-	start_index = 0;
-	end_index = jq_quiz_r.rows.length;
-	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'visible'; jq_quiz_r_c.style.display = 'block';}
-	if (jq_quiz_r) { jq_quiz_r.style.visibility = 'visible'; //jq_quiz_r.style.display = 'table';
-	}
-	tbl_max_step = end_index;
-	setTimeout("jq_StepHidePanel("+end_index+")", 50);
-}
+{$panel_script}
 
 preload([
 	'{$live_url}components/com_joomlaquiz/views/templates/tmpl/{$tmpl_folder}/images/check_off.png',
@@ -192,7 +159,6 @@ preload([
 			</div>
 			<div id="jq_quiz_container_author"><!-- x --></div>
 		</div>
-		<div id="jq_quiz_result_container" class="jq_quiz_result_container jq_block_visible" style="display:none;"><!-- x --></div>
 	</div>
 	
 	<div class="jq_quest_time">
@@ -211,6 +177,7 @@ preload([
 		</div>
 		<div class="jq_quiz_task_container"><!-- x --></div>
 	</div>
+    <div id="jq_quiz_result_container" class="jq_quiz_result_container jq_block_visible" style="display:none;"><!-- x --></div>
 </div>
 EOFTMPL;
 

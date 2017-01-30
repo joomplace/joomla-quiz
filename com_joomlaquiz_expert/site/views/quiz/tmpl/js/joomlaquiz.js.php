@@ -948,6 +948,18 @@ function jq_processFeedback(task, is_preview, skip_question){
 			if (do_feedback){
 				if (feedback_quest_id) {
 					is_do_feedback++;
+					var correct_answer = jq_jQuery(feedback).find('correct_answer').html().split(',');
+					var u_answered = jq_jQuery('input:checked');
+
+					jq_jQuery.each(u_answered, function(i,item){
+						var tr = jq_jQuery(item).closest('tr');
+						if(!tr.hasClass('answered_row')){
+							tr.addClass('answered_row');
+						}
+					});
+					jq_jQuery.each(correct_answer, function(i,v){
+						jq_jQuery('#quest_choice_'+v).closest('tr').addClass('correct_answer_row');
+					});
 
 					var feedback_quest_type = feedback.getElementsByTagName('feedback_quest_type')[0].firstChild.data;
 					if (!jq_getObj('div_qoption'+feedback_quest_id)) {
@@ -977,19 +989,11 @@ function jq_processFeedback(task, is_preview, skip_question){
 
 						if (prev_correct == '1') { // correct answer
 							<?php if ($quiz->c_slide) { ?>
-								<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/result_panel_true.png" border=0>';
-								<?php } else {?>
-									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/tick.png" border=0>';
-								<?php }?>
+								jq_getObj('quest_result_'+feedback_quest_id).addClass('correct');
 							<?php } ?>
 						} else { // incorrect answer
 							<?php if ($quiz->c_slide) { ?>
-								<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/result_panel_false.png" border=0>';
-								<?php } else {?>
-									jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/publish_x.png" border=0>';
-								<?php }?>
+								jq_getObj('quest_result_'+feedback_quest_id).addClass('wrong');
 							<?php } ?>
 
 							allow_attempt = response.getElementsByTagName('quiz_allow_attempt')[0].firstChild.data;
@@ -1003,19 +1007,11 @@ function jq_processFeedback(task, is_preview, skip_question){
 			else {
 				if (prev_correct == '1') {
 					<?php if ($quiz->c_slide) { ?>
-						<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/result_panel_true.png" border=0>';
-						<?php } else {?>
-							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/tick.png" border=0>';
-						<?php } ?>
+						jq_getObj('quest_result_'+feedback_quest_id).addClass('correct');
 					<?php } ?>
 				} else {
 					<?php if ($quiz->c_slide) { ?>
-						<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/result_panel_false.png" border=0>';
-						<?php } else {?>
-							jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/publish_x.png" border=0>';
-						<?php } ?>
+						jq_getObj('quest_result_'+feedback_quest_id).addClass('wrong');
 					<?php } ?>
 				}
 			}
@@ -2023,7 +2019,7 @@ function jq_UpdateTaskDiv(task, skip_question, is_last = false) {
 
 	jq_jQuery('.jq_quiz_task_container').html(task_container);
 
-	<?php if ($quiz->c_slide) { ?>
+	<?php if ($quiz->c_slide && 0) { ?>
 	if (result_is_shown == 1) { jq_ShowPanel(); }
 	<?php } ?>
 	if (task == 'finish') {
@@ -2085,8 +2081,8 @@ function check_Blank(id, value){
 }
 
 function jq_ShowPanel_go() {
-	var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
-	if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'hidden'; jq_quiz_c_cont.style.display = 'none';}
+	//var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
+	//if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'hidden'; jq_quiz_c_cont.style.display = 'none';}
 	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
 	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'visible'; jq_quiz_r_c.style.display = 'block';}
 }
@@ -2094,8 +2090,8 @@ function jq_ShowPanel_go() {
 function jq_HidePanel_go() {
 	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
 	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'hidden'; jq_quiz_r_c.style.display = 'none';}
-	var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
-	if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'visible'; jq_quiz_c_cont.style.display = 'block';}
+	//var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
+	//if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'visible'; jq_quiz_c_cont.style.display = 'block';}
 }
 
 function jq_ShowPanel() {

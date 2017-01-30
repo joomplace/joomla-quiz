@@ -1,2 +1,2 @@
+ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `user_ocupation` VARCHAR(255)  NOT NULL AFTER `user_surname`;
 ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `user_age` INT(11) NOT NULL AFTER `user_surname`;
-ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `user_ocupation` VARCHAR(255)  NOT NULL AFTER `user_ocupation`;

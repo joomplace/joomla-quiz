@@ -63,6 +63,7 @@ class JoomlaquizModelDynamic extends JModelAdmin
 		$fields[] = JHTML::_('select.option','spent_time', 'Spent time');
 		$fields[] = JHTML::_('select.option','start_date', 'Start date');
 		$fields[] = JHTML::_('select.option','score', 'Score');
+		$fields[] = JHTML::_('select.option','cb_organization', 'Organization');
 		$fields[] = JHTML::_('select.option','passed', 'Passed');
 		$fields[] = JHTML::_('select.option','order_id', 'Order_id');
 		$fields[] = JHTML::_('select.option','quiz_name', 'Quiz name');
@@ -130,9 +131,10 @@ class JoomlaquizModelDynamic extends JModelAdmin
 			$left_join .= "\n LEFT JOIN #__quiz_r_student_survey AS ss ON ss.c_sq_id = squest.c_id ";
 		}
 		
-		$query = "SELECT DISTINCT sq.c_id AS `x_id`, sq.c_passed AS `x_passed`, sq.c_total_score AS `x_score`, SEC_TO_TIME(sq.c_total_time) AS `x_spent_time`, sq.c_date_time AS `x_start_date`, sq.c_order_id AS `x_order_id`, q.c_title AS `x_quiz_name`, sq.c_student_id AS `x_user_id`, u.name AS `x_user_name`, u.email AS `x_user_email` "
+		$query = "SELECT DISTINCT sq.c_id AS `x_id`, sq.c_passed AS `x_passed`, cb.cb_organization AS `x_cb_organization`, sq.c_total_score AS `x_score`, SEC_TO_TIME(sq.c_total_time) AS `x_spent_time`, sq.c_date_time AS `x_start_date`, sq.c_order_id AS `x_order_id`, q.c_title AS `x_quiz_name`, sq.c_student_id AS `x_user_id`, u.name AS `x_user_name`, u.email AS `x_user_email` "
 			. "\n FROM #__quiz_r_student_quiz AS sq "
 			. "\n LEFT JOIN #__users as u ON sq.c_student_id = u.id"
+			. "\n LEFT JOIN #__comprofiler as cb ON sq.c_student_id = cb.user_id"
 			. "\n LEFT JOIN #__quiz_t_quiz as q ON sq.c_quiz_id = q.c_id "
 			. $left_join
 			. "\n WHERE 1=1 AND sq.c_quiz_id = '{$quiz_id}' "	
@@ -169,6 +171,7 @@ class JoomlaquizModelDynamic extends JModelAdmin
 		$fields['user_email'] = 'user Email';	
 		$fields['spent_time'] = 'Spent time';
 		$fields['start_date'] = 'Start date';
+		$fields['cb_organization'] = 'Organization';
 		$fields['score'] = 'Score';
 		$fields['passed'] = 'Passed';
 		$fields['order_id'] = 'Order_id';

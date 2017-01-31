@@ -24,7 +24,6 @@ build:regular:
 test:regular:
   stage: tests
   variables:
-    JUSERID: $[ ( $RANDOM % 100 )  + 1 ]
     JUSERNAME: "admin"
     JUSEREMAIL: "admin@localhost.com"
     JUSERPASS: "qweasd"
@@ -34,6 +33,8 @@ test:regular:
     DBPREFIX: "prfx_"
     JOOMLAVERSION: "3.6.5"
   image: alex7r/lamp:ccp
+  before_script:
+    - JUSERID=$[ ( $RANDOM % 100 )  + 1 ]
   script:
     - pwd
     - echo "${JUSERID}"

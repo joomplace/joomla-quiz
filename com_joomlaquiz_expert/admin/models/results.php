@@ -33,6 +33,7 @@ class JoomlaquizModelResults extends JModelList
 				'c_full_score', 'sq.c_max_score',
 				'c_passing_score', 'q.c_passing_score',
 				'c_passed', 'sq.c_passed',
+				'cb_organization', 'uc.cb_organization',
 				'c_total_time', 'sq.c_total_time',);
 		}
 		
@@ -51,6 +52,9 @@ class JoomlaquizModelResults extends JModelList
 		
 		$user_id = $this->getUserStateFromRequest('results.filter.user_id', 'filter_user_id');
 		$this->setState('filter.user_id', $user_id);
+		
+		$cb_organization= $this->getUserStateFromRequest('results.filter.cb_organization', 'filter_cb_organization');
+		$this->setState('filter.cb_organization', $cb_organization);
 		
 		$passed = $this->getUserStateFromRequest('results.filter.passed', 'filter_passed');
 		$this->setState('filter.passed', $passed);
@@ -114,9 +118,10 @@ class JoomlaquizModelResults extends JModelList
 			$cid = JFactory::getApplication()->input->get('cid');						
 			$query = $this->getSTUQuery($cid, $query);			
 		}else{
-			$query->select("sq.user_email, sq.user_name, sq.unique_id, sq.unique_pass_id, sq.c_id, sq.c_passed, sq.c_total_score,sq.c_max_score as c_full_score, sq.c_total_time, sq.c_date_time, sq.params, sq.c_passed,q.c_title, q.c_author, q.c_passing_score, sq.c_student_id, u.username, u.name, u.email, q.c_pool, ch.q_chain");
+			$query->select("sq.user_email, sq.user_name, sq.unique_id, uc.cb_organization, sq.c_id, sq.c_passed, sq.c_total_score,sq.c_max_score as c_full_score, sq.c_total_time, sq.c_date_time, sq.params, sq.c_passed,q.c_title, q.c_author, q.c_passing_score, sq.c_student_id, u.username, u.name, u.email, q.c_pool, ch.q_chain");
 			$query->from('`#__quiz_r_student_quiz` as `sq`');
 			$query->join('LEFT', '`#__users` as `u` ON sq.c_student_id = u.id');
+			$query->join('LEFT', '`#__comprofiler` as `uc` ON sq.c_student_id = uc.user_id');
 			$query->join('LEFT', '`#__quiz_q_chain` AS `ch` ON ch.s_unique_id = sq.unique_id');
 			$query->join('LEFT', '`#__quiz_t_quiz` as `q` ON sq.c_quiz_id = q.c_id');
 			$query->where('1=1');
@@ -168,6 +173,11 @@ class JoomlaquizModelResults extends JModelList
 			$passed = $this->getState('filter.passed');
 			if($passed > -1){
 				$query->where('sq.c_passed = '.$passed);
+			}
+			
+			$cb_organization = $this->getState('filter.cb_organization');
+			if($cb_organization){
+				$query->where('uc.cb_organization = "'.$cb_organization.'"');
 			}
 			
 			$orderCol	= $this->state->get('list.ordering', 'sq.c_date_time');	
@@ -261,6 +271,18 @@ class JoomlaquizModelResults extends JModelList
 		$quizzes = array_merge( $quizzes, $database->loadObjectList() );
 		$quiz = JHTML::_('select.genericlist', $quizzes,'filter_quiz_id', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $app->getUserStateFromRequest('results.filter.quiz_id', 'filter_quiz_id') );
 		$lists['quiz'] = $quiz;
+		
+		$javascript = 'onchange="document.adminForm.submit();"';
+		$query = "SELECT distinct cp.cb_organization AS value, cp.cb_organization AS text"
+		. "\n FROM #__comprofiler as cp"
+		. "\n ORDER BY cp.cb_organization"
+		;
+		$database->setQuery( $query );
+		$quizzes = array();
+		$quizzes[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_CB_ORGANIZATION') );
+		$quizzes = array_merge( $quizzes, $database->loadObjectList() );
+		$quiz = JHTML::_('select.genericlist', $quizzes,'filter_cb_organization', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $app->getUserStateFromRequest('results.filter.cb_organization', 'filter_cb_organization') );
+		$lists['organization'] = $quiz;
 
 		$opt = array();
 		$opt[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_ANY_RESULT') );

@@ -42,7 +42,6 @@ test:regular:
     - unzip /var/tmp/Joomla_$JOOMLAVERSION-Stable-Full_Package.zip -d /var/www
     - cd /var/www/html/
     - chown -R www-data:www-data .
-    - usermod -a -G www-data vagrant
     - sed -i "s/\$user = ''/\$user = '${DBUSER}'/" installation/configuration.php-dist
     - sed -i "s/\$password = ''/\$password = '${DBPASS}'/" installation/configuration.php-dist
     - sed -i "s/\$db = ''/\$db = '${DB}'/" installation/configuration.php-dist

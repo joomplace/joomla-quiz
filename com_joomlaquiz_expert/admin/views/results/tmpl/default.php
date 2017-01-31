@@ -83,6 +83,10 @@ $sortFields = $this->getSortFields();
                     <?php echo $this->lists['quiz'];?>
             </div>
 			<div class="btn-group pull-right">
+                    <label for="category_id" class="element-invisible"><?php echo JText::_('COM_JOOMLAQUIZ_CB_ORGANIZATION');?></label>
+                    <?php echo $this->lists['organization'];?>
+            </div>
+			<div class="btn-group pull-right">
                     <label for="category_id" class="element-invisible"><?php echo JText::_('COM_JOOMLAQUIZ_FILTER');?></label>
                     <?php echo $this->lists['user'];?>
             </div>
@@ -108,6 +112,12 @@ $sortFields = $this->getSortFields();
 					</th>
 					<th>
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_QUIZ2', 'c_title', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?php echo JHtml::_('grid.sort', 'Name', 'name', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_CB_ORGANIZATION', 'cb_organization', $listDirn, $listOrder); ?>
 					</th>
 					<th>
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_USER_SCORE', 'c_total_score', $listDirn, $listOrder); ?>
@@ -199,6 +209,16 @@ $sortFields = $this->getSortFields();
 					<td class="has-context">
                         <div class="pull-left">
                             <?php echo $item->c_title; ?>
+                        </div>
+					</td>
+					<td class="has-context">
+                        <div class="pull-left">
+                            <?php echo $item->name; ?>
+                        </div>
+					</td>
+					<td class="has-context">
+                        <div class="pull-left">
+                            <?php echo $item->cb_organization; ?>
                         </div>
 					</td>
 					<td class="has-context">

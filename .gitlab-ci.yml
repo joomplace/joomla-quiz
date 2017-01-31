@@ -23,9 +23,21 @@ build:regular:
 
 test:regular:
   stage: tests
+  variables:
+    JUSERID: $[ ( $RANDOM % 100 )  + 1 ]
+    JUSERNAME: "admin"
+    JUSEREMAIL: "admin@localhost.com"
+    JUSERPASS: "qweasd"
+    DB: "joomla_test"
+    DBUSER: "jdbuser"
+    DBPASS: "dbupass"
+    DBPREFIX: "prfx_"
+    JOOMLAVERSION: "3.6.5"
   image: alex7r/lamp:ccp
   script:
     - pwd
+    - echo "${JUSERID}"
+    - echo "${JUSERNAME}"
   artifacts:
     paths:
     - packages/

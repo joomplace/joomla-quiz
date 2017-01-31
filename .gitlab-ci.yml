@@ -22,7 +22,7 @@ build:regular:
     expire_in: 1 day
 
 test:regular:
-  stage: test
+  stage: tests
   image: alex7r/lamp:ccp
   script:
     - pwd

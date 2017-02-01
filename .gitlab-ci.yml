@@ -36,7 +36,6 @@ test:regular:
   before_script:
     - JUSERID=$[ ( $RANDOM % 100 )  + 1 ]
     - pwd
-    - mysql -v
     - service --status-all
   script:
     - rm -f /var/www/html/index.html

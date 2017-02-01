@@ -27,6 +27,7 @@ $extension = 'com_joomlaquiz';
 			<tr><td align="left"><?php echo JText::_('COM_JOOMLAQUIZ_USERNAME');?></td><td><?php echo $this->lists['user']->username?></td></tr>
 			<tr><td align="left"><?php echo JText::_('COM_JOOMLAQUIZ_NAME_NAME');?></td><td><?php echo $this->lists['user']->name?></td></tr>
 			<tr><td align="left"><?php echo JText::_('COM_JOOMLAQUIZ_EMAIL');?></td><td><?php echo $this->lists['user']->email?></td></tr>
+			<?php echo JHtml::_('content.prepare','',$this->lists['user']->params,'admin.results.report.row'); ?>
 		</table>
 	</div>
 	<input type="hidden" name="task" value="" />

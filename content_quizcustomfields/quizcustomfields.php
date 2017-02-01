@@ -126,6 +126,15 @@ class plgContentQuizCustomFields extends JPlugin {
 						$html[] = ',"'.$field.'"';
 					}
 				break;
+			case 'admin.results.report.row':
+					if($params) {
+						$fields = json_decode(str_replace('custom_','',$params),true);
+					}
+					$fields = array_unique($fields);
+					foreach($fields as $field => $value){
+						$html[] = '<tr><td align="left">'. JText::_('COM_JOOMLAQUIZ_'.strtoupper($field)).'</td><td>'. $value .'</td></tr>';
+					}
+				break;
 			default:
 				
 				// Simple performance check to determine whether bot should process further

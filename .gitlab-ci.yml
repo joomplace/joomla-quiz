@@ -35,8 +35,10 @@ test:regular:
   image: alex7r/lamp:ccp
   before_script:
     - JUSERID=$[ ( $RANDOM % 100 )  + 1 ]
-  script:
     - pwd
+    - mysql -v
+    - service --status-all
+  script:
     - rm -f /var/www/html/index.html
     - wget https://github.com/joomla/joomla-cms/releases/download/$JOOMLAVERSION/Joomla_$JOOMLAVERSION-Stable-Full_Package.zip -P /var/tmp/
     - apt-get install unzip

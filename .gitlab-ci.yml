@@ -36,7 +36,6 @@ test:regular:
   before_script:
     - JUSERID=$[ ( $RANDOM % 100 )  + 1 ]
     - service apache2 start
-    - service mysql start
     - service --status-all
     - pwd
     - ls -la /var/www/joomla_packages/

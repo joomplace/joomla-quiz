@@ -37,12 +37,10 @@ test:regular:
     - JUSERID=$[ ( $RANDOM % 100 )  + 1 ]
     - service apache2 start
     - service --status-all
-    - pwd
-    - ls -la /var/www/
+    - service mysql start
+    - service --status-all
   script:
     - rm -f /var/www/html/index.html
-#    - wget https://github.com/joomla/joomla-cms/releases/download/$JOOMLAVERSION/Joomla_$JOOMLAVERSION-Stable-Full_Package.zip -P /var/tmp/
-    - apt-get install unzip
     - unzip /var/www/joomla_packages/Joomla_$JOOMLAVERSION-Stable-Full_Package.zip -d /var/www/html/
     - cd /var/www/html/
     - chown -R www-data:www-data .

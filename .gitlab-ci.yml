@@ -1,8 +1,21 @@
-docker:
-  image: alex7r/joomladeception
+test:
+  image: php:7.0
+  services:
+    - mysql:latest
+  variables:
+    MYSQL_DATABASE: joomla
+    MYSQL_ROOT_PASSWORD: qweasd
+    DBUSER: "jdbuser"
+    DBPASS: "dbupass"
+    DBPREFIX: "prfx_"
   script:
     - cat /proc/meminfo
     - service mysql start
+    - echo "CREATE DATABASE ${DB}" | mysql -u root --password=qweasd
+    - echo "CREATE USER '${DBUSER}'@'%' IDENTIFIED BY '${DBPASS}';" | mysql -u root --password=$MYSQL_ROOT_PASSWORD
+    - echo "GRANT ALL ON ${DB}.* TO '${DBUSER}'@'%';" | mysql -u root --password=$MYSQL_ROOT_PASSWORD
+#    - sed -i "s/#__/${DBPREFIX}/" installation/sql/mysql/joomla.sql
+#    - cat installation/sql/mysql/joomla.sql | mysql -u $DBUSER --password=$DBPASS $MYSQL_DATABASE
 
 #stages:
 #  - build

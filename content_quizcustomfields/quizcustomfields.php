@@ -196,10 +196,10 @@ class plgContentQuizCustomFields extends JPlugin {
 								if(!$opt[1]) $opt[1] = ucfirst($opt[1]);
 								$opt = '<option value="'.$opt[0].'">'.$opt[1].'</option>';
 							}
-							$rep_back = '<label for="jq_cust_'.$name.'">'.$label.': <select id="jq_cust_'.$name.'" '.$required.' name="custom_params['.$name.']" class="custom_params">'. implode("\r",$options) .'</select></label>';
+							$rep_back = '<label for="jq_cust_'.$name.'">'.$label.': </label><select id="jq_cust_'.$name.'" '.$required.' name="custom_params['.$name.']" class="custom_params">'. implode("\r",$options) .'</select>';
 							break;
 						default:
-							$rep_back = '<label for="jq_cust_'.$name.'">'.$label.': <input type="'.$type.'" id="jq_cust_'.$name.'" '.$required.' name="custom_params['.$name.']" class="custom_params" /></label>';
+							$rep_back = '<label for="jq_cust_'.$name.'">'.$label.': </label><input type="'.$type.'" id="jq_cust_'.$name.'" '.$required.' name="custom_params['.$name.']" class="custom_params" /></label>';
 					}
 				}
 				$text = str_replace($entry[0], addcslashes($rep_back, '\\$'), $text);

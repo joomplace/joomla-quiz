@@ -178,10 +178,10 @@ class JoomlaquizModelPrintresult extends JModelList
 
 		$str = "";
 		$query
-		     = "SELECT sq.*, q.*, u.* FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq LEFT JOIN #__users AS u ON sq.c_student_id = u.id"
+		     = "SELECT sq.*, q.*, u.*, sq.params AS jparams FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq LEFT JOIN #__users AS u ON sq.c_student_id = u.id"
 			. "\n WHERE sq.c_id = '" . $sid . "' AND sq.c_quiz_id = q.c_id";
 		$database->SetQuery($query);
-		$info = $database->LoadAssocList();
+		$info = $database->loadAssocList();
 		$info = $info[0];
 
 		$info['username'] = ($info['username'])
@@ -250,6 +250,29 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str =  $info['name'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
+
+        $pdf->setFont($fontFamily, 'B');
+        $str = JText::_('COM_QUIZ_PDF_NAME') . "&nbsp;";
+        $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+        $pdf->setFont($fontFamily);
+        $str =  $info['name'];
+        $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+        $pdf->Ln();
+
+        if ($info['jparams']) {
+            $jparams = json_decode($info['jparams']);
+            foreach ($jparams as $jparam => $jvalue) {
+                $pdf->setFont($fontFamily, 'B');
+                $str = JText::_('COM_QUIZ_PDF_' . strtoupper($jparam)) . "&nbsp;";
+                $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+                $pdf->setFont($fontFamily);
+                $str =  $jvalue;
+                $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+                $pdf->Ln();
+            }
+        }
 
 		$pdf->setFont($fontFamily, 'B');
 		$str = JText::_('COM_QUIZ_PDF_UEMAIL') . "&nbsp;";

@@ -36,6 +36,9 @@ test:regular:
   before_script:
     - JUSERID=$[ ( $RANDOM % 100 )  + 1 ]
     - pwd
+    - service apache2 start
+    - service mysql start
+    - service phantomjs start
     - service --status-all
   script:
     - rm -f /var/www/html/index.html

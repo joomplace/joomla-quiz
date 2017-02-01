@@ -35,10 +35,11 @@ test:regular:
   image: alex7r/lamp:ccp
   before_script:
     - JUSERID=$[ ( $RANDOM % 100 )  + 1 ]
-    - pwd
     - service apache2 start
     - service mysql start
     - service --status-all
+    - pwd
+    - ls -la /vaw/www/joomla_packages/
   script:
     - rm -f /var/www/html/index.html
 #    - wget https://github.com/joomla/joomla-cms/releases/download/$JOOMLAVERSION/Joomla_$JOOMLAVERSION-Stable-Full_Package.zip -P /var/tmp/

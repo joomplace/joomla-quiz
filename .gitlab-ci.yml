@@ -36,6 +36,7 @@ test:regular:
   before_script:
     - JUSERID=$[ ( $RANDOM % 100 )  + 1 ]
   script:
+    - pwd
     - rm -f /var/www/html/index.html
     - wget https://github.com/joomla/joomla-cms/releases/download/$JOOMLAVERSION/Joomla_$JOOMLAVERSION-Stable-Full_Package.zip -P /var/tmp/
     - apt-get install unzip
@@ -61,6 +62,7 @@ test:regular:
     - JUSERINC=$((JUSERID+1))
     - echo "ALTER TABLE \`${DBPREFIX}users\` auto_increment = ${JUSERINC};" | mysql -u $DBUSER --password=$DBPASS $DB
     - rm -rf installation/
+#    - cp -Rf /builds/joomlaquiz/tests/* /var/www/composer/tests/
   artifacts:
     paths:
     - packages/

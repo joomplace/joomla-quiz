@@ -78,6 +78,7 @@ class JoomlaquizModelResults extends JModelList
 			->select($db->qn('q.c_pool'))
 			->select($db->qn('q.c_grading'))
 			->select($db->qn('q.c_certificate'))
+            ->select($db->qn('q.c_credit'))
 			->select($db->qn('u.username'))
 			->select($db->qn('u.name'))
 			->select($db->qn('u.email'))

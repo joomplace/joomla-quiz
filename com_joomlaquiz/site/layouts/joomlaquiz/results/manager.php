@@ -20,6 +20,7 @@ JHtml::_('script', 'system/core.js', true, true);
 		<td class="sectiontableheader"><?php echo JText::_('COM_JQ_DATE_TIME'); ?></td>
 		<td class="sectiontableheader"><?php echo JText::_('COM_QUIZ_RES_MES_SCORE2'); ?></td>		
 		<td class="sectiontableheader"><?php echo JText::_('COM_JQ_PASSED'); ?></td>
+		<td class="sectiontableheader"><?php echo JText::_('COM_QUIZ_CREDIT'); ?></td>
 		<td class="sectiontableheader"><?php echo JText::_('COM_JQ_SPEND_TIME'); ?></td>
 		<td class="sectiontableheader"><?php echo JText::_('COM_JQ_CERTIFICATE'); ?></td>
 	</tr>
@@ -58,6 +59,11 @@ JHtml::_('script', 'system/core.js', true, true);
 					<?php if ($row->c_passed == -1)	 { ?><strong>?</strong><?php } else {?>
 					<img src="<?php echo JURI::root();?>components/com_joomlaquiz/assets/images/<?php echo $img_passed;?>" border="0" alt="<?php echo $alt_passed; ?>" />
 					<?php }?>								
+				</td>
+				<td align="center">
+					<?php
+					$row->c_credit = $row->c_passed ? $row->c_credit : 0;
+					echo $row->c_credit; ?>
 				</td>
 				<td align="left">
 					<?php

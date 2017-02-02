@@ -1,7 +1,7 @@
 test:
   image: php:7.0
   services:
-    - mariadb:latest
+    - mysql:latest --performance_schema=off
   variables:
     MYSQL_DATABASE: joomla
     MYSQL_ROOT_PASSWORD: qweasd

@@ -27,7 +27,7 @@ test:
     - mv installation/configuration.php-dist configuration.php
     - cat configuration.php
     - sed -i "s/#__/${DBPREFIX}/" installation/sql/mysql/joomla.sql
-    - cat installation/sql/mysql/joomla.sql | mysql -u root --password=qweasd $MYSQL_DATABASE
+    - cat installation/sql/mysql/joomla.sql | mysql -h alex7r__slim-mysql -u root --password=qweasd $MYSQL_DATABASE
 #    - JPASS="$(echo -n "$JUSERPASS" | md5sum | awk '{ print $1 }' )"
 #    - echo "INSERT INTO \`${DBPREFIX}users\` (\`id\`, \`name\`, \`username\`, \`email\`, \`password\`, \`block\`, \`sendEmail\`, \`registerDate\`, \`lastvisitDate\`, \`activation\`, \`params\`, \`lastResetTime\`, \`resetCount\`, \`otpKey\`, \`otep\`, \`requireReset\`) VALUES ('${JUSERID}', 'Me', '${JUSERNAME}', '${JUSEREMAIL}', '${JPASS}', '0', '0', '0000-00-00 00:00:00.000000', '0000-00-00 00:00:00.000000', '', '', '0000-00-00 00:00:00.000000', '0', '', '', '0');" | mysql -u $DBUSER --password=$DBPASS $DB
 #    - echo "INSERT INTO \`${DBPREFIX}user_usergroup_map\` (\`user_id\`, \`group_id\`) VALUES ('${JUSERID}', '8');" | mysql -u $DBUSER --password=$DBPASS $DB

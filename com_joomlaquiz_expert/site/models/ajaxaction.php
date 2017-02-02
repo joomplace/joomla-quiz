@@ -1276,6 +1276,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 
                     if($user_passed) {
                         $results_txt = str_replace('<!-- CREDIT -->', $quiz_info->c_credit, $results_txt);
+                    }else{
+                        $results_txt = str_replace('<!-- CREDIT -->', 0, $results_txt);
                     }
 
 					if ($c_resbycat) {

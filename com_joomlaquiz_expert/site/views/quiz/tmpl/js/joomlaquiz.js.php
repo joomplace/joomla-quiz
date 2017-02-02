@@ -1691,24 +1691,6 @@ function jq_QuizExit(){
 }
 
 function jq_QuizNextFinish() {
-	//Add popup if at the conclusion of the survey is not all questions have answers
-	var un_answered = jQuery(response).find('un_answered').text();
-	if(un_answered){
-	  un_answered = un_answered.split(',');
-  }
-	var text = "Attention!\n";
-	if(un_answered.length){
-	  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1'); ?> " + un_answered.join(', ') + "\n";
-  }
-  text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART2'); ?>";
-  if(!confirm(text)){
-    return;
-  }else{
-	  if(!confirm("<?php echo JText::_('COM_QUIZ_POPUP_EXIT'); ?>")){
-		  return;
-	  }
-  }
-
 <?php if ($is_preview) { ?>
 	var jq_task = 'next_preview';
 	<?php } else { ?>
@@ -1769,6 +1751,30 @@ function jq_QuizNextFinish() {
 			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]=';
 		}
 	}
+	//Add popup if at the conclusion of the quiz is not all questions have answers
+	var un_answered = jQuery(response).find('un_answered').text();
+	var quiz_quest_number = jQuery(response).find('quiz_quest_num').text();
+	//Check for the answer to the current question
+	if(un_answered){
+		un_answered = un_answered.split(',');
+		if(answer){
+			for(var i=0; i<un_answered.length; i++){
+				if(un_answered[i] == quiz_quest_number){
+					un_answered.splice(i,1);
+				}
+			}
+		}
+	}
+	//Showing a message
+	var text = "Attention!\n";
+	if(un_answered.length){
+		text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1'); ?>" + un_answered.join(', ') + "\n";
+	}
+	text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART2'); ?>";
+	if(!confirm(text)){
+		return;
+	}
+
 	jq_MakeRequest(url, 1);
 	/*
 	if (!quiz_blocked) {

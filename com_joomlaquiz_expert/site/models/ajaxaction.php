@@ -2869,7 +2869,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$is_last = 1;
 			}
 		}
-		unset($un_answered[array_search($q_data->c_id,$un_answered)]);
+		//unset($un_answered[array_search($q_data->c_id,$un_answered)]);
 		$un_answered = implode(',',array_map(function($k){
             return $k+1;
         },array_keys($un_answered)));

@@ -663,6 +663,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if($qch_ids) {
 					$query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
 					$database->SetQuery( $query );
+                    /* answered questions */
 					$q_ids = $database->loadColumn();
 
 					if (!count($q_ids)) {
@@ -671,12 +672,19 @@ class JoomlaquizModelAjaxaction extends JModelList
 													
 					$quest_answer = count($q_ids);
 					$quest_num = $quest_answer;
+                    /* in chain ids */
 					$qchids = explode('*',$qch_ids);
-					$q_ids = array_diff($q_ids, $quest_ids);
-					$qchids = array_diff($qchids, $q_ids);
+                    /* answered questions without current */
+//					$q_ids = array_diff($q_ids, $quest_ids);
+                    if(0){
+                        /* chain without answered questions, but with current */
+                        $qchids = array_diff($qchids, $q_ids);
+                    }
 					$qchids = array_values($qchids);
 					$q_total = count($qchids);
-					
+
+                    $questions_left = array_diff($qchids, $q_ids);
+
 					$qnum = 0;
 
 					if(count($qchids)){
@@ -716,7 +724,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if (isset($q_data[$j])) {
 					$ret_str .= "\t" . '<task>next</task>' . "\n";
 										
-					$ret_str .= $this->JQ_GetQuestData($q_data[$j], $quiz_id, $stu_quiz_id);
+					$ret_str .= $this->JQ_GetQuestData($q_data[$j], $quiz_id, $stu_quiz_id, $questions_left);
 				} else {
 
 					$ret_str .= "\t" . '<task>finish</task>' . "\n";
@@ -2249,7 +2257,25 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$ret_str .= "\t" . '<user_unique_id><![CDATA['.$user_unique_id.']]></user_unique_id>' . "\n";
 							$ret_str .= "\t" . '<stu_quiz_id><![CDATA['.$stu_quiz_id.']]></stu_quiz_id>' . "\n";
 							$ret_str .= "\t" . '<task>seek_quest</task>' . "\n";
-							$ret_str .= $this->JQ_GetQuestData($q_data[$i], $quiz_id, $stu_quiz_id);
+
+                            $query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
+                            $database->SetQuery( $query );
+                            /* answered questions */
+                            $q_ids = $database->loadColumn();
+
+                            if (!count($q_ids)) {
+                                $q_ids = array(0);
+                            }
+
+                            $quest_answer = count($q_ids);
+                            $quest_ids = array($seek_quest_id);
+                            /* answered questions without current */
+                            $q_ids = array_diff($q_ids, $quest_ids);
+                            $qchids = array_values($qchids);
+
+                            $questions_left = array_diff($qchids, $q_ids);
+
+							$ret_str .= $this->JQ_GetQuestData($q_data[$i], $quiz_id, $stu_quiz_id, $questions_left);
 							$ret_str .= $this->JQ_GetPanelData($quiz_id, $q_data, $stu_quiz_id);
 						}
 					}
@@ -2416,12 +2442,29 @@ class JoomlaquizModelAjaxaction extends JModelList
 			}
 			
 			if ($q_id) {
-				$query = "SELECT * FROM `#__quiz_t_question` WHERE `c_id` = '{$q_id}' AND published = 1";
-				$database->SetQuery($query);
-				$q_data = $database->loadObjectList();
-				$q_data = $q_data[0];
-				$ret_str .= "\t" . '<task>prev</task>' . "\n";
-				$ret_str .= $this->JQ_GetQuestData($q_data, $quiz_id, $stu_quiz_id);
+
+                $quest_ids = array($q_id);
+
+                $query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
+                $database->SetQuery( $query );
+                /* answered questions */
+                $q_ids = $database->loadColumn();
+
+                if (!count($q_ids)) {
+                    $q_ids = array(0);
+                }
+                /* answered questions without current */
+                $q_ids = array_diff($q_ids, $quest_ids);
+                $qchids = array_values($all_quiz_quests);
+
+                $questions_left = array_diff($qchids, $q_ids);
+
+                $query = "SELECT * FROM `#__quiz_t_question` WHERE `c_id` = '{$q_id}' AND published = 1";
+                $database->SetQuery($query);
+                $q_data = $database->loadObjectList();
+                $q_data = $q_data[0];
+                $ret_str .= "\t" . '<task>prev</task>' . "\n";
+                $ret_str .= $this->JQ_GetQuestData($q_data, $quiz_id, $stu_quiz_id, $questions_left);
 			}
 		}
 		
@@ -2465,8 +2508,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 		return '<task>blank_feedback</task>';
 	}
 		
-	public function JQ_GetQuestData($q_data, $i_quiz_id, $stu_quiz_id = 0) {
-		
+	public function JQ_GetQuestData($q_data, $i_quiz_id, $stu_quiz_id = 0, $questions_left = array()) {
+        $un_answered = $questions_left;
+        $questions_left = count($questions_left);
 		$database = JFactory::getDBO();
 		$ret_str = '';
 		$seek_quest_id = intval( JFactory::getApplication()->input->get( 'seek_quest_id', 0 ) );
@@ -2789,29 +2833,41 @@ class JoomlaquizModelAjaxaction extends JModelList
 		}
 
 		$is_last = 0;
-		
-			if (!$seek_quest_id && $stu_quiz_id && is_array($all_quests) && count($all_quests) && is_array($qchids) && count($qchids)) {
-				$query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
-				$database->SetQuery( $query );
-				$q_ids = $database->loadColumn();
-					
-				if (is_array($q_ids) && count($q_ids)) {
-					$diff = array_diff ($qchids, $q_ids);
-					if (count($diff) && count($diff) == 1) {
-						$is_last = 1;
-					}
-				}else{
-					if(count($qchids)==1){
-						$is_last = 1;
-					}
-				}
-			} elseif (!$seek_quest_id && is_array($all_quests) && count($all_quests) && is_array($qchids) && count($qchids)) {
-				if ($qchids[count($qchids)-1] == $q_data->c_id) {	
-					$is_last = 1;
-				}
-			}
-			
-		
+
+        if (!$seek_quest_id && $stu_quiz_id && is_array($all_quests) && count($all_quests) && is_array($qchids) && count($qchids) && !$questions_left) {
+            $query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
+            $database->SetQuery( $query );
+            $q_ids = $database->loadColumn();
+            if (is_array($q_ids) && count($q_ids)) {
+                $diff = array_diff ($qchids, $q_ids);
+                /**
+                 * if current question is only one left
+                 * or
+                 * there is no left and current is last in chain
+                 */
+                if ((count($diff) && count($diff) == 1 && $diff[0]==$q_data->c_id /*&& $questions_left==1*/) || (!$questions_left && $qchids[count($qchids)-1]==$q_data->c_id)) {
+                    $is_last = 1;
+                }
+            }else{
+                if(count($qchids)==1 && $questions_left==1){
+                    $is_last = 1;
+                }
+            }
+        } elseif (!$seek_quest_id && is_array($all_quests) && count($all_quests) && is_array($qchids) && count($qchids)) {
+            if ($qchids[count($qchids)-1] == $q_data->c_id && $questions_left == 1) {
+                $is_last = 1;
+            }
+        }
+
+        //unset($un_answered[array_search($q_data->c_id,$un_answered)]);
+        $un_answered = implode(',',array_map(function($k){
+            return $k+1;
+        },array_keys($un_answered)));
+        if($un_answered){
+            $is_last = ($q_data->c_id == $qchids[count($qchids)-1])?1:0;
+        }
+
+        $ret_str .= "\t" . '<un_answered>'.$un_answered.'</un_answered>' . "\n";
 		$ret_str .= "\t" . '<is_last>'.$is_last.'</is_last>' . "\n";
 		$ret_str .= "\t" . '<skip_type>'.$quiz->c_enable_skip.'</skip_type>' . "\n";
 		$ret_str .= "\t" . '<quest_count>'.(int)$quest_count.'</quest_count>' . "\n";

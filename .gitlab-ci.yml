@@ -9,7 +9,7 @@ test:
 #    DBPASS: "dbupass"
 #    DBPREFIX: "prfx_"
   script:
-    - mysql --version
+    - service --status-all
 #    - cat /proc/meminfo
 #    - service mysql start
 #    - echo "CREATE DATABASE ${DB}" | mysql -u root --password=qweasd

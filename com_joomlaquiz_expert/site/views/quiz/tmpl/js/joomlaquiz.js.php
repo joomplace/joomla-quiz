@@ -1999,14 +1999,15 @@ function jq_UpdateTaskDiv(task, skip_question, is_last = false) {
 	  if(end_reached){
       task_container = task_container + '<div onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container"><div id="jq_quiz_task_link_container" class="jq_back_button"><' + 'a class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a></div></div>';
     }
-		task_container = task_container + '<div onclick="javascript:jq_QuizExit()" id="jq_finish_link_container"><' + 'a id="jq_quiz_task_link_container" class="jq_back_button btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?></a></div>';
 	} else if (skip_question && !is_last && skip_type_finish && quest_type==9) {
 		task_container = task_container;
 	} else if (skip_question && !is_last && skip_type  && quest_type!=9) {
     if(end_reached){
 		  task_container = task_container + '<div onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container"><' + 'a id="jq_quiz_task_link_container" class="jq_back_button btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a></div>';
 		}
-		task_container = task_container + '<div onclick="javascript:jq_QuizExit()" id="jq_finish_link_container"><' + 'a id="jq_quiz_task_link_container" class="jq_back_button btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?>" href="javascript: void(0)"><?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?></a></div>';
+	}
+	if((task !== 'start') && (task !== 'finish')){
+		task_container = '<a onclick="javascript:jq_QuizExit()" id="jq_finish_link_container" class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?>"><?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?></a>' + task_container;
 	}
 	<?php } else {?>
 	
@@ -2017,8 +2018,9 @@ function jq_UpdateTaskDiv(task, skip_question, is_last = false) {
     if(end_reached){
 		  task_container = '<a onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container" class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>"><?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?></a>' + task_container;
 		}
+	}
+	if((task !== 'start') && (task !== 'finish')){
 		task_container = '<a onclick="javascript:jq_QuizExit()" id="jq_finish_link_container" class="btn btn-primary" title="<?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?>"><?php echo addslashes(JText::_('COM_QUIZ_EXIT'))?></a>' + task_container;
-
 	}
 
 	<?php } ?>

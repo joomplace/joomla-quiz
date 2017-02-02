@@ -10,7 +10,7 @@ test:
 #    DBPREFIX: "prfx_"
   script:
     - service --status-all
-    - alex7r_slim-mysql --version
+    - php -c "mysql_connect('alex7r_slim-mysql', 'root', 'qweasd')"
 #    - cat /proc/meminfo
 #    - service mysql start
 #    - echo "CREATE DATABASE ${DB}" | mysql -u root --password=qweasd

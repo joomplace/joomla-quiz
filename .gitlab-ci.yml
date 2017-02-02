@@ -1,7 +1,7 @@
 test:
   image: php:7.0
   services:
-    - alex7r/slim-mysql:latest
+    - alex7r/slim-mysql
   variables:
     MYSQL_DATABASE: joomla
     MYSQL_ROOT_PASSWORD: qweasd
@@ -10,7 +10,7 @@ test:
 #    DBPREFIX: "prfx_"
   script:
     - service --status-all
-    - alex7r__slim-mysql --version
+    - alex7r_slim-mysql --version
 #    - cat /proc/meminfo
 #    - service mysql start
 #    - echo "CREATE DATABASE ${DB}" | mysql -u root --password=qweasd

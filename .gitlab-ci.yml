@@ -1,7 +1,7 @@
 test:
   image: php:7.0
   services:
-    - mysql:latest --performance_schema=off
+    - alex7r/slim-mysql:latest
   variables:
     MYSQL_DATABASE: joomla
     MYSQL_ROOT_PASSWORD: qweasd

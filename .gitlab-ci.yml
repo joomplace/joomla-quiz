@@ -9,6 +9,7 @@ test:
 #    DBUSER: "jdbuser"
 #    DBPASS: "dbupass"
     DBPREFIX: "prfx_"
+    JOOMLAVERSION: "latest"
   script:
 #    - echo "SELECT 'OK';" | mysqld -h alex7r__slim-mysql -u root -pqweasd joomla
     - rm -f /var/www/html/index.html

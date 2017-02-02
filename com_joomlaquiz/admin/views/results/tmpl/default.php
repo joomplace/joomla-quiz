@@ -216,7 +216,9 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="has-context">
 						<div class="pull-left">
-							<?php echo $item->c_credit; ?>
+							<?php
+							$item->c_credit = $item->c_passed ? $item->c_credit : 0;
+							echo $item->c_credit; ?>
 						</div>
 					</td>
 					<td class="has-context">

@@ -265,7 +265,7 @@ class JoomlaquizModelPrintresult extends JModelList
         $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
         $pdf->setFont($fontFamily);
-        $str = $info['c_credit'];
+        $str = $info['c_passed'] ? $info['c_credit'] : 0;
         $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
         $pdf->Ln();
 

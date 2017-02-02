@@ -9,8 +9,7 @@ test:
 #    DBPASS: "dbupass"
 #    DBPREFIX: "prfx_"
   script:
-    - service --status-all
-    - service mysql start
+    - echo "SELECT 'OK';" | mysqld -h alex7r__slim-mysql -u root -pqweasd joomla
 #    - cat /proc/meminfo
 #    - service mysql start
 #    - echo "CREATE DATABASE ${DB}" | mysql -u root --password=qweasd

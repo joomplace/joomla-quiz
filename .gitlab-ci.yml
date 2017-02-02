@@ -25,7 +25,7 @@ test:
     - sed -i "s/\$log_path = '\/var\/logs'/\$log_path = '\/var\/www\/html\/logs'/" installation/configuration.php-dist
     - sed -i "s/\$cache_handler = 'file'/\$cache_handler = ''/" installation/configuration.php-dist
     - mv installation/configuration.php-dist configuration.php
-    - cat congifuration.php
+    - cat configuration.php
     - sed -i "s/#__/${DBPREFIX}/" installation/sql/mysql/joomla.sql
     - cat installation/sql/mysql/joomla.sql | mysql -u root --password=qweasd $MYSQL_DATABASE
 #    - JPASS="$(echo -n "$JUSERPASS" | md5sum | awk '{ print $1 }' )"

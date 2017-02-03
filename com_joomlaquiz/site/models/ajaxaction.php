@@ -201,8 +201,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if(!$cust_params) $cust_params = '{}';
 				
 				$quiz_time = JHtml::_('date',time(), 'Y-m-d H:i:s');
-				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params, time_left)"
-			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', '".$quiz_time."', '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).", ".$database->quote($quiz->c_time_limit*60).")";
+				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, c_credit, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params, time_left)"
+			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', '".$quiz_time."', '0', '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).", ".$database->quote($quiz->c_time_limit*60).")";
 				$database->SetQuery($query);
 				$database->query();
 				$stu_quiz_id = $database->insertid();
@@ -1107,7 +1107,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if (!$c_manual && ($user_score >= $nugno_score)) {
 					$user_passed = 1; 
 				}
-
+                //Get the value of a c_credit field if quiz passed
+                $quiz_credit = 0;
+                if($user_passed){
+                    $database->setQuery("SELECT `c_credit` FROM `#__quiz_t_quiz` WHERE `c_id` = '".$quiz_id."'");
+                    $quiz_credit = $database->loadResult();
+                }
 
 				$user_time = 0;
 				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
@@ -1123,7 +1128,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$user_time = $quiz_time1 - $quiz_time2a;
 					if($limit_time != 0 && $user_time > $limit_time * 60) $user_time = $limit_time * 60;				
 
-					$query = "UPDATE #__quiz_r_student_quiz SET c_total_score = '".$user_score."', c_passed = '".$user_passed."', c_finished = '1', c_total_time = '".$user_time."', `c_passing_score`='{$nugno_score}', `c_max_score` = '{$max_score}' "
+					$query = "UPDATE #__quiz_r_student_quiz SET c_total_score = '".$user_score."', c_passed = '".$user_passed."', c_credit = '".$quiz_credit."', c_finished = '1', c_total_time = '".$user_time."', `c_passing_score`='{$nugno_score}', `c_max_score` = '{$max_score}' "
 					. "\n WHERE c_id = '".$stu_quiz_id."' AND c_rel_id = '".$rel_id."' AND c_order_id = '".$package_id."' AND c_quiz_id = '".$quiz_id."' AND c_student_id = '".$my->id."'";
 					$database->SetQuery( $query );
 					$database->execute();

@@ -84,6 +84,7 @@ var url_prefix = 'index.php?option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ
 var limit_time = 0;
 var quest_timer_sec = 0;
 var quest_timer = 0;
+var quest_timer_ticktack = 0;
 var circle = null;
 var path_elems = new Array();
 var mes_question_is_misconfigured = '<?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IS_CONFIGURED');?>';
@@ -1072,6 +1073,7 @@ function jq_Start_Question_TickTack(limit_time)
 }
 
 function jq_Start_TickTack(past_time) {
+	clearInterval(quest_timer_ticktack);
 	timer_sec = 1;
 	if (parseInt(past_time)) {
 		timer_sec = past_time;
@@ -1113,7 +1115,8 @@ function jq_Start_TickTack(past_time) {
 	}
 
 	jq_getObj('jq_time_tick_container').style.visibility = "visible";
-	setTimeout("jq_Continue_TickTack()", 1000);
+	//setTimeout("jq_Continue_TickTack()", 1000);
+	quest_timer_ticktack = setInterval("jq_Continue_TickTack()", 1000);
 }
 
 function jq_Continue_TickTack() {
@@ -1122,7 +1125,7 @@ function jq_Continue_TickTack() {
 	} else if (stop_timer == 2) {
 	//pause
 		jq_getObj('jq_time_tick_container').style.textDecoration = "blink";
-		setTimeout("jq_Continue_TickTack()", 1000);
+		//setTimeout("jq_Continue_TickTack()", 1000);
 	} else {
 		jq_getObj('jq_time_tick_container').style.textDecoration = "none";
 		timer_sec ++;
@@ -1156,7 +1159,7 @@ function jq_Continue_TickTack() {
 			} else {
 				jq_getObj('jq_time_tick_container').innerHTML = time_str + ':' + time_str2;
 			}
-			setTimeout("jq_Continue_TickTack()", 1000);
+			//setTimeout("jq_Continue_TickTack()", 1000);
 		}
 	}
 }

@@ -148,9 +148,16 @@ class JoomlaquizTableQuiz extends JTable
 							if(intval($_POST['from_percent'][$i]) <= intval($_POST['to_percent'][$i]))
 							{
 								if((intval($_POST['from_percent'][$i])<101 && intval($_POST['to_percent'][$i])<101) || $_POST['jform']['c_feed_option']!= 1){
-									$query = "INSERT INTO #__quiz_feed_option VALUES('".$this->c_id."','".intval($_POST['from_percent'][$i])."','".intval($_POST['to_percent'][$i])."',".$database->Quote(stripslashes($_POST['feed_by_percent'][$i])).") ";
-									$database->setQuery( $query );
-									if (!$database->execute()) {
+
+									$query = new stdClass();
+									$query->quiz_id = $this->c_id;
+									$query->from_percent = intval($_POST['from_percent'][$i]);
+									$query->to_percent = intval($_POST['to_percent'][$i]);
+									$query->fmessage = stripslashes($_POST['feed_by_percent'][$i]);
+
+									$result = $database->insertObject('#__quiz_feed_option', $query);
+									
+									if (!$result) {
 										echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 										exit();
 									}

@@ -7,7 +7,7 @@
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.0</version>
+	<version>3.6.3.000</version>
 	<description>This module will display a list of the top X users</description>
 	<files>
 		<filename module="mod_quiz_topxusers">mod_quiz_topxusers.php</filename>
@@ -22,9 +22,9 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-				<field name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="A suffix to be applied to the css class of the module (table.moduletable), this allows individual module styling" />
+				<field name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="A suffix to be applied to the css class of the module (table.moduletable), this allows individual module styling"/>
 				
-				<field name="quiz_count" type="text" default="5" label="Number of quizzes" description="Number of quizzess to be shown" />
+				<field name="quiz_count" type="text" default="5" label="Number of quizzes" description="Number of quizzess to be shown"/>
 								
 				<field name="user_display" type="radio" default="0" label="Display user" description="You can choose to show real name or user name">
 					<option value="0">Username</option>
@@ -36,7 +36,7 @@
 					<option value="1">Yes</option>
 				</field>
 				
-				<field name="quizid" type="text" default="" label="Quiz ID" description="Set Quiz ID to display (to specify more than one quiz, seperate with a comma , )." />
+				<field name="quizid" type="text" default="" label="Quiz ID" description="Set Quiz ID to display (to specify more than one quiz, seperate with a comma , )."/>
 		</fieldset>
 		</fields>
 	</config>

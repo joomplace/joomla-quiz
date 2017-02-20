@@ -37,10 +37,14 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 			JoomlaquizHelper::JQ_GetJoomFish($choice_data[$t]->text, 'quiz_t_choice', 'c_choice', $choice_data[$t]->value);
 		}
 						
-		$query = "SELECT c_choice_id FROM #__quiz_t_choice AS c LEFT JOIN #__quiz_r_student_choice AS sc ON c.c_id = sc.c_choice_id AND sc.c_sq_id = '".$data['sid']."' WHERE c.c_question_id = '".$data['q_data']->c_id."' ORDER BY c.ordering";
-		$database->SetQuery( $query );
-		$answers = $database->loadColumn();
-		$answers = is_array($answers)? $answers: array();
+		if ($data['sid']) {
+			$query = "SELECT c_choice_id FROM #__quiz_t_choice AS c LEFT JOIN #__quiz_r_student_choice AS sc ON c.c_id = sc.c_choice_id AND sc.c_sq_id = '".$data['sid']."' WHERE c.c_question_id = '".$data['q_data']->c_id."' ORDER BY c.ordering";
+			$database->SetQuery( $query );
+			$answers = $database->loadColumn();
+			$answers = is_array($answers)?$answers: array();
+		} else {
+			$answers = array();
+		}
 		
 		for($c = 0, $cn = count($choice_data); $c < $cn; $c++) {
 

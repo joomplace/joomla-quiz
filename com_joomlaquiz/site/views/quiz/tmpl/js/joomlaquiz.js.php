@@ -1697,11 +1697,11 @@ function jq_QuizNextFinish() {
 		}
 	}
 	//Showing a message
-	var text = "Attention!\n";
+	var text = "<?php echo JText::_('COM_QUIZ_POPUP_EXIT_ATTENTION'); ?>\n";
 	if(un_answered.length){
-		text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1'); ?>" + un_answered.join(', ') + "\n";
+		text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART1', array("interpretBackSlashes"=>false)); ?>" + un_answered.join(', ') + "\n";
 	}
-	text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART2'); ?>";
+	text+="<?php echo JText::_('COM_QUIZ_POPUP_EXIT_WITHOUT_ANSWERS_PART2', array("interpretBackSlashes"=>false)); ?>";
 	if(!confirm(text)){
 		return;
 	}

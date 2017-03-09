@@ -133,12 +133,17 @@ $sortFields = $this->getSortFields();
 					<th>
 						<?php echo JText::_('COM_JOOMLAQUIZ_UNIQUE_CODE'); ?>
 					</th>
-					<?php echo JHtml::_('content.prepare','',$this->items,'admin.results.table.head'); ?>
+					<?php
+					JLoader::import('joomla.registry.registry');
+					$data = new JRegistry();
+					$data->set('data', $this->items);
+					echo JHtml::_('content.prepare', '', $data, 'admin.results.table.head'); 
+					?>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<td colspan="<?php echo 12+(int)JHtml::_('content.prepare','',$this->items,'admin.results.table.count'); ?>">
+					<td colspan="<?php echo 12+(int)JHtml::_('content.prepare', '', $data, 'admin.results.table.count'); ?>">
 						<?php echo $this->pagination->getListFooter(); ?>
 					</td>
 				</tr>
@@ -252,7 +257,11 @@ $sortFields = $this->getSortFields();
 							<?php echo base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$item->c_id.''.$item->c_student_id.''.$item->c_total_score, 10, 36) ?>
 						<?php } ?>
 					</td>
-					<?php echo JHtml::_('content.prepare','',$item,'admin.results.table.row'); ?>
+					<?php
+					$data = new JRegistry();
+					$data->set('data', $item);
+					echo JHtml::_('content.prepare', '', $data, 'admin.results.table.row'); 
+					?>
 				</tr>
 				<?php endforeach; ?>
 			</tbody>

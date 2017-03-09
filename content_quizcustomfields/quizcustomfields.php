@@ -46,7 +46,8 @@ class plgContentQuizCustomFields extends JPlugin {
 	}
 
 	function onContentPrepare( $context, &$article, &$params ) {
-		
+
+		$params_extract = $params->get('data');
 		$html = array();
 		switch($context){
 			case 'admin.results.table.head':
@@ -54,7 +55,7 @@ class plgContentQuizCustomFields extends JPlugin {
 						$fields = explode(',',$article->text);
 					}else{
 						$fields = array();
-						foreach($params as $item){
+						foreach($params_extract as $item){
 							if($item->params)
 								$fields = array_merge($fields,array_keys(json_decode(str_replace('custom_','',$item->params),true)));
 						}
@@ -69,7 +70,7 @@ class plgContentQuizCustomFields extends JPlugin {
 						$fields = explode(',',$article->text);
 					}else{
 						$fields = array();
-						foreach($params as $item){
+						foreach($params_extract as $item){
 							if($item->params)
 								$fields = array_merge($fields,array_keys(json_decode(str_replace('custom_','',$item->params),true)));
 						}
@@ -83,8 +84,8 @@ class plgContentQuizCustomFields extends JPlugin {
 					}
 					
 					$fields = array();
-					if($params->params){
-						$fields = json_decode(str_replace('custom_','',$params->params),true);
+					if($params_extract->params){
+						$fields = json_decode(str_replace('custom_','',$params_extract->params),true);
 					}
 					if($keys){
 						foreach($keys as $key){
@@ -99,7 +100,7 @@ class plgContentQuizCustomFields extends JPlugin {
 						$fields = explode(',',$article->text);
 					}else{
 						$fields = array();
-						foreach($params as $item){
+						foreach($params_extract as $item){
 							if($item->params)
 								$fields = array_merge($fields,array_keys(json_decode(str_replace('custom_','',$item->params),true)));
 						}
@@ -115,8 +116,8 @@ class plgContentQuizCustomFields extends JPlugin {
 					}
 					
 					$fields = array();
-					if($params->params){
-						$fields = json_decode(str_replace('custom_','',$params->params),true);
+					if($params_extract->params){
+						$fields = json_decode(str_replace('custom_','',$params_extract->params),true);
 					}
 					if($keys){
 						foreach($keys as $key){
@@ -127,8 +128,8 @@ class plgContentQuizCustomFields extends JPlugin {
 					}
 				break;
 			case 'admin.results.report.row':
-					if($params) {
-						$fields = json_decode(str_replace('custom_','',$params),true);
+					if($params_extract) {
+						$fields = json_decode(str_replace('custom_','',$params_extract),true);
 					}
 					$fields = array_unique($fields);
 					foreach($fields as $field => $value){
@@ -155,8 +156,8 @@ class plgContentQuizCustomFields extends JPlugin {
 				{
 					foreach($matches as $match){
 						$fields = array();
-						if($params->params){
-							$fields = json_decode(str_replace('custom_','',$params->params),true);
+						if($params_extract->params){
+							$fields = json_decode(str_replace('custom_','',$params_extract->params),true);
 						}
 
 						// We should replace only first occurrence in order to allow positions with the same name to regenerate their content:

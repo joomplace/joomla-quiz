@@ -132,7 +132,12 @@ class JoomlaquizModelPrintcert extends JModelList
 
 				$sc_procent = ($stu_quiz->c_full_score != 0) ? number_format(($stu_quiz->user_score * 100) / $stu_quiz->c_full_score, 2, '.', ' ') : 0;
 				$font_text = $certif->crtf_text;
-				$font_text = JHtml::_('content.prepare',$this->revUni($font_text),$stu_quiz,'');
+
+				JLoader::import('joomla.registry.registry');
+				$data = new JRegistry();
+				$data->set('data', $stu_quiz);
+					
+				$font_text = JHtml::_('content.prepare', $this->revUni($font_text), $data,'');
 				$font_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $font_text);
 				$font_text = str_replace("#name#", $this->revUni($u_name), $font_text);
 				$font_text = str_replace("#surname#", $this->revUni($u_surname), $font_text);
@@ -185,7 +190,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				}
 				$font_text = str_replace('#date#', date('Y-m-d', $stu_datetime), $font_text);
 			
-				$font = JPATH_SITE . "/media/".(isset($certif->text_font)? $certif->text_font: 'arial.ttf');
+				$font = JPATH_SITE . "/media/".($certif->text_font? $certif->text_font: 'arial.ttf');
 				$text_array = explode("\n",$font_text);
 				$count_lines = count($text_array);
 				$text_lines_xlefts = array();
@@ -252,8 +257,11 @@ class JoomlaquizModelPrintcert extends JModelList
 				$ad = 0;		
 				if (is_array($fields) && count($fields)) {
 					foreach($fields as $field){
+						
+						$data = new JRegistry();
+						$data->set('data', $stu_quiz);
 					
-						$field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text),$stu_quiz,'');
+						$field->f_text = JHtml::_('content.prepare', $this->revUni($field->f_text), $data,'');
 						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
 						$field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);
 						$field->f_text = str_replace("#surname#", $this->revUni($u_surname), $field->f_text);

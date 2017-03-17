@@ -24,7 +24,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 		$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 		
 		$database = JFactory::getDBO();
-		$query = "SELECT c_id as value, c_choice as text, '0' as c_right, '0' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."'";
+		$query = "SELECT c_id as value, c_choice as text, c_right, '0' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."'";
 		if ($data['qrandom'])
 			$query .=  "\n ORDER BY rand()";
 		else

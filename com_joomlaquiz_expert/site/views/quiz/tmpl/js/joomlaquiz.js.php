@@ -1,4 +1,5 @@
 <?php JHTML::_('behavior.modal');?>
+
 <script language="JavaScript" type="text/javascript">
 <!--//--><![CDATA[//><!--
 

@@ -134,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_lpath` (
   `published` tinyint(4) DEFAULT NULL,
   `asset_id` int(18) NOT NULL,
   `lp_access_message` text NOT NULL,
+  `category` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 

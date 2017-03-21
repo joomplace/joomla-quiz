@@ -23,8 +23,12 @@ class JoomlaquizViewDashboard extends JViewLegacy
 		/* db check and fix */
 		if(JComponentHelper::getParams('com_joomlaquiz')->get('db_fix',0)){
 			$this->db_state = $this->get('DatabaseState');
-			$this->errors = $this->db_state->check();
-			$this->results = $this->db_state->getStatus();
+            $this->errors = array();
+            $this->results = array();
+            foreach ($this->db_state as $cs_state){
+                $this->errors = array_merge($this->errors,$this->db_state->check());
+                $this->results = array_merge($this->results,$this->db_state->getStatus());
+            }
 			if($this->errors){
 				JToolbarHelper::custom('dashboard.fix', 'refresh', 'refresh', 'COM_JOOMLAQUIZ_MANAGER_DASHBOARD_FIX_DB', false);
 			}	

@@ -80,7 +80,7 @@ class JoomlaquizHelper
 			return true;
 		}
 		
-		public static function jq_substr($str, $start, $length=null) {
+		public static function jq_substr($str, $start, $length = false) {
 			
 			return JString::substr($str, $start, $length);
 			

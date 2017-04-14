@@ -18,6 +18,11 @@ $model = $this->getModel('question');
 $quizes_list = $this->quizzes;
 $ordering_list = $this->ordering_list;
 ?>
+<style>
+    #jform_c_question_ifr{
+        height: 195px!important;
+    }
+</style>
 <?php echo $this->loadTemplate('menu');?>
 <script type="text/javascript">
     
@@ -62,211 +67,234 @@ $ordering_list = $this->ordering_list;
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&layout=edit&c_id='.(int) $this->item->c_id); ?>" enctype="multipart/form-data" method="post" name="adminForm" id="question-form" class="form-validate">
-<div id="j-main-container" class="span7 form-horizontal">
-	<ul class="nav nav-tabs" id="questionTabs">
-	    <li class="active"><a href="#question-details" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION');?></a></li>
-	    <?php if($this->is_feedback):?>
-		<li><a href="#question-feedback" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION_FEEDBACK2');?></a></li>
-		<?php endif;?>
-		<?php if($this->options != ''):?>
-		<li><a href="#question-options" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION_OPTIONS');?></a></li>
-		<?php endif;?>
-		<?php if($this->add_tabs):?>
-			<?php foreach($this->add_tabs as $tab):?>
-				<?php echo $tab['label'];?>
-			<?php endforeach;?>
-		<?php endif;?>
-	</ul>
-	<div class="tab-content">
-	    <div class="tab-pane active" id="question-details">
-		<fieldset class="adminform">
-			<legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION')?></legend>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_question'); ?>
+<div id="j-main-container" class="span12 form-horizontal">
+  <?php
+    if($this->type == 'mchoice'){
+      $data = new Joomla\Registry\Registry(array(
+        'TabSet' => 'questionCreation',
+      ));
+      $data->set('form',$this->form);
+      $data->set('item',$this->item);
+      ?>
+      <div id="question-edit" ng-controller="questionEditCtrl">
+      <?php
+      echo JHtml::_('bootstrap.startTabSet', $data->get('TabSet'), array('active'=>'question-details'));
+      echo JLayoutHelper::render('question.edit.details',$data,JPATH_SITE.'/plugins/joomlaquiz/'.$this->type);
+      echo JLayoutHelper::render('question.edit.extended',$data,JPATH_SITE.'/plugins/joomlaquiz/'.$this->type);
+      echo JLayoutHelper::render('question.edit.options',$data,JPATH_SITE.'/plugins/joomlaquiz/'.$this->type);
+      echo JHtml::_('bootstrap.endTabSet', $data->get('TabSet'));
+      ?>
+      </div>
+      <?php
+    }else{
+      ?>
+      <ul class="nav nav-tabs" id="questionTabs">
+        <li class="active"><a href="#question-details" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION');?></a></li>
+          <?php if($this->is_feedback):?>
+            <li><a href="#question-feedback" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION_FEEDBACK2');?></a></li>
+          <?php endif;?>
+          <?php if($this->options != ''):?>
+            <li><a href="#question-options" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION_OPTIONS');?></a></li>
+          <?php endif;?>
+          <?php if($this->add_tabs):?>
+              <?php foreach($this->add_tabs as $tab):?>
+                  <?php echo $tab['label'];?>
+              <?php endforeach;?>
+          <?php endif;?>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="question-details">
+          <fieldset class="adminform">
+            <legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION')?></legend>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo $this->form->getLabel('c_question'); ?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->form->getInput('c_question'); ?>
+              </div>
+            </div>
+              <?php if($this->is_reportname):?>
+                <div class="control-group">
+                  <div class="control-label">
+                      <?php echo $this->form->getLabel('report_name'); ?>
+                  </div>
+                  <div class="controls">
+                      <?php echo $this->form->getInput('report_name'); ?>
+                  </div>
                 </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_question'); ?>
-				</div>
-			</div>
-			<?php if($this->is_reportname):?>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('report_name'); ?>
+              <?php endif;?>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo $this->form->getLabel('published'); ?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->form->getInput('published'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo $this->form->getLabel('c_show_timer'); ?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->form->getInput('c_show_timer'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo $this->form->getLabel('c_time_limit'); ?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->form->getInput('c_time_limit'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo $this->form->getLabel('c_separator'); ?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->form->getInput('c_separator'); ?>
+              </div>
+            </div>
+              <?php
+              if(count($this->add_form)){
+                  foreach($this->add_form as $for => $item){?>
+                    <div class="control-group">
+                        <?php if ($for=='c_qform')
+                            echo $item['label'];
+                        else {?>
+                          <label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $item['label']?></label>
+                        <?php }?>
+                      <div class="controls">
+                          <?php echo $item['input']?>
+                      </div>
+                    </div>
+                  <?php }
+              }
+              ?>
+          </fieldset>
+          <fieldset class="adminform">
+            <legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_DETAILS')?></legend>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo $this->form->getLabel('c_quiz_id'); ?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->form->getInput('c_quiz_id'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo $this->form->getLabel('c_ques_cat'); ?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->form->getInput('c_ques_cat'); ?>
+              </div>
+            </div>
+              <?php if($this->is_points):?>
+                <div class="control-group">
+                  <div class="control-class">
+                      <?php echo $this->form->getLabel('c_point'); ?>
+                  </div>
+                  <div class="controls">
+                      <?php echo $this->form->getInput('c_point'); ?>
+                  </div>
                 </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('report_name'); ?>
-				</div>
-			</div>
-			<?php endif;?>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('published'); ?>
+              <?php endif;?>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo $this->form->getLabel('c_attempts'); ?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->form->getInput('c_attempts'); ?>
+              </div>
+            </div>
+              <?php if($this->is_penalty):?>
+                <div class="control-group">
+                  <div class="control-label">
+                      <?php echo $this->form->getLabel('c_penalty'); ?>
+                  </div>
+                  <div class="controls">
+                      <?php echo $this->form->getInput('c_penalty'); ?>
+                  </div>
                 </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('published'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
-                    <?php echo $this->form->getLabel('c_show_timer'); ?>
+              <?php endif;?>
+            <div class="control-group">
+              <div class="control-label">
+                  <?php echo JText::_('COM_JOOMLAQUIZ_ORDERING');?>
+              </div>
+              <div class="controls">
+                  <?php echo $this->item->ordering_list;?>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+          <?php if($this->options != ''):?>
+            <div class="tab-pane" id="question-options">
+              <fieldset class="adminform">
+                <legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_OPTIONS')?></legend>
+                  <?php echo $this->options;?>
+              </fieldset>
+            </div>
+          <?php endif;?>
+          <?php if($this->is_feedback):?>
+            <div class="tab-pane" id="question-feedback">
+              <fieldset class="adminform">
+                <legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_FEEDBACK2')?></legend>
+                <div class="control-group">
+                  <div class="control-label">
+                      <?php echo $this->form->getLabel('c_feedback'); ?>
+                  </div>
+                  <div class="controls">
+                      <?php echo $this->form->getInput('c_feedback'); ?>
+                  </div>
                 </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_show_timer'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_time_limit'); ?>
+                <div class="control-group">
+                  <div class="control-label">
+                      <?php echo $this->form->getLabel('c_right_message'); ?>
+                  </div>
+                  <div class="controls">
+                      <?php echo $this->form->getInput('c_right_message'); ?>
+                  </div>
                 </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_time_limit'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_separator'); ?>
+                <div class="control-group">
+                  <div class="control-label">
+                      <?php echo $this->form->getLabel('c_wrong_message'); ?>
+                  </div>
+                  <div class="controls">
+                      <?php echo $this->form->getInput('c_wrong_message'); ?>
+                  </div>
                 </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_separator'); ?>
-				</div>
-			</div>
-			<?php 
-			if(count($this->add_form)){
-				foreach($this->add_form as $for => $item){?>
-				<div class="control-group">
-				<?php if ($for=='c_qform') 
-			              echo $item['label'];
-				      else {?>					
-					<label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $item['label']?></label>
-				<?php }?>
-					<div class="controls">
-						<?php echo $item['input']?>
-					</div>
-				</div>
-			<?php }
-			}
-			?>
-		</fieldset>
-		<fieldset class="adminform">
-			<legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_DETAILS')?></legend>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_quiz_id'); ?>
+                <div class="control-group">
+                  <div class="control-label">
+                      <?php echo $this->form->getLabel('c_detailed_feedback'); ?>
+                  </div>
+                  <div class="controls">
+                      <?php echo $this->form->getInput('c_detailed_feedback'); ?>
+                  </div>
                 </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_quiz_id'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_ques_cat'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_ques_cat'); ?>
-				</div>
-			</div>
-			<?php if($this->is_points):?>
-			<div class="control-group">
-                <div class="control-class">
-				    <?php echo $this->form->getLabel('c_point'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_point'); ?>
-				</div>
-			</div>
-			<?php endif;?>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_attempts'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_attempts'); ?>
-				</div>
-			</div>
-			<?php if($this->is_penalty):?>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_penalty'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_penalty'); ?>
-				</div>
-			</div>
-			<?php endif;?>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo JText::_('COM_JOOMLAQUIZ_ORDERING');?>
-                </div>
-				<div class="controls">
-					<?php echo $this->item->ordering_list;?>
-				</div>
-			</div>
-		</fieldset>
-	    </div>
-		<?php if($this->options != ''):?>
-		<div class="tab-pane" id="question-options">
-			<fieldset class="adminform">
-				<legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_OPTIONS')?></legend>
-				<?php echo $this->options;?>
-			</fieldset>
-		</div>
-		<?php endif;?>
-		<?php if($this->is_feedback):?>
-	    <div class="tab-pane" id="question-feedback">
-		<fieldset class="adminform">
-			<legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_FEEDBACK2')?></legend>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_feedback'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_feedback'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_right_message'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_right_message'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_wrong_message'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_wrong_message'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_detailed_feedback'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_detailed_feedback'); ?>
-				</div>
-			</div>
-			<?php if($this->feedback_fields):?>
-				<?php foreach($this->feedback_fields as $for => $field):?>
-					<div class="control-group">
-						<label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $field['label']?></label>
-						<div class="controls">
-							<?php echo $field['input']?>
-						</div>
-					</div>
-				<?php endforeach;?>
-			<?php endif;?>
-		</fieldset>
-	    </div>
-		<?php endif;?>
-		<?php if($this->add_tabs):?>
-			<?php foreach($this->add_tabs as $tab):?>
-				<?php echo $tab['content'];?>
-			<?php endforeach;?>
-		<?php endif;?>
-	</div>
+                  <?php if($this->feedback_fields):?>
+                      <?php foreach($this->feedback_fields as $for => $field):?>
+                      <div class="control-group">
+                        <label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $field['label']?></label>
+                        <div class="controls">
+                            <?php echo $field['input']?>
+                        </div>
+                      </div>
+                      <?php endforeach;?>
+                  <?php endif;?>
+              </fieldset>
+            </div>
+          <?php endif;?>
+          <?php if($this->add_tabs):?>
+              <?php foreach($this->add_tabs as $tab):?>
+                  <?php echo $tab['content'];?>
+              <?php endforeach;?>
+          <?php endif;?>
+      </div>
+      <?php
+    }
+  ?>
 </div>
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="jform[c_id]" value="<?php echo $this->item->c_id;?>" />

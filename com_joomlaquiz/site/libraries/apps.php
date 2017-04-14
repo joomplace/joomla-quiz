@@ -56,22 +56,30 @@ class JqAppPlugins extends JObject
 	public function triggerEvent( $event , &$arrayParams = null , $needOrdering = false )
 	{
 		$content	= array();
-		
-		// Avoid problem with php 5.3
+
+        if($arrayParams instanceof \Joomla\Registry\Registry){
+            $params = $arrayParams;
+        }else{
+            $params = new \Joomla\Registry\Registry($arrayParams);
+        }
+
+        // Avoid problem with php 5.3
 		if(is_null($arrayParams)){
 			$arrayParams = array();
 		}
-		
-		$className = 'plgJoomlaquiz'.ucfirst($arrayParams['quest_type']);
+
+		$className = 'plgJoomlaquiz'.ucfirst($params->get('quest_type'));
 		if(class_exists($className)){
-			$plgObj = new $className();
+            $dispatcher = JEventDispatcher::getInstance();
+			$plgObj = new $className($dispatcher);
 			if(method_exists($plgObj, $event)){
 				$content[] = call_user_func_array(array($plgObj, $event), array(&$arrayParams));
 				$this->triggerCount++;
 			}
 			return $content;
 		} else {
-			$arrayParams['error'] = 1;
+			$params->set('error', 1);
+			$arrayParams = $params->toArray();
 		}
 		
 		return false;

@@ -31,48 +31,57 @@ case '15':
 	question_container.addClass('question-loading');
 
 	var next_block = jq_jQuery('<div class="loading-next" />');
-	next_block.load(
-		live_url+'index.php?option=com_ajax&ignoreMessages&plugin=mchoiceAnswerRenderSubquestion&group=joomlaquiz&stu_quiz_id='+stu_quiz_id+'&question='+questions[n].cur_quest_id+'&format=json',
-		{'answers':subs_answers},
-		function (response, status, xhr) {
-			response = JSON.parse(response);
-			console.log(response);
-			var feedbacks = response.messages;
-			if(feedbacks){
-                Object.keys(feedbacks).map(function(quest, index) {
-                    var msgs = feedbacks[quest];
-                    if(msgs){
-                    	msgs.map(function(msg){
-                            question_container.find('.sub_questions #subquestion-'+quest+' .feedback-section').html(msg);
-						});
-                        clear_sky = false;
-                    }
-                });
-			}
-			if(response.data){
-                var html = response.data[0];
-                html.map(function(obj, i) {
-                    if(obj.again === true){
-                        question_container.find('input[name*="'+obj.id+'"]')
-                            .each(function (oi) {
-                                jq_jQuery(this).prop('disabled', false);
+	var question_finished = question_container.data('finished');
+	if(!question_finished){
+        next_block.load(
+            live_url+'index.php?option=com_ajax&ignoreMessages&plugin=mchoiceAnswerRenderSubquestion&group=joomlaquiz&stu_quiz_id='+stu_quiz_id+'&question='+questions[n].cur_quest_id+'&format=json',
+            {'answers':subs_answers},
+            function (response, status, xhr) {
+                question_finished = true;
+                response = JSON.parse(response);
+                console.log(response);
+                var feedbacks = response.messages;
+                if(feedbacks){
+                    Object.keys(feedbacks).map(function(quest, index) {
+                        var msgs = feedbacks[quest];
+                        if(msgs){
+                            msgs.map(function(msg){
+                                question_container.find('.sub_questions #subquestion-'+quest+' .feedback-section').html(msg);
                             });
-                        clear_sky = false;
-                    }else if(obj.html && obj.again === null){
-                        question_container.find('.sub_questions').append(obj.html);
-                        clear_sky = false;
-                    }
-                });
-			}
+                            clear_sky = false;
+                        }
+                    });
+                }
+                if(response.data){
+                    var html = response.data[0];
+                    html.map(function(obj, i) {
+                        if(obj.again !== false){
+                            if(obj.again === true){
+                                question_container.find('input[name*="'+obj.id+'"]')
+                                    .each(function (oi) {
+                                        jq_jQuery(this).prop('disabled', false);
+                                    });
+                                clear_sky = false;
+                            }else if(obj.html && obj.again === null){
+                                question_container.find('.sub_questions').append(obj.html);
+                                clear_sky = false;
+                            }
+                            question_finished = false;
+                        }
+                    });
+                }
+                question_container.data('finished', question_finished);
 
-			if(clear_sky){
-                quiz_blocked = 1;
-                timerID = setTimeout("jq_QuizNext()", 300);
-			}else{
-                question_container.removeClass('question-loading');
-			}
-		}
-	);
+                if(clear_sky){
+                	alert('Still needed');
+                    quiz_blocked = 1;
+                    timerID = setTimeout("jq_QuizNext()", 300);
+                }else{
+                    question_container.removeClass('question-loading');
+                }
+            }
+        );
 
-	return false;
+        return false;
+	}
 break;

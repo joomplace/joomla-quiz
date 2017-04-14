@@ -545,7 +545,7 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
             if($res->get('correct')){
                 $question_data[$quest]->again = false;
                 $question_data[$quest]->feedback_type = 'correct';
-            }elseif($res->get('got_one_correct')){
+            }elseif($res->get('got_one_correct') && $question_data[$quest]->partial){
                 $question_data[$quest]->feedback_type = 'partial';
             }else{
                 $question_data[$quest]->feedback_type = 'incorrect';
@@ -583,7 +583,7 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
                 $data[] = array(
                     'id'=> $question->id,
                     'again'=> $question->again,
-                    'html'=> JLayoutHelper::render('question.subquestion', $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/')
+                    'html'=> ($question->again===null?JLayoutHelper::render('question.subquestion', $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/'):'')
                 );
                 if($question->again){
                     break;

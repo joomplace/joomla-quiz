@@ -87,12 +87,12 @@ JHtml::_('formbehavior.chosen', 'select');
 					</td>
 					<td class="has-context">
                         <div class="pull-left">
-                            <?php echo $item->c_point; ?>
+                            <?php echo number_format($item->c_point,2); ?>
                         </div>
 					</td>
 					<td class="has-context">
                         <div class="pull-left">
-                            <?php echo $item->c_score; ?>
+                            <?php echo number_format($item->c_score,2); ?>
                         </div>
 					</td>
 				</tr>

@@ -179,8 +179,13 @@ class JoomlaquizModelResults extends JModelList
     }	
 	
 	public function getSTUQuery($cid, $query){			
-		$query->select("e.enabled, sp.c_id, sp.c_score, q.c_type, q.c_point, q.c_question, qt.c_qtype, sp.c_question_id");		
-		$query->from("#__quiz_r_student_question as sp");		
+		$query->select("e.enabled");
+		$query->select("sp.c_id");
+		$query->select("q.c_type");
+		$query->select("q.c_question");
+		$query->select("qt.c_qtype");
+		$query->select("sp.c_question_id");
+		$query->from("#__quiz_r_student_question as sp");
 		$query->leftJoin("#__quiz_t_question as q ON sp.c_question_id = q.c_id");		
 		$query->leftJoin("#__quiz_t_qtypes as qt ON q.c_type = qt.c_id");		
 		$query->leftJoin("`#__extensions` as `e` ON e.element = qt.c_type");		
@@ -188,7 +193,28 @@ class JoomlaquizModelResults extends JModelList
 		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
 			$query->where('`q`.`c_type` != 9');	
 		}		
-		$query->order("q.ordering, q.c_id");				
+		$query->order("q.ordering, q.c_id");
+
+		$SQL = "SELECT SUM(`opts`.`points`) AS `points`,  SUM(`c_point`) AS `c_point`, `question` 
+        FROM(
+            SELECT SUM(`o`.`points`) AS `points`,  `quests`.`c_point`, iF(`quests`.`parent_id`,`quests`.`parent_id`,`o`.`question`) AS `question` 
+            FROM `prfx_quiz_options` AS `o` 
+            LEFT JOIN `prfx_quiz_t_question` AS `quests` ON `quests`.`c_id` = `o`.`question`
+            WHERE `o`.`right` = 1
+            GROUP BY `o`.`question`
+        ) AS `opts`
+        GROUP BY `opts`.`question`";
+		$query->leftjoin('('.$SQL.') AS `options` ON `q`.`c_id` = `options`.`question`');
+        $query->select("(q.c_point + `options`.`points` + `options`.`c_point`) AS `c_point`");
+
+		$SQL = "SELECT SUM(  `answer`.`c_score` ) AS `c_score` , GROUP_CONCAT( IF(  `quest`.`parent_id` ,  '',  `answer`.`c_id` ) SEPARATOR  '' ) AS `id` 
+        FROM  `prfx_quiz_r_student_question` AS  `answer` 
+        LEFT JOIN  `prfx_quiz_t_question` AS  `quest` ON  `quest`.`c_id` =  `answer`.`c_question_id` 
+        WHERE  `answer`.`c_stu_quiz_id` = '".$cid."'
+        GROUP BY IF(  `quest`.`parent_id` ,  `quest`.`parent_id` ,  `quest`.`c_id` ) ";
+		$query->leftjoin('('.$SQL.') AS `answers` ON `sp`.`c_id` = `answers`.`id`');
+        $query->select("`answers`.`c_score`");
+
 		return $query;	
 	}			
 	

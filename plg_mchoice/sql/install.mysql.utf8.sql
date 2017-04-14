@@ -1,7 +1,7 @@
 DELETE FROM `#__quiz_t_qtypes` WHERE c_id = '15';
 INSERT INTO #__quiz_t_qtypes (c_id, c_qtype, c_type) VALUES (15, 'Choice (4th generation)', 'mchoice');
 
-CREATE TABLE IF NOT EXISTS `#__quiz_options` (
+CREATE TABLE IF NOT EXISTS `#__quiz_r_choice` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `c_sq_id` int(10) unsigned NOT NULL DEFAULT '0',
   `c_choice_id` int(10) unsigned NOT NULL DEFAULT '0',

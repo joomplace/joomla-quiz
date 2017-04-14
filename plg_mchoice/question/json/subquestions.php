@@ -8,19 +8,23 @@
 
 $db = JFactory::getDbo();
 $query = $db->getQuery(true);
-$query->select($db->qn('c_id','id'))
-    ->select($db->qn('c_random','shuffle'))
-    ->select($db->qn('c_question','text'))
-    ->select($db->qn('c_point','points'))
-    ->select($db->qn('c_partial','partial'))
-    ->select($db->qn('c_attempts','attempts'))
-    ->select($db->qn('c_feedback','feedback'))
-    ->select($db->qn('c_right_message','feedback_correct'))
-    ->select($db->qn('c_wrong_message','feedback_incorrect'))
-    ->select($db->qn('c_partially_message','feedback_partial'))
-    ->from($db->qn('#__quiz_t_question', 'q'))
-    ->where($db->qn('parent_id').' = '.$db->q($displayData));
-$sub_quests = $db->setQuery($query)->loadObjectList();
+if($displayData){
+    $query->select($db->qn('c_id','id'))
+        ->select($db->qn('c_random','shuffle'))
+        ->select($db->qn('c_question','text'))
+        ->select($db->qn('c_point','points'))
+        ->select($db->qn('c_partial','partial'))
+        ->select($db->qn('c_attempts','attempts'))
+        ->select($db->qn('c_feedback','feedback'))
+        ->select($db->qn('c_right_message','feedback_correct'))
+        ->select($db->qn('c_wrong_message','feedback_incorrect'))
+        ->select($db->qn('c_partially_message','feedback_partial'))
+        ->from($db->qn('#__quiz_t_question', 'q'))
+        ->where($db->qn('parent_id').' = '.$db->q($displayData));
+    $sub_quests = $db->setQuery($query)->loadObjectList();
+}else{
+    $sub_quests = array();
+}
 $query->clear()
     ->select('*')
     ->from($db->qn('#__quiz_options', 'o'));

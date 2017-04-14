@@ -8,18 +8,15 @@
 */
 defined('_JEXEC') or die;
 
+JPluginHelper::importPlugin('joomlaquiz');
+
 /**
  * Joomlaquiz Deluxe component helper.
  */
-abstract class plgJoomlaquizQuestion
+abstract class plgJoomlaquizQuestion extends JPlugin
 {
 	var $_type		= 'joomlaquiz';
-	
-	function __construct() {
-		return true;
-	}
-	
-	abstract public function onCreateQuestion(&$data);
+
 	abstract public function onScoreByCategory(&$data);
 		
 }

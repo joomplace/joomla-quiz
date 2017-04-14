@@ -1,5 +1,5 @@
 DELETE FROM `#__quiz_t_qtypes` WHERE c_id = '15';
-INSERT INTO #__quiz_t_qtypes (c_id, c_qtype, c_type) VALUES (15, 'Multiple question', 'mchoice');
+INSERT INTO #__quiz_t_qtypes (c_id, c_qtype, c_type) VALUES (15, 'Choice (4th generation)', 'mchoice');
 
 CREATE TABLE IF NOT EXISTS `#__quiz_options` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_options` (
 CREATE TABLE IF NOT EXISTS `#__quiz_options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question` int(11) NOT NULL,
-  `text` varchar(256) CHARACTER SET latin1 NOT NULL,
+  `text` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
   `right` tinyint(1) NOT NULL DEFAULT '0',
   `points` float NOT NULL,
   PRIMARY KEY (`id`)

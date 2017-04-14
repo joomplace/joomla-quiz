@@ -17,6 +17,7 @@
 		<folder>admin</folder>
 		<folder>js</folder>
 		<folder>tmpl</folder>
+		<folder>question</folder>
 		<folder>sql</folder>
 	</files>
 	<install>

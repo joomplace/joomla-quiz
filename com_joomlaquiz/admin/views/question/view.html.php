@@ -63,6 +63,7 @@ class JoomlaquizViewQuestion extends JViewLegacy
 	
 		$data = array();
 		$type = JoomlaquizHelper::getQuestionType($new_qtype_id);
+		$this->type = $type;
 		$data['quest_type'] = $type;
 		$data['question_id'] = $this->item->c_id;
 		
@@ -72,7 +73,7 @@ class JoomlaquizViewQuestion extends JViewLegacy
 		
         $this->quizzes		= $this->get('QuizzesList');
         $this->ordering_list = $this->get('Ordering');
-				
+
 		$get_options = (method_exists($className, 'onGetAdminOptions')) ? $appsLib->triggerEvent( 'onGetAdminOptions' , $data ) : array('');
 		$this->options = $get_options[0];
 		

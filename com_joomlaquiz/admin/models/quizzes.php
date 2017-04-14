@@ -151,11 +151,19 @@ class JoomlaquizModelQuizzes extends JModelList
 		foreach ($quizzes_to_copy as $quiz2copy) {
 			$new_quiz = $this->getTable();
 			
-			if (!$new_quiz->bind( $quiz2copy )) { echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+			if (!$new_quiz->bind( $quiz2copy )) { 
+				echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); 
+			}
 			$new_quiz->published = 0;
-			$new_quiz->c_id = 0; $new_quiz->c_category_id = $categoryCopy; $new_quiz->c_title = JText::_('COM_JOOMLAQUIZ_COPY_OF') . $new_quiz->c_title;
-			if (!$new_quiz->check()) { echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-			if (!$new_quiz->store()) { echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+			$new_quiz->c_id = 0; 
+			$new_quiz->c_category_id = $categoryCopy; 
+			$new_quiz->c_title = JText::_('COM_JOOMLAQUIZ_COPY_OF') . $new_quiz->c_title;
+			if (!$new_quiz->check()) { 
+				echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); 
+			}
+			if (!$new_quiz->store()) { 
+				echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); 
+			}
 			$new_quiz_id = $new_quiz->c_id;
 			$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz2copy['c_id']."'";
 			$pool = $database->SetQuery( $query )->loadObjectList();
@@ -207,7 +215,7 @@ class JoomlaquizModelQuizzes extends JModelList
 				$new_quest->c_id = 0; $new_quest->ordering = $new_order; $new_quest->c_quiz_id = $quizMove;
 				if ($run_from_quiz_copy) { $new_order++; }
 				if (!$new_quest->check()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-				if (!$new_quest->storeCopy()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+				if (!$new_quest->store()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 				$new_quest_id = $new_quest->c_id;
 				if ( ($quest2copy['c_type'] == 1) || ($quest2copy['c_type'] == 2) /*|| ($quest2copy['c_type'] == 3)*/ || ($quest2copy['c_type'] == 10) ) {
 					$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '".$old_quest_id."'";

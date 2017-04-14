@@ -15,6 +15,17 @@ jimport('joomla.application.component.controllerform');
  */
 class JoomlaquizControllerQuiz extends JControllerForm
 {
+	
+	/**
+    * Proxy for getModel.
+    * @since       1.6
+    */
+    public function getModel($name = 'Quiz', $prefix = 'JoomlaquizModel', $config = array('ignore_request' => true))
+    {
+        $model = parent::getModel($name, $prefix, $config);
+        return $model;
+	}
+	
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
@@ -47,7 +58,7 @@ class JoomlaquizControllerQuiz extends JControllerForm
 
 		return parent::batch($model);
 	}
-	
+
 	public function save(){
 		$task = JFactory::getApplication()->input->getCmd('task');
 		if($task=='save2copy'){

@@ -19,7 +19,7 @@ JHtml::_('formbehavior.chosen', 'select');
 Joomla.submitbutton = function(task)
 	{
 		if (task == 'questcategory.cancel' || document.formvalidator.isValid(document.id('questcategory-form'))) {
-			<?php echo $this->form->getField('qc_instruction')->save(); ?>
+			<?php echo $this->form->getField('description')->save(); ?>
 			Joomla.submitform(task, document.getElementById('questcategory-form'));
 		}
 		else {
@@ -41,10 +41,10 @@ Joomla.submitbutton = function(task)
 			</div>
 			<div class="control-group form-inline">
                 <div class="control-label">
-                    <?php echo $this->form->getLabel('qc_instruction'); ?>
+                    <?php echo $this->form->getLabel('description'); ?>
                 </div>
                 <div class="controls">
-			        <?php echo $this->form->getInput('qc_instruction'); ?>
+			        <?php echo $this->form->getInput('description'); ?>
                 </div>
 			</div>
 			<div class="control-group form-inline">

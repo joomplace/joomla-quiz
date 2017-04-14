@@ -145,7 +145,7 @@ class JoomlaquizModelResults extends JModelList
 				else {
 					if (stripos(trim($search), 'code:') === 0)
 					{
-						$query->where('CONCAT("'.JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').'"sq.c_id,sq.c_student_id,sq.c_total_score) = "'.base_convert(str_replace('code:','',trim($search)),36,10).'"');
+						$query->where('CONCAT("'.JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').'",sq.c_id,sq.c_student_id,sq.c_total_score) = "'.base_convert(str_replace('code:','',trim($search)),36,10).'"');
 					}
 					else {
 						$search = $db->Quote('%'.$db->escape($search, true).'%');
@@ -184,10 +184,10 @@ class JoomlaquizModelResults extends JModelList
 		$query->leftJoin("#__quiz_t_question as q ON sp.c_question_id = q.c_id");		
 		$query->leftJoin("#__quiz_t_qtypes as qt ON q.c_type = qt.c_id");		
 		$query->leftJoin("`#__extensions` as `e` ON e.element = qt.c_type");		
-		$query->where("sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'");	
+		$query->where("sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'");
 		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
 			$query->where('`q`.`c_type` != 9');	
-		}	
+		}		
 		$query->order("q.ordering, q.c_id");				
 		return $query;	
 	}			
@@ -247,7 +247,7 @@ class JoomlaquizModelResults extends JModelList
 		
 		$app = JFactory::getApplication();
 		$database = JFactory::getDBO();
-		
+
 		$lists = array();
 		$javascript = 'onchange="document.adminForm.submit();"';
 		$query = "SELECT distinct q.c_id AS value, q.c_title AS text"
@@ -372,7 +372,7 @@ class JoomlaquizModelResults extends JModelList
                                 $manual_email = $result->user_email;
                             else
                                 $manual_email = ' - ';
-							
+								
 							$custom_data = JHtml::_('content.prepare','',$result,'admin.results.csv.row');
 
 							$csv_report .= '"'.$user.'","'.$manual_email.'",'.(($custom_data)?$custom_data.',"':'"').($quiz_number+1).'","'.($q_number+1).'","'.$answer.'","'.$feedback.'"'."\n";
@@ -408,7 +408,7 @@ class JoomlaquizModelResults extends JModelList
 		$user_id = $app->getUserStateFromRequest('results.filter.user_id', 'filter_user_id');
 		$passed = $app->getUserStateFromRequest('results.filter.passed', 'filter_passed');
 		
-		$query = "SELECT sq.c_id, sq.c_passed, sq.params, sq.c_total_score, sq.c_total_time, sq.c_date_time, sq.c_passed, sq.user_email, sq.user_name,"
+		$query = "SELECT sq.c_id, sq.c_passed, sq.params , sq.c_total_score, sq.c_total_time, sq.c_date_time, sq.c_passed, sq.user_email, sq.user_name,"
 		. "\n q.c_title, q.c_author, q.c_passing_score,sq.c_student_id, u.username, u.name, u.email, q.c_full_score, q.c_pool, ch.q_chain "
 		. "\n FROM #__quiz_r_student_quiz as sq"
 		. "\n LEFT JOIN #__users as u ON sq.c_student_id = u.id"
@@ -447,8 +447,9 @@ class JoomlaquizModelResults extends JModelList
 				$csv_rows[$i]->c_full_score = $total_score;
 			}
 		}
-		$custom_head = JHtml::_('content.prepare','',$csv_rows,'admin.results.csv.head');
 		
+		$custom_head = JHtml::_('content.prepare','',$csv_rows,'admin.results.csv.head');
+							
 		$str = '"'.JText::_('COM_JOOMLAQUIZ_NO2').'","'.JText::_('COM_JOOMLAQUIZ_TITLE2').'","'.JText::_('COM_JOOMLAQUIZ_AUTHOR').'","'.JText::_('COM_JOOMLAQUIZ_TOTAL_SCORE').'","'.JText::_('COM_JOOMLAQUIZ_PASSING_SCORE').'","'.JText::_('COM_JOOMLAQUIZ_USERNAME2').'","'.JText::_('COM_JOOMLAQUIZ_USEREMAIL').'","'.JText::_('COM_JOOMLAQUIZ_USER_SCORE').'","'.JText::_('COM_JOOMLAQUIZ_DATE_TIME').'","'.(($custom_head)?$custom_head.'","':'').JText::_('COM_JOOMLAQUIZ_SPEND_TIME').'","'.JText::_('COM_JOOMLAQUIZ_PASSED').'"'."\n";
 		for($i=0, $n = count($csv_rows); $i < $n; $i++) {
 			$str .= '"'.($i+1).'","';
@@ -467,6 +468,7 @@ class JoomlaquizModelResults extends JModelList
 				$str .= 'No';
 			$str .= "\"\n";
 		}
+		
 		$UserBrowser = '';
 		if (preg_match('/MSIE ([0-9].[0-9]{1,2})/', $_SERVER['HTTP_USER_AGENT'])) $UserBrowser = "IE";
 		header("Content-Type:application/vnd.ms-excel");

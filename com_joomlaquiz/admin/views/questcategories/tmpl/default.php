@@ -87,7 +87,7 @@ $sortFields = $this->getSortFields();
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_NAME', 'qc_category', $listDirn, $listOrder); ?> 
 					</th>
 					<th width="20%">
-						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_DESCRIPTION_TABLE', 'qc_instruction', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_DESCRIPTION_TABLE', 'description', $listDirn, $listOrder); ?>
 					</th>
 					<th width="20%">
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_MAIN_CATEGORY', 'qc_tag', $listDirn, $listOrder); ?>
@@ -130,7 +130,7 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="has-context">
                         <div>
-                            <?php echo $item->qc_instruction; ?>
+                            <?php echo $item->description; ?>
                         </div>
 					</td>
 					<td class="has-context">

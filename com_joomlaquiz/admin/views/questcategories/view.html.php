@@ -64,7 +64,7 @@ class JoomlaquizViewQuestcategories extends JViewLegacy
 	{
 		return array(
 			'qc_category' => JText::_('COM_JOOMLAQUIZ_NAME'),
-			'qc_instruction' => JText::_('COM_JOOMLAQUIZ_DESCRIPTION'),
+			'description' => JText::_('COM_JOOMLAQUIZ_DESCRIPTION'),
 			'qc_tag' => JText::_('COM_JOOMLAQUIZ_MAIN_CATEGORY')
 		);
 	}

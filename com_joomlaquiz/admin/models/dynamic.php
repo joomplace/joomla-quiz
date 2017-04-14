@@ -58,7 +58,6 @@ class JoomlaquizModelDynamic extends JModelAdmin
 		$fields[] = JHTML::_('select.option','id', 'ID');
 		$fields[] = JHTML::_('select.option','user_id', 'user ID');
 		$fields[] = JHTML::_('select.option','user_name', 'user Name');
-        $fields[] = JHTML::_('select.option','user_surname', 'user Surname');
 		$fields[] = JHTML::_('select.option','user_email', 'user Email');	
 		$fields[] = JHTML::_('select.option','spent_time', 'Spent time');
 		$fields[] = JHTML::_('select.option','start_date', 'Start date');
@@ -145,13 +144,12 @@ class JoomlaquizModelDynamic extends JModelAdmin
 		$rows = $database->LoadObjectList();
 
         foreach($rows as $key=>$row){
-            $query = "SELECT user_email,user_name,user_surname from #__quiz_r_student_quiz where c_id='".$row->x_id."'";
+            $query = "SELECT user_email,user_name from #__quiz_r_student_quiz where c_id='".$row->x_id."'";
             $database->SetQuery( $query );
             $unreg_user_info = $database->LoadObjectList();
-            if(!empty($unreg_user_info[0]->user_name)||!empty($unreg_user_info[0]->user_email)||!empty($unreg_user_info[0]->user_surname)){
+            if(!empty($unreg_user_info[0]->user_name)||!empty($unreg_user_info[0]->user_email)){
                 $rows[$key]->x_user_name = $unreg_user_info[0]->user_name;
                 $rows[$key]->x_user_email = $unreg_user_info[0]->user_email;
-                $rows[$key]->x_user_surname = $unreg_user_info[0]->user_surname;
             }
         }
 		
@@ -165,7 +163,6 @@ class JoomlaquizModelDynamic extends JModelAdmin
 		$fields['id'] = 'ID';
 		$fields['user_id'] = 'user ID';
 		$fields['user_name'] = 'user Name';
-        $fields['user_surname'] = 'user Surname';
 		$fields['user_email'] = 'user Email';	
 		$fields['spent_time'] = 'Spent time';
 		$fields['start_date'] = 'Start date';

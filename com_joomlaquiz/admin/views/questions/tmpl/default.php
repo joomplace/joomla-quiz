@@ -189,12 +189,12 @@ $sortFields = $this->getSortFields();
                             $spacebar= ' ';
                             if(strlen($question)>$length)
                             {
-                                $part = JoomlaquizHelper::jq_substr($question, 0 , $length);                                   
+                                $part = JoomlaquizHelper::jq_substr($question, 0 , $length);                               
                                 $question = $part.$dots;
                             }
                             if ($canEdit && $item->enabled) : ?>
-								<a title="<?php echo $this->escape($item->c_question); ?>" href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&task=question.edit&c_id='.$item->c_id);?>"><?php echo $question; ?></a>
-							<?php else : ?>
+                            	<a title="<?php echo $this->escape($item->c_question); ?>" href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&task=question.edit&c_id='.$item->c_id);?>"><?php echo $this->escape($question); ?></a>
+                        	<?php else : ?>
                             <?php echo $this->escape($question); ?>
                         <?php endif; ?>
                         </div>

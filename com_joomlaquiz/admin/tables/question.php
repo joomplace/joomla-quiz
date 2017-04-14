@@ -28,7 +28,11 @@ class JoomlaquizTableQuestion extends JTable
         }
 				
 		function store($updateNulls = false){
-			
+            /*
+             * Somehow this is not binded!!!
+             */
+            $this->bind(JFactory::getApplication()->input->get('jform',array(),'ARRAY'));
+
 			require_once(JPATH_SITE."/components/com_joomlaquiz/libraries/apps.php");
 
 			$input = JFactory::getApplication()->input;
@@ -40,7 +44,7 @@ class JoomlaquizTableQuestion extends JTable
 			$this->c_question = stripslashes($this->c_question);
 			$this->c_right_message = stripslashes($this->c_right_message);
 			$this->c_wrong_message = stripslashes($this->c_wrong_message);
-						
+
 			if(!$_POST['jform']['c_id'] && !$this->c_type){
 				$query = "SELECT MAX(`ordering`) FROM #__quiz_t_question
 				WHERE `c_quiz_id`='" . $this->c_quiz_id . "'
@@ -62,14 +66,23 @@ class JoomlaquizTableQuestion extends JTable
 				$this->c_id = '';
 			}
 
+			if(!is_string($this->params)){
+			    $this->params = new Joomla\Registry\Registry($this->params);
+			    $this->params = $this->params->toString();
+            }
 			$res = parent::store($updateNulls);
 			
 			$data = array();
 			$type = JoomlaquizHelper::getQuestionType($this->c_type);
 			$data['quest_type'] = $type;
 			$data['qid'] = $this->c_id;
-			
+
+			/* Legacy */
 			$appsLib->triggerEvent( 'onAdminSaveOptions' , $data );
+			/* new approach */
+            $reg = new Joomla\Registry\Registry($this->getProperties());
+            $reg->merge(new Joomla\Registry\Registry($data));
+			$appsLib->triggerEvent( 'onStoreQuestion', $reg );
 			JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($this->c_quiz_id);
 			
 			return $res;

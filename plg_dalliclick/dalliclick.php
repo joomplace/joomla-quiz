@@ -12,6 +12,8 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+jimport('components.com_joomlaquiz.helpers.plgquestion',JPATH_SITE);
+
 class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 {
 	var $name		= 'Dalliclick';

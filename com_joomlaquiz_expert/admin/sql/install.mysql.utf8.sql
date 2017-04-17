@@ -539,6 +539,7 @@ REPLACE INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_question` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) NOT NULL,
   `c_quiz_id` int(10) unsigned NOT NULL DEFAULT '0',
   `c_point` float NOT NULL DEFAULT '0',
   `c_attempts` int(11) unsigned DEFAULT '1',
@@ -574,8 +575,10 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_question` (
   `c_detailed_feedback` text NOT NULL,
   `c_time_limit` int(10) unsigned NOT NULL DEFAULT '0',
   `c_show_timer` tinyint(4) NOT NULL DEFAULT '0',
+  `params` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`c_id`),
-  KEY `c_quiz_id` (`c_quiz_id`)
+  KEY `c_quiz_id` (`c_quiz_id`),
+  KEY `parent_id` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 

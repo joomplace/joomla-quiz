@@ -130,43 +130,89 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
 		return true;
 	}
 	
-	public function onGetPdf(&$data){
+	public function onMchoiceResultPdf($question, $result, $pdf, $score, $total, $pdf_doc, $i){
+        /** @var TCPDF $pdf */
+        $fontFamily = $pdf->getFontFamily();
 
-		//$data['pdf']->SetFont('freesans');
-		$fontFamily = $data['pdf']->getFontFamily();
-		
-		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily);
-		//$data['pdf']->setStyle('b', true);
-		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
-		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+        $qd = new stdClass();
+        $qd->question_id = $question['id'];
+        $qd->c_stu_quiz_id = $result;
 
-		$data['pdf']->setFont($fontFamily);
-		//$data['pdf']->setStyle('b', false);
-		$data['pdf']->Ln();
-				
-		for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {
-			if($data['data']['c_choice'][$j]['c_choice_id']) {
-				$data['answer'] .= $k." ";
-			}
-					
-			if ($data['data']['c_choice'][$j]['c_right']) {
-				$correct_answer .= $k." ";
-			}
-					
-			$data['pdf']->Ln();
-			$data['pdf']->setFont($fontFamily);
-			//$data['pdf']->setStyle('b', true);
-			$str = "  $k.";
-			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+        $rdata = JLayoutHelper::render('question.json.report', $qd, JPATH_SITE.'/plugins/joomlaquiz/mchoice/');
+        $rdata = json_decode($rdata);
+        $score = array_sum(array_map(function($a){
+            return $a->score;
+        },$rdata));
+        $total = $this->getTotalScore($question['id']);
 
-			$data['pdf']->setFont($fontFamily);
-			//$data['pdf']->setStyle('b', false);
-			$str = $data['data']['c_choice'][$j]['c_choice'] . ' - ' . ($data['data']['c_choice'][$j]['c_choice_id']? $data['data']['c_choice'][$j]['c_title_true']: $data['data']['c_choice'][$j]['c_title_false']);
-			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-		}
-				
-		return $data['pdf'];		
+        parent::onGetResultPdf($question, $result, $pdf, $score, $total, $pdf_doc, $i);
+        $pdf->setFont($fontFamily);
+
+        $pdf->writeHTML($question['text'], true);
+
+        foreach ($rdata as $quest){
+            $pdf->writeHTML("<br>", true);
+            $pdf->write(5,$quest->text,'',false,'',true);
+            $show_correct = 0;
+            $pdf->setFont($fontFamily,'B');
+            $pdf->write(4, 'Your answer:','',false,'',true);
+            $pdf->setFont($fontFamily);
+            foreach ($quest->options as $option){
+                $pdf->write(6, $option->picked?(($option->right || !$show_correct)?'✔ ':'✖ '):'    ','',false,'',false);
+                $pdf->write(6, $option->text,'',false,'',true);
+            }
+            if($show_correct){
+                $pdf->setFont($fontFamily,'B');
+                $pdf->write(4, 'Correct answer:','',false,'',true);
+                $pdf->setFont($fontFamily);
+                foreach ($quest->options as $option){
+                    if($show_correct){
+                        $pdf->write(6, $option->right?'✔ ':'✖ ','',false,'',false);
+                    }
+                    $pdf->write(6, $option->text,'',false,'',true);
+                }
+            }
+        }
+        return $pdf;
+	}
+
+	public function onMchoicePrintResult($question, $result, $score, $total, $i){
+	    ob_start();
+        $qd = new stdClass();
+        $qd->question_id = $question['id'];
+        $qd->c_stu_quiz_id = $result;
+
+        $rdata = JLayoutHelper::render('question.json.report', $qd, JPATH_SITE.'/plugins/joomlaquiz/mchoice/');
+        $rdata = json_decode($rdata);
+        $score = array_sum(array_map(function($a){
+            return $a->score;
+        },$rdata));
+        $total = $this->getTotalScore($question['id']);
+
+        parent::onPrintResult($question, $result, $score, $total, $i);
+
+        echo $question['text'];
+
+        foreach ($rdata as $quest){
+            ?><br><div><?= $quest->text ?></div><div><strong>Your answer:</strong></div><?php
+            $show_correct = 0;
+            foreach ($quest->options as $option){
+                echo $option->picked?(($option->right || !$show_correct)?'✔ ':'✖ '):'&nbsp;&nbsp;&nbsp;&nbsp;';
+                echo $option->text;
+                echo '<br>';
+            }
+            if($show_correct){
+                ?><div><strong>Correct answer:</strong></div><?php
+                foreach ($quest->options as $option){
+                    echo $option->right?'✔ ':'&nbsp;&nbsp;&nbsp;&nbsp;';
+                    echo $option->text;
+                    echo '<br>';
+                }
+            }
+        }
+        $html = ob_get_contents();
+        ob_end_clean();
+        return $html;
 	}
 	
 	public function onSendEmail(&$data){
@@ -232,74 +278,6 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
 		
 	}
 
-	//Administration part
-	
-	public function onGetAdminOptions($data)
-	{
-		$settings = JoomlaquizHelper::getSettings();
-		$q_om_type = 15;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
-		
-		$db = JFactory::getDBO();
-		$choices = array();
-		$return = array();
-		if($data['question_id']){
-			$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '".$data['question_id']."' ORDER BY ordering";
-			$db->SetQuery( $query );
-			$choices = array();
-			$choices = $db->LoadObjectList();
-		}
-		
-		$return['choices'] = $choices;
-		ob_start();
-		require_once(JPATH_SITE."/plugins/joomlaquiz/mchoice/admin/options/mchoice.php");
-		$options = ob_get_contents();
-		ob_get_clean();
-		
-		return $options;
-	}
-	
-	public function onGetAdminForm(&$data)
-	{
-		$db = JFactory::getDBO();
-		$c_id = JFactory::getApplication()->input->get('c_id');
-		
-		$db->setQuery("SELECT `c_random`, `c_partial`, `c_qform`, `c_title_true`, `c_title_false` FROM #__quiz_t_question WHERE `c_id` = '".$c_id."'");
-		$row = $db->loadObject();
-		
-		$lists = array();
-		$c_qform = array();
-		$c_qform[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_RADIO_BUTTONS'));
-		$c_qform[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_DROP_DOWN'));
-		$c_qform = JHTML::_('select.genericlist', $c_qform, 'jform[c_qform]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_qform) ? intval( $row->c_qform ) : 0)); 
-		$lists['c_qform']['input'] = $c_qform;
-		$lists['c_qform']['label'] = JText::_('COM_JOOMLAQUIZ_DISPLAY_STYLE');
-		
-		$c_partial = array();
-		$c_partial[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_NO'));
-		$c_partial[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_YES'));
-		$c_partial = JHTML::_('select.genericlist', $c_partial, 'jform[c_partial]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_partial) ? intval( $row->c_partial ) : 0)); 
-		$lists['c_partial']['input'] = $c_partial;
-		$lists['c_partial']['label'] = JText::_('COM_JOOMLAQUIZ_PARTIAL_SCORE');
-		
-		$c_random = array();
-		$c_random[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_NO'));
-		$c_random[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_YES'));
-		$c_random = JHTML::_('select.genericlist', $c_random, 'jform[c_random]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_random) ? intval( $row->c_random ) : 0));
-		$lists['c_random']['input'] = $c_random;
-		$lists['c_random']['label'] = JText::_('COM_JOOMLAQUIZ_RANDOMIZE_ANSWERS');
-		
-		$c_title_true = (isset($row->c_title_true)) ? $row->c_title_true : '';
-		$lists['c_title_true']['input'] = "<input type='text' size='30' name='c_title_true' value='".$c_title_true."' />";
-		$lists['c_title_true']['label'] = JText::_('COM_JOOMLAQUIZ_TITLE_FOR_TRUE');
-		
-		$c_title_false = (isset($row->c_title_false)) ? $row->c_title_false : '';
-		$lists['c_title_false']['input'] = "<input type='text' size='30' name='c_title_false' value='".$c_title_false."' />";
-		$lists['c_title_false']['label'] = JText::_('COM_JOOMLAQUIZ_TITLE_FOR_FALSE');
-		
-		return $lists;
-	}
-	
 	public function onAdminIsFeedback(&$data){
 		return true;
 	}
@@ -315,66 +293,7 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
 	public function onAdminIsReportName(){
 		return true;
 	}
-	
-	public function onGetAdminAddLists(&$data){
-		
-		$database = JFactory::getDBO();
-		
-		$query = "SELECT c.*, sc.c_id as sc_id FROM #__quiz_t_choice as c LEFT JOIN #__quiz_r_choice as sc ON c.c_id = sc.c_choice_id"
-		. "\n and sc.c_sq_id = '".$data['id']."'"
-		. "\n WHERE c.c_question_id = '".$data['q_id']."'"
-		. "\n ORDER BY c.ordering, c.c_id"
-		;
-		$database->SetQuery( $query );
-		$answer = $database->LoadObjectList();
-		
-		$lists['answer'] = $answer;
-		$lists['id'] = $data['id'];
-				
-		return $lists;
-		
-	}
-	
-	public function onGetAdminReportsHTML(&$data){
-		$rows = $data['lists']['answer'];
-		
-		ob_start();
-		?>
-		<table class="table table-striped">
-					<tr>
-						<th class="title" width="100"><?php echo JText::_('COM_JOOMLAQUIZ_USER_CHOICE');?></th>
-						<th class="title" width="100"><?php echo JText::_('COM_JOOMLAQUIZ_RIGHT_ANSWER');?></th>
-						<th class="title"><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_OPTIONS');?></th>
-					</tr>
-					<?php
-					$k = 0;
-					for ($i=0, $n=count($rows); $i < $n; $i++) {
-						$row = $rows[$i];
-						?>
-						<tr class="<?php echo "row$k"; ?>">
-							<td align="left" nowrap>
-								<input type="radio" disabled <?php echo ($row->sc_id ? 'checked' : ''); ?>/><?php echo $data['lists']['title_true']; ?><br />
-								<input type="radio" disabled <?php echo (!$row->sc_id ? 'checked' : ''); ?>/><?php echo $data['lists']['title_false']; ?>
-							</td>
-							<td align="left" nowrap>
-								<input type="radio" disabled <?php echo ($row->c_right ? 'checked' : ''); ?>/><?php echo $data['lists']['title_true']; ?><br />
-								<input type="radio" disabled <?php echo (!$row->c_right ? 'checked' : ''); ?>/><?php echo $data['lists']['title_false']; ?>
-							</td>
-							<td align="left">
-								<?php echo $row->c_choice; ?>
-							</td>
-						</tr>
-						<?php
-						$k = 1 - $k;
-					}?>
-					</table>
-		<?php
-		
-		$content = ob_get_contents();
-		ob_clean();
-		return $content;
-	}
-	
+
 	public function onGetAdminQuestionData(&$data){
 	
 		$database = JFactory::getDBO();
@@ -781,36 +700,57 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
      */
     public function onTotalScore(&$data){
 
-        $data['max_score'] = 0;
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
-        $query->select('*')
-            ->from($db->qn('#__quiz_t_question'))
-            ->where($db->qn('c_type').' = '.$db->q(15))
-            ->where($db->qn('c_id').' IN ('.$data['qch_ids'].')');
-        $questions = $db->setQuery($query)->loadObjectList();
-        $qids = array_map(function($quest){
-            return $quest->c_id;
-        },$questions);
-
-        if($qids){
-            $query->clear();
-            $query->select('SUM(c_point)')
-                ->from($db->qn('#__quiz_t_question'))
-                ->where($db->qn('c_id').' IN ('.implode(',',$qids).')','OR')
-                ->where($db->qn('parent_id').' IN ('.implode(',',$qids).')');
-            $data['max_score'] += $db->setQuery($query)->loadResult();
-
-            $options_quesry = $db->getQuery(true);
-            $query->clear('select')
-                ->select('c_id');
-            $options_quesry->select('SUM(points)')
-                ->from($db->qn('#__quiz_options'))
-                ->where($db->qn('question').' IN ('.$query.')')
-                ->where($db->qn('right').' = '.$db->q(1));
-            $data['max_score'] += $db->setQuery($options_quesry)->loadResult();
-        }
+        $data['max_score'] = $this->getTotalScore($data['qch_ids']);
 
         return true;
+    }
+
+    /**
+     * Returns max total score for passed ids.
+     *
+     * @param $ids
+     *
+     * @return bool
+     * @since 3.9
+     */
+    public function getTotalScore($ids = array()){
+
+        if(is_array($ids)){
+            $ids = implode(',',$ids);
+        }
+
+        $max_score = 0;
+        if($ids){
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query->select('*')
+                ->from($db->qn('#__quiz_t_question'))
+                ->where($db->qn('c_type').' = '.$db->q(15))
+                ->where($db->qn('c_id').' IN ('.$ids.')');
+            $questions = $db->setQuery($query)->loadObjectList();
+            $qids = array_map(function($quest){
+                return $quest->c_id;
+            },$questions);
+
+            if($qids){
+                $query->clear();
+                $query->select('SUM(c_point)')
+                    ->from($db->qn('#__quiz_t_question'))
+                    ->where($db->qn('c_id').' IN ('.implode(',',$qids).')','OR')
+                    ->where($db->qn('parent_id').' IN ('.implode(',',$qids).')');
+                $max_score += $db->setQuery($query)->loadResult();
+
+                $options_quesry = $db->getQuery(true);
+                $query->clear('select')
+                    ->select('c_id');
+                $options_quesry->select('SUM(points)')
+                    ->from($db->qn('#__quiz_options'))
+                    ->where($db->qn('question').' IN ('.$query.')')
+                    ->where($db->qn('right').' = '.$db->q(1));
+                $max_score += $db->setQuery($options_quesry)->loadResult();
+            }
+        }
+
+        return $max_score;
     }
 }

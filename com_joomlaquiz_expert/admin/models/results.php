@@ -170,8 +170,8 @@ class JoomlaquizModelResults extends JModelList
 				$query->where('sq.c_passed = '.$passed);
 			}
 			
-			$orderCol	= $this->state->get('list.ordering', 'sq.c_date_time');	
-			$orderDirn	= $this->state->get('list.direction', 'ASC');
+			$orderCol	= $this->state->get('list.ordering', 'c_date_time');
+			$orderDirn	= $this->state->get('list.direction', 'DESC');
 			$query->order($db->escape($orderCol.' '.$orderDirn));		
 		}		
 		

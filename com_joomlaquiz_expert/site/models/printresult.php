@@ -129,6 +129,10 @@ class JoomlaquizModelPrintresult extends JModelList
 		
 		$query = $database->getQuery(true);
 		$query->select('`rq`.`c_id`, `rq`.`remark`')
+            ->select($database->qn('rq.c_stu_quiz_id'))
+            ->select($database->qn('rq.c_question_id'))
+            ->select($database->qn('tq.c_question'))
+            ->select($database->qn('tq.c_type'))
 			->from('`#__quiz_r_student_question` AS `rq`')
 			->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
 			->order('`c_id`');
@@ -136,27 +140,53 @@ class JoomlaquizModelPrintresult extends JModelList
 			$query->where('`tq`.`c_type` != 9');
 		}
 		$query->where('`rq`.`c_stu_quiz_id` = "'.$sid.'"');
+		$query->where('`tq`.`parent_id` = "0"');
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
 		$total = count($info);
-		
+
+        JPluginHelper::importPlugin('joomlaquiz');
+        $dispatcher = JEventDispatcher::getInstance();
 		for($i=0;$i < $total;$i++) {
-			$data = array();
-			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
-			$str .= "".($i+1).".[".number_format($data['c_score'],1).'/'.number_format($data['c_point'],1)."] ".$data['c_question']."\n";
-			$type = JoomlaquizHelper::getQuestionType($data['c_type']);
-			$answer = '';
-			
-			$email_data = array();
-			$email_data['quest_type'] = $type;
-			$email_data['data'] = $data;
-			$email_data['str'] = $str;
-			$email_data['answer'] = $answer;
-			
-			$appsLib->triggerEvent( 'onSendEmail' , $email_data );
-			$str = $email_data['str'];
-			
-			$str .= "\n";
+
+		    $str.='<br><hr>';
+
+            $type = $info[$i]->c_type;
+            $type = JoomlaquizHelper::getQuestionType($type);
+            $params['c_question'] = array(
+                'id' => $info[$i]->c_question_id,
+                'text'=> $info[$i]->c_question
+            );
+            $params['c_stu_quiz_id'] = $info[$i]->c_stu_quiz_id;
+            $data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
+            $params['score']      = $data['c_score'];
+            $params['total']      = $data['c_point'];
+            $params['i']    = $i;
+            if($response = $dispatcher->trigger('on'.ucfirst($type).'PrintResult', $params)){
+                list($markup) = $response;
+                $str.=$markup;
+            }else {
+                $data   = array();
+                $data
+                        = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
+                $str    .= "" . ($i + 1) . ".["
+                    . number_format($data['c_score'], 1) . '/'
+                    . number_format($data['c_point'], 1) . "] "
+                    . $data['c_question'] . "\n";
+                $type   = JoomlaquizHelper::getQuestionType($data['c_type']);
+                $answer = '';
+
+                $email_data               = array();
+                $email_data['quest_type'] = $type;
+                $email_data['data']       = $data;
+                $email_data['str']        = $str;
+                $email_data['answer']     = $answer;
+
+                $appsLib->triggerEvent('onSendEmail', $email_data);
+                $str = $email_data['str'];
+
+                $str .= "\n";
+            }
 		}
 		$str .= " ";
 		
@@ -360,7 +390,12 @@ class JoomlaquizModelPrintresult extends JModelList
 			$pdf->Ln();
 		}
 		$query = $database->getQuery(true);
-		$query->select('`rq`.`c_id`')->from(
+		$query->select('`rq`.`c_id`')
+            ->select($database->qn('rq.c_stu_quiz_id'))
+            ->select($database->qn('rq.c_question_id'))
+            ->select($database->qn('tq.c_question'))
+            ->select($database->qn('tq.c_type'))
+            ->from(
 			'`#__quiz_r_student_question` AS `rq`'
 		)->join(
 			'LEFT',
@@ -374,50 +409,68 @@ class JoomlaquizModelPrintresult extends JModelList
 			$query->where('`tq`.`c_type` != 9');
 		}
 		$query->where('`rq`.`c_stu_quiz_id` = "' . $sid . '"');
+		$query->where('`tq`.`parent_id` = "0"');
 		$database->SetQuery($query);
-		$info  = $database->LoadObjectList();
+		$info  = $database->loadObjectList();
 		$total = count($info);
 
+        JPluginHelper::importPlugin('joomlaquiz');
+        $dispatcher = JEventDispatcher::getInstance();
 		for ($i = 0; $i < $total; $i++)
 		{
-			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
+		    $pdf->writeHTML('<br/><hr>');
+            $type = $info[$i]->c_type;
+            $type = JoomlaquizHelper::getQuestionType($type);
+            $params['c_question'] = array(
+                'id' => $info[$i]->c_question_id,
+                'text'=> $info[$i]->c_question
+            );
+            $params['c_stu_quiz_id'] = $info[$i]->c_stu_quiz_id;
+            $data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
+            $params['score']      = $data['c_score'];
+            $params['total']      = $data['c_point'];
+            $params['i']    = $i;
+            if($response = $dispatcher->trigger('on'.ucfirst($type).'PrintResult', $params)){
+                $pdf->setFont($fontFamily);
+                list($markup) = $response;
+                $pdf->writeHTML($markup);
+            }else{
 
-			$pdf->Ln();
-			$pdf->setFont($fontFamily, 'B');
-			//$pdf->setStyle('b', true);
-			$str = ($i + 1) . ".[" . number_format($data['c_score'],1) . '/' . number_format($data['c_point'],1)
-				. "]";
-			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+                $pdf->Ln();
+                $pdf->setFont($fontFamily, 'B');
+                //$pdf->setStyle('b', true);
+                $str = ($i + 1) . ".[" . number_format($data['c_score'],1) . '/' . number_format($data['c_point'],1)
+                    . "]";
+                $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-			$pdf->setFont($fontFamily, 'B');
-			//$pdf->setStyle('b', false);
-			$str = $data['c_question'];
-			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+                $pdf->setFont($fontFamily);
+                //$pdf->setStyle('b', false);
+                $str = $data['c_question'];
+                $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-			$type           = $data['c_type'];
-			$answer         = '';
-			$correct_answer = '';
+                $type           = $data['c_type'];
+                $answer         = '';
+                $correct_answer = '';
 
-			$t                      = JoomlaquizHelper::getQuestionType($type);
-			$pdf_data               = array();
-			$pdf_data['quest_type'] = $t;
-			$pdf_data['pdf_doc']    = $pdf_doc;
-			$pdf_data['data']       = $data;
-			$pdf_data['pdf']        = $pdf;
+                $t                      = JoomlaquizHelper::getQuestionType($type);
+                $pdf_data               = array();
+                $pdf_data['quest_type'] = $t;
+                $pdf_data['pdf_doc']    = $pdf_doc;
+                $pdf_data['data']       = $data;
+                $pdf_data['pdf']        = $pdf;
 
-			$appsLib->triggerEvent('onGetPdf', $pdf_data);
-			$pdf = $pdf_data['pdf'];
+                $appsLib->triggerEvent('onGetPdf', $pdf_data);
+                $pdf = $pdf_data['pdf'];
 
-			$pdf->Ln();
-			
-			if ($data['c_feedback_pdf']){
-				$str = $data['is_correct'] ? $data['c_right_message'] : $data['c_wrong_message'];
-				$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-				$pdf->Ln();
-			}
+                $pdf->Ln();
+
+                if ($data['c_feedback_pdf']){
+                    $str = $data['is_correct'] ? $data['c_right_message'] : $data['c_wrong_message'];
+                    $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+                    $pdf->Ln();
+                }
+            }
 		}
-
 		return $pdf;
 	}
 }
-?>

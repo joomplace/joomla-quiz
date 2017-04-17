@@ -1,11 +1,88 @@
 case '15':
-	var qform = parseInt(eval('document.quest_form'+questions[n].cur_quest_id+'.c_qform.value'));
+    var question_container = jq_jQuery('#question-'+questions[n].cur_quest_id);
+    var total_subs = question_container.find('.sub_questions').data('total');
+    var subs_answers = {};
+    var clear_sky = true;
+    question_container.find('.sub_questions [id*="subquestion-"]').each(function (i) {
+        var sub_id = jq_jQuery(this).data('id');
+        jq_jQuery(this).removeClass('not-filled');
+        subs_answers[sub_id] = [];
+        jq_jQuery(this).find('input[name*="'+jq_jQuery(this).attr('id')+'"]:checked').each(function (oi) {
+            subs_answers[sub_id].push(jq_jQuery(this).val());
+        });
+        if(!subs_answers[sub_id].length){
+            jq_jQuery(this).addClass('not-filled');
+            delete subs_answers[sub_id];
+            try{ ScrollToElement(jq_jQuery(this));} catch(e) {}
+            ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 1, mes_complete_this_part);
+            clear_sky = false;
+        }else{
+            jq_jQuery(this).find('input[name*="'+jq_jQuery(this).attr('id')+'"]')
+                .each(function (oi) {
+                    jq_jQuery(this).prop('disabled', true);
+                });
+        }
+    });
+    if(!clear_sky){
+        return clear_sky;
+    }
 
-	if (qform == 1) {
-		answer = jq_Check_MChoices_slist(questions[n].cur_quest_id, 'quest_choice');
-	} else {
-		answer = jq_Check_MChoices_radio(questions[n].cur_quest_id, 'quest_choice');
-	}
-	
-	null;
+    // add loading
+    question_container.addClass('question-loading');
+
+    var next_block = jq_jQuery('<div class="loading-next" />');
+    var question_finished = question_container.data('finished');
+    if(!question_finished){
+        next_block.load(
+            live_url+'index.php?option=com_ajax&ignoreMessages&plugin=mchoiceAnswerRenderSubquestion&group=joomlaquiz&stu_quiz_id='+stu_quiz_id+'&question='+questions[n].cur_quest_id+'&format=json',
+            {'answers':subs_answers},
+            function (response, status, xhr) {
+                question_finished = true;
+                response = JSON.parse(response);
+                console.log(response);
+                var feedbacks = response.messages;
+                if(feedbacks){
+                    Object.keys(feedbacks).map(function(quest, index) {
+                        var msgs = feedbacks[quest];
+                        if(msgs){
+                            msgs.map(function(msg){
+                                question_container.find('.sub_questions #subquestion-'+quest+' .feedback-section').html(msg);
+                            });
+                            clear_sky = false;
+                        }
+                    });
+                }
+                if(response.data){
+                    var html = response.data[0];
+                    html.map(function(obj, i) {
+                        if(obj.again !== false){
+                            if(obj.again === true){
+                                question_container.find('input[name*="'+obj.id+'"]')
+                                    .each(function (oi) {
+                                        jq_jQuery(this).prop('disabled', false);
+                                    });
+                                clear_sky = false;
+                            }else if(obj.html && obj.again === null){
+                                question_container.find('.sub_questions').append(obj.html);
+                                clear_sky = false;
+                            }
+                            question_finished = false;
+                        }
+                    });
+                }
+                question_container.data('finished', question_finished);
+
+                if(clear_sky){
+                    alert('Still needed');
+                    quiz_blocked = 1;
+                    var answer = JSON.stringify(subs_answers);
+                    timerID = setTimeout(jq_MakeRequest(url, 1), 300);
+                }else{
+                    question_container.removeClass('question-loading');
+                }
+            }
+        );
+
+        return false;
+    }
 break;

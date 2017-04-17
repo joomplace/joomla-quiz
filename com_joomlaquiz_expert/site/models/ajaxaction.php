@@ -2784,6 +2784,15 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 				}
 			}
+
+            /*
+             * Ignore legacy and do our thing
+             */
+            $registry = new Joomla\Registry\Registry($q_data);
+            $quest_html = JLayoutHelper::render('question.display',$registry,JPATH_SITE.'/plugins/joomlaquiz/'.JoomlaquizHelper::getQuestionType($q_data->c_type));
+            if($quest_html){
+                $out_html = $quest_html;
+            }
 			
 			$ret_add = ($out_html) ? $out_html : $ret_add;		
 			$ret_str .= "\t" . '<quest_data><![CDATA['.$ret_add.']]></quest_data>' . "\n";

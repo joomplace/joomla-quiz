@@ -90,4 +90,3 @@ $question_data = json_decode(JLayoutHelper::render('question.json.subquestions',
         },$question_data);
     ?>
 </div>
-<?php

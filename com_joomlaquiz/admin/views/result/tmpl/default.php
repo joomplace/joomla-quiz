@@ -21,6 +21,7 @@ $query = $db->getQuery(true);
 $query->select($db->qn('type.c_type', 'type'))
     ->select($db->qn('quest') . '.*')
     ->select($db->qn('answer.c_id', 'answer'))
+    ->select($db->qn('answer.c_stu_quiz_id'))
     ->from($db->qn('#__quiz_r_student_question', 'answer'))
     ->where($db->qn('answer.c_id') . ' = ' . $db->q($this->cid))
     ->leftJoin($db->qn('#__quiz_t_question', 'quest') . ' ON '

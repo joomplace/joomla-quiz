@@ -370,7 +370,6 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
         $input         = JFactory::getApplication()->input;
         $db            = JFactory::getDbo();
         $sub_questions = $input->get('subquestion', array(), 'ARRAY');
-        // TODO: delete not needed entires
         $sub_questions = array_map(function ($question) use ($db, $data) {
             $question              = new \Joomla\Registry\Registry($question);
             $quest_row             = (object)array_fill_keys (
@@ -395,6 +394,7 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
                 $question->set('id', $db->insertid());
             }
 
+            // TODO: delete not needed entires
             $options = array_map(function ($option) use ($db, $question) {
                 $option             = new \Joomla\Registry\Registry($option);
                 $option_row         = (object)array_fill_keys(
@@ -419,6 +419,23 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
 
             return $question;
         }, $sub_questions);
+
+        $query = $db->getQuery(true);
+        $query->delete($db->qn('#__quiz_t_question'))
+            ->where($db->qn('parent_id').' = '.$db->q($data->get('c_id')));
+        if($sub_questions){
+            $query->where($db->qn('c_id').' NOT IN ('.implode(',',array_map(function($q)use($db){return $db->q($q->get('id'));},$sub_questions)).')');
+        }
+        $optquesry = $db->getQuery(true);
+        $db->setQuery($query);
+        $query->clear('delete')
+            ->select($db->qn('c_id'))
+            ->from($db->qn('#__quiz_t_question'));
+        $optquesry->delete($db->qn('#__quiz_options'))
+            ->where($db->qn('question').' IN ('.$query.')');
+        $db->execute();
+        $db->setQuery($optquesry);
+        $db->execute();
     }
 
     /**

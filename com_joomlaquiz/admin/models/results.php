@@ -198,8 +198,8 @@ class JoomlaquizModelResults extends JModelList
 		$SQL = "SELECT SUM(`opts`.`points`) AS `points`,  SUM(`c_point`) AS `c_point`, `question` 
         FROM(
             SELECT SUM(`o`.`points`) AS `points`,  `quests`.`c_point`, iF(`quests`.`parent_id`,`quests`.`parent_id`,`o`.`question`) AS `question` 
-            FROM `prfx_quiz_options` AS `o` 
-            LEFT JOIN `prfx_quiz_t_question` AS `quests` ON `quests`.`c_id` = `o`.`question`
+            FROM `#__quiz_options` AS `o` 
+            LEFT JOIN `#__quiz_t_question` AS `quests` ON `quests`.`c_id` = `o`.`question`
             WHERE `o`.`right` = 1
             GROUP BY `o`.`question`
         ) AS `opts`
@@ -208,8 +208,8 @@ class JoomlaquizModelResults extends JModelList
         $query->select("(q.c_point + `options`.`points` + `options`.`c_point`) AS `c_point`");
 
 		$SQL = "SELECT SUM(  `answer`.`c_score` ) AS `c_score` , GROUP_CONCAT( IF(  `quest`.`parent_id` ,  '',  `answer`.`c_id` ) SEPARATOR  '' ) AS `id` 
-        FROM  `prfx_quiz_r_student_question` AS  `answer` 
-        LEFT JOIN  `prfx_quiz_t_question` AS  `quest` ON  `quest`.`c_id` =  `answer`.`c_question_id` 
+        FROM  `#__quiz_r_student_question` AS  `answer` 
+        LEFT JOIN  `#__quiz_t_question` AS  `quest` ON  `quest`.`c_id` =  `answer`.`c_question_id` 
         WHERE  `answer`.`c_stu_quiz_id` = '".$cid."'
         GROUP BY IF(  `quest`.`parent_id` ,  `quest`.`parent_id` ,  `quest`.`c_id` ) ";
 		$query->leftjoin('('.$SQL.') AS `answers` ON `sp`.`c_id` = `answers`.`id`');

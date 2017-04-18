@@ -391,4 +391,3 @@ $quests_data = JLayoutHelper::render('question.json.subquestions', $data->get('i
   </div>
   <input type="hidden" name="subquestion[{{question.id}}]" value="{{question}}"/>
 </div>
-<?php

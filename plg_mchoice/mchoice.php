@@ -433,6 +433,7 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
         $optquesry = $db->getQuery(true);
         $db->setQuery($query);
         $query->clear('delete')
+            ->clear('from')
             ->select($db->qn('c_id'))
             ->from($db->qn('#__quiz_t_question'));
         $optquesry->delete($db->qn('#__quiz_options'))

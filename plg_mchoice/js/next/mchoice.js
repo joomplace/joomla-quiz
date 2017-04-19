@@ -73,7 +73,7 @@ case '15':
                 question_container.data('finished', question_finished);
 
                 if(clear_sky){
-                	alert('Still needed');
+                	console.log('Still needed // seems like for all together');
                     quiz_blocked = 1;
                     timerID = setTimeout("jq_QuizNext()", 300);
                 }else{

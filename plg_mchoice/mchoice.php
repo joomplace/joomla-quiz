@@ -425,21 +425,21 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
         }, $sub_questions);
 
         $query = $db->getQuery(true);
-        $query->delete($db->qn('#__quiz_t_question'))
+        $optquesry = $db->getQuery(true);
+        $query->select($db->qn('c_id'))
+            ->from($db->qn('#__quiz_t_question'))
             ->where($db->qn('parent_id').' = '.$db->q($data->get('c_id')));
         if($sub_questions){
             $query->where($db->qn('c_id').' NOT IN ('.implode(',',array_map(function($q)use($db){return $db->q($q->get('id'));},$sub_questions)).')');
         }
-        $optquesry = $db->getQuery(true);
-        $db->setQuery($query);
-        $query->clear('delete')
-            ->clear('from')
-            ->select($db->qn('c_id'))
-            ->from($db->qn('#__quiz_t_question'));
         $optquesry->delete($db->qn('#__quiz_options'))
             ->where($db->qn('question').' IN ('.$query.')');
-        $db->execute();
         $db->setQuery($optquesry);
+        $db->execute();
+
+        $query->clear('select')->clear('from')
+            ->delete($db->qn('#__quiz_t_question'));
+        $db->setQuery($query);
         $db->execute();
     }
 

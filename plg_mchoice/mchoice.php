@@ -394,7 +394,6 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
                 $question->set('id', $db->insertid());
             }
 
-            // TODO: delete not needed entires
             $options = array_map(function ($option) use ($db, $question) {
                 $option             = new \Joomla\Registry\Registry($option);
                 $option_row         = (object)array_fill_keys(
@@ -415,6 +414,11 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
 
                 return $option;
             }, $question->get('options'));
+            $query = $db->getQuery(true);
+            $query->delete($db->qn('#__quiz_options'))
+                ->where($db->qn('question').' = '.$db->q($question->get('id')))
+                ->where($db->qn('id').' NOT IN ('.implode(',',array_map(function($o)use($db){return $db->q($o->get('id'));},$options)).')');
+            $db->setQuery($query)->execute();
             $question->set('options', $options);
 
             return $question;

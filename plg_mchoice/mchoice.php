@@ -414,23 +414,25 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
 
                 return $option;
             }, $question->get('options'));
+            $options_to_delete = array_map(function($o)use($db){return $db->q($o->get('id'));},$options);
             $query = $db->getQuery(true);
             $query->delete($db->qn('#__quiz_options'))
                 ->where($db->qn('question').' = '.$db->q($question->get('id')))
-                ->where($db->qn('id').' NOT IN ('.implode(',',array_map(function($o)use($db){return $db->q($o->get('id'));},$options)).')');
+                ->where($db->qn('id').' NOT IN ('.implode(',',$options_to_delete).')');
             $db->setQuery($query)->execute();
             $question->set('options', $options);
 
             return $question;
         }, $sub_questions);
 
+        $questions_to_delete = array_map(function($q)use($db){return $db->q($q->get('id'));},$sub_questions);
         $query = $db->getQuery(true);
         $optquesry = $db->getQuery(true);
         $query->select($db->qn('c_id'))
             ->from($db->qn('#__quiz_t_question'))
             ->where($db->qn('parent_id').' = '.$db->q($data->get('c_id')));
         if($sub_questions){
-            $query->where($db->qn('c_id').' NOT IN ('.implode(',',array_map(function($q)use($db){return $db->q($q->get('id'));},$sub_questions)).')');
+            $query->where($db->qn('c_id').' NOT IN ('.implode(',',$questions_to_delete).')');
         }
         $optquesry->delete($db->qn('#__quiz_options'))
             ->where($db->qn('question').' IN ('.$query.')');

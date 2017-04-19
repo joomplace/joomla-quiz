@@ -415,11 +415,13 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
                 return $option;
             }, $question->get('options'));
             $options_to_delete = array_map(function($o)use($db){return $db->q($o->get('id'));},$options);
-            $query = $db->getQuery(true);
-            $query->delete($db->qn('#__quiz_options'))
-                ->where($db->qn('question').' = '.$db->q($question->get('id')))
-                ->where($db->qn('id').' NOT IN ('.implode(',',$options_to_delete).')');
-            $db->setQuery($query)->execute();
+            if($options){
+                $query = $db->getQuery(true);
+                $query->delete($db->qn('#__quiz_options'))
+                    ->where($db->qn('question').' = '.$db->q($question->get('id')))
+                    ->where($db->qn('id').' NOT IN ('.implode(',',$options_to_delete).')');
+                $db->setQuery($query)->execute();
+            }
             $question->set('options', $options);
 
             return $question;

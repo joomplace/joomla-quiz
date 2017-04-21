@@ -26,8 +26,8 @@ class JoomlaquizViewDashboard extends JViewLegacy
             $this->errors = array();
             $this->results = array();
             foreach ($this->db_state as $cs_state){
-                $this->errors = array_merge($this->errors,$this->db_state->check());
-                $this->results = array_merge($this->results,$this->db_state->getStatus());
+                $this->errors = array_merge($this->errors,$cs_state->check());
+                $this->results = array_merge($this->results,$cs_state->getStatus());
             }
 			if($this->errors){
 				JToolbarHelper::custom('dashboard.fix', 'refresh', 'refresh', 'COM_JOOMLAQUIZ_MANAGER_DASHBOARD_FIX_DB', false);

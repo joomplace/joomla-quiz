@@ -1322,7 +1322,7 @@ function jq_StartQuiz() {
 		custom_info = custom_info+'&qs='+qs;
 	}
 	
-	jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + custom_info, 1);
+	jq_MakeRequest('&ajax_task=start&page=<?= JFactory::getApplication()->input->get('page',0); ?>&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + custom_info, 1);
 }
 
 function JQ_gotoQuestionOn(qid) {

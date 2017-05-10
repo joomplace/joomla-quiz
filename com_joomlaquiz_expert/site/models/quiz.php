@@ -473,6 +473,10 @@ class JoomlaquizModelQuiz extends JModelList
 			/* if no attempts don`t allow force */
 			if (!$is_attempts) 
 				$quiz_params->force = 0;
+
+			if(JFactory::getApplication()->input->get('page')){
+			    $quiz_params->c_autostart = 1;
+            }
 			
 			return $quiz_params;
 			

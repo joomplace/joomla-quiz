@@ -136,7 +136,7 @@ if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_im
 		</script>
 		</div>
 		<?php
-		} elseif ($quiz->c_autostart) {
+		} elseif ($quiz->c_autostart || JFactory::getApplication()->input->get('page')) {
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');
 		?>
 		<script language="JavaScript" type="text/javascript">

@@ -465,6 +465,52 @@ class JoomlaquizModelAjaxaction extends JModelList
 								}
 						}
 					}
+
+					if($page = JFactory::getApplication()->input->get('page')){
+					    $db = JFactory::getDbo();
+					    $query = $db->getQuery(true);
+                        switch ($quiz->c_pagination){
+                            case 1:
+                                /* All on one page */
+                                $pages = array($q_data);
+                                break;
+                            case 2:
+                                /* By page breaks */
+                                $pages = array();
+                                $i = 0;
+                                $q_breaks = $db->getQuery(true);
+                                $q_breaks->select($db->qn('c_question_id','id'))
+                                    ->from($db->qn('#__quiz_t_pbreaks'))
+                                    ->where($db->qn('c_quiz_id').'='.$db->q($quiz->c_id));
+                                $breaks = $db->setQuery($q_breaks)->loadColumn();
+                                foreach ($q_data as $quest){
+                                    if(!isset($pages[$i])){
+                                        $pages[$i] = array();
+                                    }
+                                    $pages[$i][] = $quest;
+                                    if(in_array($quest->c_id,$breaks)){
+                                        $i++;
+                                    }
+                                }
+                                break;
+                            case 3:
+                                /* Auto pagebreak */
+                                $pages = array_chunk($q_data, $quiz->c_auto_breaks);
+                                break;
+                            default:
+                                /* One per page */
+                                $pages = array_map(function($quest){
+                                    return array($quest);
+                                },$q_data);
+                        }
+                        foreach ($pages as $i => $qids){
+                            if($i<$page-1){
+                                $quest_num += count($qids);
+                            }else{
+                                break;
+                            }
+                        }
+                    }
 					
 					$ret_str .= "\t" . '<quiz_count_quests>'.$kol_quests.'</quiz_count_quests>' . "\n";			
 					$ret_str .= $this->JQ_GetQuestData($q_data[$quest_num], $quiz_id, $stu_quiz_id);

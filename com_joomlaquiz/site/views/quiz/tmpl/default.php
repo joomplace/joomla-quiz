@@ -11,6 +11,11 @@ defined('_JEXEC') or die('Restricted Access');
 
 $quiz = $this->quiz_params;
 
+$gotopage = JFactory::getApplication()->input->get('page');
+if($gotopage){
+    $quiz->c_autostart = true;
+}
+
 $is_preview = $this->is_preview;
 $preview_quest = $this->preview_quest;
 $preview_id = $this->preview_id;

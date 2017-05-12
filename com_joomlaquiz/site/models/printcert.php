@@ -21,11 +21,30 @@ class JoomlaquizModelPrintcert extends JModelList
 
 	public function JQ_printCertificate(){
 		
-		$database = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$my = JFactory::getUser();
-		
-		$stu_quiz_id = intval( JFactory::getApplication()->input->get('stu_quiz_id', 0 ) );
-		$user_unique_id = JFactory::getApplication()->input->get('user_unique_id', '', 'STRING');
+
+        $stu_quiz_id = intval( JFactory::getApplication()->input->get('stu_quiz_id', 0 ) );
+
+        $query = $db->getQuery(true);
+        $sub_query = $db->getQuery(true);
+
+        //Get Quiz Id
+        $sub_query->select($db->quoteName('sqr.c_quiz_id', 'c_quiz_id'));
+        $sub_query->from($db->quoteName('#__quiz_r_student_quiz', 'sqr'));
+        $sub_query->where($db->quoteName('sqr.c_id') . ' = ' . $db->quote($stu_quiz_id));
+
+        //Get $stu_quiz_id for the first successful attempt
+        $query->select($db->quoteName('qr.c_id', 'c_id'));
+        $query->from($db->quoteName('#__quiz_r_student_quiz', 'qr'));
+        $query->where($db->quoteName('qr.c_student_id') . ' = ' . $db->quote($my->id));
+        $query->where($db->quoteName('qr.c_quiz_id') . ' IN (' . $sub_query . ')');
+        $query->where($db->quoteName('qr.c_passed') . ' = ' . '1');
+        $query->order($db->quoteName('qr.c_date_time') . ' ASC');
+        $db->setQuery($query, 0, 1);
+        $stu_quiz_id = $db->loadResult();
+
+//		$user_unique_id = JFactory::getApplication()->input->get('user_unique_id', '', 'STRING');
 		$unique_pass_id = JFactory::getApplication()->input->get('unique_pass_id', '', 'STRING');
 		
 		$query = "SELECT SUM(squ.c_score) as user_score, ch.q_chain, sq.params, sq.user_name, sq.user_email, sq.user_surname, sq.c_passed, sq.c_student_id, sq.c_total_score, sq.c_date_time, sq.c_total_time, sq.unique_id, sq.unique_pass_id, qtq.c_full_score, qtq.c_title, qtq.c_certificate, qtq.c_id"
@@ -35,12 +54,12 @@ class JoomlaquizModelPrintcert extends JModelList
 		. "\n LEFT JOIN `#__quiz_q_chain` AS ch ON ch.s_unique_id = sq.unique_id"
 		. "\n WHERE sq.c_id = '".$stu_quiz_id."' and qtq.c_id = sq.c_quiz_id"
 		. "\n GROUP BY squ.c_stu_quiz_id";
-		$database->SetQuery( $query );
-		$stu_quiz = $database->LoadObjectList();
+		$db->SetQuery( $query );
+		$stu_quiz = $db->LoadObjectList();
 		
 		if (count($stu_quiz)) {
 			$stu_quiz = $stu_quiz[0];
-			if ( (($my->id == $stu_quiz->c_student_id || $unique_pass_id == $stu_quiz->unique_pass_id) || $my->authorise('core.manage','com_joomlaquiz')) && ($user_unique_id == $stu_quiz->unique_id) ) {
+			if ( (($my->id == $stu_quiz->c_student_id || $unique_pass_id == $stu_quiz->unique_pass_id) || $my->authorise('core.manage','com_joomlaquiz')) /*&& ($user_unique_id == $stu_quiz->unique_id)*/ ) {
 				if ($stu_quiz->c_passed != 1) {
 					echo JText::_('COM_QUIZ_MES_NOTPASSED'); die();
 				}
@@ -50,16 +69,16 @@ class JoomlaquizModelPrintcert extends JModelList
 				
 				if(file_exists(JPATH_SITE.'/components/com_comprofiler/comprofiler.php')){
 					$query = "SELECT `name` FROM `#__comprofiler_fields` WHERE  `name` NOT IN ( 'password', 'onlinestatus', 'formatname', 'connections', 'forumrank', 'forumposts', 'forumkarma', 'forumsignature', 'forumview', 'forumorder') AND `table` LIKE '%comprofiler'";
-					$database->SetQuery( $query );
-					$cb_fields = $database->loadColumn();
+					$db->SetQuery( $query );
+					$cb_fields = $db->loadColumn();
 					
 					$ftmp = array();
 					$conf = new JConfig();
 					if(count($cb_fields)){
 						foreach ($cb_fields as $cb_field) {
 							$query = "SELECT * FROM `information_schema`.`columns` WHERE `table_schema` = '".$conf->db."' AND `table_name` = '".$conf->dbprefix."comprofiler' AND column_name = '".$cb_field."'";
-							$database->setQuery($query);
-							$f = $database->loadObjectList();
+							$db->setQuery($query);
+							$f = $db->loadObjectList();
 
 							if(count($f)){
 								$ftmp[] = $cb_field;
@@ -70,14 +89,14 @@ class JoomlaquizModelPrintcert extends JModelList
 					
 					if (count($cb_fields)) {
 						$query = "SELECT `".implode('`,`', $cb_fields)."` FROM #__comprofiler WHERE user_id= ".$stu_quiz->c_student_id;
-						$database->SetQuery( $query );				
-						$cb_data = $database->loadObjectList();	
+						$db->SetQuery( $query );				
+						$cb_data = $db->loadObjectList();	
 						$cb_data = @$cb_data[0];			
 					} 
 				}
 				
-				$database->SetQuery("SELECT * FROM #__quiz_certificates WHERE id = '".$stu_quiz->c_certificate."'");
-				$certif = $database->LoadObjectList();
+				$db->SetQuery("SELECT * FROM #__quiz_certificates WHERE id = '".$stu_quiz->c_certificate."'");
+				$certif = $db->LoadObjectList();
 				$certif = $certif[0];
 				
 				$loadFile = JPATH_SITE . "/images/joomlaquiz/images/" . $certif->cert_file;
@@ -98,8 +117,8 @@ class JoomlaquizModelPrintcert extends JModelList
 				$inform = array();
 				$query = "SELECT u.name, u.username from #__quiz_r_student_quiz sq, #__users u";
 				$query .= " WHERE sq.c_id = '".$stu_quiz_id."' AND sq.c_student_id=u.id";
-				$database->SetQuery($query);
-				$inform = $database->LoadObjectList();			
+				$db->SetQuery($query);
+				$inform = $db->LoadObjectList();			
 				if (count($inform)) {
 					if ($inform[0]->name != '') {
 						$u_name = $inform[0]->name;
@@ -245,8 +264,8 @@ class JoomlaquizModelPrintcert extends JModelList
 				}
 
 				$query = "SELECT * FROM #__quiz_cert_fields WHERE cert_id = '{$certif->id}' ORDER BY c_id";
-				$database->setQuery($query);
-				$fields = $database->loadObjectList();
+				$db->setQuery($query);
+				$fields = $db->loadObjectList();
 
 				$ad = 0;		
 				if (is_array($fields) && count($fields)) {

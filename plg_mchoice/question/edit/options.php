@@ -8,7 +8,54 @@
 
 JFactory::getDocument()->addScript('https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js');
 JFactory::getDocument()->addScript('https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-sanitize.min.js');
+JFactory::getDocument()->addScript('https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tinymce/0.0.18/tinymce.js');
 ///https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular-sanitize.min.js
+
+$editor = JEditor::getInstance('tinymce');
+$buttons = $editor->getButtons('tinymce');
+JFactory::getDocument()->setBase(JUri::root());
+
+$i = 0;
+$scripts = array_map(function($btn)use(&$i){
+    if(!$btn->options){
+        return false;
+    }
+    ob_start();
+    ?>
+    !(function(){
+    var getBtnOptions = new Function("return <?= $btn->options ?>"),
+    btnOptions = getBtnOptions(),
+    modalWidth = btnOptions.size && btnOptions.size.x ?  btnOptions.size.x : null,
+    modalHeight = btnOptions.size && btnOptions.size.y ?  btnOptions.size.y : null;
+    editor.addButton("button-<?= $i++ ?><?= $btn->text ?>", {
+    text: "<?= $btn->text ?>",
+    title: "<?= $btn->text ?>",
+    icon: "none icon-<?= $btn->name ?>",
+    onclick: function () {
+    var modalOptions = {
+    title  : "<?= $btn->text ?>",
+    url : '<?= JUri::root().JRoute::_($btn->link) ?>',
+    buttons: [{
+    text   : "Close",
+    onclick: "close"
+    }]
+    }
+    if(modalWidth){
+    modalOptions.width = modalWidth;
+    }
+    if(modalHeight){
+    modalOptions.height = modalHeight;
+    }
+    editor.windowManager.open(modalOptions);
+    }
+    });
+    })();
+    <?php
+    $buf = ob_get_contents();
+    ob_end_clean();
+    return $buf;
+},$buttons);
+$scripts = array_filter($scripts);
 
 $data = $displayData;
 $db = JFactory::getDbo();
@@ -82,9 +129,24 @@ $quests_data = JLayoutHelper::render('question.json.subquestions', $data->get('i
 </style>
 <script>
     jQuery(document).ready(function($){
-        var app = angular.module('question-edit', ['ngSanitize'])
+        var app = angular.module('question-edit', ['ngSanitize','ui.tinymce'])
             .controller('questionEditCtrl', ['$scope','$rootScope', function($scope, $rootScope) {
                 $rootScope.questions = $scope.questions = <?= $quests_data ?>;
+
+                $scope.tinymceOptions = {
+                    setup: function(editor) {
+                        <?= implode("\n",$scripts); ?>
+                    },
+                    onChange: function(e) {
+                        // put logic here for keypress and cut/paste changes
+                    },
+                    inline: false,
+                    plugins : "table link code hr charmap autolink lists importcss jdragdrop",
+                    toolbar1: "bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist | outdent indent | undo redo | link unlink anchor code | hr table | subscript superscript | charmap | <?php $i=0; echo implode(' | ', array_filter(array_map(function($b)use(&$i){return ($b->options)?'button-'.($i++).$b->text:false;},$buttons))) ?>",
+                    skin: 'lightgray',
+                    document_base_url: '<?= JUri::root(); ?>',
+                    theme : 'modern'
+                };
 
                 $scope.changesMade = function(){
                     return false;
@@ -255,7 +317,7 @@ $quests_data = JLayoutHelper::render('question.json.subquestions', $data->get('i
             <div class="control-group">
                 <label class="control-label">Question text</label>
                 <div class="controls">
-                    <textarea ng-model="question.text"></textarea>
+                    <textarea ui-tinymce="tinymceOptions" ng-model="question.text"></textarea>
                 </div>
             </div>
             <div class="control-group">

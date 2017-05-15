@@ -23,32 +23,32 @@ $scripts = array_map(function($btn)use(&$i){
     ob_start();
     ?>
     !(function(){
-    var getBtnOptions = new Function("return <?= $btn->options ?>"),
-    btnOptions = getBtnOptions(),
-    modalWidth = btnOptions.size && btnOptions.size.x ?  btnOptions.size.x : null,
-    modalHeight = btnOptions.size && btnOptions.size.y ?  btnOptions.size.y : null;
-    editor.addButton("button-<?= $i++ ?><?= $btn->text ?>", {
-    text: "<?= $btn->text ?>",
-    title: "<?= $btn->text ?>",
-    icon: "none icon-<?= $btn->name ?>",
-    onclick: function () {
-    var modalOptions = {
-    title  : "<?= $btn->text ?>",
-    url : '<?= JUri::root().JRoute::_($btn->link) ?>',
-    buttons: [{
-    text   : "Close",
-    onclick: "close"
-    }]
-    }
-    if(modalWidth){
-    modalOptions.width = modalWidth;
-    }
-    if(modalHeight){
-    modalOptions.height = modalHeight;
-    }
-    editor.windowManager.open(modalOptions);
-    }
-    });
+        var getBtnOptions = new Function("return <?= $btn->options ?>"),
+        btnOptions = getBtnOptions(),
+        modalWidth = btnOptions.size && btnOptions.size.x ?  btnOptions.size.x : null,
+        modalHeight = btnOptions.size && btnOptions.size.y ?  btnOptions.size.y : null;
+        editor.addButton("button-<?= $i++ ?><?= $btn->text ?>", {
+            text: "<?= $btn->text ?>",
+            title: "<?= $btn->text ?>",
+            icon: "none icon-<?= $btn->name ?>",
+            onclick: function () {
+                var modalOptions = {
+                    title  : "<?= $btn->text ?>",
+                    url : '<?= JUri::root().JRoute::_($btn->link) ?>',
+                    buttons: [{
+                        text   : "Close",
+                        onclick: "close"
+                    }]
+                }
+                if(modalWidth){
+                    modalOptions.width = modalWidth;
+                }
+                if(modalHeight){
+                    modalOptions.height = modalHeight;
+                }
+                editor.windowManager.open(modalOptions);
+            }
+        });
     })();
     <?php
     $buf = ob_get_contents();
@@ -133,6 +133,7 @@ $quests_data = JLayoutHelper::render('question.json.subquestions', $data->get('i
             .controller('questionEditCtrl', ['$scope','$rootScope', function($scope, $rootScope) {
                 $rootScope.questions = $scope.questions = <?= $quests_data ?>;
 
+                // TODO: add inline editor for options
                 $scope.tinymceOptions = {
                     setup: function(editor) {
                         <?= implode("\n",$scripts); ?>

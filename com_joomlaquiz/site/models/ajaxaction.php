@@ -3298,7 +3298,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if($q_data->c_type == 6){
 					$ret_str .= '<quest_data><![CDATA[<div>'.JoomlaquizHelper::Blnk_replace_quest_review($q_data->c_id, $q_data->c_question).'</div>]]></quest_data>';
 				}else{
-					$ret_str .= "\t" . '<quest_data><![CDATA[<div>'.$q_data->c_question.'</div>]]></quest_data>' . "\n";
+                    /*
+                     * Ignore legacy and do our thing
+                     */
+                    $registry = new Joomla\Registry\Registry($q_data);
+                    $quest_html = JLayoutHelper::render('question.review.display',array($registry,$stu_quiz_id),JPATH_SITE.'/plugins/joomlaquiz/'.JoomlaquizHelper::getQuestionType($q_data->c_type));
+                    if($quest_html){
+                        $out_html = $quest_html;
+                    }
+                    $ret_add = ($out_html) ? $out_html : '<div>'.$q_data->c_question.'</div>';
+                    $ret_str .= "\t" . '<quest_data><![CDATA['.$ret_add.']]></quest_data>' . "\n";
 				}
 				$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = '".$q_data->c_id."' AND c_right = 1";
 				$database->SetQuery( $query );

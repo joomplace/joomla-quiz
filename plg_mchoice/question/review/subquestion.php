@@ -6,7 +6,9 @@
  * Time: 15:08
  */
 
+jimport('question.helper',JPATH_SITE.'/plugins/joomlaquiz/mchoice/');
 /** @var \Joomla\Registry\Registry $data */
+$displayData = \Joomplace\Quiz\Question\Mchoice\Helper::addResultStatistic($displayData, $displayData->result_id);
 $data = new Joomla\Registry\Registry($displayData);
 
 $options = $data->get('options',array());
@@ -18,18 +20,14 @@ if($data->get('shuffle')){
     shuffle($options);
 }
 
-$session = JFactory::getSession();
-$input = JFactory::getApplication()->input;
-$answer_session = $session->get('quiz.'.$input->get('stu_quiz_id',0).'.question.'.$data->get('parent_id',0));
-$answers = json_decode($answer_session, true)[$data->get('id')];
-$disabled = $answer_session[$data->get('id').'_attempted'] >= $data->get('attempts',1000);
-$options = array_map(function($option) use ($type, $review, $answers, $disabled){
+$review = $data->get('review',false);
+
+$optionsHtml = array_map(function($option) use ($type, $review){
     $option = new \Joomla\Registry\Registry($option);
     $option->set('type',$type);
-    $option->set('picked',in_array($option->get('id'),$answers));
-    $option->set('disabled',$disabled);
-    return JLayoutHelper::render('question.option', $option);
+    return JLayoutHelper::render('question.review.option', $option);
 },$options);
+
 ?>
 <div>
     <div id="subquestion-<?= $data->get('id') ?>" data-id="<?= $data->get('id') ?>" class="subquestion_content">
@@ -39,9 +37,16 @@ $options = array_map(function($option) use ($type, $review, $answers, $disabled)
         <div class="question_options">
             <div class="form-control">
                 <div class="controls">
-                    <?= implode("\n",$options) ?>
+                    <?= implode("\n",$optionsHtml) ?>
                 </div>
             </div>
+        </div>
+        <div class="review_statistic">
+            <b><?= JText::_('COM_QUIZ_ANSWER'); ?></b><br/>
+            <?= implode('; ',array_filter(array_map(function($option) use ($type, $review){
+                $option = new \Joomla\Registry\Registry($option);
+                return $option->get('picked')?$option->get('text'):false;
+            },$options))) ?>
         </div>
         <?php
             if($data->get('feedback')){

@@ -103,6 +103,44 @@ class JoomlaquizModelLpath extends JModelList
 			$database->SetQuery( $query );
 			$lpath_stages = $database->loadObjectList();
 
+
+//			if ($lpath_stages) {
+//				$lpath_all_revers = array_reverse($lpath_all);
+//
+//				$i = -1;
+//				foreach ($lpath_all_revers as $step) {
+//					foreach ($lpath_stages as $stage) {
+//						if ($step->qid == $stage->qid) {
+//							if ($lpath_all_revers[$i]->type == 'a') {
+//
+//								for ($j = $i; $j >= 0; $j--) {
+//									if ($lpath_all_revers[$j]->type == 'a') {
+//										$lpath_stages = $this->ckeckLpArticles($my->id, $lpath->id, $lpath_all_revers[$j]->qid, $package_id, $rel_id);
+//									}
+//									else {
+//										break;
+//									}
+//								}
+//
+//							}
+//							break 2;
+//						}
+//					}
+//					$i++;
+//				}
+//			}
+//			else {
+//				for ($i = 0; $i < count($lpath_all); $i ++) {
+//					if ($lpath_all[$i]->type == 'a' && $lpath_all[$i+1]->type == 'q') {
+//						$lpath_stages = $this->ckeckLpArticles($my->id, $lpath->id, $lpath_all[0]->qid, $package_id, $rel_id);
+//					}
+//					if ($lpath_all[$i]->type == 'q') {
+//						break;
+//					}
+//				}
+//			}
+
+
 			if(is_array($lpath_stages) && count($lpath_stages))
 			foreach($lpath_stages as $ls) {
 				$passed_steps[$ls->type][$ls->qid] = 1;	
@@ -155,5 +193,19 @@ class JoomlaquizModelLpath extends JModelList
 			$lpath->message = '<p align="left">'.JText::_('COM_QUIZ_LPATH_NOT_AVAILABLE').'</p>';
 			return array($lpath, null);
 		}		
+	}
+
+	protected function ckeckLpArticles($myId, $lpathId, $lpathQid, $package_id, $rel_id ) {
+		$database = JFactory::getDBO();
+		$query = "INSERT INTO `#__quiz_lpath_stage`"
+			. "\n SET uid = {$myId}, lpid = {$lpathId}, `type` = 'a', qid = {$lpathQid}, stage = 1, oid = 0, rel_id = 0 ";
+		$database->SetQuery( $query );
+		$database->execute();
+
+		$query = "SELECT `type`, `qid`"
+			. "\n FROM `#__quiz_lpath_stage`"
+			. "\n WHERE uid = '{$myId}' AND oid = '{$package_id}' AND rel_id = '{$rel_id}' AND lpid = '{$lpathId}' AND stage = 1";
+		$database->SetQuery( $query );
+		return $database->loadObjectList();
 	}
 }

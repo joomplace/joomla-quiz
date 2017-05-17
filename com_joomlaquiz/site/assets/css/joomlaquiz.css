@@ -157,9 +157,9 @@ object{
 	margin: 2px 10px;
 }
 
-.jq_question_answers_cont{
-	margin:20px 0;
-}	
+/*.jq_question_answers_cont{
+	margin:20px 0 0 -215px;
+}	*/
 .jq_quiz_align{
 	display:inline-block;
 	*zoom:1;

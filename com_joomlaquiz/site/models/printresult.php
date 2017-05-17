@@ -141,7 +141,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		for($i=0;$i < $total;$i++) {
 			$data = array();
 			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
-			$str .= "".($i+1).".[".number_format($data['c_score'],1).'/'.number_format($data['c_point'],1)."] ".$data['c_question']."\n";
+			$str .= "".($i+1).". ".$data['c_question']."\n";
 			$type = JoomlaquizHelper::getQuestionType($data['c_type']);
 			$answer = '';
 			
@@ -383,8 +383,7 @@ class JoomlaquizModelPrintresult extends JModelList
 			$pdf->Ln();
 			$pdf->setFont($fontFamily, 'B');
 			//$pdf->setStyle('b', true);
-			$str = ($i + 1) . ".[" . number_format($data['c_score'],1) . '/' . number_format($data['c_point'],1)
-				. "]";
+			$str = ($i + 1) . ".";
 			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
 			$pdf->setFont($fontFamily, 'B');

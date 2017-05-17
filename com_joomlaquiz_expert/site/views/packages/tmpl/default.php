@@ -85,7 +85,7 @@ if(!count($this->packages)) {
 		</div>
 		<div class="jq_package_body_container">
 			<?php
-			if(strtoupper($package->order_status_code) != 'C') {
+			if(strtoupper($package->order_status_code) != 'C' && strtoupper($package->order_status_code) != 'U') {
 				echo "</div>";
 				continue;
 			}

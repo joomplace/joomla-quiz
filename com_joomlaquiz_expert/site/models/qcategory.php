@@ -297,16 +297,14 @@ class JoomlaquizModelQcategory extends JModelList
         foreach ($rows as $i => $quizz) {
             if ($quizz->paid_check || !$quizz->c_guest) {
                 // need to run checks
-                if (!$user->id) {
-                    // need to check permissions
-                    if (!$user->authorise('core.view',
-                        'com_joomlaquiz.quiz.' . $quizz->c_id)
-                    ) {
-                        unset($rows[$i]);
-                    }
-                }
                 // need to check packages
                 // feature to release(after refactoring)
+            }
+            // need to check permissions anyway
+            if (!$user->authorise('core.view',
+                'com_joomlaquiz.quiz.' . $quizz->c_id)
+            ) {
+                unset($rows[$i]);
             }
         }
 

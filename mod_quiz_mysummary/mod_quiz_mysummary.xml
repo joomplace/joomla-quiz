@@ -12,7 +12,6 @@
 	<files>
 		<filename module="mod_quiz_mysummary">mod_quiz_mysummary.php</filename>
 		<folder>tmpl</folder>
-		<filename>helper.php</filename>
 		<filename>index.html</filename>
 		<filename>mod_quiz_mysummary.xml</filename>
 	</files>

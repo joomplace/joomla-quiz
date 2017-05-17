@@ -9,6 +9,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modellist');
+JLoader::register('JoomlaquizHelper', JPATH_SITE . '/components/com_joomlaquiz/helpers/joomlaquiz.php');
 /**
  * Category Model.
  *

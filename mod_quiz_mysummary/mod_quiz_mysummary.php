@@ -29,7 +29,7 @@ $query->leftJoin('('.$sub_query.' LIMIT 0,1) AS '.$db->qn('pr').' ON '.$db->qn('
 $sub_query->clear('where')
     ->where($db->qn('c_passed').'='.$db->q(0));
 $query->leftJoin('('.$sub_query.' LIMIT 0,1) AS '.$db->qn('fr').' ON '.$db->qn('q.c_id').' = '.$db->qn('fr.c_quiz_id'));
-$query->where($db->qn('q.c_id').' IN (0,'.implode(',',array_map(function($q){return $q->c_id;},JoomlaquizModelQcategory::getAvaliableQuizzes())).')');
+$query->where($db->qn('q.c_id').' IN ('.array_merge(array(0),implode(',',array_map(function($q){return $q->c_id;},JoomlaquizModelQcategory::getAvaliableQuizzes()))).')');
 
 $results = $db->setQuery($query)->loadObjectList();
 

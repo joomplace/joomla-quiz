@@ -33,4 +33,4 @@ $query->where($db->qn('q.c_id').' IN ('.array_merge(array(0),implode(',',array_m
 
 $results = $db->setQuery($query)->loadObjectList();
 
-require JModuleHelper::getLayoutPath('mod_quiz_myresult', $params->get('layout', 'default'));
+require JModuleHelper::getLayoutPath('mod_quiz_mysummary', $params->get('layout', 'default'));

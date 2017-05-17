@@ -23,10 +23,12 @@ $query->select($db->qn('q.c_id'))
 $sub_query = $db->getQuery(true);
 $sub_query->select('*')
     ->from($db->qn('#__quiz_r_student_quiz'))
+    ->where($db->qn('c_student_id').'='.$db->q(JFactory::getUser()->id))
     ->where($db->qn('c_passed').'='.$db->q(1))
     ->order($db->qn('c_date_time').' ASC');
 $query->leftJoin('('.$sub_query.' LIMIT 0,1) AS '.$db->qn('pr').' ON '.$db->qn('q.c_id').' = '.$db->qn('pr.c_quiz_id'));
 $sub_query->clear('where')
+    ->where($db->qn('c_student_id').'='.$db->q(JFactory::getUser()->id))
     ->where($db->qn('c_passed').'='.$db->q(0));
 $query->leftJoin('('.$sub_query.' LIMIT 0,1) AS '.$db->qn('fr').' ON '.$db->qn('q.c_id').' = '.$db->qn('fr.c_quiz_id'));
 $query->where($db->qn('q.c_id').' IN ('.implode(',',array_merge(array(-1),array_map(function($q){return $q->c_id;},JoomlaquizModelQcategory::getAvaliableQuizzes()))).')');

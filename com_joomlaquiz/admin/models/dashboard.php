@@ -22,19 +22,24 @@ class JoomlaquizModelDashboard extends JModelList
 	}
 	
 	public function getDatabaseState(){
-		
-		$folder = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/updates/';
 
-		try{
-			$changeSet = JSchemaChangeset::getInstance($this->getDbo(), $folder);
-		}catch (RuntimeException $e){
-			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+        $folders = array();
+        $folders[] = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/updates/';
+        $folders[] = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/initial_sync/';
 
-			return false;
-		}
-		
-		return $changeSet;
-		
+        try{
+            $changeSets = array();
+            foreach ($folders as $folder){
+                $changeSets[] = new JSchemaChangeset($this->getDbo(), $folder);
+            }
+        }catch (RuntimeException $e){
+            JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+
+            return false;
+        }
+
+        return $changeSets;
+
 	}
 	
 	/**
@@ -43,11 +48,13 @@ class JoomlaquizModelDashboard extends JModelList
 	 * @return  void
 	 */
 	public function fix(){
-		if (!$changeSet = $this->getDatabaseState()){
-			return false;
-		}
+        if (!$changeSets = $this->getDatabaseState()){
+            return false;
+        }
 
-		$changeSet->fix();
+        foreach ($changeSets as $changeSet){
+            $changeSet->fix();
+        }
 	}
 
 	public function  fixEncode(){

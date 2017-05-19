@@ -144,7 +144,7 @@ class JoomlaquizModelProducts extends JModelList
 		}
 		
 		$category_id = $this->getState('filter.category_id');
-		if($category_id){
+		if($category_id && $category_id != -1){
 			if (!$no_virtuemart) {
 				$query->where('vm_pc.virtuemart_category_id = '.$category_id);
 			}

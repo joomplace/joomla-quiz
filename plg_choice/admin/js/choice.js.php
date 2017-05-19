@@ -2,6 +2,25 @@
 		<link rel="stylesheet" href="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/css/thickbox/thickbox.css" type="text/css" />
 		<script language="javascript" type="text/javascript" src="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" ></script>
 <?php }?>
+<?php 	
+		$editor_name = JFactory::getConfig()->get('editor');
+
+		if  (JFactory::getConfig()->get('editor') == 'codemirror') {
+			$PCREpattern  =  '/\r\n|\s+|\r|\n/u';
+			$editor = JFactory::getEditor();
+			$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
+			$edit = str_replace("'", "\'", $edit);
+		}
+
+		if (JFactory::getConfig()->get('editor') == 'tinymce') {
+			$PCREpattern  =  '/\r\n|\s\s+|\r|\n/u';
+			$editor = JFactory::getEditor();
+			$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
+			$edit = str_replace("'", "\'", $edit);
+		}
+		
+		
+?>
 <script language="javascript" type="text/javascript">
 <!--
 		var quest_type = <?php echo $q_om_type; ?>;
@@ -285,15 +304,15 @@
 			document.getElementById("new_field_points").value  = '';
 			
 			if(quest_type == 1)
-			{
+			{				
 				var inc_text = 	document.createElement("textarea");
 				inc_text.setAttribute('name','jq_incorrect_feed[]');
 				
 				inc_text.row = 5;
 				inc_text.cols = 50;
-				inc_text.value = document.getElementById('wr_mess').value;
+				inc_text.value = document.getElementById('new_incorrect_feed').value;
 				cell8.appendChild(inc_text);
-				document.getElementById('wr_mess').value = '';
+				document.getElementById('new_incorrect_feed').value = '';
 				
 			}
 			
@@ -343,9 +362,37 @@
 		}
 
 		<?php } else {?>
+
 		function Add_new_tbl_field(elem_field, tbl_id, field_name) {
+
+			ii = document.getElementsByClassName('row0').length + document.getElementsByClassName('row1').length;
+
 			var new_element_txt = document.getElementById(elem_field).value;
 			var add_new_field = document.getElementById("new_field_points").value;
+
+			var new_incorrect_feed = <?php echo $editor->getContent('new_incorrect_feed'); ?>;
+			
+			<?php if ($editor_name == 'codemirror') { ?>
+				var new_editor_part1 = document.getElementById('new_editor').children[1];
+				var new_editor = '<?php echo $edit; ?>'.replace(/new_incorrect/g, 'jq_incorrect_feed['+ii+']');
+			<?php }; 
+
+			if ($editor_name == 'tinymce') { ?>
+				var new_editor = '<?php echo $edit; ?>'.replace(/new_incorrect/g, 'jq_incorrect_feed['+ii+']');
+
+				document.getElementById("new_incorrect_feed").value = "";
+				
+				try {
+
+					if (window.frames["new_incorrect_feed_ifr"].contentWindow.document.querySelector('[data-id="new_incorrect_feed"]') !== undefined) {
+						window.frames["new_incorrect_feed_ifr"].contentWindow.document.querySelector('[data-id="new_incorrect_feed"]').innerHTML = '';
+					};
+
+				} catch (err) {
+
+				};
+			<?php }; ?>
+
 			document.getElementById(elem_field).value = '';
 			if (TRIM_str(new_element_txt) == '') {
 				alert("<?php echo JText::_('COM_JOOMLAQUIZ_PLEASE_ENTER_TEXT');?>");return;
@@ -422,18 +469,17 @@
 			points.value = parseFloat(add_new_field)?parseFloat(add_new_field):0;
 			points.setAttribute('maxlength', 10);
 			document.getElementById("new_field_points").value  = '';
-			if(quest_type == 1)
-			{
-				var inc_text = 	document.createElement("textarea");
-				inc_text.setAttribute('name','jq_incorrect_feed[]');
-				
-				inc_text.row = 5;
-				inc_text.cols = 50;
-				inc_text.value = document.getElementById('wr_mess').value;
-				cell8.appendChild(inc_text);
-				document.getElementById('wr_mess').value = '';
-			}
+
 			
+			<?php if ($editor_name == 'codemirror') { ?>
+				cell8.innerHTML = new_editor ;
+			<?php }; 
+
+ 			 if ($editor_name == 'tinymce') { ?>
+					cell8.innerHTML = new_editor;
+			<?php }; ?>
+
+
 			cell1.align = 'center';
 			cell1.innerHTML = 0;
 			if(quest_type == 10)
@@ -459,6 +505,19 @@
 			row.appendChild(cell6);row.appendChild(cell7);
 			row.appendChild(cell8);
 			ReAnalize_tbl_Rows(tbl_elem.rows.length - 2, tbl_id);
+
+
+			<?php if ($editor_name == 'codemirror') { ?>
+				document.getElementById('jq_incorrect_feed['+ii+']').children[0].after(new_editor_part1);
+				document.getElementById('jq_incorrect_feed['+ii+']').value = new_incorrect_feed;
+				
+			<?php }; ?>
+
+			<?php if ($editor_name == 'tinymce') { ?>
+				
+				document.getElementById('jq_incorrect_feed['+ii+']').value = new_incorrect_feed;
+			<?php }; ?>
+
 		}
 		<?php }?>
 		

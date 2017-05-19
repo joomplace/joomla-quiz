@@ -1,4 +1,4 @@
-﻿CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
+CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cert_name` varchar(50) NOT NULL,
   `cert_file` varchar(50) NOT NULL,
@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_lpath` (
   `published` tinyint(4) DEFAULT NULL,
   `asset_id` int(18) NOT NULL,
   `lp_access_message` text NOT NULL,
+  `category` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

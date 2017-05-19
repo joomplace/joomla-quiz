@@ -56,7 +56,11 @@ class com_joomlaquizInstallerScript
 
     function update($parent)
     {
-			
+        // Delete sql update file 0.0.0.0001.sql
+        if(JFile::exists(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/sql/updates/mysql/0.0.0.001.sql')){
+            JFile::delete(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/sql/updates/mysql/0.0.0.001.sql');
+        }
+
 		if(file_exists(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml')){
 			$xml = JFactory::getXML(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml');
 			$this->version_from = $version = preg_split( '/(\s|\.)/', $xml->version );

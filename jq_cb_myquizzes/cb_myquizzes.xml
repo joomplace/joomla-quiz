@@ -7,8 +7,7 @@
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.6.1.000</version>
-	<release>3.6.1</release>
+	<version>3.6.3.000</version>
 	<description>JoomlaQuiz plugin for Community Builder.</description>
 	<files>
 		<filename plugin="cb_myquizzes">cb_myquizzes.php</filename>

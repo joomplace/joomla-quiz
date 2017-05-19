@@ -8,13 +8,16 @@
   <authorUrl>www.joomplace.com</authorUrl>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-  <version>3.6.1.000</version>
+  <version>3.6.3.000</version>
   <files folder="packages">
     <file type="component" id="com_joomlaquiz">com_joomlaquiz_expert.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_lastten.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_myresult.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_topxquiz.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_topxusers.zip</file>
+    <file type="module" id="joomlaquiz" client="site">mod_quiz_availablelp.zip</file>
+    <file type="module" id="joomlaquiz" client="site">mod_quiz_notcompletedlp.zip</file>
+    <file type="module" id="joomlaquiz" client="site">mod_quiz_completedlp.zip</file>
     <file type="plugin" id="blank" group="joomlaquiz">plg_blank.zip</file>
     <file type="plugin" id="boilerplate" group="joomlaquiz">plg_boilerplate.zip</file>
     <file type="plugin" id="choice" group="joomlaquiz">plg_choice.zip</file>

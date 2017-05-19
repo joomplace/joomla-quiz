@@ -35,9 +35,15 @@ class JoomlaquizViewPayments extends JViewLegacy
         $items 		= $this->get('Items');
         $pagination = $this->get('Pagination');
         $state		= $this->get('State');
-        
-		$usersFields = JHTML::_('select.options', $this->get('Users'), 'value', 'text', $app->getUserStateFromRequest('payments.filter.user_id', 'filter_user_id') );
-		
+
+        $usergroupOptions = JHTML::_('select.options', $this->get('UsersGroup'), 'value', 'text', $app->getUserStateFromRequest('payments.filter.usergroup_id', 'filter_usergroup_id') );
+        JHtmlSidebar::addFilter(
+            JText::_('COM_JOOMLAQUIZ_SELECT_USERGROUP'),
+            'filter_usergroup_id',
+            $usergroupOptions
+        );
+
+        $usersFields = JHTML::_('select.options', $this->get('Users'), 'value', 'text', $app->getUserStateFromRequest('payments.filter.user_id', 'filter_user_id') );
 		JHtmlSidebar::addFilter(
 			JText::_('COM_JOOMLAQUIZ_SELECT_USER'),
 			'filter_user_id',

@@ -56,7 +56,11 @@ class com_joomlaquizInstallerScript
 
     function update($parent)
     {
-			
+        // Delete sql update file 0.0.0.0001.sql
+        if(JFile::exists(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/sql/updates/mysql/0.0.0.001.sql')){
+            JFile::delete(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/sql/updates/mysql/0.0.0.001.sql');
+        }
+
 		if(file_exists(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml')){
 			$xml = JFactory::getXML(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml');
 			$this->version_from = $version = preg_split( '/(\s|\.)/', $xml->version );
@@ -508,6 +512,13 @@ class com_joomlaquizInstallerScript
 		
 		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_question_id` int(12) NOT NULL, `c_paths` text NOT NULL, PRIMARY KEY (`c_id`))");
 		$db->execute();
+
+		/* add Uncategorialised category for learning path */
+		$db->setQuery("SELECT `extension` FROM `#__categories` WHERE `extension` = 'com_joomlaquiz.lpath' ");
+		if (!$db->loadColumn()) {
+			$db->setQuery("INSERT INTO `#__categories` (`path`, `extension`, `title`, `alias`, `description`, `parent_id`, `published`, `params`, `metadata`) VALUES ('uncategorised', 'com_joomlaquiz.lpath', 'Uncategorised', 'uncategorised', 'A default category for the joomlaquiz questions.', 1, 1, '{\"target\":\"\",\"image\":\"\"}', '{\"page_title\":\"\",\"author\":\"\",\"robots\":\"\"}')");
+			$db->execute();
+		}
 		
 		$this->defaultCategoryCheck();
 		$this->migrateCategories();

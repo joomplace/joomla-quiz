@@ -62,7 +62,7 @@ $ordering_list = $this->ordering_list;
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&layout=edit&c_id='.(int) $this->item->c_id); ?>" enctype="multipart/form-data" method="post" name="adminForm" id="question-form" class="form-validate">
-<div id="j-main-container" class="span7 form-horizontal">
+<div id="j-main-container" class="span12 form-horizontal">
 	<ul class="nav nav-tabs" id="questionTabs">
 	    <li class="active"><a href="#question-details" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION');?></a></li>
 	    <?php if($this->is_feedback):?>

@@ -427,19 +427,19 @@ $quests_data = JLayoutHelper::render('question.json.subquestions', $data->get('i
                     <div class="control-group">
                         <label class="control-label">Correct answer</label>
                         <div class="controls">
-                            <textarea ng-model="question.feedback_correct"></textarea>
+                            <textarea ui-tinymce="tinymceOptions" ng-model="question.feedback_correct"></textarea>
                         </div>
                     </div>
                     <div class="control-group" ng-show="question.partial">
                         <label class="control-label">Partial answer</label>
                         <div class="controls">
-                            <textarea ng-model="question.feedback_partial"></textarea>
+                            <textarea ui-tinymce="tinymceOptions" ng-model="question.feedback_partial"></textarea>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">Incorrect answer</label>
                         <div class="controls">
-                            <textarea ng-model="question.feedback_incorrect"></textarea>
+                            <textarea ui-tinymce="tinymceOptions" ng-model="question.feedback_incorrect"></textarea>
                         </div>
                     </div>
                 </div>

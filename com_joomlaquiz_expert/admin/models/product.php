@@ -72,7 +72,7 @@ class JoomlaquizModelProduct extends JModelAdmin
 
         $no_virtuemart = ($this->isNotVirtuemart()) ? 1 : 0;
         $no_j2store = ($this->isNotJ2store()) ? 1 : 0;
-        $no_eventbooking = ($this->inNotEventBooking()) ? 1 : 0;
+        $no_eventbooking = ($this->isNotEventBooking()) ? 1 : 0;
 
         $GLOBALS['no_virtuemart'] = $no_virtuemart;
 
@@ -312,7 +312,7 @@ class JoomlaquizModelProduct extends JModelAdmin
     }
 
     //Check that EventBooking component exists
-    protected function inNotEventBooking()
+    protected function isNotEventBooking()
     {
         if (file_exists(JPATH_ADMINISTRATOR . '/components/com_eventbooking/config.xml')) {
             return false;

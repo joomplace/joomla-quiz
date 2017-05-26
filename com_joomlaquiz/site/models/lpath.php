@@ -29,6 +29,7 @@ class JoomlaquizModelLpath extends JModelList
 		
 		$lpath_id = intval(JFactory::getApplication()->input->get( 'lpath_id', $params->get('lpath_id', 0) ));
 		$rel_id = intval(JFactory::getApplication()->input->get( 'rel_id', 0));
+        $product_type = strval(JFactory::getApplication()->input->get( 'product_type'));
 		$package_id = intval(JFactory::getApplication()->input->get( 'package_id', 0));
 		$vm = $package_id < 1000000000;
 		
@@ -42,7 +43,7 @@ class JoomlaquizModelLpath extends JModelList
 		$_SESSION['quiz_check_rel_item'] = 0;	
 		
 		if (!$lpath_id) {
-			$lpath_id = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $vm);
+			$lpath_id = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $product_type);
 		} else {
 			$query = "SELECT `paid_check` "
 			. "\n FROM #__quiz_lpath"

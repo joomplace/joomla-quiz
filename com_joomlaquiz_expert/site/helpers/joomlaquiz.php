@@ -664,15 +664,35 @@ class JoomlaquizHelper
 
             $product_quantity = 1;
             if ($order_id < 1000000000) {
-                $query = "SELECT vm_oi.product_quantity"
-                    . "\n FROM #__virtuemart_orders AS vm_o"
-                    . "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
-                    . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-                    . "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $order_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
-                ;
+                if($product_type == 'vm') {//Get quantity for VirtueMart
+                    $query = "SELECT vm_oi.product_quantity"
+                        . "\n FROM #__virtuemart_orders AS vm_o"
+                        . "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
+                        . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
+                        . "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $order_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')";
 
-                $db->SetQuery( $query );
-                $product_quantity = ($db->loadResult()) ? (int)$db->loadResult() : 1;
+                    $db->SetQuery($query);
+                    $product_quantity = ($db->loadResult()) ? (int)$db->loadResult() : 1;
+                }elseif ($product_type == 'j2s'){//Get quantity for J2Store
+                    $query = $db->getQuery(true);
+                    $query->select($db->qn('joi.orderitem_quantity', 'quantity'))
+                        ->from($db->qn('#__j2store_orderitems', 'joi'))
+                        ->leftJoin($db->qn('#__j2store_orders', 'jo')
+                            . 'ON'
+                            . $db->qn('jo.cart_id') . ' = ' . $db->qn('joi.cart_id')
+                        )
+                        ->leftJoin($db->qn('#__quiz_products', 'qp')
+                            . 'ON'
+                            . $db->qn('qp.pid') . ' = ' . $db->qn('joi.product_id')
+                        )
+                        ->where($db->qn('qp.id') . ' = ' . $db->q($rel_id))
+                        ->where($db->qn('jo.user_id') . ' = ' . $db->q($my->id))
+                        ->where($db->qn('jo.j2store_order_id') . ' = ' . $db->q($order_id))
+                        ->where($db->qn('jo.order_state_id') . ' = 1')
+                    ;
+                    $db->setQuery($query);
+                    $product_quantity = ($db->loadResult()) ? (int)$db->loadResult() : 1;
+                }
             }
 
             if (!$product_params_attempts)

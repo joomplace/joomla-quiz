@@ -182,9 +182,10 @@ class JoomlaquizModelProducts extends JModelList
             $query_eb = $db->getQuery(true);
             $query_eb->select('DISTINCT' . $db->quoteName('qp.pid', 'pid'))
                 ->select($db->quoteName(
-                    array('qp.id', 'qp.pid_type', 'ebe.title',),
-                    array('id','pid_type', 'product_name',)
+                    array('qp.id', 'qp.pid_type'),
+                    array('id','pid_type')
                 ))
+                ->select("CONVERT (`ebe`.`title` USING utf8) COLLATE utf8_unicode_ci AS product_name")
                 ->select('\'\' AS `product_sku`')
                 ->select($db->qn('ebc.name', 'category_name'))
                 ->select('\'\' AS `name`')

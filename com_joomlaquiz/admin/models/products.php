@@ -227,17 +227,6 @@ class JoomlaquizModelProducts extends JModelList
         $query->where($db->quoteName('qp.pid_type') . ' = ""');
         $query->group($db->quoteName('qp.pid'));
 
-        //Add querys for other components
-        if (!$no_j2store) {
-            $query->unionAll($query_j2s);
-        }
-        if (!$no_virtuemart) {
-            $query->unionAll($query_vm);
-        }
-        if (!$no_event_booking) {
-            $query->unionAll($query_eb);
-        }
-
         // Filter by search in title.
         $search = $this->getState('filter.search');
         if (!empty($search)) {
@@ -277,7 +266,19 @@ class JoomlaquizModelProducts extends JModelList
         }
 
         $orderDirn = $this->state->get('list.direction', 'ASC');
-        $query->order($db->escape($orderCol . ' ' . $orderDirn));
+
+        //Add querys for other components
+        if (!$no_j2store) {
+            $query .= ' UNION ALL(' . $query_j2s . ')';
+        }
+        if (!$no_virtuemart) {
+            $query .= ' UNION ALL(' . $query_vm . ')';
+        }
+        if (!$no_event_booking) {
+            $query .= ' UNION ALL(' . $query_eb . ')';
+        }
+
+        $query .= ' ORDER BY ' . $db->escape($orderCol . ' ' . $orderDirn);
 
         return $query;
     }

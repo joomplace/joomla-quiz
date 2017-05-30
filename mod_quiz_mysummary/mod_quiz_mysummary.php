@@ -32,6 +32,9 @@ $sub_query->clear('where')
     ->where($db->qn('c_passed').'='.$db->q(0));
 $query->leftJoin('('.$sub_query.' LIMIT 0,1) AS '.$db->qn('fr').' ON '.$db->qn('q.c_id').' = '.$db->qn('fr.c_quiz_id'));
 $query->where($db->qn('q.c_id').' IN ('.implode(',',array_merge(array(-1),array_map(function($q){return $q->c_id;},JoomlaquizModelQcategory::getAvaliableQuizzes()))).')');
+if($params->get('quiz_ids', array())){
+    $query->where($db->qn('q.c_id').' IN ('.implode(',',$params->get('quiz_ids', array())).')');
+}
 
 $results = $db->setQuery($query)->loadObjectList();
 

@@ -18,4 +18,21 @@
 	<languages>
 		<language tag="en-GB">en-GB.mod_quiz_mysummary.ini</language>
 	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field
+						name="quiz_ids"
+						value_field="text"
+						key_field="value"
+						type="sql"
+						query="SELECT `c_title` AS `text`, `c_id` AS `value` FROM `#__quiz_t_quiz` WHERE `c_id` > 0"
+						default=""
+						label="Show if avaliable"
+						description="Select quizzes you want to show if they are accessable by user"
+						multiple="true"
+				/>
+			</fieldset>
+		</fields>
+	</config>
 </extension>

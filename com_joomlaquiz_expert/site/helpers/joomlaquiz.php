@@ -745,6 +745,7 @@ class JoomlaquizHelper
 
         //Check order status for the quiz
         if ($product_type == 'vm') {//for VirtueMart
+            $query->clear();
             $query->select($db->qn('qp') . '.*')
                 ->from($db->qn('#__virtuemart_orders', 'vm_o'))
                 ->innerJoin($db->qn('#__virtuemart_order_items', 'vm_oi')
@@ -762,6 +763,7 @@ class JoomlaquizHelper
                 ->where($db->qn('vm_o.order_status') . " IN ('C', 'U') ")
             ;
         } else if($product_type == 'j2s') {//For J2Store
+            $query->clear();
             $query->select($db->qn('qp') . '.*')
                 ->from($db->qn('#__quiz_products', 'qp'))
                 ->leftJoin($db->qn('#__j2store_orders', 'jo')

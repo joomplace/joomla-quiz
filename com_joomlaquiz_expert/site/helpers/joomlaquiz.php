@@ -905,11 +905,24 @@ class JoomlaquizHelper
             $product_quantity = ($db->loadResult()) ? (int)$db->loadResult() : 1;
         }
         if($product_type == 'j2s'){
-            $query->clear();
-            $query->select()
-                ->from()
-                ->where()
+            $query = $db->getQuery(true);
+            $query->select($db->qn('joi.orderitem_quantity', 'quantity'))
+                ->from($db->qn('#__j2store_orderitems', 'joi'))
+                ->leftJoin($db->qn('#__j2store_orders', 'jo')
+                    . 'ON'
+                    . $db->qn('jo.cart_id') . ' = ' . $db->qn('joi.cart_id')
+                )
+                ->leftJoin($db->qn('#__quiz_products', 'qp')
+                    . 'ON'
+                    . $db->qn('qp.pid') . ' = ' . $db->qn('joi.product_id')
+                )
+                ->where($db->qn('qp.id') . ' = ' . $db->q($rel_id))
+                ->where($db->qn('jo.user_id') . ' = ' . $db->q($my->id))
+                ->where($db->qn('jo.j2store_order_id') . ' = ' . $db->q($order_id))
+                ->where($db->qn('jo.order_state_id') . ' = 1')
             ;
+            $db->setQuery($query);
+            $product_quantity = ($db->loadResult()) ? (int)$db->loadResult() : 1;
         }
 
         $attempts = (!empty($products_stat) && array_key_exists($rel_id, $products_stat) && $products_stat[$rel_id]->attempts ? $products_stat[$rel_id]->attempts : 0);

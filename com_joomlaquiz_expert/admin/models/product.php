@@ -81,6 +81,7 @@ class JoomlaquizModelProduct extends JModelAdmin
         $lists['no_j2store'] = $no_j2store;
         $lists['no_eventbooking'] = $no_eventbooking;
         $product_id = JFactory::getApplication()->input->get('id');
+        $product_pid_type = '';
 
         //Get product's pid and pid_type for id
         if (isset($product_id) && $product_id != 0) {
@@ -111,7 +112,6 @@ class JoomlaquizModelProduct extends JModelAdmin
         //Get J2Store products
         if (!$no_j2store) {
             $query = $db->getQuery(true);
-
             $query->select(
                 $query->concatenate(
                     array(
@@ -142,7 +142,7 @@ class JoomlaquizModelProduct extends JModelAdmin
 
         //Get EventBooking products
         if (!$no_eventbooking) {
-            $query->clear();
+            $query = $db->getQuery(true);
             $query->select($query->concatenate(array($db->qn('ebe.id'), '\'_eb\'')) . ' AS `value`')
                 ->select($db->qn('ebe.title', 'text'))
                 ->from($db->qn('#__eb_events', 'ebe'))

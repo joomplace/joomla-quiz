@@ -725,6 +725,15 @@ class JoomlaquizHelper
         $rel_id = intval($rel_id);
         $package_id = intval($package_id);
         $product_type = strval($product_type);
+        if(!$product_type){
+            $query->select('qp.pid_type')
+                ->from($db->qn('#__quiz_products', 'qp'))
+                ->where($db->qn('qp.id') . ' = ' . $db->q($rel_id))
+            ;
+            $db->setQuery($query);
+            $product_type = $db->loadResult();
+        }
+
         $quiz_params = array();
         $quiz_params[0] = new stdClass;
 

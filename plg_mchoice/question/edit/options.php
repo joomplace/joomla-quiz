@@ -6,13 +6,16 @@
  * Time: 15:08
  */
 
+
+$editor = JEditor::getInstance('tinymce');
+$editor->display();
+
 JFactory::getDocument()->addScript('https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js');
 JFactory::getDocument()->addScript('https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-sanitize.min.js');
 JFactory::getDocument()->addScript('https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tinymce/0.0.18/tinymce.js');
 ///https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular-sanitize.min.js
 
-$editor = JEditor::getInstance('tinymce');
-$buttons = $editor->getButtons('tinymce');
+$buttons = $editor->getButtons('ng-mce');
 JFactory::getDocument()->setBase(JUri::root());
 
 $i = 0;
@@ -34,7 +37,7 @@ $scripts = array_map(function($btn)use(&$i){
             onclick: function () {
                 var modalOptions = {
                     title  : "<?= $btn->text ?>",
-                    url : '<?= JUri::root().JRoute::_($btn->link) ?>',
+                    url : '<?= JUri::root().str_replace('ng-mce',"'+editor.id+'",JRoute::_($btn->link)) ?>',
                     buttons: [{
                         text   : "Close",
                         onclick: "close"
@@ -137,6 +140,25 @@ $quests_data = JLayoutHelper::render('question.json.subquestions', $data->get('i
                 $scope.tinymceOptions = {
                     setup: function(editor) {
                         <?= implode("\n",$scripts); ?>
+                        Joomla.editors.instances[editor.id] = {
+                            getValue: function() {
+                                return this.instance.getContent()
+                            },
+                            setValue: function(text) {
+                                return this.instance.setContent(text)
+                            },
+                            replaceSelection: function(text) {
+                                return this.instance.execCommand("mceInsertContent", false, text)
+                            },
+                            id: editor.id,
+                            instance: editor,
+                            onSave: function() {
+                                if (this.instance.isHidden()) {
+                                    this.instance.show()
+                                }
+                                return ""
+                            }
+                        };
                     },
                     onChange: function(e) {
                         // put logic here for keypress and cut/paste changes

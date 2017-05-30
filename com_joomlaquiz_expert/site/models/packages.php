@@ -63,6 +63,7 @@ class JoomlaquizModelPackages extends JModelList
 
         //Get orders for j2store for current user
         if (!$no_j2store) {
+            $j2s_orders = array();
             $query->clear();
             $query->select($db->quoteName(
                 array(
@@ -80,14 +81,16 @@ class JoomlaquizModelPackages extends JModelList
                 ->order($db->quoteName('jo.created_on') . ' DESC');
             $db->setQuery($query);
             $j2s_orders = $db->loadObjectList();
-        }
-//        Add j2store order if available
-        if (is_array($j2s_orders) && count($j2s_orders)) {
-            $orders = array_merge($orders, $j2s_orders);
+
+        //Add j2store order if available
+            if (is_array($j2s_orders) && count($j2s_orders)) {
+                $orders = array_merge($orders, $j2s_orders);
+            }
         }
 
         //Get orders for Event Booking for current user
         if (!$no_event_booking) {
+            $event_booking_orders = array();
             $query->clear();
             $query->select($db->quoteName(
                 array(
@@ -106,14 +109,16 @@ class JoomlaquizModelPackages extends JModelList
                 ->order($db->quoteName('ebr.payment_date') . ' DESC');
             $db->setQuery($query);
             $event_booking_orders = $db->loadObjectList();
-        }
-//        Add event booking orders if available
-        if (is_array($event_booking_orders) && count($event_booking_orders)) {
-            $orders = array_merge($orders, $event_booking_orders);
+
+        //Add event booking orders if available
+            if (is_array($event_booking_orders) && count($event_booking_orders)) {
+                $orders = array_merge($orders, $event_booking_orders);
+            }
         }
 
         //Get orders for Virtue Mart for current user
         if (!$no_virtuemart) {
+            $vm_orders = array();
             $query = "SELECT vm_orders.virtuemart_order_id as order_id, vm_orders.virtuemart_user_id as user_id, vm_orders.virtuemart_vendor_id as vendor_id, 'vm' AS `product_type`"
                 . "\n FROM `#__virtuemart_orders` AS vm_orders"
                 . "\n WHERE vm_orders.virtuemart_user_id = '{$my->id}'"
@@ -121,10 +126,11 @@ class JoomlaquizModelPackages extends JModelList
 
             $db->SetQuery($query);
             $vm_orders = $db->loadObjectList();
-        }
-        //Add Virtue Mart orders if available
-        if (is_array($vm_orders) && count($vm_orders)) {
-            $orders = array_merge($orders, $vm_orders);
+
+            //Add Virtue Mart orders if available
+            if (is_array($vm_orders) && count($vm_orders)) {
+                $orders = array_merge($orders, $vm_orders);
+            }
         }
 
         //Get payments for orders through JoomQuiz
@@ -141,10 +147,7 @@ class JoomlaquizModelPackages extends JModelList
             else
                 $orders = $payments;
         }
-//        echo '<pre>';
-//        print_r($orders);
-//        echo '</pre>';
-//        die();
+
         $packages = array();
         if (is_array($orders) && count($orders))
             foreach ($orders as $i => $order) {

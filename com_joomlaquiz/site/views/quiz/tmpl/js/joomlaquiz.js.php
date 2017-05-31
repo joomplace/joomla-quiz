@@ -1,4 +1,15 @@
-<?php JHTML::_('behavior.modal');?>
+<?php
+/**
+ * Joomlaquiz Deluxe Component for Joomla 3
+ * @package Joomlaquiz Deluxe
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
+
+JHTML::_('behavior.modal');?>
 <script language="JavaScript" type="text/javascript">
 <!--//--><![CDATA[//><!--
 

@@ -1,4 +1,9 @@
 <?php defined('_JEXEC') or die;
+
+/**
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
 require_once(JPATH_BASE . '/components/com_joomlaquiz/assets/qxmlreader.php' );
 require_once(JPATH_BASE . '/components/com_joomlaquiz/assets/domit/xml_domit_lite_include.php' );
 

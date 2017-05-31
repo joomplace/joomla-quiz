@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * PHP HTTP Tools is a library for working with the http protocol
 * php_http_proxy represents a basic http proxy

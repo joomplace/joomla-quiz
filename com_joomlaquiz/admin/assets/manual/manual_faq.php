@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * JoomlaQuiz component for Joomla
 * @version $Id: manual_faq.php 2009-11-16 17:30:15

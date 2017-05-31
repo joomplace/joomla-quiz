@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * DOMIT! is a non-validating, but lightweight and fast DOM parser for PHP
 * @package domit-xmlparser

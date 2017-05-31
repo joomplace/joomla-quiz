@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 
 if (!defined('PHP_TEXT_CACHE_INCLUDE_PATH')) {
 	define('PHP_TEXT_CACHE_INCLUDE_PATH', (dirname(__FILE__) . "/"));

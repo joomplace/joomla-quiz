@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 

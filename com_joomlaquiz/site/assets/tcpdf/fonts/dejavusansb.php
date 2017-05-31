@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 // TCPDF FONT FILE DESCRIPTION
 $type='TrueTypeUnicode';
 $name='DejaVuSans-Bold';

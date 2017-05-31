@@ -1,11 +1,21 @@
-		<?php
-		$jq_num = 99999999;
-		for ($z = 0; $z < count($blank_data); $z++) { 
-			$database = JFactory::getDBO();
-			$query = $query = "SELECT b.* FROM #__quiz_t_text as b WHERE b.c_blank_id = ".$blank_data[$z]->c_id." ORDER BY b.ordering";
-			$database->SetQuery( $query );
-			$ans_row = $database->loadObjectList();
-		?>
+<?php
+/**
+ * Joomlaquiz Deluxe Component for Joomla 3
+ * @package Joomlaquiz Deluxe
+ * @author JoomPlace Team
+ * @Copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
+
+$jq_num = 99999999;
+for ($z = 0; $z < count($blank_data); $z++) {
+    $database = JFactory::getDBO();
+    $query = $query = "SELECT b.* FROM #__quiz_t_text as b WHERE b.c_blank_id = ".$blank_data[$z]->c_id." ORDER BY b.ordering";
+    $database->SetQuery( $query );
+    $ans_row = $database->loadObjectList();
+?>
 		<table cellpadding="10" cellspacing="10" style="margin-top:15px;">
 			<tr>
 				<td><strong><?php echo JText::_('COM_JOOMLAQUIZ_BLANK');?><strong/><span id="blnk_num_<?php echo $z?>"><?php echo $z+1?></span><?php echo JText::_('COM_JOOMLAQUIZ_CODE_FORQUESTION');?> {blank<?php echo $z+1?>}</td>

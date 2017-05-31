@@ -6,6 +6,9 @@
 * @Copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
+
+defined('_JEXEC') or die;
+
 function removeReportsPuzzle($cids){
 	
 	$database = JFactory::getDBO();

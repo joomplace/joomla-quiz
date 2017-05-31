@@ -6,6 +6,9 @@
 * @Copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
+
+defined('_JEXEC') or die('Restricted access');
+
 function removeReportsTruefalse($cids){
 	
 	$database = JFactory::getDBO();
@@ -19,7 +22,6 @@ function removeReportsTruefalse($cids){
 	return true;
 }
 
-?>
     
 		 
 		 

@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 $type='TrueTypeUnicode';
 $name='FreeSansBold';
 $desc=array('Ascent'=>1159,'Descent'=>-355,'CapHeight'=>1159,'Flags'=>32,'FontBBox'=>'[-459 -355 1300 1159]','ItalicAngle'=>0,'StemV'=>120,'MissingWidth'=>600);

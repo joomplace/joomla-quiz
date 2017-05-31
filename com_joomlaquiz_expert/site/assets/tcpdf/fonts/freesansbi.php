@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 $type='TrueTypeUnicode';
 $name='FreeSansBoldOblique';
 $desc=array('Ascent'=>979,'Descent'=>-309,'CapHeight'=>979,'Flags'=>96,'FontBBox'=>'[-379 -309 1283 979]','ItalicAngle'=>-12,'StemV'=>120,'MissingWidth'=>600);

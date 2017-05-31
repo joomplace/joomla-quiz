@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 //============================================================+
 // File name   : tcpdf_static.php
 // Version     : 1.1.3

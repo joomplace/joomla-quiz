@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * @package domit-xmlparser
 * @version 1.01

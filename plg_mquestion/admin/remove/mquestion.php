@@ -6,6 +6,9 @@
 * @Copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
+
+defined('_JEXEC') or die;
+
 function removeResultsMquestion($stu_cids){
 	
 	$database = JFactory::getDBO();
@@ -18,8 +21,3 @@ function removeResultsMquestion($stu_cids){
 	
 	return true;
 }
-
-?>
-    
-		 
-		 

@@ -387,11 +387,16 @@ class JoomlaquizModelPackages extends JModelList
                         }
                     }
                 } else {
-                    $query = "SELECT qpi.* "
-                        . "\n FROM #__quiz_payments AS p"
-                        . "\n INNER JOIN #__quiz_product_info AS qpi ON qpi.quiz_sku = p.pid"
-                        . "\n WHERE p.id = " . $order->order_id
-                        . "\n ORDER BY `qpi`.`name`";
+                    $query = $db->getQuery(true);
+                    $query->select($db->qn('qpi') . '.*')
+                        ->from($db->qn('#__quiz_payments', 'p'))
+                        ->innerJoin($db->qn('#__quiz_product_info', 'qpi')
+                            . ' ON '
+                            . $db->qn('qpi.quiz_sku') . ' = ' . $db->qn('p.pid')
+                        )
+                        ->where($db->qn('p.id') . ' = ' . $db->q($order->id))
+                        ->order($db->qn('qpi.name'))
+                    ;
 
                     $db->SetQuery($query);
                     $products_all = $db->loadObjectList();

@@ -1,4 +1,14 @@
-<?php defined('_JEXEC') or die;
+<?php
+/**
+ * Joomlaquiz Component for Joomla 3
+ * @package Joomlaquiz
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
+
 // TCPDF FONT FILE DESCRIPTION
 $type='TrueTypeUnicode';
 $name='DejaVuSans';

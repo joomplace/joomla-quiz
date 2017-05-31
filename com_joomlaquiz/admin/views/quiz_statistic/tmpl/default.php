@@ -4,7 +4,7 @@
  * @version $Id: install.joomlaquiz.php 2016-05-16 17:30:15
  * @package JLMSCoordinators
  * @author JoomPlace Team
- * @Copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
  * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 // No direct access to this file

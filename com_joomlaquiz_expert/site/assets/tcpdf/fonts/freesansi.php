@@ -1,4 +1,13 @@
-<?php defined('_JEXEC') or die;
+<?php
+/**
+ * Joomlaquiz Component for Joomla 3
+ * @package Joomlaquiz
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
 $type='TrueTypeUnicode';
 $name='FreeSansOblique';
 $desc=array('Ascent'=>1141,'Descent'=>-419,'CapHeight'=>1141,'Flags'=>96,'FontBBox'=>'[-313 -419 1129 1141]','ItalicAngle'=>-12,'StemV'=>70,'MissingWidth'=>600);

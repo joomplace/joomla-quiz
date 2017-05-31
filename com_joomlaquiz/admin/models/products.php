@@ -114,7 +114,9 @@ class JoomlaquizModelProducts extends JModelList
             VmConfig::loadConfig();
             VmConfig::loadJLang('com_virtuemart');
 
-            $query_vm->select("DISTINCT(`qp`.`pid`), `qp`.`id`,  `qp`.`pid_type`, `vm_p_engb`.`product_name`, `vm_p`.`product_sku`, `vm_c`.`category_name`, `quiz_p`.`name`");
+            $query_vm->select("DISTINCT(`qp`.`pid`), `qp`.`id`,  `qp`.`pid_type`");
+            $query_vm->select("CONVERT (`vm_p_engb`.`product_name` USING utf8) COLLATE utf8_unicode_ci AS product_name");
+            $query_vm->select("`vm_p`.`product_sku`, `vm_c`.`category_name`, `quiz_p`.`name`");
             $query_vm->from("`#__quiz_products` AS `qp`");
             $query_vm->join("LEFT", "`#__quiz_product_info` AS `quiz_p` ON quiz_p.quiz_sku = qp.pid");
             $query_vm->join("LEFT", "`#__virtuemart_products` AS `vm_p` ON vm_p.virtuemart_product_id = qp.pid");

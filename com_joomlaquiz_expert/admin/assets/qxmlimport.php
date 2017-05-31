@@ -2,6 +2,11 @@
 require_once(JPATH_BASE . '/components/com_joomlaquiz/assets/qxmlreader.php' );
 require_once(JPATH_BASE . '/components/com_joomlaquiz/assets/domit/xml_domit_lite_include.php' );
 
+
+/**
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL License
+ **/
+
 class qXMLImport
 {
 	var $xmlDoc;		// XML Doc Class (Domit or XMLReader)

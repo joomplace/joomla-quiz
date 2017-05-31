@@ -1,5 +1,10 @@
 <?php defined('_JEXEC') or die;
 
+
+/**
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL License
+ **/
+
 class QuizXMLReader
 {
 

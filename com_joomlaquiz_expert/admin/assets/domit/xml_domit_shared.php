@@ -1,4 +1,9 @@
 <?php defined('_JEXEC') or die;
+
+/**
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL License
+ **/
+
 /**
 * @package domit-xmlparser
 * @version 1.01

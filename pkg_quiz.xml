@@ -32,6 +32,6 @@
     <file type="plugin" id="updater" group="installer">plg_installer_joomplaceupdater.zip</file>
   </files>
   <updateservers>
-    <server type="extension" priority="1" name="Joomplace Extentions Update Site">http://www.joomplace.com/updates/updates.xml</server>
+    <server type="collection" priority="1" name="Joomplace Update Site">http://www.joomplace.com/updates/collections.xml</server>
   </updateservers>
 </extension>

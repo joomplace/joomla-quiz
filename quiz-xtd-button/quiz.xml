@@ -6,8 +6,8 @@
     <authorUrl>www.joomplace.com</authorUrl>
     <copyright>(C) JoomPlace, www.joomplace.com</copyright>
     <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-    <version>3.6.3.000</version>
-    <creationDate>December 2015</creationDate>
+    <version>3.7.0</version>
+    <creationDate>May 2017</creationDate>
     <description>Displays a button to make it possible to insert Joomla Quiz Deluxe into articles.</description>
 
     <languages folder="language/en-GB">

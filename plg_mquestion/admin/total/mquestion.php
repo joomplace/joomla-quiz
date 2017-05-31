@@ -15,7 +15,7 @@ function getTotalScoreMquestion($qid){
 	$qch_ids_type_10 = $database->loadColumn();
 
 	if(count($qch_ids_type_10)) {
-		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id IN (".implode(',', $qch_ids_type_10).") AND c_right = 0";
+		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id IN (".implode(',', $qch_ids_type_10).")";
 		$database->SetQuery( $query );
 		$total_score += $database->LoadResult();
 	}

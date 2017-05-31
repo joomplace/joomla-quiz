@@ -1,11 +1,11 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * JoomlaQuiz component for Joomla
 * @version $Id: installer.joomlaquiz.php 2009-11-16 17:30:15
 * @package JoomlaQuiz
 * @subpackage installer.joomlaquiz.php
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 

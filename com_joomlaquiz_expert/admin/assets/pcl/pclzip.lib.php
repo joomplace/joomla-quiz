@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * @version $Id: pclzip.lib.php 10381 2008-06-01 03:35:53Z pasamio $
 * @package		Joomla

@@ -3,9 +3,12 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
+
+defined('_JEXEC') or die;
+
 function removeReportsMemory($cids){
 	
 	$database = JFactory::getDBO();
@@ -18,8 +21,3 @@ function removeReportsMemory($cids){
 	
 	return true;
 }
-
-?>
-    
-		 
-		 

@@ -1,4 +1,7 @@
-<?php
+<?php defined('_JEXEC') or die;
+/**
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 

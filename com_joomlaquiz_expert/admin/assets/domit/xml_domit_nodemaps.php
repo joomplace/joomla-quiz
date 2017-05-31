@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * DOMIT node maps are structures for storing and accessing collections of DOMIT_Nodes.
 * @package domit-xmlparser

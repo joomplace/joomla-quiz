@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * DOMIT Utilities are a set of utilities for the DOMIT! parser
 * @package domit-xmlparser

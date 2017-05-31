@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * @package domit-xmlparser
 * @copyright (C) 2004 John Heinstein. All rights reserved

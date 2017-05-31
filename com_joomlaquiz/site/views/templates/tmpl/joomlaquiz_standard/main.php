@@ -5,7 +5,7 @@
 * @package JoomlaQuiz
 * @subpackage jp_template.phpJQ_show_results
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 

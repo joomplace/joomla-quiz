@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 //============================================================+
 // File name   : html_entity_decode_php4.php
 // Begin       : 2006-06-22

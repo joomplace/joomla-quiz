@@ -3,6 +3,7 @@
 	<fieldset name="question_details"
 		label="COM_JOOMLAQUIZ_SETTINGS_GLOBAL"
 		description="COM_JOOMLAQUIZ_QUESTION_GLOBAL_DESC"
+		addfieldpath="/administrator/components/com_categories/models/fields"
 		>
 		
 		<field name="asset_id" type="hidden" filter="unset" />
@@ -48,11 +49,11 @@
 
 		<field name="c_quiz_id" type="quizzes" label="COM_JOOMLAQUIZ_QUIZ" labelclass="control-label" required="false"/>
 		<field 
-			name="c_ques_cat" 
-			type="category" 
+			name="c_ques_cat"
+			type="categoryedit"
 			extension="com_joomlaquiz.questions" 
 			label="COM_JOOMLAQUIZ_QUESTION_CATEGORY2" 
-			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUESTIONCAT" 
+			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUESTIONCAT"
 		/>
 		<field name="c_point" type="text" default="" size="30"
 				label="COM_JOOMLAQUIZ_POINTS" labelclass="control-label" required="false">

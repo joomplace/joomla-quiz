@@ -2,6 +2,7 @@
 <form>
 	<fieldset name="quiz_details"
 		label="COM_JOOMLAQUIZ_SETTINGS_GLOBAL"
+		addfieldpath="/administrator/components/com_categories/models/fields"
 		>
 		
 		<field name="asset_id" type="hidden" filter="unset" />
@@ -20,7 +21,7 @@
 		</field>
 		<field 
 			name="c_category_id" 
-			type="category" 
+			type="categoryedit"
 			extension="com_joomlaquiz" 
 			label="COM_JOOMLAQUIZ_CATEGORY" 
 			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUIZCAT" 

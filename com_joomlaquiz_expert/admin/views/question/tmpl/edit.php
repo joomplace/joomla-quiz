@@ -11,6 +11,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
+JHtml::_('formbehavior.chosen', '#jform_c_ques_cat', null, array('disable_search_threshold' => 0 ));
 JHtml::_('formbehavior.chosen', 'select');
 $app = JFactory::getApplication();
 $input = $app->input;
@@ -18,6 +19,11 @@ $model = $this->getModel('question');
 $quizes_list = $this->quizzes;
 $ordering_list = $this->ordering_list;
 ?>
+<style>
+    #jform_c_question_ifr{
+        height: 195px!important;
+    }
+</style>
 <?php echo $this->loadTemplate('menu');?>
 <script type="text/javascript">
     
@@ -131,13 +137,13 @@ $ordering_list = $this->ordering_list;
 					<?php echo $this->form->getInput('c_separator'); ?>
 				</div>
 			</div>
-			<?php 
+			<?php
 			if(count($this->add_form)){
 				foreach($this->add_form as $for => $item){?>
 				<div class="control-group">
-				<?php if ($for=='c_qform') 
+				<?php if ($for=='c_qform')
 			              echo $item['label'];
-				      else {?>					
+				      else {?>
 					<label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $item['label']?></label>
 				<?php }?>
 					<div class="controls">

@@ -90,9 +90,33 @@ class JoomlaquizTableQuiz extends JTable
 				$this->setRules($rules);
 			}
 
-			$this->c_category_id = $_POST['jform']['c_category_id'];
-			$this->c_skin = $_POST['jform']['c_skin'];
-			$this->c_certificate = $_POST['jform']['c_certificate'];
+            JLoader::register('CategoriesHelper', JPATH_ADMINISTRATOR . '/components/com_categories/helpers/categories.php');
+
+            // Cast catid to integer for comparison
+            $catid = (int) $jform['c_category_id'];
+            $cat_extension = 'com_joomlaquiz.questions';
+
+            // Check if New Category exists
+            if ($catid > 0)
+            {
+                $catid = CategoriesHelper::validateCategoryId($jform['c_category_id'], $cat_extension);
+            }
+
+            // Save New Categoryg
+            if ($catid == 0 && JFactory::getUser()->authorise('core.create', 'com_joomlaquiz'))
+            {
+                $table = array();
+                $table['title'] = $jform['c_category_id'];
+                $table['parent_id'] = 1;
+                $table['extension'] = $cat_extension;
+                $table['language'] = $jform['language']?$jform['language']:'*';
+                $table['published'] = 1;
+
+                // Create new category and get catid back
+                $jform['c_category_id'] = CategoriesHelper::createCategory($table);
+            }
+
+            $this->bind($jform);
 			$res = parent::store($updateNulls);			
 			// -- add pool ----//
 
@@ -130,7 +154,7 @@ class JoomlaquizTableQuiz extends JTable
 			}	
 			
 			// -- add feedback options --//
-			if(isset($_POST['jform']['c_feed_option']) && $_POST['jform']['c_feed_option'] )
+			if(isset($_POST['jform']['c_feed_option']) && $_POST['jform']['c_feed_option'])
 			{
 				$query = "DELETE FROM #__quiz_feed_option WHERE quiz_id=".$this->c_id;
 				$database->setQuery( $query );

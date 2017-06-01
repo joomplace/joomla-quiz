@@ -94,7 +94,7 @@ class JoomlaquizTableQuiz extends JTable
 
             // Cast catid to integer for comparison
             $catid = (int) $jform['c_category_id'];
-            $cat_extension = 'com_joomlaquiz.questions';
+            $cat_extension = 'com_joomlaquiz';
 
             // Check if New Category exists
             if ($catid > 0)

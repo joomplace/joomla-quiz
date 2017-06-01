@@ -694,7 +694,8 @@ class JoomlaquizModelPackages extends JModelList
 //                $package->j2s = $order->j2s;
                 $package->product_type = $order->product_type;
 //                $package->package_number = $order->vm ? $orders_status->order_id : $orders_status->order_id + 1000000000;
-                $package->package_number = $orders_status->order_id;
+                $package->package_number = $order->product_type ? $orders_status->order_id : $orders_status->order_id + 1000000000;
+//                $package->package_number = $orders_status->order_id;
                 $package->order_status_code = $orders_status->order_status_code;
                 $package->order_status_name = JText::_($orders_status->order_status_name);
                 $package->order_status_date = date(JText::_('COM_PACKAGE_STATUS_FROM_FORMAT'), strtotime($orders_status->date_added));

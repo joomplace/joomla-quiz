@@ -803,7 +803,7 @@ class JoomlaquizHelper
         $product_data = $rel_check[0];
 
         //Get products stat
-        $query->clear();
+        $query = $db->getQuery(true);
         $query->select($db->qn('qps'). '.*')
             ->from($db->qn('#__quiz_products_stat', 'qps'))
             ->where($db->qn('qps.uid') . ' = ' . $db->q($my->id))

@@ -152,6 +152,14 @@ $ordering_list = $this->ordering_list;
 					<?php echo $this->form->getInput('c_ques_cat'); ?>
 				</div>
 			</div>
+            <div class="control-group">
+                <div class="control-label">
+                    <?php echo $this->form->getLabel('tags'); ?>
+                </div>
+                <div class="controls">
+                    <?php echo $this->form->getInput('tags'); ?>
+                </div>
+            </div>
 			<?php if($this->is_points):?>
 			<div class="control-group">
                 <div class="control-class">

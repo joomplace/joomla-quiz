@@ -26,6 +26,11 @@ class JoomlaquizModelQuestion extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		$result = parent::getItem($pk);
+        if (!empty($result->c_id))
+        {
+            $result->tags = new JHelperTags;
+            $result->tags->getTagIds($result->c_id, $this->getTable()->type);
+        }
 		return $result;
 	}
 		

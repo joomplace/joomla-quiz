@@ -55,6 +55,13 @@
 			label="COM_JOOMLAQUIZ_QUESTION_CATEGORY2" 
 			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUESTIONCAT"
 		/>
+		<field name="tags"
+			   type="tag"
+			   mode="ajax"
+			   label="JTAG"
+			   description="JTAG_DESC"
+			   multiple="true"
+		/>
 		<field name="c_point" type="text" default="" size="30"
 				label="COM_JOOMLAQUIZ_POINTS" labelclass="control-label" required="false">
 		</field>

@@ -147,8 +147,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 		
 		if (count($quiz)) { $quiz = $quiz[0];
 		} else { return $ret_str; }
-
-		$now = JHtml::_('date',time(), 'Y-m-d H:i:s');
 		
 		if(!$this->userHasAccess($quiz, $my)){
 			return $ret_str;
@@ -200,8 +198,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$dispatcher = JEventDispatcher::getInstance();
 				list($cust_params) = $dispatcher->trigger('onQuizCustomFieldsRetrieve');
 				if(!$cust_params) $cust_params = '{}';
-				
-				$quiz_time = JHtml::_('date',time(), 'Y-m-d H:i:s');
+
+                /*
+                 * @imoortant: do not use JDate, as this will cause double time transform
+                 */
+                $quiz_time = date( 'Y-m-d H:i:s');
 				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params)"
 			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', '".$quiz_time."', '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).")";
 				$database->SetQuery($query);

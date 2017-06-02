@@ -3,7 +3,7 @@
  * Joomlaquiz Deluxe Component for Joomla 3
  * @package Joomlaquiz Deluxe
  * @author JoomPlace Team
- * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @Copyright Copyright (C) JoomPlace, www.joomplace.com
  * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -21,17 +21,19 @@ class JoomlaquizTableProducts extends JTable
      *
      * @param object Database connector object
      */
-    function __construct(&$db)
+    public function __construct(&$db)
     {
-        parent::__construct('#__quiz_products', 'pid', $db);
+        parent::__construct('#__quiz_products', 'id', $db);
     }
 
-    function store($updateNulls = false)
+    public function store($updateNulls = false)
     {
-
-        $database = JFactory::getDBO();
-
+        $db = JFactory::getDbo();
         $product_id = ($_POST['product_id']) ? $_POST['product_id'] : '-1';
+
+        //Separate product_id
+        list($product_id, $product_postfix) = explode('_', $product_id);
+
         $quiz_product_id = ($_POST['quiz_product_id']) ? $_POST['quiz_product_id'] : '-1';
         $product_id_int = (string)intval($product_id);
 
@@ -51,21 +53,21 @@ class JoomlaquizTableProducts extends JTable
             $query = "SELECT quiz_sku"
                 . "\n FROM #__quiz_product_info"
                 . "\n WHERE `quiz_sku` = '{$product_id}'";
-            $database->setQuery($query);
-            $quiz_sku = $database->loadResult();
+            $db->setQuery($query);
+            $quiz_sku = $db->loadResult();
 
             if ($quiz_sku) {
                 $query = "UPDATE #__quiz_product_info SET `name` = '{$name}' WHERE `quiz_sku` = '" . $quiz_sku . "' ";
-                $database->setQuery($query);
-                $database->execute();
+                $db->setQuery($query);
+                $db->execute();
             }
         }
 
         if (($product_id && $product_id_int != $product_id && !$quiz_sku) || ($product_id == '-1' && $name != '')) {
             $quiz_sku = strtotime(JFactory::getDate());
             $query = "INSERT INTO #__quiz_product_info SET `quiz_sku` = '" . $quiz_sku . "', `name` = '{$name}'";
-            $database->setQuery($query);
-            $database->execute();
+            $db->setQuery($query);
+            $db->execute();
 
             $_REQUEST['name'] = $name;
         }
@@ -81,6 +83,7 @@ class JoomlaquizTableProducts extends JTable
 
             foreach ($ids as $id) {
                 $values = array();
+                $values[] = $product_postfix;
                 $values[] = $product_id;
                 $values[] = $type;
                 $values[] = $id;
@@ -113,11 +116,19 @@ class JoomlaquizTableProducts extends JTable
                 $attempts = ($_POST[$type . '_attempts_' . $id]) ? intval($_POST[$type . '_attempts_' . $id]) : 0;
                 $values[] = $attempts;
 
-                $query = "SELECT id"
-                    . "\n FROM #__quiz_products"
-                    . "\n WHERE `pid` = '{$product_id}' AND `type` = '$type' AND `rel_id` = $id";
-                $database->setQuery($query);
-                $update_id = $database->loadResult();
+                $query = $db->getQuery(true);
+                $query->clear();
+                $query->select($db->quoteName('qp.id', 'id'));
+                $query->from($db->quoteName('#__quiz_products', 'qp'));
+                $query->where($db->quoteName('qp.pid') . ' = ' . $db->quote($product_id))
+                    ->where($db->quoteName('qp.type') . ' = ' . $db->quote($type))
+                    ->where($db->quoteName('qp.rel_id') . ' = ' . $db->quote($id))
+                    ->where($db->quoteName('qp.pid_type') . ' = ' . $db->quote($product_postfix));
+
+
+                $db->setQuery($query);
+                $update_id = $db->loadResult();
+
                 if ($update_id) {
                     $query = 'UPDATE #__quiz_products SET'
                         . "\n `xdays` = $xdays,"
@@ -126,9 +137,9 @@ class JoomlaquizTableProducts extends JTable
                         . "\n `attempts` = '$attempts', "
                         . "   `pid` = '{$product_id}' "
                         . "\n WHERE `id` = '$update_id'";
-                    $database->setQuery($query);
-                    if (!$database->execute()) {
-                        echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+                    $db->setQuery($query);
+                    if (!$db->execute()) {
+                        echo "<script> alert('" . $db->getErrorMsg() . "'); window.history.go(-1); </script>\n";
                         continue;
                     }
                     $not_for_delete[] = $update_id;
@@ -143,28 +154,45 @@ class JoomlaquizTableProducts extends JTable
             exit();
         }
 
+        //Удаление продукта если такой уже существует
         $query = 'DELETE FROM #__quiz_products'
             . "\n WHERE `pid` = '{$product_id}'"
+            . "\n AND `pid_type` = '{$product_postfix}'"
             . (count($not_for_delete) ? ' AND id NOT IN (' . implode(',', $not_for_delete) . ')' : '');
-        $database->setQuery($query);
-        if (!$database->query()) {
-            echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+        $db->setQuery($query);
+        if (!$db->query()) {
+            echo "<script> alert('" . $db->getErrorMsg() . "'); window.history.go(-1); </script>\n";
             exit();
         }
 
+        //Создание нового проудука
         if (count($insert)) {
+
             $query = 'INSERT INTO #__quiz_products'
-                . "\n (`pid`, `type`, `rel_id`, `xdays`, `period_start`, `period_end`, `attempts`)"
+                . "\n (`pid_type`,`pid`, `type`, `rel_id`, `xdays`, `period_start`, `period_end`, `attempts`)"
                 . "\n VALUES"
                 . "\n " . implode(", \n", $insert);
-            $database->setQuery($query);
-            if (!$database->execute()) {
-                echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+            $db->setQuery($query);
+            if (!$db->execute()) {
+                echo "<script> alert('" . $db->getErrorMsg() . "'); window.history.go(-1); </script>\n";
                 exit();
             }
         }
 
-        $_REQUEST['pid'] = $product_id;
+        //Get first id for the product
+        $query = $db->getQuery(true);
+        $query->clear();
+        $query->select($db->quoteName('qp.id', 'id'))
+            ->from($db->quoteName('#__quiz_products', 'qp'))
+            ->where($db->quoteName('qp.pid') . ' = ' . $db->quote($product_id))
+            ->where($db->quoteName('qp.pid_type') . ' = ' . $db->quote($product_postfix))
+            ->order($db->qn('qp.id') . ' ASC')
+        ;
+        $db->setQuery($query);
+        $first_id = $db->loadResult();
+
+        //For redirect after save
+        $_REQUEST['id'] = $first_id;
 
         return true;
     }

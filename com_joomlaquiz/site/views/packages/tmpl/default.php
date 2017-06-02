@@ -7,7 +7,7 @@
  * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 defined('_JEXEC') or die('Restricted Access');
-
+ 
 $tag = JFactory::getLanguage()->getTag();
 $lang = JFactory::getLanguage();
 $lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
@@ -85,7 +85,10 @@ if (isset($this->packages->error) && $this->packages->error) {
             </div>
             <div class="jq_package_body_container">
                 <?php
-                if (strtoupper($package->order_status_code) != 'C' && strtoupper($package->order_status_code) != 'U') {
+                if (strtoupper($package->order_status_code) != 'C'
+                    && strtoupper($package->order_status_code) != 'U'
+                    && strtoupper($package->order_status_name) != 'J2STORE_CONFIRMED'
+                    && $package->order_status_name != 'Confirmed') {
                     echo "</div>";
                     continue;
                 }
@@ -96,8 +99,8 @@ if (isset($this->packages->error) && $this->packages->error) {
             </div> <?php
         continue;
         }
-
         if (count($package->bought_quizzes)) { ?>
+
             <br/>
             <strong style="text-transform:uppercase"><?php echo JText::_('COM_JQ_QUIZZES') ?></strong>
             <br/>
@@ -110,7 +113,8 @@ if (isset($this->packages->error) && $this->packages->error) {
                         <?php if ($b_quizz->expired) {
                             echo $b_quizz->quiz->c_title;
                         } else { ?>
-                            <a href="<?php echo JRoute::_("index.php?option=com_joomlaquiz&view=quiz&vm=" . $package->vm . "&package_id=" . $package->package_number . "&rel_id=" . $b_quizz->rel_id . JoomlaquizHelper::JQ_GetItemId()); ?>"><?php echo $b_quizz->quiz->c_title; ?></a>
+                            <!--                            <a href="--><?php //echo JRoute::_("index.php?option=com_joomlaquiz&view=quiz&vm=" . $package->vm . "&package_id=" . $package->package_number . "&rel_id=" . $b_quizz->rel_id . JoomlaquizHelper::JQ_GetItemId()); ?><!--">--><?php //echo $b_quizz->quiz->c_title; ?><!--</a>-->
+                            <a href="<?php echo JRoute::_("index.php?option=com_joomlaquiz&view=quiz&product_type=" . $package->product_type . "&package_id=" . $package->package_number . "&rel_id=" . $b_quizz->rel_id . JoomlaquizHelper::JQ_GetItemId()); ?>"><?php echo $b_quizz->quiz->c_title; ?></a>
                         <?php } ?>
                     </strong><br/>
 
@@ -139,7 +143,8 @@ if (isset($this->packages->error) && $this->packages->error) {
                             <?php if ($lpath->expired) {
                                 echo $lpath->title;
                             } else { ?>
-                                <a href="<?php echo JRoute::_("index.php?option=com_joomlaquiz&view=lpath&vm=" . $package->vm . "&package_id=" . $package->package_number . "&rel_id=" . $lpath->id . JoomlaquizHelper::JQ_GetItemId()); ?>"><?php echo $lpath->title; ?></a>
+                                <!--                                <a href="--><?php //echo JRoute::_("index.php?option=com_joomlaquiz&view=lpath&vm=" . $package->vm . "&package_id=" . $package->package_number . "&rel_id=" . $lpath->id . JoomlaquizHelper::JQ_GetItemId()); ?><!--">--><?php //echo $lpath->title; ?><!--</a>-->
+                                <a href="<?php echo JRoute::_("index.php?option=com_joomlaquiz&view=lpath&product_type=" . $package->product_type . "&package_id=" . $package->package_number . "&rel_id=" . $lpath->id . JoomlaquizHelper::JQ_GetItemId()); ?>"><?php echo $lpath->title; ?></a>
                             <?php } ?>
                         </strong><br/>
 
@@ -155,6 +160,7 @@ if (isset($this->packages->error) && $this->packages->error) {
             ?></div><?php
         }
         ?>
+
 
     </div>
 

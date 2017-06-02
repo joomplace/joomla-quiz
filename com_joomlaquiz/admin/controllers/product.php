@@ -20,18 +20,17 @@ class JoomlaquizControllerProduct extends JControllerForm
         // Check specific edit permission then general edit permission.
         return JFactory::getUser()->authorise('core.edit', 'com_joomlaquiz');
     }
+	
+	public function save(){
+		parent::save();
+		$task = JFactory::getApplication()->input->getCmd('task');
+		$id = JFactory::getApplication()->input->getCmd('id');
 
-    public function save()
-    {
-        parent::save();
-        $task = JFactory::getApplication()->input->getCmd('task');
-        $pid = JFactory::getApplication()->input->getCmd('pid');
-
-        if ($task == 'apply') {
-            $this->setRedirect('index.php?option=com_joomlaquiz&view=product&layout=edit&pid=' . $pid);
-        } elseif ($task == 'save') {
-            $this->setRedirect('index.php?option=com_joomlaquiz&view=products');
-        }
-    }
+		if($task == 'apply'){
+			$this->setRedirect('index.php?option=com_joomlaquiz&view=product&layout=edit&id='.$id);
+		} elseif($task == 'save') {
+			$this->setRedirect('index.php?option=com_joomlaquiz&view=products');
+		}
+	}
 
 }

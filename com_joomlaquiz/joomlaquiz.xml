@@ -74,4 +74,7 @@
       <language tag="en-GB">en-GB.com_joomlaquiz.sys.ini</language>
     </languages>
   </administration>
+  <updateservers>
+    <server type="extension" priority="1" name="Joomlaquiz Update Site">http://www.joomplace.com/updates/updates.xml</server>
+  </updateservers>
 </extension>

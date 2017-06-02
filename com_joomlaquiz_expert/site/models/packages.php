@@ -9,20 +9,18 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modellist');
-
 /**
  * Packages Model.
  *
  */
 class JoomlaquizModelPackages extends JModelList
-{
-    public function getPackages()
-    {
+{	
+	public function getPackages(){
+		
+		$lang = JFactory::getLanguage()->getTag();
+		$lang = strtolower(str_replace('-', '_', $lang));
 
-        $lang = JFactory::getLanguage()->getTag();
-        $lang = strtolower(str_replace('-', '_', $lang));
-
-        $database = JFactory::getDBO();
+        $db = JFactory::getDBO();
         $my = JFactory::getUser();
 
         $jq_language = array();
@@ -34,9 +32,13 @@ class JoomlaquizModelPackages extends JModelList
             return $packages[0];
         }
 
-        $query = "SELECT * FROM `#__quiz_t_quiz` WHERE published = 1";
-        $database->SetQuery($query);
-        $all_quizzez = $database->loadObjectList('c_id');
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from($db->quoteName('#__quiz_t_quiz'))
+            ->where($db->quoteName('published') . ' =1');
+//		$query = "SELECT * FROM `#__quiz_t_quiz` WHERE published = 1";
+        $db->SetQuery($query);
+        $all_quizzez = $db->loadObjectList('c_id');
 
         $orders = array();
 
@@ -45,22 +47,97 @@ class JoomlaquizModelPackages extends JModelList
         else
             $no_virtuemart = true;
 
+        if (file_exists(JPATH_SITE . '/administrator/components/com_j2store/config.xml')) {
+            $no_j2store = false;
+        } else {
+            $no_j2store = true;
+        }
+
+        if (file_exists(JPATH_SITE . '/administrator/components/com_eventbooking/config.xml')) {
+            $no_event_booking = false;
+        } else {
+            $no_event_booking = true;
+        }
+
+        //Get orders for j2store for current user
+        if (!$no_j2store) {
+            $j2s_orders = array();
+            $query->clear();
+            $query->select($db->quoteName(
+                array(
+                    'jo.j2store_order_id',
+                    'jo.user_id'
+                ),
+                array(
+                    'order_id',
+                    'user_id'
+                )
+            ))
+                ->select('\'j2s\' AS `product_type`')
+                ->from($db->quoteName('#__j2store_orders', 'jo'))
+                ->where($db->quoteName('jo.user_id') . ' = ' . $db->quote($my->id))
+                ->order($db->quoteName('jo.created_on') . ' DESC');
+            $db->setQuery($query);
+            $j2s_orders = $db->loadObjectList();
+
+        //Add j2store order if available
+            if (is_array($j2s_orders) && count($j2s_orders)) {
+                $orders = array_merge($orders, $j2s_orders);
+            }
+        }
+
+        //Get orders for Event Booking for current user
+        if (!$no_event_booking) {
+            $event_booking_orders = array();
+            $query->clear();
+            $query->select($db->quoteName(
+                array(
+                    'ebr.id',
+                    'ebr.user_id'
+                ),
+                array(
+                    'order_id',
+                    'user_id'
+                )
+            ))
+                ->select('\'eb\' AS `product_type`')
+                ->from($db->quoteName('#__eb_registrants', 'ebr'))
+                ->where($db->quoteName('ebr.user_id') . ' = ' . $db->quote($my->id))
+                ->where($db->quoteName('ebr.published') . ' = 1')
+                ->order($db->quoteName('ebr.payment_date') . ' DESC');
+            $db->setQuery($query);
+            $event_booking_orders = $db->loadObjectList();
+
+        //Add event booking orders if available
+            if (is_array($event_booking_orders) && count($event_booking_orders)) {
+                $orders = array_merge($orders, $event_booking_orders);
+            }
+        }
+
+        //Get orders for Virtue Mart for current user
         if (!$no_virtuemart) {
-            $query = "SELECT vm_orders.virtuemart_order_id as order_id, vm_orders.virtuemart_user_id as user_id, vm_orders.virtuemart_vendor_id as vendor_id, '1' AS `vm` "
+            $vm_orders = array();
+            $query = "SELECT vm_orders.virtuemart_order_id as order_id, vm_orders.virtuemart_user_id as user_id, vm_orders.virtuemart_vendor_id as vendor_id, 'vm' AS `product_type`"
                 . "\n FROM `#__virtuemart_orders` AS vm_orders"
                 . "\n WHERE vm_orders.virtuemart_user_id = '{$my->id}'"
                 . "\n ORDER BY vm_orders.created_on DESC";
 
-            $database->SetQuery($query);
-            $orders = $database->loadObjectList();
+            $db->SetQuery($query);
+            $vm_orders = $db->loadObjectList();
+
+            //Add Virtue Mart orders if available
+            if (is_array($vm_orders) && count($vm_orders)) {
+                $orders = array_merge($orders, $vm_orders);
+            }
         }
 
-        $query = "SELECT `payments`.*, '0' AS `vm` "
+        //Get payments for orders through JoomQuiz
+        $query = "SELECT `payments`.*, 'jq' AS `product_type`"
             . "\n FROM `#__quiz_payments` AS `payments` "
             . "\n WHERE `payments`.`user_id` = '{$my->id}'"
             . "\n ORDER BY `payments`.`date` DESC";
-        $database->SetQuery($query);
-        $payments = $database->loadObjectList();
+        $db->SetQuery($query);
+        $payments = $db->loadObjectList();
 
         if (is_array($payments) && count($payments)) {
             if (is_array($orders))
@@ -68,17 +145,67 @@ class JoomlaquizModelPackages extends JModelList
             else
                 $orders = $payments;
         }
+
         $packages = array();
         if (is_array($orders) && count($orders))
             foreach ($orders as $i => $order) {
                 $package = new stdClass;
 
-                if ($order->vm) {
+                if ($order->product_type == 'vm') {
                     $query = "SELECT vm_order_history.*, vm_order_history.created_on as date_added, vm_order_history.virtuemart_order_id as order_id, vm_order_status.virtuemart_orderstate_id as order_status_id, vm_order_status.order_status_name"
                         . "\n FROM `#__virtuemart_order_histories` AS vm_order_history"
                         . "\n INNER JOIN `#__virtuemart_orderstates` AS vm_order_status ON (vm_order_status.order_status_code = vm_order_history.order_status_code AND vm_order_status.virtuemart_vendor_id = " . $order->vendor_id . ')'
                         . "\n WHERE vm_order_history.virtuemart_order_id = " . $order->order_id
                         . "\n ORDER BY vm_order_history.virtuemart_order_history_id DESC, vm_order_history.created_on DESC";
+
+                } elseif ($order->product_type == 'j2s') {
+                    $query = $db->getQuery(true);
+                    $query->select($db->quoteName(
+                        array(
+                            'jo.j2store_order_id',
+                            'jo.created_on',
+                            'jo.created_by',
+                            'jo.modified_on',
+                            'jo.modified_by',
+                            'jo.order_state_id',
+                            'js.orderstatus_name'
+                        ),
+                        array(
+                            'order_id',
+                            'date_added',
+                            'created_by',
+                            'modified_on',
+                            'modified_by',
+                            'order_status_code',
+                            'order_status_name'
+                        )
+                    ))
+                        ->from($db->quoteName('#__j2store_orders', 'jo'))
+                        ->innerJoin($db->quoteName('#__j2store_orderstatuses', 'js')
+                            . ' ON '
+                            . $db->quoteName('js.j2store_orderstatus_id') . ' = ' . $db->quoteName('jo.order_state_id')
+                        )
+                        ->where($db->quoteName('jo.j2store_order_id') . ' = ' . $db->quote($order->order_id))
+                        ->order($db->quoteName('jo.created_on') . ' DESC');
+                } else if($order->product_type == 'eb'){
+                    $query = $db->getQuery(true);
+                    $query->select($db->quoteName(
+                        array(
+                            'ebr.id',
+                            'ebr.register_date',
+                            'ebr.published',
+                        ),
+                        array(
+                            'order_id',
+                            'date_added',
+                            'order_status_code',
+                        )
+                    ))
+                        ->select("IF (`ebr`.`published`, 'Confirmed', 'No comfirmed') AS `order_status_name`")
+                        ->from($db->quoteName('#__eb_registrants', 'ebr'))
+                        ->where($db->quoteName('ebr.id') . ' = ' . $db->quote($order->order_id))
+                        ->order($db->quoteName('ebr.register_date') . ' DESC');
+                    $db->setQuery($query);
                 } else {
                     $query = "SELECT p.id, p.id AS `order_id`, p.confirmed_time AS `date_added`, '' AS `order_status_id`, (IF(`status` = 'Confirmed', 'C', '')) AS `order_status_code`, `status` AS `order_status_name` "
                         . "\n FROM #__quiz_payments AS p"
@@ -86,23 +213,83 @@ class JoomlaquizModelPackages extends JModelList
                         . "\n ORDER BY p.confirmed_time";
                 }
 
-                $database->SetQuery($query);
-                $orders_status = $database->loadObject();
+                $db->SetQuery($query);
+                $orders_status = $db->loadObject();
 
-                if ($order->vm) {
+                if ($order->product_type == 'vm') {
                     JoomlaquizHelper::JQ_GetJoomFish($orders_status->order_status_name, 'vm_order_status', 'order_status_name', $orders_status->order_status_id);
                 } else {
                     $orders_status->order_status_name = isset($jq_language[$orders_status->order_status_name]) ? $jq_language[$orders_status->order_status_name] : $orders_status->order_status_name;
                 }
 
-                if ($order->vm) {
+                if ($order->product_type == 'vm') {
                     $query = "SELECT qp.*"
                         . "\n FROM #__virtuemart_order_items AS vm_oi"
-                        . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
+                        . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id AND qp.pid_type = 'vm'"
                         . "\n LEFT JOIN #__quiz_t_quiz AS q ON qp.type = 'q' AND q.c_id = qp.rel_id "
                         . "\n LEFT JOIN #__quiz_lpath AS lp ON qp.type = 'l' AND lp.id = qp.rel_id"
                         . "\n WHERE vm_oi.virtuemart_order_id = " . $order->order_id
                         . "\n ORDER BY q.c_title, lp.title";
+                } elseif ($order->product_type == 'j2s') {
+                    //Get quiz product for j2store
+                    $query->clear();
+                    $query->select($db->quoteName('qp') . '.*')
+                        ->from($db->quoteName('#__quiz_products', 'qp'))
+                        ->leftJoin($db->quoteName('#__j2store_orderitems', 'ji')
+                            . 'ON'
+                            . $db->quoteName('ji.product_id') . ' = ' . $db->quoteName('qp.pid')
+                            . ' AND '
+                            . $db->quoteName('qp.pid_type') . ' = \'j2s\''
+                        )
+                        ->leftJoin($db->quoteName('#__j2store_orders', 'jo')
+                            . ' ON '
+                            . $db->quoteName('jo.cart_id') . ' = ' . $db->quoteName('ji.cart_id')
+                        )
+                        ->leftJoin($db->quoteName('#__quiz_t_quiz', 'q')
+                            . ' ON '
+                            . $db->quoteName('q.c_id') . ' = ' . $db->quoteName('qp.rel_id')
+                            . ' AND '
+                            . $db->quoteName('qp.type') . ' = \'q\''
+                        )
+                        ->leftJoin($db->quoteName('#__quiz_lpath', 'lp')
+                            . ' ON '
+                            . $db->quoteName('lp.id') . ' = ' . $db->quoteName('qp.rel_id')
+                            . ' AND '
+                            . $db->quoteName('qp.type') . ' = \'l\''
+                        )
+                        ->where($db->quoteName('jo.j2store_order_id') . ' = ' . $db->quote($order->order_id))
+                        ->order($db->quoteName(array(
+                            'q.c_title',
+                            'lp.title'
+                        )));
+                } elseif($order->product_type == 'eb'){
+                    //Get quiz product (quizes and learning passes) for Event Booking
+                    $query->clear();
+                    $query->select($db->quoteName('qp') . '.*')
+                        ->from($db->quoteName('#__quiz_products', 'qp'))
+                        ->leftJoin($db->quoteName('#__eb_registrants', 'ebr')
+                            . 'ON'
+                            . $db->quoteName('ebr.event_id') . ' = ' . $db->quoteName('qp.pid')
+                            . ' AND '
+                            . $db->quoteName('qp.pid_type') . ' = \'eb\''
+                        )
+                        ->leftJoin($db->quoteName('#__quiz_t_quiz', 'q')
+                            . ' ON '
+                            . $db->quoteName('q.c_id') . ' = ' . $db->quoteName('qp.rel_id')
+                            . ' AND '
+                            . $db->quoteName('qp.type') . ' = \'q\''
+                        )
+                        ->leftJoin($db->quoteName('#__quiz_lpath', 'lp')
+                            . ' ON '
+                            . $db->quoteName('lp.id') . ' = ' . $db->quoteName('qp.rel_id')
+                            . ' AND '
+                            . $db->quoteName('qp.type') . ' = \'l\''
+                        )
+                        ->where($db->quoteName('ebr.id') . ' = ' . $db->quote($order->order_id))
+                        ->order($db->quoteName(array(
+                            'q.c_title',
+                            'lp.title'
+                        )));
                 } else {
                     $query = "SELECT qp.*"
                         . "\n FROM #__quiz_payments AS p"
@@ -112,8 +299,8 @@ class JoomlaquizModelPackages extends JModelList
                         . "\n WHERE p.id = " . $order->id
                         . "\n ORDER BY q.c_title, lp.title";
                 }
-                $database->SetQuery($query);
-                $quiz_products = $database->loadObjectList();
+                $db->SetQuery($query);
+                $quiz_products = $db->loadObjectList();
 
                 $rel_quizzes = $products = array();
 
@@ -126,7 +313,7 @@ class JoomlaquizModelPackages extends JModelList
                     continue;
                 }
 
-                if ($order->vm) {
+                if ($order->product_type == 'vm') {
                     $query = "SELECT vm_p.*, vm_p_engb.product_name, vm_p.virtuemart_product_id as product_id"
                         . "\n FROM #__virtuemart_order_items AS vm_oi"
                         . "\n INNER JOIN #__virtuemart_products AS vm_p ON vm_p.virtuemart_product_id = vm_oi.virtuemart_product_id"
@@ -134,22 +321,83 @@ class JoomlaquizModelPackages extends JModelList
                         . "\n WHERE vm_oi.virtuemart_order_id = " . $order->order_id
                         . "\n ORDER BY vm_p_engb.product_name";
 
-                    $database->SetQuery($query);
-                    $products_all = $database->loadObjectList();
+
+                    $db->SetQuery($query);
+                    $products_all = $db->loadObjectList();
 
                     if (is_array($products_all) && count($products_all))
                         foreach ($products_all as $product) {
                             JoomlaquizHelper::JQ_GetJoomFish($product->product_name, 'vm_product', 'product_name', $product->product_id);
                             $products[] = $product->product_name;
                         }
+
+                } elseif ($order->product_type == 'j2s') {
+                    $query->clear();
+                    $query->select($db->quoteName(
+                        array(
+                            'ji.orderitem_name',
+                            'ji.product_id'
+                        ),
+                        array(
+                            'product_name',
+                            'product_id'
+                        )
+                    ))
+                        ->from($db->quoteName('#__j2store_orderitems', 'ji'))
+                        ->leftJoin($db->quoteName('#__j2store_orders', 'jo')
+                            . ' ON '
+                            . $db->quoteName('jo.cart_id') . ' = ' . $db->quoteName('ji.cart_id')
+                        )
+                        ->where($db->quoteName('jo.j2store_order_id') . ' = ' . $db->quote($order->order_id));
+                    $db->SetQuery($query);
+                    $products_all = $db->loadObjectList();
+
+                    if (is_array($products_all) && count($products_all)) {
+                        foreach ($products_all as $product) {
+                            $products[] = $product->product_name;
+                        }
+                    }
+                } elseif($order->product_type == 'eb'){
+                    //Get package name and package id
+                    $query->clear();
+                    $query->select($db->quoteName(
+                        array(
+                            'ebe.title',
+                            'ebe.id'
+                        ),
+                        array(
+                            'product_name',
+                            'product_id'
+                        )
+                    ))
+                        ->from($db->quoteName('#__eb_events', 'ebe'))
+                        ->leftJoin($db->quoteName('#__eb_registrants', 'ebr')
+                            . ' ON '
+                            . $db->quoteName('ebr.event_id') . ' = ' . $db->quoteName('ebe.id')
+                        )
+                        ->where($db->quoteName('ebr.id') . ' = ' . $db->quote($order->order_id));
+                    $db->SetQuery($query);
+                    $products_all = $db->loadObjectList();
+
+                    if (is_array($products_all) && count($products_all)) {
+                        foreach ($products_all as $product) {
+                            $products[] = $product->product_name;
+                        }
+                    }
                 } else {
-                    $query = "SELECT qpi.* "
-                        . "\n FROM #__quiz_payments AS p"
-                        . "\n INNER JOIN #__quiz_product_info AS qpi ON qpi.quiz_sku = p.pid"
-                        . "\n WHERE p.id = " . $order->id
-                        . "\n ORDER BY qpi.name";
-                    $database->SetQuery($query);
-                    $products_all = $database->loadObjectList();
+                    $query = $db->getQuery(true);
+                    $query->select($db->qn('qpi') . '.*')
+                        ->from($db->qn('#__quiz_payments', 'p'))
+                        ->innerJoin($db->qn('#__quiz_product_info', 'qpi')
+                            . ' ON '
+                            . $db->qn('qpi.quiz_sku') . ' = ' . $db->qn('p.pid')
+                        )
+                        ->where($db->qn('p.id') . ' = ' . $db->q($order->id))
+                        ->order($db->qn('qpi.name'))
+                    ;
+
+                    $db->SetQuery($query);
+                    $products_all = $db->loadObjectList();
 
                     if (is_array($products_all) && count($products_all))
                         foreach ($products_all as $product) {
@@ -159,25 +407,39 @@ class JoomlaquizModelPackages extends JModelList
                 }
 
                 $products_stat = array();
-                if ($order->vm) {
+                if ($order->product_type == 'vm') {
                     $query = "SELECT *"
                         . "\n FROM #__quiz_products_stat"
                         . "\n WHERE uid = $my->id AND oid = " . $order->order_id;
+                } elseif ($order->product_type == 'j2s') {
+                    $query->clear();
+                    $query->select('*')
+                        ->from($db->quoteName('#__quiz_products_stat'))
+                        ->where($db->quoteName('uid') . ' = ' . $my->id)
+                        ->where($db->quoteName('oid') . ' = ' . $order->order_id);
+                } elseif($order->product_type == 'eb'){
+                    $query->clear();
+                    $query->select('*')
+                        ->from($db->quoteName('#__quiz_products_stat'))
+                        ->where($db->quoteName('uid') . ' = ' . $my->id)
+                        ->where($db->quoteName('oid') . ' = ' . $order->order_id);
                 } else {
                     $query = "SELECT *"
                         . "\n FROM #__quiz_products_stat"
                         . "\n WHERE uid = '{$my->id}' AND oid = '" . ($order->id + 1000000000) . "'";
                 }
-                $database->SetQuery($query);
-                $products_stat = $database->loadObjectList('qp_id');
+                $db->SetQuery($query);
+                $products_stat = $db->loadObjectList('qp_id');
 
                 $ts = strtotime(JFactory::getDate());
 
                 $bought_quizzes = array();
                 $bq_count = $bq_counter_exiped = 0;
 
+                //Проверяем наличие квизов в продукте
                 if (array_key_exists('q', $rel_quizzes) && count($rel_quizzes['q'])) {
                     $bq_count = count($rel_quizzes['q']);
+
 
                     foreach ($rel_quizzes['q'] as $ii => $data) {
                         if (empty($all_quizzez[$data->rel_id])) {
@@ -258,8 +520,8 @@ class JoomlaquizModelPackages extends JModelList
                                         . "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = " . $order->order_id . " AND qp.id = " . $data->id . " AND vm_o.order_status IN ('C')";
                                 }
 
-                                $database->SetQuery($query);
-                                $product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
+                                $db->SetQuery($query);
+                                $product_quantity = ($db->loadResult()) ? (int)$db->loadResult() : 1;
                             }
 
                             $attempts = (!empty($products_stat) && array_key_exists($data->id, $products_stat) && $products_stat[$data->id]->attempts ? $products_stat[$data->id]->attempts : 0);
@@ -281,6 +543,7 @@ class JoomlaquizModelPackages extends JModelList
                         }
 
 
+
                         $quiz = $all_quizzez[$data->rel_id];
                         JoomlaquizHelper::JQ_GetJoomFish($quiz->c_title, 'quiz_t_quiz', 'c_title', $quiz->c_id);
                         JoomlaquizHelper::JQ_GetJoomFish($quiz->c_description, 'quiz_t_quiz', 'c_description', $quiz->c_id);
@@ -299,12 +562,14 @@ class JoomlaquizModelPackages extends JModelList
                         if ($data->expired_a)
                             $data->suffix = JText::_('COM_QUIZ_NOT_ATTEMPTS2');
 
+
                         $bought_quizze = new stdClass;
                         $bought_quizze->quiz = $quiz;
                         $bought_quizze->rel_id = $data->id;
                         $bought_quizze->suffix = $data->suffix;
                         $bought_quizze->expired = $data->expired;
                         $bought_quizzes[] = $bought_quizze;
+
                     }
                 }
 
@@ -312,8 +577,8 @@ class JoomlaquizModelPackages extends JModelList
                 $l_count = $l_counter_exiped = 0;
                 if (array_key_exists('l', $rel_quizzes) && count($rel_quizzes['l'])) {
                     $query = 'SELECT * FROM #__quiz_lpath WHERE published = 1';
-                    $database->setQuery($query);
-                    $lpath = $database->loadObjectList('id');
+                    $db->setQuery($query);
+                    $lpath = $db->loadObjectList('id');
                     if (!empty($lpath)) {
                         $l_count = count($rel_quizzes['l']);
 
@@ -398,8 +663,8 @@ class JoomlaquizModelPackages extends JModelList
                                             . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
                                             . "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = " . $order->order_id . " AND qp.id = " . $data->id . " AND vm_o.order_status IN ('C')";
 
-                                        $database->SetQuery($query);
-                                        $product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
+                                        $db->SetQuery($query);
+                                        $product_quantity = ($db->loadResult()) ? (int)$db->loadResult() : 1;
                                     }
                                     $data->suffix .= ($data->suffix ? ' ' : '') . sprintf(JText::_('COM_LPATH_ATTEMPTS'), $data->attempts * $product_quantity);
 
@@ -422,8 +687,13 @@ class JoomlaquizModelPackages extends JModelList
                     continue;
                 }
 
-                $package->vm = $order->vm;
-                $package->package_number = $order->vm ? $orders_status->order_id : $orders_status->order_id + 1000000000;
+
+//                $package->vm = $order->vm;
+//                $package->j2s = $order->j2s;
+                $package->product_type = $order->product_type;
+//                $package->package_number = $order->vm ? $orders_status->order_id : $orders_status->order_id + 1000000000;
+                $package->package_number = $order->product_type != 'jq' ? $orders_status->order_id : $orders_status->order_id + 1000000000;
+//                $package->package_number = $orders_status->order_id;
                 $package->order_status_code = $orders_status->order_status_code;
                 $package->order_status_name = JText::_($orders_status->order_status_name);
                 $package->order_status_date = date(JText::_('COM_PACKAGE_STATUS_FROM_FORMAT'), strtotime($orders_status->date_added));

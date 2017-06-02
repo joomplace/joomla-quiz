@@ -33,10 +33,11 @@ class JoomlaquizTableQuiz extends JTable
 			
 			if ((int)$_POST['jform']['c_id'] < 1)
 			{
-				$query = "SELECT COUNT(*) "
-				. "\n FROM #__quiz_t_quiz"
-				. "\n WHERE  c_title = '".$_POST['jform']['c_title']."'";
-				
+                $query = $db->getQuery(true);
+                $query->select($db->qn('qtq') . '.*')
+                    ->from($db->qn('#__quiz_t_quiz', 'qtq'))
+                    ->where($db->qn('qtq.c_title') . ' = ' . $db->q($_POST['jform']['c_title']))
+                ;
 				$db->setQuery( $query );
 				$rows_dubl = $db->loadResult();
 

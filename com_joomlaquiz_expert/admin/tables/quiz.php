@@ -29,7 +29,7 @@ class JoomlaquizTableQuiz extends JTable
 
 		function store($updateNulls = false){
 			
-			$database = JFactory::getDBO();
+			$db = JFactory::getDBO();
 			
 			if ((int)$_POST['jform']['c_id'] < 1)
 			{
@@ -37,8 +37,8 @@ class JoomlaquizTableQuiz extends JTable
 				. "\n FROM #__quiz_t_quiz"
 				. "\n WHERE  c_title = '".$_POST['jform']['c_title']."'";
 				
-				$database->setQuery( $query );
-				$rows_dubl = $database->loadResult();
+				$db->setQuery( $query );
+				$rows_dubl = $db->loadResult();
 
 				if($rows_dubl>0)
 				{
@@ -121,17 +121,17 @@ class JoomlaquizTableQuiz extends JTable
 			// -- add pool ----//
 
 			$query = "DELETE FROM #__quiz_pool WHERE q_id=".$this->c_id;
-			$database->setQuery( $query );
-			if (!$database->execute()) {
-				echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			$db->setQuery( $query );
+			if (!$db->execute()) {
+				echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 				exit();
 			}
 			switch($_POST['jform']['c_pool']){
 				case 1:
 					$query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('".$this->c_id."','0','".$_POST['jform']['pool_rand']."')";
-					$database->setQuery( $query );
-					if (!$database->execute()) {
-						echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+					$db->setQuery( $query );
+					if (!$db->execute()) {
+						echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 						exit();
 					}
 					break;
@@ -142,9 +142,9 @@ class JoomlaquizTableQuiz extends JTable
 						if($_POST['pnumber_'.$hid_pcat])
 						{
 							$query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('".$this->c_id."','".$hid_pcat."','".$_POST['pnumber_'.$hid_pcat]."')";
-							$database->setQuery( $query );
-							if (!$database->execute()) {
-								echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+							$db->setQuery( $query );
+							if (!$db->execute()) {
+								echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 								exit();
 							}
 						}
@@ -157,9 +157,9 @@ class JoomlaquizTableQuiz extends JTable
 			if(isset($_POST['jform']['c_feed_option']) && $_POST['jform']['c_feed_option'])
 			{
 				$query = "DELETE FROM #__quiz_feed_option WHERE quiz_id=".$this->c_id;
-				$database->setQuery( $query );
-				if (!$database->execute()) {
-					echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+				$db->setQuery( $query );
+				if (!$db->execute()) {
+					echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 					exit();
 				}
 					
@@ -179,10 +179,10 @@ class JoomlaquizTableQuiz extends JTable
 									$query->to_percent = intval($_POST['to_percent'][$i]);
 									$query->fmessage = stripslashes($_POST['feed_by_percent'][$i]);
 
-									$result = $database->insertObject('#__quiz_feed_option', $query);
+									$result = $db->insertObject('#__quiz_feed_option', $query);
 									
 									if (!$result) {
-										echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+										echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 										exit();
 									}
 								}

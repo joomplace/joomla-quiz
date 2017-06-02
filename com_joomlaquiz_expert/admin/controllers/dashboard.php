@@ -11,20 +11,22 @@ defined('_JEXEC') or die('Restricted access');
 
 class JoomlaquizControllerDashboard extends JControllerLegacy
 {
-	
-	public function fix(){
-		$model = $this->getModel('Dashboard');
-		$model->fix();
-		
-		// Refresh versionable assets cache
-		JFactory::getApplication()->flushAssets();
 
-		$this->setRedirect(JRoute::_('index.php?option=com_joomlaquiz', false));
-	}
+    public function fix()
+    {
+        $model = $this->getModel('Dashboard');
+        $model->fix();
 
-	public function fixEncode(){
-		$model = $this->getModel('Dashboard');
-		$model->fixEncode();
-	}
+        // Refresh versionable assets cache
+        JFactory::getApplication()->flushAssets();
+
+        $this->setRedirect(JRoute::_('index.php?option=com_joomlaquiz', false));
+    }
+
+    public function fixEncode()
+    {
+        $model = $this->getModel('Dashboard');
+        $model->fixEncode();
+    }
 
 }

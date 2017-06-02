@@ -1,12 +1,12 @@
 <?php
 /**
-* Joomlaquiz Deluxe Component for Joomla 3
-* @package Joomlaquiz Deluxe
-* @author JoomPlace Team
-* @copyright Copyright (C) JoomPlace, www.joomplace.com
-* @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
-*/
- defined('_JEXEC') or die('Restricted access');
+ * Joomlaquiz Deluxe Component for Joomla 3
+ * @package Joomlaquiz Deluxe
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.view');
 
@@ -15,25 +15,26 @@ jimport('joomla.application.component.view');
  */
 class JoomlaquizViewResults extends JViewLegacy
 {
-    public function display($tpl = null) 
+    public function display($tpl = null)
     {
-		$this->results = $this->get('Results');
-		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
+        $this->results = $this->get('Results');
+        // Check for errors.
+        if (count($errors = $this->get('Errors'))) {
+            JError::raiseError(500, implode("\n", $errors));
+            return false;
+        }
 
-		if($this->results == 'no_access'){
+        if ($this->results == 'no_access') {
             ?>
             <div>
                 <span style="color:red;"><?php echo JText::_('COM_JOOMLAQUIZ_FE_NO_RIGHTS_VIEW_RESULTS') . '.'; ?></span>
                 <br/><br/>
             </div>
             <?php
-        }else{
+        } else {
             parent::display($tpl);
         }
     }
 }
+
 ?>

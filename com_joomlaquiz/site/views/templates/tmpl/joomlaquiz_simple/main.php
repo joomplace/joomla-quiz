@@ -1,57 +1,60 @@
 <?php
 /**
-* JoomlaQuiz component for Joomla
-* @version $Id: jp_template.php 2009-11-16 17:30:15
-* @package JoomlaQuiz
-* @subpackage jp_template.php
-* @author JoomPlace Team
-* @copyright Copyright (C) JoomPlace, www.joomplace.com
-* @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
-*/
+ * JoomlaQuiz component for Joomla
+ * @version $Id: jp_template.php 2009-11-16 17:30:15
+ * @package JoomlaQuiz
+ * @subpackage jp_template.php
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
 
 // no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined('_JEXEC') or die('Restricted access');
 
-JLoader::register('JoomlaQuizTemplateClass', JPATH_SITE.'/components/com_joomlaquiz/views/templates/tmpl/default.php');
+JLoader::register('JoomlaQuizTemplateClass', JPATH_SITE . '/components/com_joomlaquiz/views/templates/tmpl/default.php');
 
-class JoomlaQuiz_template_class extends JoomlaQuizTemplateClass {
-	
-	public static function JQ_getTemplateName() {
-		return 'joomlaquiz_simple';
-	}
-	
-	public static function JQ_MainScreen($descr) {
-		
-		$document 	= JFactory::getDocument();
-		$document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/views/templates/tmpl/'.static::JQ_getTemplateName().'/css/jq_template.css');		
-		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js"); 
-		$document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/raphael.js");
+class JoomlaQuiz_template_class extends JoomlaQuizTemplateClass
+{
 
-		$live_site = JURI::root();
-		if (JoomlaquizHelper::jq_substr($_SERVER['HTTP_HOST'],0,4) == 'www.') {
-			if (strpos($live_site, 'www.') !== false){
-				// nothing to do
-			} else {
-				$live_site = str_replace(JoomlaquizHelper::jq_substr($_SERVER['HTTP_HOST'],4), $_SERVER['HTTP_HOST'], $live_site);
-			}
-		} else { 
-			if (strpos($live_site, 'www.') !== false) 
-				$live_site = str_replace('www.'.$_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'], $live_site);
-		}
-		
-		$live_site_parts = parse_url($live_site); 
-	
-		$live_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on'? 'https':'http').'://'.$live_site_parts['host'].(isset($live_site_parts['port'])?':'.$live_site_parts['port']:'').(isset($live_site_parts['path'])?$live_site_parts['path']:'/');
-		
-		if ( JoomlaquizHelper::jq_substr($live_url, strlen($live_url)-1, 1) !== '/')
-			$live_url .= '/';
-		
-		$hide_result_panel = JText::_('COM_QUIZ_HIDE_RESULT_PANEL');
-		$show_result_panel = JText::_('COM_QUIZ_SHOW_RESULT_PANEL');
-		$flag_question = JText::_('COM_QUIZ_FLAG_QUESTION');
-		
-		$tmpl_folder = static::JQ_getTemplateName();
-		$jq_tmpl_html = <<<EOFTMPL
+    public static function JQ_getTemplateName()
+    {
+        return 'joomlaquiz_simple';
+    }
+
+    public static function JQ_MainScreen($descr)
+    {
+
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(JURI::root(true) . '/components/com_joomlaquiz/views/templates/tmpl/' . static::JQ_getTemplateName() . '/css/jq_template.css');
+        $document->addScript(JURI::root(true) . "/components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
+        $document->addScript(JURI::root(true) . "/components/com_joomlaquiz/assets/js/raphael.js");
+
+        $live_site = JURI::root();
+        if (JoomlaquizHelper::jq_substr($_SERVER['HTTP_HOST'], 0, 4) == 'www.') {
+            if (strpos($live_site, 'www.') !== false) {
+                // nothing to do
+            } else {
+                $live_site = str_replace(JoomlaquizHelper::jq_substr($_SERVER['HTTP_HOST'], 4), $_SERVER['HTTP_HOST'], $live_site);
+            }
+        } else {
+            if (strpos($live_site, 'www.') !== false)
+                $live_site = str_replace('www.' . $_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'], $live_site);
+        }
+
+        $live_site_parts = parse_url($live_site);
+
+        $live_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http') . '://' . $live_site_parts['host'] . (isset($live_site_parts['port']) ? ':' . $live_site_parts['port'] : '') . (isset($live_site_parts['path']) ? $live_site_parts['path'] : '/');
+
+        if (JoomlaquizHelper::jq_substr($live_url, strlen($live_url) - 1, 1) !== '/')
+            $live_url .= '/';
+
+        $hide_result_panel = JText::_('COM_QUIZ_HIDE_RESULT_PANEL');
+        $show_result_panel = JText::_('COM_QUIZ_SHOW_RESULT_PANEL');
+        $flag_question = JText::_('COM_QUIZ_FLAG_QUESTION');
+
+        $tmpl_folder = static::JQ_getTemplateName();
+        $jq_tmpl_html = <<<EOFTMPL
 		
 <script language="JavaScript" type="text/javascript">
 <!--//--><![CDATA[//><!--
@@ -204,7 +207,7 @@ JQ_MM_preloadImages(
 </div>
 EOFTMPL;
 
-		return $jq_tmpl_html;
-	}
-	
+        return $jq_tmpl_html;
+    }
+
 }

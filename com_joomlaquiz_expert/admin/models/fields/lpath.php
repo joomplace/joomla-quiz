@@ -20,27 +20,27 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldLpath extends JFormFieldList
 {
-	/**
-	 * @var		string	The form field type.
-	 */
-	public $type = 'Lpath';
+    /**
+     * @var        string    The form field type.
+     */
+    public $type = 'Lpath';
 
-	protected function getOptions()
-	{
-		// Initialise variables.
-		$options = array();
+    protected function getOptions()
+    {
+        // Initialise variables.
+        $options = array();
 
-		$db		= JFactory::getDbo();
-		
-		$query = "(SELECT '- Select learnin path -' AS `text`, '- Select learnin path -' AS `lpath_id`, '0' AS `value` FROM `#__users` LIMIT 0,1) UNION (SELECT `title` AS `text`, `title` AS `lpath_id`, `id` AS `value` FROM `#__quiz_lpath` WHERE `id` > 0)";
-		$db->setQuery($query);
-		$options = $db->loadObjectList();
+        $db = JFactory::getDbo();
 
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			JError::raiseWarning(500, $db->getErrorMsg());
-		}
-		
-		return $options; 
-	} 
+        $query = "(SELECT '- Select learnin path -' AS `text`, '- Select learnin path -' AS `lpath_id`, '0' AS `value` FROM `#__users` LIMIT 0,1) UNION (SELECT `title` AS `text`, `title` AS `lpath_id`, `id` AS `value` FROM `#__quiz_lpath` WHERE `id` > 0)";
+        $db->setQuery($query);
+        $options = $db->loadObjectList();
+
+        // Check for a database error.
+        if ($db->getErrorNum()) {
+            JError::raiseWarning(500, $db->getErrorMsg());
+        }
+
+        return $options;
+    }
 }

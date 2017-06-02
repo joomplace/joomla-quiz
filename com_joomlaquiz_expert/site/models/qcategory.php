@@ -1,22 +1,24 @@
 <?php
 /**
-* Joomlaquiz Component for Joomla 3
-* @package Joomlaquiz
-* @author JoomPlace Team
-* @copyright Copyright (C) JoomPlace, www.joomplace.com
-* @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
-*/
+ * Joomlaquiz Component for Joomla 3
+ * @package Joomlaquiz
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modellist');
 JLoader::register('JoomlaquizHelper', JPATH_SITE . '/components/com_joomlaquiz/helpers/joomlaquiz.php');
+
 /**
  * Category Model.
  *
  */
 class JoomlaquizModelQcategory extends JModelList
 {
-    public static function getAvaliableQuizzes($cat_id = null){
+    public static function getAvaliableQuizzes($cat_id = null)
+    {
         list($rows) = self::getAvaliableQuizzesByType($cat_id);
         return $rows;
     }
@@ -34,8 +36,8 @@ class JoomlaquizModelQcategory extends JModelList
         $my = JFactory::getUser();
         $database = JFactory::getDbo();
         $rel_quizzes = array();
-        $lpath_ids   = array();
-        $quiz_ids    = array();
+        $lpath_ids = array();
+        $quiz_ids = array();
         if ($my->id) {
 
             $VM_quiz_products = array();
@@ -91,7 +93,7 @@ class JoomlaquizModelQcategory extends JModelList
         $query = "SELECT *"
             . "\n FROM `#__quiz_t_quiz`"
             . "\n WHERE published = 1 ";
-        if($cat_id){
+        if ($cat_id) {
             $query .= "\n AND c_category_id = '$cat_id' ";
         }
         $query .= "\n AND (one_time != 1 OR c_id NOT IN (SELECT c_quiz_id FROM `#__quiz_r_student_quiz` WHERE `c_student_id` = '"
@@ -103,7 +105,7 @@ class JoomlaquizModelQcategory extends JModelList
         $query = "SELECT `c_title`"
             . "\n FROM `#__quiz_t_quiz`"
             . "\n WHERE published = 1 ";
-        if($cat_id){
+        if ($cat_id) {
             $query .= "\n AND c_category_id = '$cat_id' ";
         }
         $query .= "\n ORDER BY `c_title` ";
@@ -151,7 +153,7 @@ class JoomlaquizModelQcategory extends JModelList
 
                 if ($all_quizzez[$i]->paid_check == 0) {
                     $all_quizzez[$i]->payment
-                            = JText::_('COM_QUIZ_PAYMENT_FREE');
+                        = JText::_('COM_QUIZ_PAYMENT_FREE');
                     $rows[] = $all_quizzez[$i];
                 } else {
                     $purch_quizzes[] = $all_quizzez[$i]->c_id;
@@ -214,8 +216,8 @@ class JoomlaquizModelQcategory extends JModelList
                         . sprintf(JText::_('COM_QUIZ_ATTEMPTS'),
                             $data->attempts);
                 }
-                $data->row        = $all_quizzez[$data->rel_id];
-                $data->pid        = $data->order_id;
+                $data->row = $all_quizzez[$data->rel_id];
+                $data->pid = $data->order_id;
                 $bought_quizzes[] = $data;
             }
         }
@@ -239,7 +241,7 @@ class JoomlaquizModelQcategory extends JModelList
                         if (empty($lpath[$data->rel_id])) {
                             continue;
                         }
-                        $data->title       = $lpath[$data->rel_id]->title;
+                        $data->title = $lpath[$data->rel_id]->title;
                         $data->short_descr = $lpath[$data->rel_id]->short_descr;
                         if ($data->xdays > 0) {
                             $data->suffix = sprintf(JText::_('COM_LPATH_XDAYS'),
@@ -287,7 +289,7 @@ class JoomlaquizModelQcategory extends JModelList
                                     $data->attempts);
                         }
                         $data->pid = $data->order_id;
-                        $lpaths[]  = $data;
+                        $lpaths[] = $data;
                     }
                 }
             }
@@ -316,20 +318,21 @@ class JoomlaquizModelQcategory extends JModelList
         return array($rows, $bought_quizzes, $lpaths);
     }
 
-    public function getCategories(){
+    public function getCategories()
+    {
         jimport('joomla.application.categories');
-        $categories = new JCategories(array('extension'=>'com_joomlaquiz','access'=>true));
+        $categories = new JCategories(array('extension' => 'com_joomlaquiz', 'access' => true));
         $input = JFactory::getApplication()->input;
-        $cur_cat = $categories->get($input->get( 'cat_id'));
+        $cur_cat = $categories->get($input->get('cat_id'));
         $subs = $cur_cat->getChildren(true);
         $rel_level = $cur_cat->level;
 
         $ids = array($cur_cat->id);
-        foreach($subs as $s){
+        foreach ($subs as $s) {
             $ids[] = $s->id;
         }
         $return_data = array();
-        foreach($ids as $cat_id){
+        foreach ($ids as $cat_id) {
             $database = JFactory::getDBO();
             $mainframe = JFactory::getApplication();
             $my = JFactory::getUser();
@@ -343,12 +346,12 @@ class JoomlaquizModelQcategory extends JModelList
             }
 
             $query = "SELECT * FROM `#__quiz_t_category` WHERE `c_id` = '$cat_id'";
-            $database->SetQuery( $query );
+            $database->SetQuery($query);
             $cat = $database->loadObjectList();
             $cat = $cat[0];
 
             $cat = $categories->get($cat_id);
-            $cat->level =  $cat->level - $rel_level;
+            $cat->level = $cat->level - $rel_level;
 
             $data = new stdClass();
             $data->cat = $cat;

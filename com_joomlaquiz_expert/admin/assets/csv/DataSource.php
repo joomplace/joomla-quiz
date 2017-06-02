@@ -63,13 +63,13 @@ class File_CSV_DataSource
 {
     public
 
-    /**
-     * csv parsing default-settings
-     *
-     * @var array
-     * @access public
-     */
-    $settings = array(
+        /**
+         * csv parsing default-settings
+         *
+         * @var array
+         * @access public
+         */
+        $settings = array(
         'delimiter' => ',',
         'eol' => ";",
         'length' => 999999,
@@ -78,29 +78,29 @@ class File_CSV_DataSource
 
     protected
 
-    /**
-     * imported data from csv
-     *
-     * @var array
-     * @access protected
-     */
-    $rows = array(),
+        /**
+         * imported data from csv
+         *
+         * @var array
+         * @access protected
+         */
+        $rows = array(),
 
-    /**
-     * csv file to parse
-     *
-     * @var string
-     * @access protected
-     */
-    $_filename = '',
+        /**
+         * csv file to parse
+         *
+         * @var string
+         * @access protected
+         */
+        $_filename = '',
 
-    /**
-     * csv headers to parse
-     *
-     * @var array
-     * @access protected
-     */
-    $headers = array();
+        /**
+         * csv headers to parse
+         *
+         * @var array
+         * @access protected
+         */
+        $headers = array();
 
     /**
      * data load initialize
@@ -415,7 +415,7 @@ class File_CSV_DataSource
     public function getAsymmetricRows()
     {
         $ret_arr = array();
-        $hc      = count($this->headers);
+        $hc = count($this->headers);
         foreach ($this->rows as $row) {
             if (count($row) != $hc) {
                 $ret_arr[] = $row;
@@ -535,7 +535,7 @@ class File_CSV_DataSource
             return array();
         }
         $ret_arr = array();
-        $key     = array_search($name, $this->headers, true);
+        $key = array_search($name, $this->headers, true);
         foreach ($this->rows as $data) {
             $ret_arr[] = $data[$key];
         }
@@ -633,7 +633,7 @@ class File_CSV_DataSource
      * </code>
      *
      * @param string $column an item returned by getHeaders()
-     * @param mixed  $values same as fillColumn()
+     * @param mixed $values same as fillColumn()
      *
      * @access public
      * @return boolean
@@ -646,8 +646,8 @@ class File_CSV_DataSource
             return false;
         }
         $this->headers[] = $column;
-        $length          = $this->countHeaders();
-        $rows            = array();
+        $length = $this->countHeaders();
+        $rows = array();
 
         foreach ($this->rows as $row) {
             $rows[] = array_pad($row, $length, '');
@@ -759,7 +759,7 @@ class File_CSV_DataSource
         $y = array_search($column, $this->headers);
 
         if (is_numeric($values) || is_string($values)) {
-            foreach (range(0, $this->countRows() -1) as $x) {
+            foreach (range(0, $this->countRows() - 1) as $x) {
                 $this->fillCell($x, $y, $values);
             }
             return true;
@@ -906,7 +906,7 @@ class File_CSV_DataSource
      * argument, and whatever that callback returns will be used to
      * replace the current value of that cell.
      *
-     * @param string $name     the header name used to identify the column
+     * @param string $name the header name used to identify the column
      * @param string $callback the callback function to be called per
      * each cell value
      *
@@ -1035,9 +1035,9 @@ class File_CSV_DataSource
      *   )
      * </code>
      *
-     * @param integer $x     the row to fetch
-     * @param integer $y     the column to fetch
-     * @param mixed   $value the value to fill the cell with
+     * @param integer $x the row to fetch
+     * @param integer $y the column to fetch
+     * @param mixed $value the value to fill the cell with
      *
      * @access public
      * @return boolean
@@ -1048,8 +1048,8 @@ class File_CSV_DataSource
         if (!$this->hasCell($x, $y)) {
             return false;
         }
-        $row            = $this->getRow($x);
-        $row[$y]        = $value;
+        $row = $this->getRow($x);
+        $row[$y] = $value;
         $this->rows[$x] = $row;
         return true;
     }
@@ -1573,8 +1573,8 @@ class File_CSV_DataSource
      *  )
      * </code>
      *
-     * @param integer $row    the row to fill identified by its key
-     * @param mixed   $values the value to use, if a string or number
+     * @param integer $row the row to fill identified by its key
+     * @param mixed $values the value to use, if a string or number
      * is given the whole row will be replaced with this value.
      * if an array is given instead the values will be used to fill
      * the row. Only when the currently loaded dataset is symmetric
@@ -1592,7 +1592,7 @@ class File_CSV_DataSource
 
         if (is_string($values) || is_numeric($values)) {
             foreach ($this->rows[$row] as $key => $cell) {
-                 $this->rows[$row][$key] = $values;
+                $this->rows[$row][$key] = $values;
             }
             return true;
         }
@@ -1806,11 +1806,11 @@ class File_CSV_DataSource
      * argument, and whatever that callback returns will be used to
      * replace the current value of that cell.
      *
-     * @param string|integer $row      anything that is numeric is a valid row
+     * @param string|integer $row anything that is numeric is a valid row
      * identificator. As long as it is within the range of the currently
      * loaded dataset
      *
-     * @param string         $callback the callback function to be executed
+     * @param string $callback the callback function to be executed
      * per each cell in a row
      *
      * @access public
@@ -1847,7 +1847,7 @@ class File_CSV_DataSource
      */
     public function getRawArray()
     {
-        $ret_arr   = array();
+        $ret_arr = array();
         $ret_arr[] = $this->headers;
         foreach ($this->rows as $row) {
             $ret_arr[] = $row;
@@ -1975,7 +1975,7 @@ class File_CSV_DataSource
         $this->moveHeadersToRows();
 
         $ret_arr = array();
-        for ($i = 1; $i < $length; $i ++) {
+        for ($i = 1; $i < $length; $i++) {
             $ret_arr[] = $prefix . "_$i";
         }
         $this->headers = $ret_arr;
@@ -2157,7 +2157,7 @@ class File_CSV_DataSource
                 array_push($this->rows, $keys);
             }
 
-            $c ++;
+            $c++;
         }
 
         fclose($res);
@@ -2216,12 +2216,12 @@ class File_CSV_DataSource
      */
     protected function moveHeadersToRows()
     {
-        $arr   = array();
+        $arr = array();
         $arr[] = $this->headers;
         foreach ($this->rows as $row) {
             $arr[] = $row;
         }
-        $this->rows    = $arr;
+        $this->rows = $arr;
         $this->headers = array();
     }
 
@@ -2259,7 +2259,7 @@ class File_CSV_DataSource
      */
     protected function flush()
     {
-        $this->rows    = array();
+        $this->rows = array();
         $this->headers = array();
     }
 

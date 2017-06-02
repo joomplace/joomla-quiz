@@ -19,33 +19,33 @@ JFormHelper::loadFieldClass('list');
  */
 class JFormFieldQuiz extends JFormFieldList
 {
-	/**
-	 * The form field type.
-	 */
-	protected $type = 'Quiz';
+    /**
+     * The form field type.
+     */
+    protected $type = 'Quiz';
 
-	/**
-	 * Method to get the field options.
-	 *
-	 * @return	array	The field option objects.
-	 */
-	protected function getOptions()
-	{
-		// Initialise variables.
-		$options = array();
+    /**
+     * Method to get the field options.
+     *
+     * @return    array    The field option objects.
+     */
+    protected function getOptions()
+    {
+        // Initialise variables.
+        $options = array();
 
-		$db		= JFactory::getDbo();
-		
-		$query	= "(SELECT '- Select quiz -' AS `text`, '- Select quiz -' AS `quiz_id`, '0' AS `value` FROM `#__users` LIMIT 0,1) UNION (SELECT `c_title` AS `text`, `c_title` AS `quiz_id`, `c_id` AS `value` FROM `#__quiz_t_quiz` WHERE `c_id` > 0)";
-		$db->setQuery($query);
+        $db = JFactory::getDbo();
 
-		$options = $db->loadObjectList();
+        $query = "(SELECT '- Select quiz -' AS `text`, '- Select quiz -' AS `quiz_id`, '0' AS `value` FROM `#__users` LIMIT 0,1) UNION (SELECT `c_title` AS `text`, `c_title` AS `quiz_id`, `c_id` AS `value` FROM `#__quiz_t_quiz` WHERE `c_id` > 0)";
+        $db->setQuery($query);
 
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			JError::raiseWarning(500, $db->getErrorMsg());
-		}
-		
-		return $options; 
-	} 
+        $options = $db->loadObjectList();
+
+        // Check for a database error.
+        if ($db->getErrorNum()) {
+            JError::raiseWarning(500, $db->getErrorMsg());
+        }
+
+        return $options;
+    }
 }

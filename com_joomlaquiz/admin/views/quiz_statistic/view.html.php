@@ -13,58 +13,57 @@ jimport('joomla.application.component.view');
 
 class JoomlaquizViewQuiz_Statistic extends JViewLegacy
 {
-	protected $items = null;
+    protected $items = null;
 
-	function display($tpl = null)
-	{
-		// Get application
-		$app = JFactory::getApplication();
-		$context = "joomlaquiz.list.admin.joomlaquiz";
+    function display($tpl = null)
+    {
+        // Get application
+        $app = JFactory::getApplication();
+        $context = "joomlaquiz.list.admin.joomlaquiz";
 
-		$this->addTemplatePath(JPATH_BASE.'/components/com_joomlaquiz/helpers/html');
+        $this->addTemplatePath(JPATH_BASE . '/components/com_joomlaquiz/helpers/html');
 
-		$this->items = $this->get('Items');
-		$this->state		= $this->get('State');
-		$this->pagination	= $this->get('Pagination');
+        $this->items = $this->get('Items');
+        $this->state = $this->get('State');
+        $this->pagination = $this->get('Pagination');
 
-		$this->filter_order 	= $app->getUserStateFromRequest($context.'filter_order', 'filter_order', 'name', 'cmd');
-		$this->filter_order_Dir = $app->getUserStateFromRequest($context.'filter_order_Dir', 'filter_order_Dir', 'asc', 'cmd');
+        $this->filter_order = $app->getUserStateFromRequest($context . 'filter_order', 'filter_order', 'name', 'cmd');
+        $this->filter_order_Dir = $app->getUserStateFromRequest($context . 'filter_order_Dir', 'filter_order_Dir', 'asc', 'cmd');
 
-		$this->filterForm    	= $this->get('FilterForm');
-		
-		$this->activeFilters 	= $this->get('ActiveFilters');
+        $this->filterForm = $this->get('FilterForm');
 
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
+        $this->activeFilters = $this->get('ActiveFilters');
 
-		$this->addToolBar();
+        if (count($errors = $this->get('Errors'))) {
+            JError::raiseError(500, implode('<br />', $errors));
+            return false;
+        }
 
-		parent::display($tpl);
+        $this->addToolBar();
 
-		$this->setDocument();
-	}
+        parent::display($tpl);
 
-	protected function addToolBar()
-	{
-		//$input = JFactory::getApplication()->input;
+        $this->setDocument();
+    }
 
-		$title = JText::_('COM_JOOMLAQUIZ').': '.JText::_('COM_JOOMLAQUIZ_REALTIME_TRACK');
+    protected function addToolBar()
+    {
+        //$input = JFactory::getApplication()->input;
 
-		JToolBarHelper::title($title, 'joomlaquiz');
-	}
+        $title = JText::_('COM_JOOMLAQUIZ') . ': ' . JText::_('COM_JOOMLAQUIZ_REALTIME_TRACK');
 
-	/**
-	 * Set page parametres.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.6
-	 */
-	protected function setDocument()
-	{
-		$document = JFactory::getDocument();
-	}
+        JToolBarHelper::title($title, 'joomlaquiz');
+    }
+
+    /**
+     * Set page parametres.
+     *
+     * @return  void
+     *
+     * @since   1.6
+     */
+    protected function setDocument()
+    {
+        $document = JFactory::getDocument();
+    }
 }

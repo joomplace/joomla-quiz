@@ -44,6 +44,7 @@ class JoomlaquizTableQuestion extends JTable
                 $content_type = new stdClass();
                 $content_type->type_title = 'Quiz Questions';
                 $content_type->type_alias = $this->type;
+                $content_type->router = 'QuizHelperRoute::routeQuestionTag';
                 $content_type->table = '{"special":{"dbtable":"#__quiz_t_question","key":"c_id","type":"Question","prefix":"JoomlaquizTable"}}';
                 $content_type->field_mappings = '{"common": {"core_content_item_id": "c_id","core_title": "c_id","core_state": "published","core_params": "params","core_ordering": "ordering","core_catid": "c_quest_cat"}}';
 //            {"common": {"core_content_item_id": "c_id","core_title": "c_id","core_state": "published","core_alias": "null","core_created_time": "null","core_modified_time": "null","core_body": "null","core_hits": "null","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "null","core_ordering": "null","core_metakey": "null","core_metadesc": "null","core_catid": "c_quest_cat","core_xreference": "null","asset_id": "null"}}

@@ -53,9 +53,9 @@ $listDirn	= $this->state->get('list.direction');
 			</div>
             <?php if(strlen($this->lists['products'])!=0):?>
                 <div class="control-group form-inline">
-                    <label class=" control-label" for="jform_product_id" id="jform_product_id-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_OR_SELECT_VM')?></label>
+                    <label class=" control-label" for="jform_product_id" id="jform_product_id-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_FILTER')?></label>
                     <div class="controls">
-                        <?php if (!$this->lists['no_virtuemart']) {?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo JText::_('COM_JOOMLAQUIZ_OR_SELECT_VM');?><?php echo $this->lists['products'];  } else {?><input  type="hidden" name="product_id" value="<?php echo $this->lists['product_id'];?>" /><?php  } ?>
+                        <?php if (!$this->lists['no_virtuemart'] || !$this->lists['no_j2store'] || !$this->lists['no_eventbooking']) {?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo JText::_('COM_JOOMLAQUIZ_OR_SELECT_EXISTING');?><?php echo $this->lists['products'];  } else {?><input  type="hidden" name="product_id" value="<?php echo $this->lists['product_id'];?>" /><?php  } ?>
                     </div>
                 </div>
             <?php endif;?>

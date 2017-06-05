@@ -23,62 +23,72 @@ class JoomlaquizModelQuiz extends JModelList
 		$jinput = $app->input;
 		$query = $db->getQuery(true);
 
-		/* get menu item params */
-		// check because fails on article save because of content plugin
-		if(!$app->isAdmin())
-			$params = $app->getParams();
-		else
-			$params = new JRegistry();
-		
-		$error_info = '';
-		if (!isset($quiz_id) || !$quiz_id) {
-			$quiz_id = $jinput->get( 'quiz_id', $params->get('quiz_id', 0, 'INT'), 'INT');
-		}
-		
-		$article_id 	= $jinput->get( 'article_id', 0, 'INT');
-		
-		/* not used anywhere in code */
-		// $lpath_id 		= $jinput->get( 'lpath_id', $params->get('lpath_id', 0, 'INT'), 'INT');
-		/* learning path ??? */
-		$lid 			= $jinput->get( 'lid', 0, 'INT');
-		
-		/* packages needs? */
-		$rel_id 		= $jinput->get( 'rel_id', 0, 'INT');
-		$package_id 	= $jinput->get( 'package_id', 0, 'INT');
-		$vm 			= $package_id < 1000000000;
-		
-		$quiz_params 	= array();
-		$quiz_params = new stdClass;
-		
-		/* видимо предпроверка на то куплен ли пакет */
-		if( ( $rel_id && !$user->id ) || ( !$package_id && $rel_id ) || ( $package_id && !$rel_id )	){
-			$quiz_params->error = 1;
-			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_NOT_AVAILABLE').'</p>';
-			return $quiz_params;
-		}
-		
-		/* понять что это значит */
-		if ($rel_id && !$quiz_id && !$article_id) {
-			$quiz_params = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $vm);
-			return $quiz_params;
-		}
-		
-		/* возможно соединить с предыдущей функцией? */
-		if ($rel_id && $article_id) 
-			$lid = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $vm);
-			
-		/* вход в learning path */
-		if($article_id && $lid){
-		
-			
-			$query->clear();
-			$query->select($db->qn('order'))
-				->from($db->qn('#__quiz_lpath_quiz'))
-				->where($db->qn('lid').' = '.$db->q($lid))
-				->where($db->qn('type').' = '.$db->q('a'))
-				->where($db->qn('qid').' = '.$db->q($article_id));
-		
-			$sub_query = (string)$query;
+        /* get menu item params */
+        // check because fails on article save because of content plugin
+        if(!$app->isAdmin())
+            $params = $app->getParams();
+        else
+            $params = new JRegistry();
+
+        $error_info = '';
+        if (!isset($quiz_id) || !$quiz_id) {
+            $quiz_id = $jinput->get( 'quiz_id', $params->get('quiz_id', 0, 'INT'), 'INT');
+        }
+
+        $article_id 	= $jinput->get( 'article_id', 0, 'INT');
+
+        /* not used anywhere in code */
+        // $lpath_id 		= $jinput->get( 'lpath_id', $params->get('lpath_id', 0, 'INT'), 'INT');
+        /* learning path ??? */
+        $lid 			= $jinput->get( 'lid', 0, 'INT');
+
+        /* packages needs? */
+        $rel_id 		= $jinput->get( 'rel_id', 0, 'INT');
+        $package_id 	= $jinput->get( 'package_id', 0, 'INT');
+        $product_type 	= $jinput->get( 'product_type');
+
+        //Get pid_type
+        $query->select($db->qn('qp.pid_type'))
+            ->from($db->qn('#__quiz_products', 'qp'))
+            ->where($db->qn('qp.id') . ' = ' . $db->q($rel_id));
+        $db->setQuery($query);
+        $pid_type = $db->loadResult();
+
+
+
+//		$vm 			= $package_id < 1000000000;
+        $vm = $pid_type == 'vm' ? true : false;
+        $j2s = $pid_type == 'j2s' ? true : false;
+
+        $quiz_params 	= array();
+        $quiz_params = new stdClass;
+
+        /* видимо предпроверка на то куплен ли пакет */
+        if( ( $rel_id && !$user->id ) || ( !$package_id && $rel_id ) || ( $package_id && !$rel_id )	){
+            $quiz_params->error = 1;
+            $quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_NOT_AVAILABLE').'</p>';
+            return $quiz_params;
+        }
+
+        /* понять что это значит */
+        if ($rel_id && !$quiz_id && !$article_id) {
+            $quiz_params = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $product_type);
+        }
+
+        /* возможно соединить с предыдущей функцией? */
+        if ($rel_id && $article_id)
+            $lid = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $product_type);
+
+        /* вход в learning path */
+        if($article_id && $lid){
+            $query->clear();
+            $query->select($db->qn('order'))
+                ->from($db->qn('#__quiz_lpath_quiz'))
+                ->where($db->qn('lid').' = '.$db->q($lid))
+                ->where($db->qn('type').' = '.$db->q('a'))
+                ->where($db->qn('qid').' = '.$db->q($article_id));
+
+            $sub_query = (string)$query;
 
 			$query->clear();
 			$query->select($db->qn( array('a.type','a.qid')))

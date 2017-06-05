@@ -188,6 +188,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_pool` (
 CREATE TABLE IF NOT EXISTS `#__quiz_products` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` varchar(32) DEFAULT NULL,
+  `pid_type` varchar(32) DEFAULT NULL,
   `type` char(1) DEFAULT NULL,
   `rel_id` int(11) NOT NULL,
   `xdays` int(5) NOT NULL,

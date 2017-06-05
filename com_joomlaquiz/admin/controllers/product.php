@@ -24,10 +24,10 @@ class JoomlaquizControllerProduct extends JControllerForm
 	public function save(){
 		parent::save();
 		$task = JFactory::getApplication()->input->getCmd('task');
-		$pid = JFactory::getApplication()->input->getCmd('pid');
+		$id = JFactory::getApplication()->input->getCmd('id');
 		
 		if($task == 'apply'){
-			$this->setRedirect('index.php?option=com_joomlaquiz&view=product&layout=edit&pid='.$pid);
+			$this->setRedirect('index.php?option=com_joomlaquiz&view=product&layout=edit&id='.$id);
 		} elseif($task == 'save') {
 			$this->setRedirect('index.php?option=com_joomlaquiz&view=products');
 		}

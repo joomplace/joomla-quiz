@@ -3,7 +3,7 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die;
@@ -80,7 +80,7 @@ class JoomlaquizHelper
 			return true;
 		}
 		
-		public static function jq_substr($str, $start, $length=null) {
+		public static function jq_substr($str, $start, $length = false) {
 			
 			return JString::substr($str, $start, $length);
 			
@@ -145,13 +145,25 @@ class JoomlaquizHelper
 				$vName == 'questcategories'
 			);
 			JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_CATEGORIES_LPATH'),
+                'index.php?option=com_categories&extension=com_joomlaquiz.lpath',
+                $vName == 'lpathscategories'
+            );
+			JHtmlSidebar::addEntry(
 				JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_QUIZ'),
 				'index.php?option=com_joomlaquiz&view=quizzes',
-				$vName == 'quizzes');
+				$vName == 'quizzes'
+			);
 			JHtmlSidebar::addEntry(
 				JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_QUEST'),
 				'index.php?option=com_joomlaquiz&view=questions',
-				$vName == 'questions');
+				$vName == 'questions'
+			);
+			JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_LPATH'),
+                'index.php?option=com_joomlaquiz&view=lpaths',
+                $vName == 'lpaths'
+            );
 		}
 
 		public static function addQuizzesSubmenu($vName)
@@ -175,6 +187,11 @@ class JoomlaquizHelper
 				'index.php?option=com_joomlaquiz&view=lpaths',
 				$vName == 'lpaths'
 			);
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_CATEGORIES_LPATH'),
+                'index.php?option=com_categories&extension=com_joomlaquiz.lpath',
+                $vName == 'lpathscategories'
+            );
 		}
 		
 		public static function addQuestionsSubmenu($vName)

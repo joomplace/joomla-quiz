@@ -5,7 +5,7 @@
 * @package JoomlaQuiz
 * @subpackage blank.php
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
@@ -539,6 +539,11 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		
 		if(isset($_POST['blnk_arr']))
 		{
+            if(JFactory::getApplication()->input->get('task')=='save2copy') {
+                $_POST['blnk_arr_id'] = array_map(function ($id) {
+                    return 0;
+                }, $_POST['blnk_arr_id']);
+            }
 			$ord = 0;
 			$blank_arr = array();
 			foreach ($_POST['blnk_arr'] as $blnk_n) {	
@@ -564,10 +569,17 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 				$mcounter = 0;
 				$fids_arr = array();
 				if (isset($_POST['jq_hid_fields_'.$blnk_n])) {
+                    if(JFactory::getApplication()->input->get('task')=='save2copy') {
+                        $_POST['jq_hid_fields_ids_' . $blnk_n]
+                            = array_map(function ($id) {
+                            return 0;
+                        }, $_POST['jq_hid_fields_ids_' . $blnk_n]);
+                    }
 					foreach ($_POST['jq_hid_fields_'.$blnk_n] as $br=>$f_row) {
 						$new_field = new stdClass;
-						if(intval($_POST['jq_hid_fields_ids_'.$blnk_n][$mcounter]))
-								$new_field->c_id = intval($_POST['jq_hid_fields_ids_'.$blnk_n][$mcounter]);
+						if(intval($_POST['jq_hid_fields_ids_'.$blnk_n][$mcounter])){
+                            $new_field->c_id = intval($_POST['jq_hid_fields_ids_'.$blnk_n][$mcounter]);
+                        }
 						$new_field->c_blank_id = $bid;
 						$new_field->c_text = (stripslashes($f_row));
 						$new_field->ordering = $field_order;

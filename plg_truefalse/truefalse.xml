@@ -2,12 +2,12 @@
 <extension version="3.0" type="plugin" group="joomlaquiz" method="upgrade">
 	<name>Joomlaquiz - truefalse</name>
 	<author>JoomPlace Team</author>
-	<creationDate>June 2013</creationDate>
+	<creationDate>May 2017</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.0.1</version>
+	<version>3.7.0</version>
 	<isapplication>false</isapplication>
 	<isbrowsable>false</isbrowsable>
 	<description>Added True/False question type</description>

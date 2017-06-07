@@ -1,4 +1,8 @@
-<?php
+<?php defined('_JEXEC') or die;
+
+/**
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL License
+ **/
 
 if (!defined('PHP_TEXT_CACHE_INCLUDE_PATH')) {
 	define('PHP_TEXT_CACHE_INCLUDE_PATH', (dirname(__FILE__) . "/"));

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <extension type="component" version="3.0" method="upgrade">
   <name>COM_JOOMLAQUIZ</name>
-  <creationDate>April 2013</creationDate>
+  <creationDate>May 2017</creationDate>
   <author>JoomPlace Team</author>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
   <authorEmail>support@joomplace.com</authorEmail>
   <authorUrl>www.joomplace.com</authorUrl>
-  <version>3.6.0.000</version>
+  <version>3.7.0</version>
   <description>This component manages Quizzes and Quiz Clients</description>
   <scriptfile>script.php</scriptfile>
   <install>
@@ -76,6 +76,6 @@
     </languages>
   </administration>
   <updateservers>
-    <server type="extension" priority="1" name="Joomlaquiz Update Site">http://www.joomplace.com/updates/updates.xml</server>
+    <server type="extension" priority="1" name="Joomplace Extentions Update Site">http://www.joomplace.com/updates/updates.xml</server>
   </updateservers>
 </extension>

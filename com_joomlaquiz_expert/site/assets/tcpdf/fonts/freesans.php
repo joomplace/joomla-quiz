@@ -1,4 +1,13 @@
 <?php
+/**
+ * Joomlaquiz Component for Joomla 3
+ * @package Joomlaquiz
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
 $type='TrueTypeUnicode';
 $name='FreeSans';
 $desc=array('Ascent'=>1141,'Descent'=>-459,'CapHeight'=>1141,'Flags'=>32,'FontBBox'=>'[-797 -459 1632 1141]','ItalicAngle'=>0,'StemV'=>70,'MissingWidth'=>600);

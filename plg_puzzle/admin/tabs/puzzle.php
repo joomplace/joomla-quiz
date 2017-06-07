@@ -1,4 +1,16 @@
- <div class="tab-pane" id="question-image">
+<?php
+/**
+ * Joomlaquiz Component for Joomla 3
+ * @package Joomlaquiz
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
+
+?>
+<div class="tab-pane" id="question-image">
 		<fieldset class="adminform">
 			<legend><?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IMAGE')?></legend>
 				<?php echo JText::_('COM_JOOMLAQUIZ_PUZZLE_OPTIONS_TEXT');?>

@@ -3,7 +3,7 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die;
@@ -57,8 +57,17 @@ class JoomlaquizModelQuestion extends JModelAdmin
 		
 		return $data;
 	}
-	
-	public function getForm($data = array(), $loadData = true)
+
+    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    {
+        if(JFactory::getUser()->authorise('core.create', 'com_joomlaquiz')){
+            $form->setFieldAttribute('c_ques_cat', 'allowAdd', 'true');
+        }
+        parent::preprocessForm($form, $data, $group);
+    }
+
+
+    public function getForm($data = array(), $loadData = true)
 	{
 		$new_qtype_id = JFactory::getApplication()->input->get('new_qtype_id');
 		$this->setState('question.new_qtype_id', $new_qtype_id);
@@ -69,6 +78,9 @@ class JoomlaquizModelQuestion extends JModelAdmin
 		if (empty($form)) {
 			return false;
 		}
+
+		$this->preprocessForm($form, $data);
+
 		return $form;
 	}
 	

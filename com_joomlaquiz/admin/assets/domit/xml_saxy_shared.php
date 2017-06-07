@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * SAXY_Parser_Base is a base class for SAXY and SAXY Lite
 * @package saxy-xmlparser

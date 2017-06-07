@@ -3,7 +3,7 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die;
@@ -80,7 +80,7 @@ class JoomlaquizHelper
 			return true;
 		}
 		
-		public static function jq_substr($str, $start, $length=null) {
+		public static function jq_substr($str, $start, $length = false) {
 			
 			return JString::substr($str, $start, $length);
 			

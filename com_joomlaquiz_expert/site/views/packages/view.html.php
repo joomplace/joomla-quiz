@@ -23,8 +23,20 @@ class JoomlaquizViewPackages extends JViewLegacy
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-				
-		parent::display($tpl);
+
+        $load_vm_lang = false;
+        foreach ($this->packages as $item){
+            if($item->vm){
+                $load_vm_lang = true;
+                break;
+            }
+        }
+        if($load_vm_lang){
+            JFactory::getLanguage()->load('com_virtuemart_orders', 'components/com_virtuemart');
+        }
+
+
+        parent::display($tpl);
     }
 }
 ?>

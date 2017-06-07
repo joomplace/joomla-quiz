@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 //============================================================+
 // File name   : unicode_data.php
 // Begin       : 2008-01-01
@@ -30,6 +30,8 @@
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * @since 2.1.000 (2008-01-08)
 */
+
+defined('_JEXEC') or die;
 
 /**
 * Left-to-Right Mark

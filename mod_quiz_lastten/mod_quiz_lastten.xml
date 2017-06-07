@@ -2,12 +2,12 @@
 <extension version="3.0" type="module" client="site" method="upgrade">
 	<name>Last X quiz results</name>
 	<author>JoomPlace Team</author>
-	<creationDate>June 2013</creationDate>
+	<creationDate>May 2017</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.0.0</version>
+	<version>3.7.0</version>
 	<description>This module will display a list of the last X quizzes with score</description>
 	<files>
 		<filename module="mod_quiz_lastten">mod_quiz_lastten.php</filename>

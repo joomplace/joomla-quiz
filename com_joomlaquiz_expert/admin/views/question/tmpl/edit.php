@@ -11,6 +11,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
+JHtml::_('formbehavior.chosen', '#jform_c_ques_cat', null, array('disable_search_threshold' => 0 ));
 JHtml::_('formbehavior.chosen', 'select');
 $app = JFactory::getApplication();
 $input = $app->input;
@@ -18,6 +19,11 @@ $model = $this->getModel('question');
 $quizes_list = $this->quizzes;
 $ordering_list = $this->ordering_list;
 ?>
+<style>
+    #jform_c_question_ifr{
+        height: 195px!important;
+    }
+</style>
 <?php echo $this->loadTemplate('menu');?>
 <script type="text/javascript">
     
@@ -62,7 +68,7 @@ $ordering_list = $this->ordering_list;
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&layout=edit&c_id='.(int) $this->item->c_id); ?>" enctype="multipart/form-data" method="post" name="adminForm" id="question-form" class="form-validate">
-<div id="j-main-container" class="span7 form-horizontal">
+<div id="j-main-container" class="span12 form-horizontal">
 	<ul class="nav nav-tabs" id="questionTabs">
 	    <li class="active"><a href="#question-details" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION');?></a></li>
 	    <?php if($this->is_feedback):?>
@@ -131,13 +137,13 @@ $ordering_list = $this->ordering_list;
 					<?php echo $this->form->getInput('c_separator'); ?>
 				</div>
 			</div>
-			<?php 
+			<?php
 			if(count($this->add_form)){
 				foreach($this->add_form as $for => $item){?>
 				<div class="control-group">
-				<?php if ($for=='c_qform') 
+				<?php if ($for=='c_qform')
 			              echo $item['label'];
-				      else {?>					
+				      else {?>
 					<label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $item['label']?></label>
 				<?php }?>
 					<div class="controls">

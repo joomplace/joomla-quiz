@@ -3,7 +3,7 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die('Restricted access');
@@ -144,7 +144,7 @@ class JoomlaquizModelProducts extends JModelList
 		}
 		
 		$category_id = $this->getState('filter.category_id');
-		if($category_id){
+		if($category_id && $category_id != -1){
 			if (!$no_virtuemart) {
 				$query->where('vm_pc.virtuemart_category_id = '.$category_id);
 			}

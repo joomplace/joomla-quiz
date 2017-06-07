@@ -1,11 +1,14 @@
 <?php
 /**
-* Joomlaquiz Deluxe Component for Joomla 3
-* @package Joomlaquiz Deluxe
-* @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
-* @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
-*/
+ * Joomlaquiz Deluxe Component for Joomla 3
+ * @package Joomlaquiz Deluxe
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
+
 function getTotalScoreMquestion($qid){
 
 	$total_score = 0;
@@ -15,15 +18,10 @@ function getTotalScoreMquestion($qid){
 	$qch_ids_type_10 = $database->loadColumn();
 
 	if(count($qch_ids_type_10)) {
-		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id IN (".implode(',', $qch_ids_type_10).") AND c_right = 0";
+		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id IN (".implode(',', $qch_ids_type_10).")";
 		$database->SetQuery( $query );
 		$total_score += $database->LoadResult();
 	}
 	
 	return $total_score;
 }
-
-?>
-    
-		 
-		 

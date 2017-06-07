@@ -3,7 +3,7 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die;
@@ -93,10 +93,22 @@ class JoomlaquizModelQuiz extends JModelAdmin
 		if (empty($form)) {
 			return false;
 		}
+
+        $this->preprocessForm($form, $data);
+
 		return $form;
 	}
-	
-	public function getCategories(){
+
+    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    {
+        if(JFactory::getUser()->authorise('core.create', 'com_joomlaquiz')){
+            $form->setFieldAttribute('c_category_id', 'allowAdd', 'true');
+        }
+        parent::preprocessForm($form, $data, $group);
+    }
+
+
+    public function getCategories(){
 		$db = JFactory::getDBO();
 		
 		$query = "SELECT * FROM #__quiz_t_category order by c_category";

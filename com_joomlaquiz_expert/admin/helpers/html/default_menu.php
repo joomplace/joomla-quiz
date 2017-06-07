@@ -3,7 +3,7 @@
 * Joomlaquiz component for Joomla 3.0
 * @package Joomlaquiz
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die;
@@ -35,6 +35,7 @@ $document->addStyleSheet(JURI::root().'administrator/components/com_joomlaquiz/a
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_joomlaquiz&view=quizzes"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_QUIZ');?></a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_joomlaquiz&view=quizzes&layout=import_quizzes"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_IMPORT_QUIZZES');?></a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_joomlaquiz&view=lpaths"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_LPATH');?></a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_categories&extension=com_joomlaquiz.lpath"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_CATEGORIES_LPATH');?></a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

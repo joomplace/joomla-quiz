@@ -3,7 +3,7 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die('Restricted access');
@@ -127,31 +127,37 @@ class JoomlaquizModelReactivates extends JModelList
 		
 		return $users;
 	}
-	
+
 	public function getProducts($order_id, $vm){
-	
-		$lang = JFactory::getLanguage()->getTag();
-		$lang = strtolower(str_replace('-', '_', $lang));		
-		$db = JFactory::getDBO();
-		if ($vm) {
-			$query = "SELECT vm_p_engb.product_name"
-			. "\n FROM #__virtuemart_order_items AS vm_oi"
-			. "\n INNER JOIN #__virtuemart_products_" . $lang ." AS vm_p_engb ON vm_p_engb.virtuemart_product_id = vm_oi.virtuemart_order_id"
-			. "\n WHERE vm_oi.virtuemart_order_id = " . $order_id
-			. "\n ORDER BY vm_p_engb.product_name"
-			;
-		} else {
-			$query = "SELECT qpi.name"
-			. "\n FROM #__quiz_payments AS p"
-			. "\n INNER JOIN #__quiz_product_info AS qpi ON p.pid = qpi.quiz_sku "
-			. "\n WHERE p.id = " . $order_id
-			. "\n ORDER BY qpi.name "
-			;
-		}
 		
+		$db = JFactory::getDBO();
+		$query = "";
+		if ($vm) {
+			$table_list = $db->getTableList();
+
+			$i = 0;
+			foreach ($table_list as $table) {
+				if (strpos($table, 'virtuemart_products_') !== false) {
+					if ($i > 0) $query .= " UNION ";
+					$query .= "(SELECT vm_p_engb.product_name";
+					$query .= "\n FROM #__virtuemart_order_items AS vm_oi";
+					$query .= "\n INNER JOIN " . $table ." AS vm_p_engb ON vm_p_engb.virtuemart_product_id = vm_oi.virtuemart_order_id";
+					$query .= "\n WHERE vm_oi.virtuemart_order_id = " . $order_id;
+					$query .= "\n ORDER BY vm_p_engb.product_name) ";
+					$i++;
+				}
+			}
+		} else {
+			$query = "SELECT qpi.name";
+			$query .= "\n FROM #__quiz_payments AS p";
+			$query .= "\n INNER JOIN #__quiz_product_info AS qpi ON p.pid = qpi.quiz_sku ";
+			$query .= "\n WHERE p.id = " . $order_id;
+			$query .= "\n ORDER BY qpi.name ";
+		}
+
 		$db->SetQuery( $query );
 		$products_names = $db->loadColumn();
-		
+
 		return $products_names;
 	}
 

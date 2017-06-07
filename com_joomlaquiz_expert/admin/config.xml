@@ -65,7 +65,7 @@
 		</field>
 		
 		<!-- Customizations settings -->
-		<field name="restrict_on_passed" type="hidden"	default="0"	
+		<field name="restrict_on_passed" type="hidden"	default="1"
 			class="btn-group"
 			label="Restrict when passed(customization)" 
 			>

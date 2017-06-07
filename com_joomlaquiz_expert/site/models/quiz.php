@@ -151,7 +151,16 @@ class JoomlaquizModelQuiz extends JModelList
 			->where($db->qn('c_passed').' = '.$db->q('1'))
 			->where($db->qn('c_quiz_id').' = '.$db->q($quiz_params->c_id))
 			->where($db->qn('c_student_id').' = '.$db->q($user->id));
-		if ($quiz_params->one_time == 1 && $db->setQuery($query)->loadResult()) {
+
+        //Check a possibility to pass a quiz after a successful passage
+        $one_time = '';
+        if($quiz_params->one_time == ''){
+            $one_time = JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0);
+        }else{
+            $one_time = $quiz_params->one_time;
+        }
+
+		if ($one_time == 1 && $db->setQuery($query)->loadResult()) {
 			$quiz_params = new stdClass;
 			$quiz_params->error = 1;
 			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_ALEARY_PASSED').'</p>';

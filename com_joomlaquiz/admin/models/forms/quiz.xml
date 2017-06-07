@@ -111,11 +111,12 @@
 		</field>
 		<field name="one_time"
 			   type="radio"
-			   class="btn-group"
+			   class="btn-group btn-group-yesno"
 			   label="COM_JOOMLAQUIZ_ONE_TIME"
 			   labelclass="control-label"
-			   default="0">
+			   default="">
 			<option value="0">COM_JOOMLAQUIZ_NO</option>
+			<option value="">COM_JOOMLAQUIZ_INHERIT</option>
 			<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 	</fieldset>

@@ -317,23 +317,23 @@ class JoomlaquizModelQuiz extends JModelList
 				return $quiz_params;
 			}	
 			
-			if(JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0)){
-				$db = JFactory::getDBO();
-				$query = $db->getQuery(true);
-				$query->select($db->qn('c_id'))
-					->from($db->qn('#__quiz_r_student_quiz'))
-					->where($db->qn('c_quiz_id').' = '.$db->q($quiz_params->c_id))
-					->where($db->qn('c_student_id').' = '.$db->q($user->id))
-					->where($db->qn('c_passed').' = '.$db->q(1));
-				$passed = $db->setQuery($query,0,1)->loadResult();
-				
-				if ($passed) {
-					$message = JText::_('COM_QUIZ_ALREADY_PASSED');
-					$quiz_params->error = 1;
-					$quiz_params->message = $message;
-					return $quiz_params;
-				}
-			}
+//			if(JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0)){
+//				$db = JFactory::getDBO();
+//				$query = $db->getQuery(true);
+//				$query->select($db->qn('c_id'))
+//					->from($db->qn('#__quiz_r_student_quiz'))
+//					->where($db->qn('c_quiz_id').' = '.$db->q($quiz_params->c_id))
+//					->where($db->qn('c_student_id').' = '.$db->q($user->id))
+//					->where($db->qn('c_passed').' = '.$db->q(1));
+//				$passed = $db->setQuery($query,0,1)->loadResult();
+//
+//				if ($passed) {
+//					$message = JText::_('COM_QUIZ_ALREADY_PASSED');
+//					$quiz_params->error = 1;
+//					$quiz_params->message = $message;
+//					return $quiz_params;
+//				}
+//			}
 			
 			$doing_quiz = 1;
 		} else {
@@ -353,23 +353,23 @@ class JoomlaquizModelQuiz extends JModelList
 				return $quiz_params;
 			}
 			
-			if(JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0)){
-				$db = JFactory::getDBO();
-				$query = $db->getQuery(true);
-				$query->select($db->qn('c_id'))
-					->from($db->qn('#__quiz_r_student_quiz'))
-					->where($db->qn('c_quiz_id').' = '.$db->q($quiz_params->c_id))
-					->where($db->qn('c_student_id').' = '.$db->q($user->id))
-					->where($db->qn('c_passed').' = '.$db->q(1));
-				$passed = $db->setQuery($query,0,1)->loadResult();
-				
-				if ($passed) {
-					$message = JText::_('COM_QUIZ_ALREADY_PASSED');
-					$quiz_params->error = 1;
-					$quiz_params->message = $message;
-					return $quiz_params;
-				}
-			}
+//			if(JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0)){
+//				$db = JFactory::getDBO();
+//				$query = $db->getQuery(true);
+//				$query->select($db->qn('c_id'))
+//					->from($db->qn('#__quiz_r_student_quiz'))
+//					->where($db->qn('c_quiz_id').' = '.$db->q($quiz_params->c_id))
+//					->where($db->qn('c_student_id').' = '.$db->q($user->id))
+//					->where($db->qn('c_passed').' = '.$db->q(1));
+//				$passed = $db->setQuery($query,0,1)->loadResult();
+//
+//				if ($passed) {
+//					$message = JText::_('COM_QUIZ_ALREADY_PASSED');
+//					$quiz_params->error = 1;
+//					$quiz_params->message = $message;
+//					return $quiz_params;
+//				}
+//			}
 									
 			/* check if has access */
 			if(!JFactory::getUser()->authorise('core.view', 'com_joomlaquiz.quiz.'.$quiz_params->c_id) /* c_guest must be excluded */&& (!JFactory::getUser()->id && !$quiz_params->c_guest)) {
@@ -529,7 +529,7 @@ class JoomlaquizModelQuiz extends JModelList
 		} else {
 			$article->next = null;
 		}
-		
+
 		if (($article->id == 0)) {
 			$id = JFactory::getApplication()->input->get( 'id', '', 'default', 'int' );
 			return JError::raiseError( 404, JText::sprintf( 'Article # not found', $id ) );

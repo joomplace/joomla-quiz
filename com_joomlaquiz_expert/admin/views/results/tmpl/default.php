@@ -234,7 +234,7 @@ $sortFields = $this->getSortFields();
                         </div>
 					</td>
 					<td class="has-context">
-						<a href="/<?php echo JUri::root(true).'index.php?option=com_joomlaquiz&view=results&task=printresult.get_pdf&stu_quiz_id='.$item->c_id.'&user_unique_id='.$item->unique_id.'&unique_pass_id='.$item->unique_pass_id; ?>">
+						<a href="<?php echo JUri::root(true) . '/index.php?option=com_joomlaquiz&view=results&task=printresult.get_pdf&stu_quiz_id='.$item->c_id.'&user_unique_id='.$item->unique_id.'&unique_pass_id='.$item->unique_pass_id; ?>">
 							<span class="icon-file-2"></span>
 						</a> 
 					</td>

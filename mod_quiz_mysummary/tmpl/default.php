@@ -55,7 +55,7 @@ defined('_JEXEC') or die;
     if($results){
         array_map(function($quiz){
             ?>
-            <tr class="quiz-<?= !$quiz->status?'failed':($quiz->status==2?'pending':($quiz->status==-1?'na':'passed')) ?>">
+            <tr class="quiz-<?= $quiz->status==2?'passed':($quiz->status==1?'failed':($quiz->status==='0'?'pending':'na')) ?>">
                 <td><?= $quiz->c_title ?></td>
                 <td><?= $quiz->score ?></td>
             </tr>

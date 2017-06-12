@@ -1,11 +1,10 @@
 <?php
 /**
  * JoomlaQuiz module for Joomla
- * @version $Id: mod_quiz_myresult.php 2011-03-03 17:30:15
  * @package JoomlaQuiz
  * @subpackage mod_quiz_myresult.php
  * @author JoomPlace Team
- * @Copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
  * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
 

@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 //============================================================+
 // File name   : tcpdf_fonts.php
 // Version     : 1.1.0

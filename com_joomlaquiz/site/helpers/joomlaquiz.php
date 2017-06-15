@@ -3,7 +3,7 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die;
@@ -311,10 +311,10 @@ class JoomlaquizHelper
 			$query = "SELECT `c_id` FROM `#__quiz_t_blank` WHERE `c_question_id` = ".$qdata->c_id;
 			$database->setQuery($query);
 			$blanks = (array)$database->loadColumn();
-			
-			$query = "( SELECT c_text FROM #__quiz_t_text WHERE c_blank_id  IN ('".implode("','", $blanks)."') ) UNION (SELECT c_text FROM #__quiz_t_faketext WHERE c_quest_id = ".$qdata->c_id.") ORDER BY rand()";
-			$database->setQuery($query);
-			$answers = (array)$database->loadColumn();
+
+            $query = "( SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id  IN ('".implode("','", $blanks)."') ) UNION (SELECT c_id, c_text FROM #__quiz_t_faketext WHERE c_quest_id = ".$qdata->c_id.") ORDER BY rand()";
+            $database->setQuery($query);
+            $answers = $database->loadColumn(1);
 			
 			srand ((float)microtime()*1000000);
 			shuffle ($answers);

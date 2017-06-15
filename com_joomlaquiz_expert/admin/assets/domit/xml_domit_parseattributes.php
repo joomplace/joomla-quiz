@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * parseAttributes is a function for parsing attribute and attribute-like strings
 * @package domit-xmlparser

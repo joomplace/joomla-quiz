@@ -5,7 +5,7 @@
 * @package JoomlaQuiz
 * @subpackage choice.php
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
@@ -560,8 +560,15 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 				$ans_right[] = $sss;
 			}
 		}
-		else
-		$msg .= JText::_('COM_JOOMLAQUIZ_QUESTION_NOT_COMPLETE');
+        else{
+            $msg .= JText::_('COM_JOOMLAQUIZ_QUESTION_NOT_COMPLETE');
+        }
+
+        if(JFactory::getApplication()->input->get('task')=='save2copy'){
+            $_POST['jq_hid_fields_ids'] = array_map(function($el){
+                return '';
+            }, $_POST['jq_hid_fields_ids']);
+        }
 		if (isset($_POST['jq_hid_fields'])) {
 			$mcounter = 0;
 			$fids_arr = array();

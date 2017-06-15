@@ -1,20 +1,30 @@
-<?php if ($wysiwyg) { ?>		
+<?php
+/**
+ * Joomlaquiz Deluxe Component for Joomla 3
+ * @package Joomlaquiz Deluxe
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
+
+if ($wysiwyg) { ?>
 		<link rel="stylesheet" href="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/css/thickbox/thickbox.css" type="text/css" />
 		<script language="javascript" type="text/javascript" src="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" ></script>
 <?php }?>
 <?php 	
 		$editor_name = JFactory::getConfig()->get('editor');
+        $editor = JFactory::getEditor();
 
 		if  (JFactory::getConfig()->get('editor') == 'codemirror') {
 			$PCREpattern  =  '/\r\n|\s+|\r|\n/u';
-			$editor = JFactory::getEditor();
 			$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
 			$edit = str_replace("'", "\'", $edit);
 		}
 
 		if (JFactory::getConfig()->get('editor') == 'tinymce') {
 			$PCREpattern  =  '/\r\n|\s\s+|\r|\n/u';
-			$editor = JFactory::getEditor();
 			$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
 			$edit = str_replace("'", "\'", $edit);
 		}

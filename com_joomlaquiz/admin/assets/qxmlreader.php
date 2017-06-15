@@ -1,4 +1,8 @@
-<?php
+<?php defined('_JEXEC') or die;
+
+/**
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
 
 class QuizXMLReader
 {

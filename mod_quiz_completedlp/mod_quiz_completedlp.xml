@@ -2,12 +2,12 @@
 <extension version="3.0" type="module" client="site" method="upgrade">
 	<name>Successfully Completed Learning Path</name>
 	<author>JoomPlace Team</author>
-	<creationDate>January 2017</creationDate>
+	<creationDate>May 2017</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.6.3.000</version>
+	<version>3.7.0</version>
 	<description>This module will display successfully completed Learning Path (user will see Learning Path that have been completed at least once)</description>
 	<files>
 		<filename module="mod_quiz_completedlp">mod_quiz_completedlp.php</filename>

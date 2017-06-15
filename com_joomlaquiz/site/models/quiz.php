@@ -370,13 +370,23 @@ class JoomlaquizModelQuiz extends JModelList
 					return $quiz_params;
 				}
 			}
-									
-			/* check if has access */
-			if(!JFactory::getUser()->authorise('core.view', 'com_joomlaquiz.quiz.'.$quiz_params->c_id) /* c_guest must be excluded */&& (!JFactory::getUser()->id && !$quiz_params->c_guest)) {
-				$quiz_params->error = 1;
-				$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_REG_ONLY').'</p>';
-				return $quiz_params;
-			}
+
+            /* check if has access */
+            $category = JTable::getInstance('Category');
+            $my_acl   = $user->getAuthorisedViewLevels();
+            $category->load($quiz_params->c_category_id);
+            if ((!JFactory::getUser()->authorise('core.view',
+                        'com_joomlaquiz.quiz.' . $quiz_params->c_id)
+                    || !in_array($category->access, $my_acl))
+                /* c_guest must be excluded (legacy purpose @deprecated 3.8) */
+                && (!JFactory::getUser()->id && !$quiz_params->c_guest)
+            ) {
+                $quiz_params->error   = 1;
+                $quiz_params->message = '<p align="left">'
+                    . JText::_('COM_QUIZ_REG_ONLY') . '</p>';
+
+                return $quiz_params;
+            }
 		}
 		
 		if ($doing_quiz ==  1) {

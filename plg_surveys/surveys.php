@@ -5,7 +5,7 @@
 * @package JoomlaQuiz
 * @subpackage surveys.php
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 

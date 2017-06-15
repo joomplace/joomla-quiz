@@ -364,11 +364,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 			if ($old_quiz) {
 				$ret_str = '';
 
-				$query = "SELECT c_date_time  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
+				$query = "SELECT c_date_time, NOW()  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
 				$database->SetQuery($query);
-				$c_date_time = $database->loadResult();
+				list($quiz_time2, $quiz_time1) = $database->loadRow();
 				
-				$ret_str .= "\t" . '<quiz_past_time>'.intval(strtotime(JHtml::_('date',time(), 'Y-m-d H:i:s'))-strtotime($c_date_time)).'</quiz_past_time>' . "\n";
+				$ret_str .= "\t" . '<quiz_past_time>'.intval(strtotime($quiz_time1)-strtotime($quiz_time2)).'</quiz_past_time>' . "\n";
 
 				$ret_str .= "\t" . '<task>seek_quest</task>' . "\n";
 				$ret_str .= "\t" . '<stu_quiz_id>'.$stu_quiz_id.'</stu_quiz_id>' . "\n";
@@ -511,12 +511,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if ($cur_tmpl && ($quiz_id) && ($stu_quiz_id) && is_array($quest_ids) && count($quest_ids)) {
 			//'time is up' check
 			if ($quiz->c_time_limit) {
-				$quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
-				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
-				$database->SetQuery( $query );
-				$quiz_time2 = $database->LoadResult();
-				$quiz_time2a = strtotime($quiz_time2);
-				$user_time = $quiz_time1 - $quiz_time2a;
+                $query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+                $database->SetQuery( $query );
+                list($quiz_time2, $quiz_time1) = $database->loadRow();
+                $quiz_time1a = strtotime($quiz_time1);
+                $quiz_time2a = strtotime($quiz_time2);
+				$user_time = $quiz_time1a - $quiz_time2a;
 				if ($user_time > ($quiz->c_time_limit * 60)) {
 					return $this->JQ_TimeIsUp($quiz, $stu_quiz_id);
 				}
@@ -743,11 +743,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$database->SetQuery( $query );
 					$q_total_score = $database->LoadResult();
 
-					$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+					$query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 					$database->SetQuery( $query );
-					$q_beg_time = $database->LoadResult();
+                    list($quiz_time2, $quiz_time1) = $database->loadRow();
 
-					$q_time_total = strtotime(JHtml::_('date',time(), 'Y-m-d H:i:s')) - strtotime($q_beg_time);
+					$q_time_total = strtotime($quiz_time1) - strtotime($quiz_time2);
 
 					$query = "UPDATE #__quiz_r_student_quiz SET c_total_score = '".$q_total_score."', c_total_time = '".$q_time_total."' WHERE c_id = '".$stu_quiz_id."'";
 					$database->SetQuery($query);
@@ -792,12 +792,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 			//'time is up' check
 			if ($quiz->c_time_limit) {
 				$user_time = 0;
-				$quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
-				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
-				$database->SetQuery( $query );
-				$quiz_time2 = $database->LoadResult();
-				$quiz_time2a = strtotime($quiz_time2);
-				$user_time = $quiz_time1 - $quiz_time2a;
+                $query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+                $database->SetQuery( $query );
+                list($quiz_time2, $quiz_time1) = $database->loadRow();
+                $quiz_time1a = strtotime($quiz_time1);
+                $quiz_time2a = strtotime($quiz_time2);
+                $user_time = $quiz_time1a - $quiz_time2a;
 				if ($user_time > ($quiz->c_time_limit * 60)) {
 					return $this->JQ_TimeIsUp($quiz, $stu_quiz_id);
 				}
@@ -939,11 +939,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$database->SetQuery( $query );
 				$q_total_score = $database->LoadResult();
 
-				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+				$query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 				$database->SetQuery( $query );
-				$q_beg_time = $database->LoadResult();
+                list($quiz_time2, $quiz_time1) = $database->loadRow();
 
-				$q_time_total = strtotime(JHtml::_('date',time(), 'Y-m-d H:i:s')) - strtotime($q_beg_time);
+				$q_time_total = strtotime($quiz_time1) - strtotime($quiz_time2);
 				$query = "UPDATE #__quiz_r_student_quiz SET c_total_score = '".$q_total_score."', c_total_time = '".$q_time_total."' WHERE c_id = '".$stu_quiz_id."'";
 				$database->SetQuery($query);
 				$database->execute();
@@ -1128,18 +1128,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$user_passed = 1; 
 				}
 
-
-				$user_time = 0;
-				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+				$query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 				$database->SetQuery( $query );
-				$quiz_time2 = $database->LoadResult();
+                list($quiz_time2, $quiz_time1) = $database->loadRow();
 				
 				if(!$result_mode) {
-					$quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
 					$database->setQuery("SELECT `c_time_limit` FROM `#__quiz_t_quiz` WHERE `c_id` = '".$quiz_id."'");
 					$limit_time = $database->loadResult();
 					$quiz_time2a = strtotime($quiz_time2);
-					$user_time = $quiz_time1 - $quiz_time2a;
+                    $quiz_time1a = strtotime($quiz_time1);
+					$user_time = $quiz_time1a - $quiz_time2a;
 					if($limit_time != 0 && $user_time > $limit_time * 60) $user_time = $limit_time * 60;
 
 
@@ -2198,12 +2196,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 			//'time is up' check
 			if ($quiz->c_time_limit) {
 				$user_time = 0;
-				$quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
-				$query = "SELECT c_date_time FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
-				$database->SetQuery( $query );
-				$quiz_time2 = $database->LoadResult();
-				$quiz_time2a = strtotime($quiz_time2);
-				$user_time = $quiz_time1 - $quiz_time2a;
+                $query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+                $database->SetQuery( $query );
+                list($quiz_time2, $quiz_time1) = $database->loadRow();
+                $quiz_time1a = strtotime($quiz_time1);
+                $quiz_time2a = strtotime($quiz_time2);
+				$user_time = $quiz_time1a - $quiz_time2a;
 				if ($user_time > ($quiz->c_time_limit * 60)) {
 					return $this->JQ_TimeIsUp($quiz, $stu_quiz_id);
 				}
@@ -2264,11 +2262,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 						JoomlaquizHelper::JQ_load_template($cur_tmpl);
 						if (isset($q_data[$i])) {
 
-							$query = "SELECT c_date_time  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
+							$query = "SELECT c_date_time, NOW()  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
 							$database->SetQuery($query);
-							$c_date_time = $database->loadResult();
-							if ($c_date_time) {							
-								$ret_str .= "\t" . '<quiz_past_time>'.intval(strtotime(JHtml::_('date',time(), 'Y-m-d H:i:s'))-strtotime($c_date_time)).'</quiz_past_time>' . "\n";
+                            list($quiz_time2, $quiz_time1) = $database->loadRow();
+							if ($quiz_time2) {
+								$ret_str .= "\t" . '<quiz_past_time>'.intval(strtotime($quiz_time1)-strtotime($quiz_time2)).'</quiz_past_time>' . "\n";
 							} else {
 								$ret_str .= "\t" . '<quiz_past_time>0</quiz_past_time>' . "\n";
 							}

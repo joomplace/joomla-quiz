@@ -62,9 +62,9 @@ if(isset($lpath->error) && $lpath->error){
 		<div class="jq_lpath_container">
 			<?php foreach($lpath_all as $k=>$lpath_item) { ?>
 				<div class="jq_lpath_step_title">
-					<?php if ($lpath_item->show_link || $lpath_item->type == 'a') {	?><strong><?php }?>
+					<?php if ($lpath_item->show_link) {	?><strong><?php }?>
 						<span style="cursor:pointer;text-transform:uppercase"><?php echo $lpath_item->title;?></span>
-						<?php if ($lpath_item->show_link || $lpath_item->type == 'a') {	?></strong><?php }?>
+						<?php if ($lpath_item->show_link) {	?></strong><?php }?>
 					<?php if (false && $lpath_item->short_description) { ?>
 						<div class="jq_lpath_step_expand" style="float:right;">[<?php echo JText::_('COM_JQ_SHOW_DESCRIPTION');?>]</div>
 					<?php } ?>

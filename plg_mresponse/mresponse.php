@@ -384,7 +384,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		}
 
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily);
+		$data['pdf']->setFont($fontFamily, 'B');
 		//$data['pdf']->setStyle('b', true);
 		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
@@ -392,6 +392,13 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+
+		if ($data['data']["is_correct"]) {
+			$str = JText::_('COM_QUIZ_PDF_ANSWER_CORRECT');
+		} else {
+			$str = JText::_('COM_QUIZ_PDF_ANSWER_INCORRECT');
+		}
+		$data['pdf']->Write(5, " ".$data['pdf_doc']->cleanText($str), '', 0);
 				
 		return $data['pdf'];		
 	}

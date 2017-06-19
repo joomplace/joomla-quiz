@@ -428,7 +428,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			}
 					
 			$data['pdf']->Ln();
-			$data['pdf']->setFont($fontFamily);
+			$data['pdf']->setFont($fontFamily, 'B');
 			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

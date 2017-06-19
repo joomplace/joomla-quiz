@@ -400,7 +400,7 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 				
 		for($j=0,$k='A';$j < count($data['data']['c_matching']);$j++,$k++) {			
 			$data['pdf']->Ln();
-			$data['pdf']->setFont($fontFamily);
+			$data['pdf']->setFont($fontFamily, 'B');
 			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

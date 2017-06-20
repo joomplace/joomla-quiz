@@ -381,7 +381,8 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_choice'][$j]['c_choice'];
-			$str = substr($str, 4);
+			$vowels = array("a)", "b)", "c)", "d)", "e)", "f)", "g)", "h)", "j)", "k)");
+			$str = str_replace($vowels, "", trim($str));
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 			
 		}

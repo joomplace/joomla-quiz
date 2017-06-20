@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * nodetools is a class of miscellaneous XML helper methods
 * @package domit-xmlparser

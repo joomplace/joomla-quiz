@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 //============================================================+
 // File name   : tcpdf_colors.php
 // Version     : 1.0.004

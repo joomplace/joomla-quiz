@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
@@ -33,7 +33,7 @@
  * @package   File_CSV_DataSource
  * @author    Kazuyoshi Tlacaelel <kazu.dev@gmail.com>
  * @copyright 2008 Kazuyoshi Tlacaelel
- * @license   The MIT License
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
  * @version   SVN: $Id: DataSource.php 285574 2009-03-09 15:22:24Z ktlacaelel $
  * @link      http://code.google.com/p/php-csv-parser/
  */

@@ -191,8 +191,13 @@ if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_im
 		//--><!]]>
 		</script>
 		</div>
-<?php	}
-	}
+<?php	} ?>
+		<script>
+			<?php if (!$quiz->c_slide && !$quiz->c_flag) { ?>
+			jq_jQuery('.jquiz_bottom').hide();
+			<?php } ?>
+		</script>
+	<?php }
 
 	if (defined('_JEXEC')) {
 		$document	= JFactory::getDocument();

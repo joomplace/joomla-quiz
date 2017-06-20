@@ -649,6 +649,15 @@ table#quiz_table label {
 .contentpane.child-cat.joomlaquiz.rel-level2 {
     margin-left: 30px;
 }
+.contentpane.child-cat.joomlaquiz.rel-level3 {
+    margin-left: 60px;
+}
+.contentpane.child-cat.joomlaquiz.rel-level4 {
+    margin-left: 90px;
+}
+.contentpane.child-cat.joomlaquiz.rel-level5 {
+    margin-left: 120px;
+}
 
 .dc_layout .dc_cover_container,
 .dc_layout .dc_buttons_container {

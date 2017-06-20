@@ -1501,7 +1501,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$mailfrom = $config->mailfrom;
 					$sitename = $config->fromname;
 
-					if (!$result_mode && $quiz->c_emails) {
+					if (!$result_mode && $quiz->c_emails && $quiz->c_email_chk) {
                         if (($quiz->c_ifmanual && $c_manual) ||  !$quiz->c_ifmanual) {
 
                             $emails = explode(',', $quiz->c_emails);

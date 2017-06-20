@@ -2,19 +2,23 @@
 <extension type="package" version="3.x" method="upgrade">
   <name>Joomla Quiz Deluxe Package</name>
   <author>Joomplace Team</author>
-  <creationDate>December 2012</creationDate>
+  <creationDate>May 2017</creationDate>
   <packagename>expert_quiz</packagename>
   <authorEmail>support@joomplace.com</authorEmail>
   <authorUrl>www.joomplace.com</authorUrl>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-  <version>3.6.3.000</version>
+  <version>3.7.0</version>
   <files folder="packages">
     <file type="component" id="com_joomlaquiz">com_joomlaquiz_expert.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_lastten.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_myresult.zip</file>
+    <file type="module" id="joomlaquiz" client="site">mod_quiz_mysummary.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_topxquiz.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_topxusers.zip</file>
+    <file type="module" id="joomlaquiz" client="site">mod_quiz_availablelp.zip</file>
+    <file type="module" id="joomlaquiz" client="site">mod_quiz_notcompletedlp.zip</file>
+    <file type="module" id="joomlaquiz" client="site">mod_quiz_completedlp.zip</file>
     <file type="plugin" id="blank" group="joomlaquiz">plg_blank.zip</file>
     <file type="plugin" id="boilerplate" group="joomlaquiz">plg_boilerplate.zip</file>
     <file type="plugin" id="choice" group="joomlaquiz">plg_choice.zip</file>
@@ -34,6 +38,6 @@
     <file type="plugin" id="updater" group="installer">plg_installer_joomplaceupdater.zip</file>
   </files>
   <updateservers>
-    <server type="collection" priority="1" name="Joomplace Update Site">http://www.joomplace.com/updates/collections.xml</server>
+    <server type="extension" priority="1" name="Joomplace Extentions Update Site">http://www.joomplace.com/updates/updates.xml</server>
   </updateservers>
 </extension>

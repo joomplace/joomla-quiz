@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * SAXY Lite is a non-validating, but lightweight and fast SAX parser for PHP, modelled on the Expat parser
 * @package saxy-xmlparser

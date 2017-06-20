@@ -3,7 +3,7 @@
 * Joomlaquiz component for Joomla 3.0
 * @package Joomlaquiz
 * @author JoomPlace Team
-* @Copyright Copyright (C) JoomPlace, www.joomplace.com
+* @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
@@ -22,18 +22,23 @@ class JoomlaquizModelDashboard extends JModelList
 	}
 	
 	public function getDatabaseState(){
-		
-		$folder = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/updates/';
+
+	    $folders = array();
+		$folders[] = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/updates/';
+		$folders[] = JPATH_ADMINISTRATOR . '/components/com_joomlaquiz/sql/initial_sync/';
 
 		try{
-			$changeSet = JSchemaChangeset::getInstance($this->getDbo(), $folder);
+            $changeSets = array();
+		    foreach ($folders as $folder){
+                $changeSets[] = new JSchemaChangeset($this->getDbo(), $folder);
+            }
 		}catch (RuntimeException $e){
 			JFactory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 
 			return false;
 		}
 		
-		return $changeSet;
+		return $changeSets;
 		
 	}
 	
@@ -43,11 +48,13 @@ class JoomlaquizModelDashboard extends JModelList
 	 * @return  void
 	 */
 	public function fix(){
-		if (!$changeSet = $this->getDatabaseState()){
+		if (!$changeSets = $this->getDatabaseState()){
 			return false;
 		}
 
-		$changeSet->fix();
+		foreach ($changeSets as $changeSet){
+            $changeSet->fix();
+        }
 	}
 
 	public function  fixEncode(){

@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 //============================================================+
 // File name   : tcpdf_autoconfig.php
 // Version     : 1.1.1

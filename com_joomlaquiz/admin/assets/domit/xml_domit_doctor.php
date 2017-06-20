@@ -1,4 +1,4 @@
-<?php
+<?php defined('_JEXEC') or die;
 /**
 * DOMIT! Doctor is a set of utilities for repairing malformed XML
 * @package domit-xmlparser

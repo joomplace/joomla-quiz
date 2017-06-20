@@ -1,4 +1,15 @@
-<?php if ($wysiwyg) { ?>		
+<?php
+/**
+ * Joomlaquiz Deluxe Component for Joomla 3
+ * @package Joomlaquiz Deluxe
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
+
+defined('_JEXEC') or die;
+
+if ($wysiwyg) { ?>
 		<link rel="stylesheet" href="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/css/thickbox/thickbox.css" type="text/css" />
 		<script language="javascript" type="text/javascript" src="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" ></script>
 <?php }?>

@@ -58,21 +58,6 @@ function subfolding($r_url){
                         </th>
                     </tr>
                     <tr>
-                        <td width="13%"  align="left">Installed version:</td>
-                        <td align="left">&nbsp;<b><?php echo JoomlaquizHelper::getVersion();?></b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left">Latest version:</td>
-                        <td>
-                            <div id="jq_LatestVersion">
-                                <script type="text/javascript">
-                                    jq_CheckVersion();
-                                </script>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
                         <td valign="top" align="left">About:</td>
                         <td align="left"><?php echo JText::_('COM_JOOMLAQUIZ_ABOUT_TEXT'); ?></td>
                     </tr>

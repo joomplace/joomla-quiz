@@ -17,7 +17,7 @@ function subfolding($r_url){
 	$r_url = '/'.trim(str_replace(JUri::root(),'',$r_url),'/');
 	$subfold = JUri::root(true);
 	if($subfold){
-		if(strpos('/'.$ditem->icon,$subfold)===false){
+		if(strpos('/' . $r_url, $subfold) === false){
 			return $subfold.$r_url;
 		}else{
 			return $r_url;

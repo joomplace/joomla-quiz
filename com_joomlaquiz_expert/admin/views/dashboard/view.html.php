@@ -21,9 +21,9 @@ class JoomlaquizViewDashboard extends JViewLegacy
         $this->dashboardItems = $this->get('Items');
         
 		/* db check and fix */
+        $this->errors = array();
 		if(JComponentHelper::getParams('com_joomlaquiz')->get('db_fix',0)){
 			$this->db_state = $this->get('DatabaseState');
-            $this->errors = array();
             $this->results = array();
 			foreach ($this->db_state as $cs_state){
                 $this->errors = array_merge($this->errors,$cs_state->check());

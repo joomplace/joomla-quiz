@@ -436,7 +436,6 @@ input:focus,
 .jq_mquestions td:not(#foo)  > input[type='radio'],
 .jq_mchoice td:not(#foo)  > input[type='radio'], 
 .jq_mresponse td:not(#foo)  > input[type='checkbox'] {
-	opacity: 0; 
 	float: left;
 	width: 18px;
 }

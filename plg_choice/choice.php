@@ -305,7 +305,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 				$choice_data[$i]->text = JoomlaquizHelper::JQ_ShowText_WithFeatures($choice_data[$i]->text);
 			}
 			
-			$choice_data[0]->overal = JText::_('COM_QUIZ_RST_PANSW')." ".$past_this." ".JText::_('COM_QUIZ_RST_PANSW_TIMES');
+			//$choice_data[0]->overal = JText::_('COM_QUIZ_RST_PANSW')." ".$past_this." ".JText::_('COM_QUIZ_RST_PANSW_TIMES');
 		}	
 		
 		$query = "SELECT * FROM #__quiz_t_choice AS c  LEFT JOIN #__quiz_r_student_choice AS sc"

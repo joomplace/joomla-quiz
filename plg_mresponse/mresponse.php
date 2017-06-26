@@ -85,7 +85,10 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		$c_temp_cor = 0;
 		$c_temp_incor = 0;
 		$data['is_avail'] = 1;
-		$ans_array = explode(',',$data['answer']);					
+        $data['correct_answer'] = array_map(function($option){
+            return $option->c_id;
+        },$ddd);
+		$ans_array = explode(',',$data['answer']);
 		if (count($ddd2) && count($ddd)) {
 			$c_quest_score = $ddd[0]->c_point;
 			$data['is_correct'] = 1;						

@@ -601,6 +601,11 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
     background-repeat: no-repeat;
 }
 
+.correct_answer_row{
+	background: #6fab6f;
+	border: 1px solid #008000!important;
+}
+
 
 /* Fix Span with "Points for the correct answer @n" */
 @media screen and (max-width: 980px) {

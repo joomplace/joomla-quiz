@@ -566,7 +566,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$c_quest_cur_attempt = null;
 					$c_all_attempts = null;
 					
-					$this->JQ_SaveAnswer($stu_quiz_id, $quest_id, $answer, $qtype, $c_penalty, $is_avail, $is_correct, $is_no_attempts, $questtype1_answer_incorrect, $got_one_correct, $c_quest_cur_attempt, $c_all_attempts, $timer);
+					$resp_data = $this->JQ_SaveAnswer($stu_quiz_id, $quest_id, $answer, $qtype, $c_penalty, $is_avail, $is_correct, $is_no_attempts, $questtype1_answer_incorrect, $got_one_correct, $c_quest_cur_attempt, $c_all_attempts, $timer);
 					
 					$j = 0;
 						
@@ -604,7 +604,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						JoomlaquizHelper::JQ_load_template($cur_tmpl);
 						$feedback_count++;
 
-                        $ret_str .= $this->feedback($database, $blank_fbd, $blank_fbd_count, $answer, $quest_id, $c_quest_cur_attempt, $c_all_attempts, $quiz, $question, $qtype, $is_no_attempts, $is_correct, $jq_language, $got_one_correct, $questtype1_answer_incorrect, $is_avail);
+                        $ret_str .= $this->feedback($database, $blank_fbd, $blank_fbd_count, $answer, $quest_id, $c_quest_cur_attempt, $c_all_attempts, $quiz, $question, $qtype, $is_no_attempts, $is_correct, $jq_language, $got_one_correct, $questtype1_answer_incorrect, $is_avail, $resp_data);
 
 					}
 
@@ -2933,7 +2933,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 	
 	public function JQ_SaveAnswer($stu_quiz_id, $quest_id, $answer, $qtype, $c_penalty, &$is_avail, &$is_correct, &$is_no_attempts, &$questtype1_answer_incorrect, &$got_one_correct, &$c_quest_cur_attempt, &$c_all_attempts, $timer = 0) {	
 		
-		$return = false;
+		$return = true;
 		$type = JoomlaquizHelper::getQuestionType($qtype);
 		$appsLib = JqAppPlugins::getInstance();
 		$appsLib->loadApplications();
@@ -2967,8 +2967,12 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$got_one_correct = $data['got_one_correct'];
 		$c_quest_cur_attempt = $data['c_quest_cur_attempt'];
 		$c_all_attempts = $data['c_all_attempts'];
-		
-		return $return;
+
+        if($return){
+            return $data;
+        }else{
+            return $return;
+        }
 	}
 	
 	public function JQ_GetStatistic($quiz_id, $stu_quiz_id, $c_show_qfeedback = 0) {
@@ -3357,7 +3361,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		return $ret_str;
 	}
 	
-	public function feedback($database, $blank_fbd, $blank_fbd_count, $answer, $quest_id, $c_quest_cur_attempt, $c_all_attempts, $quiz, $question, $qtype, $is_no_attempts, $is_correct, $jq_language, $got_one_correct, $questtype1_answer_incorrect, $is_avail){
+	public function feedback($database, $blank_fbd, $blank_fbd_count, $answer, $quest_id, $c_quest_cur_attempt, $c_all_attempts, $quiz, $question, $qtype, $is_no_attempts, $is_correct, $jq_language, $got_one_correct, $questtype1_answer_incorrect, $is_avail, $resp_data){
 		
         $ret_str = "\t" . '<feedback>' . "\n";
 		
@@ -3376,6 +3380,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 								
 								$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', $msg_html );
             }
+            $ret_str .= "\t" . '<correct_answer>'.implode(',',$resp_data['correct_answer']).'</correct_answer>' . "\n";
             $ret_str .= "\t" . '<quest_feedback>1</quest_feedback>' . "\n";
             $ret_str .= "\t" . '<quest_feedback_repl_func>0</quest_feedback_repl_func>' . "\n";
             if ($blank_fbd && $blank_fbd_count) {

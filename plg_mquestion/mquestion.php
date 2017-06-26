@@ -91,6 +91,9 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$c_temp_cor = 0;
 		$c_temp_incor = 0;
 		$data['is_avail'] = 1;
+        $data['correct_answer'] = array_map(function($option){
+            return $option->c_id;
+        },$ddd);
 		$ans_array = explode(',', $data['answer']);
 		
 		if (count($ddd) && (count($ddd2) || count($ddd3))) {

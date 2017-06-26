@@ -89,6 +89,9 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		
 		$data['c_all_attempts'] = 1;
 		$data['is_avail'] = 1;
+        $data['correct_answer'] = array_map(function($option){
+            return $option->c_id;
+        },$ddd);
 		if (count($ddd)) {
 			if ($ddd[0]->c_id == $data['answer']) {
 				$c_quest_score += $ddd[0]->c_point;

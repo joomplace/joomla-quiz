@@ -870,6 +870,20 @@ function jq_processFeedback(task, is_preview, skip_question){
 				if (feedback_quest_id) {
 					is_do_feedback++;
 
+                    var correct_answer = jq_jQuery(feedback).find('correct_answer').html().split(',');
+                    var u_answered = jq_jQuery('input:checked');
+
+                    jq_jQuery.each(u_answered, function(i,item){
+                        var tr = jq_jQuery(item).closest('tr');
+                        if(!tr.hasClass('answered_row')){
+                            tr.addClass('answered_row');
+                        }
+                    });
+                    jq_jQuery.each(correct_answer, function(i,v){
+                        jq_jQuery('#quest_choice_'+v).closest('tr').addClass('correct_answer_row');
+
+                    });
+
 					var feedback_quest_type = feedback.getElementsByTagName('feedback_quest_type')[0].firstChild.data;
 					if (!jq_getObj('div_qoption'+feedback_quest_id)) {
 						null;

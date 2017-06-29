@@ -14,7 +14,6 @@ defined('_JEXEC') or die('Restricted access');
  */
 class JoomlaquizViewFeedbackMchoice
 {
-
     public static function getFeedbackContent($feedback_data, $data){
         return JLayoutHelper::render('question.results.display', array('question' => $data['q_data'], 'quiz_result_id' => $data['stu_quiz_id']), JPATH_SITE.'/plugins/joomlaquiz/mchoice/');
     }

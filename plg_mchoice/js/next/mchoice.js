@@ -30,6 +30,8 @@ case '15':
 	// add loading
 	question_container.addClass('question-loading');
 
+    window.allow_prev = false;
+    jq_jQuery('#jq_back_link_container').css('opacity','0.4');
 	var next_block = jq_jQuery('<div class="loading-next" />');
 	var question_finished = question_container.data('finished');
 	if(!question_finished){
@@ -84,4 +86,6 @@ case '15':
 
         return false;
 	}
+    jq_jQuery('#jq_back_link_container').css('opacity','1');
+    window.allow_prev = true;
 break;

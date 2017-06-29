@@ -31,6 +31,9 @@ class Helper
             ->where($db->qn('c_question_id').' = '.$db->q($question->id));
         $statistic = array();
         $statistic['res_ids'] = $db->setQuery($query)->loadColumn();
+        if(!$statistic['res_ids']){
+            $statistic['res_ids'] = array(0);
+        }
         $statistic['total'] = count($statistic['res_ids']);
 
         $query->clear()
@@ -47,7 +50,7 @@ class Helper
 
         $question->options = array_map(function($option) use ($answers, $statistics){
             $data = new \Joomla\Registry\Registry($option);
-            $data->set('stats', $statistics[$data->get('id')]);
+            $data->set('stats', $statistics[$data->get('id')]?$statistics[$data->get('id')]:false);
             if(in_array($data->get('id'),$answers)){
                 $data->set('picked', true);
             }

@@ -6,7 +6,7 @@
  * Time: 15:08
  */
 
-jimport('question.helper',JPATH_SITE.'/plugins/joomlaquiz/mchoice/');
+jimport('question.Helper',JPATH_SITE.'/plugins/joomlaquiz/mchoice/');
 /** @var \Joomla\Registry\Registry $data */
 $displayData = \Joomplace\Quiz\Question\Mchoice\Helper::addResultStatistic($displayData, $displayData->result_id);
 $data = new Joomla\Registry\Registry($displayData);

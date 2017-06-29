@@ -707,7 +707,7 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
         $question_result->c_attempts = 1;
         $question_result->is_correct = $data['is_correct'];
         $db->insertObject('#__quiz_r_student_question', $question_result);
-        $session->set('quiz.'.$data['stu_quiz_id'].'.question.'.$data['quest_id'], null);
+//        $session->set('quiz.'.$data['stu_quiz_id'].'.question.'.$data['quest_id'], null);
         $data['is_avail'] = 0;
         $data['is_no_attempts'] = 1;
         $data['score'] = $question_result->c_score;

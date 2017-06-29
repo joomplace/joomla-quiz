@@ -15,7 +15,7 @@ defined('_JEXEC') or die('Restricted access');
 class JoomlaquizViewCreateMchoice
 {
 	public static function getQuestionContent($qdata, $data){
-		
+
 		$jq_tmpl_html = "<input type='hidden' value='{$data['q_data']->c_qform}' name='c_qform'  /> \n ";
 		$jq_tmpl_html .= "<table class='jq_mchoices'>" . "\n";
 		foreach ($qdata as $qone) {
@@ -42,7 +42,7 @@ class JoomlaquizViewCreateMchoice
 			$jq_tmpl_html .= "</tr>" . "\n";
 		}
 		$jq_tmpl_html .= "</table>" . "\n";
-		
+
 		return $jq_tmpl_html;
 	}
 }

@@ -648,7 +648,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$database->setQuery("SELECT `c_attempts` FROM #__quiz_t_question WHERE `c_id` = '".$qchids[$i]."'");
 							$all_attempts = $database->loadResult();
 								
-							$query = "SELECT `c_attempts` FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qchids[$i]."'";
+//							$query = "SELECT `c_attempts` FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qchids[$i]."'";
+                            $query = "SELECT * FROM #__quiz_r_student_question AS qr LEFT JOIN #__quiz_t_question AS q ON q.c_id = qr.c_question_id WHERE `qr`.`c_stu_quiz_id` = '".$stu_quiz_id."' AND `qr`.`c_question_id` = '".$qchids[$i]."' AND `q`.`c_type`!='15'";
 							$database->SetQuery( $query );
 							$c_attempts = $database->LoadResult();
 							
@@ -668,7 +669,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$j = count($q_data)?(0):(-1);
 				}
 				// -- my chain ==//
-
 				if (isset($q_data[$j])) {
 					$ret_str .= "\t" . '<task>next</task>' . "\n";
 										

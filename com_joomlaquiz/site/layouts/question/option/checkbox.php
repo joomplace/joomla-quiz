@@ -11,7 +11,9 @@ $data = $displayData;
 $stats = $data->get('stats');
 ?>
 <label>
-    <?= $stats?'<span class="stat">'.$stats->percentage.'%</span>':'' ?>
+    <?php if($stats!==null){ ?>
+        <span class="stat"><?= $stats?$stats->percentage.'%':'0%' ?></span>
+    <?php } ?>
     <input
         <?= $data->get('disabled')?'disabled':'' ?>
         type="checkbox"

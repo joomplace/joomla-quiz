@@ -6,7 +6,10 @@
  * Time: 15:08
  */
 
+jimport('question.Helper',JPATH_SITE.'/plugins/joomlaquiz/mchoice/');
 /** @var \Joomla\Registry\Registry $data */
+$input = JFactory::getApplication()->input;
+//$stated = \Joomplace\Quiz\Question\Mchoice\Helper::addResultStatistic($displayData,$input->get('stu_quiz_id'));
 $data = new Joomla\Registry\Registry($displayData);
 
 $options = $data->get('options',array());
@@ -19,10 +22,9 @@ if($data->get('shuffle')){
 }
 
 $session = JFactory::getSession();
-$input = JFactory::getApplication()->input;
 $answer_session = $session->get('quiz.'.$input->get('stu_quiz_id',0).'.question.'.$data->get('parent_id',0));
 $answers = json_decode($answer_session, true)[$data->get('id')];
-$disabled = $answer_session[$data->get('id').'_attempted'] >= $data->get('attempts',1000);
+$disabled = json_decode($answer_session, true)[$data->get('id').'_attempted'] >= $data->get('attempts',1000);
 $options = array_map(function($option) use ($type, $review, $answers, $disabled){
     $option = new \Joomla\Registry\Registry($option);
     $option->set('type',$type);

@@ -136,7 +136,6 @@ $quests_data = JLayoutHelper::render('question.json.subquestions', $data->get('i
             .controller('questionEditCtrl', ['$scope','$rootScope', function($scope, $rootScope) {
                 $rootScope.questions = $scope.questions = <?= $quests_data ?>;
 
-                // TODO: add inline editor for options
                 $scope.tinymceOptions = {
                     setup: function(editor) {
                         <?= implode("\n",$scripts); ?>
@@ -449,19 +448,19 @@ $quests_data = JLayoutHelper::render('question.json.subquestions', $data->get('i
                     <div class="control-group">
                         <label class="control-label">Correct answer</label>
                         <div class="controls">
-                            <textarea ui-tinymce="tinymceOptions" ng-model="question.feedback_correct"></textarea>
+                            <textarea ng-model="question.feedback_correct"></textarea>
                         </div>
                     </div>
                     <div class="control-group" ng-show="question.partial">
                         <label class="control-label">Partial answer</label>
                         <div class="controls">
-                            <textarea ui-tinymce="tinymceOptions" ng-model="question.feedback_partial"></textarea>
+                            <textarea ng-model="question.feedback_partial"></textarea>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">Incorrect answer</label>
                         <div class="controls">
-                            <textarea ui-tinymce="tinymceOptions" ng-model="question.feedback_incorrect"></textarea>
+                            <textarea ng-model="question.feedback_incorrect"></textarea>
                         </div>
                     </div>
                 </div>

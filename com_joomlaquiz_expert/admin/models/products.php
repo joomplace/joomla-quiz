@@ -138,18 +138,17 @@ class JoomlaquizModelProducts extends JModelList
                     array(
                         'qp.id',
                         'qp.pid_type',
-                        'c.title',
                         'jv.sku',
                         'cat.title',
                     ),
                     array(
                         'id',
                         'pid_type',
-                        'product_name',
                         'product_sku',
                         'category_name'
                     )
                 ))
+                ->select("CONVERT (`c`.`title` USING utf8) COLLATE utf8_unicode_ci AS product_name")
                 ->select('\'\' AS `name`')
                 ->from($db->quoteName('#__quiz_products', 'qp'))
                 //Get the pid

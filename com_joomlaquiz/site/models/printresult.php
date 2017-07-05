@@ -234,13 +234,22 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str = $info['c_title'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
-
+		
 		$pdf->setFont($fontFamily, 'B');
-		$str = JText::_('COM_QUIZ_PDF_UNAME') . "&nbsp;";
+		$str = JText::_('COM_QUIZ_PDF_COURSE_CODE') . "&nbsp;";
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
 		$pdf->setFont($fontFamily);
-		$str =  $info['username'];
+		$str =  $info['c_author'];
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+		$pdf->Ln();
+
+		$pdf->setFont($fontFamily, 'B');
+		$str = JText::_('COM_QUIZ_PDF_DATE_TIME') . "&nbsp;";
+		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+
+		$pdf->setFont($fontFamily);
+		$str =  $info['c_date_time'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 

@@ -11,20 +11,23 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.helper');
-//if(JComponentHelper::getParams('com_joomlaquiz')->get('use_wysiwyg_options_feedbacks', true)){
-//    $editor = JEditor::getInstance();
-//}else{
-//    $editor = JEditor::getInstance('none');
-//}
-$editor = JEditor::getInstance();
+if (JComponentHelper::getParams('com_joomlaquiz')
+    ->get('use_wysiwyg_options_feedbacks', true)
+) {
+    $editor = JEditor::getInstance(JFactory::getConfig()
+        ->get('editor', 'none'));
+} else {
+    $editor = JEditor::getInstance('none');
+}
 ?>
 <style type="text/css">
     .mce-edit-area iframe {
         width: 100% !important;
         height: 150px !important;
     }
-    .js-editor-none .pull-left{
-        float: none!important;
+
+    .js-editor-none .pull-left {
+        float: none !important;
     }
 </style>
 <table class="table table-striped" id="qfld_tbl" cellpadding="10">

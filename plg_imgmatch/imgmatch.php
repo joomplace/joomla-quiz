@@ -35,6 +35,12 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		
 		$data['ret_str'] .= "\t" . '<quest_limit_time>'.$quest_limit_time.'</quest_limit_time>';
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<table id="dd_table" style="border-collapse:separate;">';
+        if(!$data['q_data']->c_width){
+            $data['q_data']->c_width = 100;
+        }
+        if(!$data['q_data']->c_height){
+            $data['q_data']->c_height = 100;
+        }
 		if(count($match_data)){
 			foreach($match_data as $ii => $dd_data){
 				$data['ret_str'] .= "\t" .'<tr>';

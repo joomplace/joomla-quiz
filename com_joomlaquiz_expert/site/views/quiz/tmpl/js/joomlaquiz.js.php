@@ -48,6 +48,7 @@ var totalPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_TOTAL_POINT')?>';
 var elapsedTime = '<?php echo JText::_('COM_QUIZ_ELAPSED_TIME')?>';
 var timeHasRunOut = '<?php echo JText::_('COM_QUIZ_TIME_FOR_ANSWERING_HAS_RUN_OUT')?>';
 var wellDone = '<?php echo JText::_('COM_QUIZ_WELL_DONE')?>';
+var confirm_notstarted_message = '<?= JText::_('COM_JOOMLAQUIZ_MEMORY_NOTSTARTED') ?>';
 
 var quiz_id = <?php echo $quiz->c_id;?>;
 var stu_quiz_id = 0;

@@ -264,7 +264,7 @@ if ($wysiwyg) { ?>
 			
 			if(quest_type != 10)
 			{
-				input_check.type = "checkbox";
+				input_check.type = "radio";
 				input_check.setAttribute('name','jq_checked[]');
 			
 				input_check.checked = false;
@@ -431,7 +431,7 @@ if ($wysiwyg) { ?>
 			
 			if(quest_type != 10)
 			{
-				input_check.type = "checkbox";
+				input_check.type = "radio";
 				input_check.setAttribute('name','jq_checked[]');
 			
 				input_check.checked = false;

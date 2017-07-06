@@ -2824,7 +2824,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					
 				if (is_array($q_ids) && count($q_ids)) {
 					$diff = array_diff ($qchids, $q_ids);
-					if (count($diff) && count($diff) == 1) {
+                    if (count($diff) && count($diff) == 1 && array_pop($diff)==$q_data->c_id) {
 						$is_last = 1;
 					}
 				}

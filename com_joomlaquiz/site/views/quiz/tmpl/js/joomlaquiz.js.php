@@ -1798,7 +1798,7 @@ function jq_UpdateTaskDiv(task, skip_question) {
 		break;
 
 		case 'continue_finish':
-			task_container = jq_SubmitButton('jq_QuizContinueFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_CONTINUE'))?>');
+			task_container = jq_SubmitButton('jq_QuizContinueFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_CONTINUE'))?>')+jq_PrevButton('jq_QuizBack()', '<?php echo addslashes(JText::_('COM_QUIZ_BACK'))?>');
 		break;
 
 		case 'hide':

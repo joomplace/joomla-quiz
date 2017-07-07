@@ -2,7 +2,7 @@
 <joomfish type="contentelement">
   <name>Joomlaquiz - Category</name>
   <author>JoomPlace</author>
-  <version>3.7.1</version>
+  <version>3.7.2-rc</version>
   <description>Definition for the JoomlaQuiz component</description>
   <reference>
 	<table name="quiz_t_category">

@@ -1685,7 +1685,8 @@ function setFlag(qid){
 }
 
 function jq_QuizNextFinish() { //send 'TASK = next'
-<?php if ($is_preview) { ?>
+<?php if($quiz->c_enable_skip==2){ ?>
+    <?php if ($is_preview) { ?>
 	var jq_task = 'next_preview';
 	<?php } else { ?>
 	//new code
@@ -1761,6 +1762,9 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 		setTimeout("jq_releaseBlock()", 1000);
 	}
 	*/
+<?php }else{ ?>
+     jq_QuizNext();
+<?php } ?>
 }
 
 function jq_UpdateTaskDiv(task, skip_question) {

@@ -1606,10 +1606,11 @@ function setFlag(qid){
 }
 
 function jq_QuizNextFinish() { //send 'TASK = next'
-<?php if ($is_preview) { ?>
+<?php if($quiz->c_enable_skip==2){ ?>
+    <?php if ($is_preview) { ?>
 	var jq_task = 'next_preview';
 	<?php } else { ?>
-    //new code
+	//new code
     var feedback = jq_jQuery(response).find('feedback');
     if(feedback){
         var q_feedback = jq_jQuery(feedback).find('quest_feedback').text();
@@ -1622,7 +1623,7 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 
     //old code
 //    var jq_task = 'nextFinish';
-	var jq_task2 = ''
+		var jq_task2 = ''
 	<?php } ?>
 	var answer = '';
 	var url = '&ajax_task=' + jq_task + '&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id;
@@ -1630,7 +1631,7 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 0, '');
 	   // jq_QuizContinueFinish
 	}
-	
+
 	/*
 	for(var n=0; n < quest_count; n++) {
 		if (questions[n].disabled) {
@@ -1682,6 +1683,9 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 		setTimeout("jq_releaseBlock()", 1000);
 	}
 	*/
+<?php }else{ ?>
+     jq_QuizNext();
+<?php } ?>
 }
 
 function jq_UpdateTaskDiv(task, skip_question) {

@@ -144,6 +144,7 @@ function jq_attachE(obj,event,handler) {
 
 function jq_GetQuestionData(question, n) {
 	questions[n].cur_quest_type = question.getElementsByTagName('quest_type')[0].firstChild.data
+	questions[n].unlim_attempts = question.getElementsByTagName('unlim_attempts')[0].firstChild.data
 	questions[n].cur_quest_id = question.getElementsByTagName('quest_id')[0].firstChild.data;
 	questions[n].c_separator = parseInt(question.getElementsByTagName('quest_separator')[0].firstChild.data);
 	questions[n].cur_quest_score = question.getElementsByTagName('quest_score')[0].firstChild.data;
@@ -1479,7 +1480,7 @@ function jq_QuizCallCode() {
 function jq_QuizBack() {
 
 	for (var n=0; n<quest_count; n++) {
-		if (questions[n].attempts > 0) {
+		if (questions[n].attempts > 0 || questions[n].unlim_attempts) {
 			questions[n].disabled = false;
 			switch (questions[n].cur_quest_type) {
 				<?php JoomlaquizHelper::getJavascriptIncludes('quizback');?>
@@ -1793,7 +1794,7 @@ function jq_UpdateTaskDiv(task, skip_question) {
 		break;
 
 		case 'continue':
-			task_container = jq_ContinueButton('jq_QuizContinue()', '<?php echo addslashes(JText::_('COM_QUIZ_CONTINUE'))?>');
+			task_container = jq_ContinueButton('jq_QuizContinue()', '<?php echo addslashes(JText::_('COM_QUIZ_CONTINUE'))?>')+jq_PrevButton('jq_QuizBack()', '<?php echo addslashes(JText::_('COM_QUIZ_BACK'))?>');
 		break;
 
 		case 'continue_finish':

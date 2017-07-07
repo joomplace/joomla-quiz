@@ -2568,6 +2568,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 		}
 
 		foreach($all_quests as $q_data) {
+            if ($q_data->c_attempts == "0") {
+                $unlim_attempts = 1;
+            }else {
+                $unlim_attempts = 0;
+            }
 			$quest_count++;
 			$ret_add_script = '';
 			$ret_str .= "\t" . '<question_data>';
@@ -2670,6 +2675,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$q_data = $data['q_data'];				
 				
 				$ret_str .= "\t" . '<quest_type>'.$q_data->c_type.'</quest_type>' . "\n";
+				$ret_str .= "\t" . '<unlim_attempts>'.$unlim_attempts.'</unlim_attempts>' . "\n";
 				$ret_str .= "\t" . '<quest_id>'.$q_data->c_id.'</quest_id>' . "\n";
 				$ret_str .= "\t" . '<flag_question>'.$c_flag_question.'</flag_question>' . "\n";
 				$ret_str .= "\t" . '<skip_question>'.$this->JQ_GetNextQuestion($qch_ids, $i_quiz_id, $stu_quiz_id, $q_data->c_id).'</skip_question>' . "\n";

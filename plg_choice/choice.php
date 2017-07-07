@@ -100,7 +100,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 				$data['is_correct'] = 1;
 			}
 			
-			if ($ddd[0]->c_attempts) {
+			if ($ddd[0]->c_attempts || $ddd[0]->c_attempts == 0) {
 				$data['c_all_attempts'] = $ddd[0]->c_attempts;
 			}
 		}
@@ -116,10 +116,14 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 		$query = "SELECT c_id, c_attempts FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' and c_question_id = '".$data['quest_id']."'";
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
+
+        $query = "SELECT c_attempts FROM #__quiz_t_question WHERE c_id = '".$data['quest_id']."'";
+        $database->SetQuery( $query );
+        $is_unlim_attempts = ($database->loadResult()==0)?1:0;
 		
 		if (count($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
-			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
+			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts'] && !$is_unlim_attempts) {
 				$data['is_avail'] = 0;
 				$data['is_no_attempts'] = 1;
 			}

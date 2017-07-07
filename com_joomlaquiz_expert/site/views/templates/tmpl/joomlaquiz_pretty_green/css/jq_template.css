@@ -445,7 +445,7 @@ blockquote span{
 	text-align: center;
 	line-height: 18px;
 
-	position: absolute;
+	/*position: absolute;*/
 	width: 100%;
 }
 .jq_question_name-wr,

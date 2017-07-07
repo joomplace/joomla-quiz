@@ -22,6 +22,7 @@ class JoomlaquizController extends JControllerLegacy
         {
         	$view = JFactory::getApplication()->input->getCmd('view', 'dashboard');
             JFactory::getApplication()->input->set('view', $view);
+            $this->migrateParamsOnAir();
             parent::display($cachable);
         }
 
@@ -88,12 +89,53 @@ class JoomlaquizController extends JControllerLegacy
 		    }
 		    exit();
         }
-		
-		public function fix_database(){
-			JPluginHelper::importPlugin( 'joomplace_lab' );
-			$dispatcher = JEventDispatcher::getInstance();
-			$results = $dispatcher->trigger('fixTableStructure');
-			JFactory::getApplication()->enqueueMessage(JText::_('JDONE'));
-			$this->diplay();
-		}
+
+    public function migrateParamsOnAir()
+    {
+        $db      = JFactory::getDbo();
+        $columns = $db->getTableColumns('#__quiz_t_quiz');
+        if (array_key_exists('c_guest', $columns)) {
+            /*
+             * Migrate guest access to permissions
+             */
+            $query = $db->getQuery(true);
+            $query->select($db->qn('c_id'))
+                ->select($db->qn('c_title'))
+                ->select($db->qn('c_guest'))
+                ->from($db->qn('#__quiz_t_quiz'));
+            $rows = $db->setQuery($query)->loadObjectList();
+            /** @var JTableAsset $asset */
+            $asset       = JTable::getInstance('Asset');
+            $rule        = "core.view";
+            $user        = JFactory::getUser(0);
+            $guest_group = array_pop($user->getAuthorisedGroups());
+            foreach ($rows as $row) {
+                $asset_name = 'com_joomlaquiz.quiz.' . $row->c_id;
+                $asset->loadByName($asset_name);
+                $rules = json_decode($asset->rules);
+                if (isset($rules->$rule) && !is_array($rules->$rule)) {
+                    if (!$rules->$rule->$guest_group) {
+                        $rules->$rule->$guest_group = $row->c_guest;
+                    }
+                } else {
+                    $rules->$rule               = new stdClass();
+                    $rules->$rule->$guest_group = $row->c_guest;
+                }
+                $asset->rules = json_encode($rules);
+                $asset->store();
+                if (!$user->authorise('core.view', $asset_name)
+                    && $user->authorise('core.view', $asset_name)
+                    != $row->c_guest
+                ) {
+                    JFactory::getApplication()
+                        ->enqueueMessage('There might be something wrong with guest access for quiz #'
+                            . $row->c_id . ' ' . $row->c_title
+                            . '. Please check quiz settings. (Previously "guest access" was '
+                            . ($row->c_guest ? 'enabled' : 'disabled') . ')');
+                }
+            }
+            $db->setQuery("ALTER TABLE `#__quiz_t_quiz` DROP `c_guest`;")
+                ->execute();
+        }
+    }
 }

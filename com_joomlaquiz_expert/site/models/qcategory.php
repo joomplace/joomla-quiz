@@ -305,13 +305,9 @@ class JoomlaquizModelQcategory extends JModelList
 
             // need to check permissions anyway
             $category->load($quizz->c_category_id);
-            if (
-                (!$user->authorise('core.view',
+            if (!$user->authorise('core.view',
                         'com_joomlaquiz.quiz.' . $quizz->c_id)
-                    || !in_array($category->access, $my_acl)
-                )
-                && !$quizz->c_guest
-            ) {
+                    || !in_array($category->access, $my_acl)) {
                 // TODO: migrate c_guest to permissions (via SQL)
                 unset($rows[$i]);
             }

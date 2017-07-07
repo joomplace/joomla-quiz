@@ -300,14 +300,6 @@ window.onload = function (){
 		<fieldset class="adminform">
 			<div class="control-group">
                 <div class="control-label">
-                    <?php echo $this->form->getLabel('c_guest'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_guest'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
                     <?php echo $this->form->getLabel('c_random'); ?>
                 </div>
 				<div class="controls">

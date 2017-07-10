@@ -493,6 +493,14 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
+
+        if (!JFolder::exists(JPATH_SITE . '/images/joomlaquiz/images/resize') ) {
+            JFolder::create( JPATH_SITE . '/images/joomlaquiz/images/resize');
+        }
+
+        if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg')) {
+            JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg');
+        }
 		
 		$resize_dir = JPATH_SITE.'/images/joomlaquiz/images/resize';
 		if(!file_exists($resize_dir)){

@@ -14,7 +14,7 @@ if ($wysiwyg) { ?>
 <link rel="stylesheet"
       href="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/css/thickbox/thickbox.css"
       type="text/css"/>
-< script language = "javascript" type = "text/javascript" src = "<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" > < / script >
+<script language = "javascript" type = "text/javascript" src = "<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" > </script>
     <?php }?>
     <?php
     $editor_name = JFactory::getConfig()->get('editor');
@@ -36,8 +36,7 @@ if ($wysiwyg) { ?>
 
 
     ?>
-    < script language = "javascript" type = "text/javascript" >
-    < !--
+    <script language = "javascript" type = "text/javascript" >
 var quest_type = <?php echo $q_om_type; ?>;
 
 function ReAnalize_tbl_Rows(start_index, tbl_id, increaser) {
@@ -455,6 +454,4 @@ function jq_UnselectCheckbox2(e) {
 function jq_SetHidden(random_number, value) {
     document.getElementById(random_number).value = value;
 }
-
-//-->
 </script>

@@ -42,10 +42,10 @@ var quest_type = <?php echo $q_om_type; ?>;
 function ReAnalize_tbl_Rows(start_index, tbl_id, increaser) {
     start_index = 1;
     var tbl_elem = document.getElementById(tbl_id);
-    if (tbl_elem.rows[start_index]) {
-        var count = start_index;
-        var row_k = 1 - start_index % 2;
-        for (var i = start_index; i < tbl_elem.rows.length; i += increaser) {
+    if (tbl_elem.rows[1]) {
+        var count = 1;
+        var row_k = 1 - 1 % 2;
+        for (var i = 1; i < tbl_elem.rows.length; i += increaser) {
             tbl_elem.rows[i].cells[0].innerHTML = count;
 
             Redeclare_element_inputs2(tbl_elem.rows[i].cells[1], i);
@@ -167,31 +167,41 @@ function Delete_tbl_row(element) {
 
 function Up_tbl_row(element) {
     if (element.parentNode.parentNode.sectionRowIndex > 1) {
+        var ctr = jQuery(element).closest('tr');
+        if(ctr.prev().is('[class*="row"]')){
+            var ttr = ctr.prev();
+            ttr.after(ctr);
+        }else{
+            var ctr2 = ctr.prev();
+            var ttr2 = ctr2.prev().prev();
+            ttr2.after(ctr);
+            ctr.after(ctr2);
+        }
         var sec_indx = element.parentNode.parentNode.sectionRowIndex;
         var table = element.parentNode.parentNode.parentNode;
         var tbl_id = table.parentNode.id;
-
-        var cell1 = document.createElement("td");
-        cell1.align = 'center';
-        var row = table.insertRow(sec_indx - 1);
-        row.appendChild(cell1);
-        row.appendChild(element.parentNode.parentNode.cells[1]);
-        row.appendChild(element.parentNode.parentNode.cells[1]);
-        row.appendChild(element.parentNode.parentNode.cells[1]);
-
-        var r7 = element.parentNode.parentNode.cells[3];
-
-        var r8 = element.parentNode.parentNode.cells[4];
-
-        var cell5 = document.createElement("td");
-        cell5.innerHTML = '<' + 'a href="javascript: void(0);" onClick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a>';
-        row.appendChild(cell5);
-        var cell6 = document.createElement("td");
-        cell6.innerHTML = '&nbsp;';
-        row.appendChild(cell6);
-        row.appendChild(r7);
-        row.appendChild(r8);
-        element.parentNode.parentNode.parentNode.deleteRow(element.parentNode.parentNode.sectionRowIndex);
+//
+//        var cell1 = document.createElement("td");
+//        cell1.align = 'center';
+//        var row = table.insertRow(sec_indx - 1);
+//        row.appendChild(cell1);
+//        row.appendChild(element.parentNode.parentNode.cells[1]);
+//        row.appendChild(element.parentNode.parentNode.cells[1]);
+//        row.appendChild(element.parentNode.parentNode.cells[1]);
+//
+//        var r7 = element.parentNode.parentNode.cells[3];
+//
+//        var r8 = element.parentNode.parentNode.cells[4];
+//
+//        var cell5 = document.createElement("td");
+//        cell5.innerHTML = '<' + 'a href="javascript: void(0);" onClick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php //echo JURI::root()?>//administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a>';
+//        row.appendChild(cell5);
+//        var cell6 = document.createElement("td");
+//        cell6.innerHTML = '&nbsp;';
+//        row.appendChild(cell6);
+//        row.appendChild(r7);
+//        row.appendChild(r8);
+//        element.parentNode.parentNode.parentNode.deleteRow(element.parentNode.parentNode.sectionRowIndex);
 
         ReAnalize_tbl_Rows(sec_indx - 2, tbl_id);
     }
@@ -199,29 +209,39 @@ function Up_tbl_row(element) {
 
 function Down_tbl_row(element) {
     if (element.parentNode.parentNode.sectionRowIndex < element.parentNode.parentNode.parentNode.rows.length - 1) {
+        var ctr = jQuery(element).closest('tr');
+        if(ctr.next().is('[class*="row"]')){
+            var ttr = ctr.next();
+            ttr.after(ctr);
+        }else{
+            var ctr2 = ctr.next();
+            var ttr2 = ctr2.next().next();
+            ttr2.after(ctr);
+            ctr.after(ctr2);
+        }
         var sec_indx = element.parentNode.parentNode.sectionRowIndex;
         var table = element.parentNode.parentNode.parentNode;
         var tbl_id = table.parentNode.id;
 
-        var cell1 = document.createElement("td");
-        cell1.align = 'center';
-        var row = table.insertRow(sec_indx + 2);
-        row.appendChild(cell1);
-        row.appendChild(element.parentNode.parentNode.cells[1]);
-        row.appendChild(element.parentNode.parentNode.cells[1]);
-        row.appendChild(element.parentNode.parentNode.cells[1]);
-        var r7 = element.parentNode.parentNode.cells[3];
-        var r8 = element.parentNode.parentNode.cells[4];
-
-        var cell5 = document.createElement("td");
-        cell5.innerHTML = '<' + 'a href="javascript: void(0);" onClick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a>';
-        row.appendChild(cell5);
-        var cell6 = document.createElement("td");
-        cell6.innerHTML = '&nbsp;';
-        row.appendChild(cell6);
-        row.appendChild(r7);
-        row.appendChild(r8);
-        element.parentNode.parentNode.parentNode.deleteRow(element.parentNode.parentNode.sectionRowIndex);
+//        var cell1 = document.createElement("td");
+//        cell1.align = 'center';
+//        var row = table.insertRow(sec_indx + 2);
+//        row.appendChild(cell1);
+//        row.appendChild(element.parentNode.parentNode.cells[1]);
+//        row.appendChild(element.parentNode.parentNode.cells[1]);
+//        row.appendChild(element.parentNode.parentNode.cells[1]);
+//        var r7 = element.parentNode.parentNode.cells[3];
+//        var r8 = element.parentNode.parentNode.cells[4];
+//
+//        var cell5 = document.createElement("td");
+//        cell5.innerHTML = '<' + 'a href="javascript: void(0);" onClick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php //echo JURI::root()?>//administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a>';
+//        row.appendChild(cell5);
+//        var cell6 = document.createElement("td");
+//        cell6.innerHTML = '&nbsp;';
+//        row.appendChild(cell6);
+//        row.appendChild(r7);
+//        row.appendChild(r8);
+//        element.parentNode.parentNode.parentNode.deleteRow(element.parentNode.parentNode.sectionRowIndex);
 
 
         ReAnalize_tbl_Rows(sec_indx, tbl_id);

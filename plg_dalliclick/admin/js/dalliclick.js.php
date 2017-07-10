@@ -14,7 +14,7 @@ if ($wysiwyg) { ?>
 		<script language="javascript" type="text/javascript" src="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" ></script>
 <?php }?>
 <script language="javascript" type="text/javascript">
-<!--
+
 		var quest_type = <?php echo $q_om_type; ?>;
 			
 		function ReAnalize_tbl_Rows( start_index, tbl_id ) {
@@ -529,5 +529,4 @@ if ($wysiwyg) { ?>
 			document.getElementById(random_number).value = value;
 		}
 		
-//-->
 </script>

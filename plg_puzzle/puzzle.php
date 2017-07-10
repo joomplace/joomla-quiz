@@ -89,11 +89,11 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 				echo '<c_quest_text><![CDATA['.$q_data->c_question.']]></c_quest_text>' . "\n";
 				echo '<c_image><![CDATA['.$q_data->c_image.']]></c_image>' . "\n";
 				echo '<c_point>'.$q_data->c_point.'</c_point>' . "\n";
-				echo '<quest_time>'.(($q_data->c_timer) ? $q_data->c_timer : 1).'</quest_time>' . "\n";
+				echo '<quest_time>'.(($q_data->c_timer) ? $q_data->c_timer : $pieces*1.5*10).'</quest_time>' . "\n";
 				echo '<puzzle_difficulty>'.$pieces.'</puzzle_difficulty>' . "\n";
 				echo $xml_attempts. "\n";
 				echo '</response>' . "\n";
-				
+
 				die;
 			break;
 			case 'addpoints':
@@ -103,12 +103,15 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 				$action = JFactory::getApplication()->input->get('action', '');
 				$piece = JFactory::getApplication()->input->get('piece');
 				$ltime = JFactory::getApplication()->input->get('ltime');
-					
+
 				$database->setQuery("SELECT `c_point`, `c_timer` FROM #__quiz_t_question WHERE `c_id` = '".$quest_id."' AND `c_quiz_id` = '".$quiz_id."'");
 				$q_data = $database->loadAssoc();
-				
+
+                $database->setQuery("SELECT `c_pieces` FROM #__quiz_t_puzzle WHERE `c_question_id` = '".$quest_id."'");
+                $pieces = $database->loadResult();
+
 				$point = (!$action) ? $q_data['c_point'] : 0;
-				$all_time = ($q_data['c_timer']) ? $q_data['c_timer'] : 60;
+				$all_time = ($q_data['c_timer']) ? $q_data['c_timer'] : $pieces*1.5*10;
 				
 				$database->setQuery("SELECT COUNT(c_id) FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$quest_id."'");
 				$exists = $database->loadResult();

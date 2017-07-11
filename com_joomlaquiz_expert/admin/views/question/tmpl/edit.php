@@ -26,7 +26,7 @@ $ordering_list = $this->ordering_list;
 </style>
 <?php echo $this->loadTemplate('menu');?>
 <script type="text/javascript">
-    
+
 	Joomla.submitbutton = function(task)
 	{
 		var form = document.adminForm;
@@ -45,23 +45,23 @@ $ordering_list = $this->ordering_list;
 			if(window.parent.tinyMCE.get('jform_c_question').getContent() == '' && jQuery('#jform_c_question').val() != ''){
 				window.parent.tinyMCE.get('jform_c_question').setContent(jQuery('#jform_c_question').val());
 			}
-			
+
 			if(task != 'question.cancel' && window.parent.tinyMCE.get('jform_c_question').getContent() == ''){
 				alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 				return false;
 			}
 		}
-		
-		if (task == 'question.cancel' || document.formvalidator.isValid(document.id('question-form'))) {	
+
+		if (task == 'question.cancel' || document.formvalidator.isValid(document.id('question-form'))) {
 			Joomla.submitform(task, document.getElementById('question-form'));
 		}
 		else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
 
-		
+
 	}
-	
+
 	function TRIM_str(sStr) {
 		sStr = sStr+"";
 		return (sStr.replace(/^[\s\xA0]+/, "").replace(/[\s\xA0]+$/, ""));
@@ -144,7 +144,12 @@ $ordering_list = $this->ordering_list;
 				<?php if ($for=='c_qform')
 			              echo $item['label'];
 				      else {?>
-					<label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $item['label']?></label>
+                          <label class="hasPopover control-label"
+                                 for="<?php echo $for; ?>"
+                                 title="<?php echo $item['label_title']; ?>"
+                                 data-content="<?php echo $item['label_description']; ?>"
+                                 id="<?php echo $for; ?>-lbl"
+                                 style="width:156px;"><?php echo $item['label'] ?></label>
 				<?php }?>
 					<div class="controls">
 						<?php echo $item['input']?>

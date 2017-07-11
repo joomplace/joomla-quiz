@@ -353,7 +353,9 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 		
 		$lists['c_pieces']['input'] = '<input type="text" size="35" name="c_pieces" value="'.(isset($c_pieces) ? $c_pieces : '').'">';
 		$lists['c_pieces']['label'] = 'Puzzle Difficulty (In pieces):';
-		
+        $lists['c_pieces']['label_title'] = 'Puzzle Difficulty';
+        $lists['c_pieces']['label_description'] = 'Define the number of puzzle pieces on one side (the value will be squared)';
+
 		$lists['c_width']['input'] = '<input type="text" size="35" name="c_width" value="'.(isset($row->c_width) ? $row->c_width : '').'">';
 		$lists['c_width']['label'] = 'Image Width:';
 		

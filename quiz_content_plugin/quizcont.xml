@@ -7,7 +7,7 @@
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.2-rc</version>
+	<version>3.7.2-rc2</version>
 	<description>Displays formatted code in content items</description>
 	<files>
 		<filename plugin="quizcont">quizcont.php</filename>

@@ -7,7 +7,7 @@
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.2-rc</version>
+	<version>3.7.2-rc2</version>
 	<description>This module will display a list of connected user results</description>
 	<files>
 		<filename module="mod_quiz_mysummary">mod_quiz_mysummary.php</filename>

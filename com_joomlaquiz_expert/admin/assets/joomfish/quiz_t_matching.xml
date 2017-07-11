@@ -2,7 +2,7 @@
 <joomfish type="contentelement">
   <name>Joomlaquiz - Answers (Drop-Down, Drag-Drop Questions)</name>
   <author>JoomPlace</author>
-  <version>3.7.2-rc</version>
+  <version>3.7.2-rc2</version>
   <description>Definition for the JoomlaQuiz component</description>
   <reference>
 	<table name="quiz_t_matching">

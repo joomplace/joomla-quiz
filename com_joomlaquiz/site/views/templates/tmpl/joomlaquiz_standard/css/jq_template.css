@@ -736,3 +736,7 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 	font-weight:bold;
 	color:#333;
 }
+
+td.quest_pos > label {
+    margin: 2px 0px 5px;
+}

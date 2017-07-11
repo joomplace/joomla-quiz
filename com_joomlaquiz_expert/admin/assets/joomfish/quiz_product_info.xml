@@ -2,7 +2,7 @@
 <joomfish type="contentelement">
   <name>Joomlaquiz - Quiz Products</name>
   <author>JoomPlace</author>
-  <version>3.7.1</version>
+  <version>3.7.2</version>
   <description>Definition for the JoomlaQuiz component</description>
   <reference>
 	<table name="quiz_product_info">

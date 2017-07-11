@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 ?>
 <script language="javascript" type="text/javascript">
-<!--
+
 var quest_type = <?php echo $q_om_type; ?>;
 
 function jq_uploadImage()
@@ -217,6 +217,4 @@ function Add_new_tbl_field(elem_field, elem_field2, elem_field3, tbl_id, field_n
 	row.appendChild(cell7);
 	ReAnalize_tbl_Rows(tbl_elem.rows.length - 2, tbl_id);
 }
-
-//-->
 </script>

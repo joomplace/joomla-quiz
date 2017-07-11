@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 
 ?>
 <script language="javascript" type="text/javascript">
-		<!--
 		var quest_type = <?php echo $q_om_type; ?>;
 
 		function ReAnalize_tbl_Rows( start_index, tbl_id ) {
@@ -472,5 +471,4 @@ defined('_JEXEC') or die;
 			sStr = sStr+"";
 			return (sStr.replace(/^[\s\xA0]+/, "").replace(/[\s\xA0]+$/, ""));
 		}
-//-->
 </script>

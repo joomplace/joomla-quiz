@@ -2,12 +2,12 @@
 <extension version="3.0" type="plugin" group="system" method="upgrade">
     <name>System - JoomlaQuiz Alta User Points</name>
     <author>Joomplace.com</author>
-    <creationDate>June 2017</creationDate>
+    <creationDate>July 2017</creationDate>
     <copyright>(C) JoomPlace, www.joomplace.com</copyright>
     <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
     <authorEmail>support@joomplace.com</authorEmail>
     <authorUrl>www.joomplace.com</authorUrl>
-    <version>3.7.1</version>
+    <version>3.7.2</version>
     <description>JOOMLAQUIZ ALTA USER POINTS PLUGIN</description>
     <files>
         <filename plugin="jq_altauserpoints">jq_altauserpoints.php</filename>

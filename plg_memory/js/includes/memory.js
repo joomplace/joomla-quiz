@@ -1,8 +1,4 @@
 if(questions[i].cur_quest_type == 13){
-	quest_timer_sec = 0;
-}
-
-if(questions[i].cur_quest_type == 13){
 	jq_jQuery('.jq_time_tick_container').prepend('<div id="jq_total_memory_point">' + totalPoint + '&nbsp;<span>0</span></div>');
 	jq_jQuery('.jq_time_tick_container').prepend('<div id="jq_current_memory_point">' + currentPoint + '&nbsp;<span>0</span></div>');
 	jq_jQuery('.jq_time_tick_container').prepend('<div id="jq_penalty_memory_point">' + penaltyPoint + '&nbsp;<span>0</span></div>');

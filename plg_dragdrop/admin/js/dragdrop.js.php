@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 ?>
 <script language="javascript" type="text/javascript">
-		<!--
+
 		var quest_type = <?php echo $q_om_type; ?>;
 
 		function ReAnalize_tbl_Rows( start_index, tbl_id ) {
@@ -196,5 +196,4 @@ defined('_JEXEC') or die;
 			row.appendChild(cell7);
 			ReAnalize_tbl_Rows(tbl_elem.rows.length - 2, tbl_id);
 		}
-//-->
 </script>

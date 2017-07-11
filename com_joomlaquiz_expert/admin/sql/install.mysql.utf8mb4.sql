@@ -613,7 +613,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_enable_sertif` char(1) NOT NULL DEFAULT '',
   `c_skin` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `c_random` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `c_guest` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `published` int(11) NOT NULL DEFAULT '0',
   `c_slide` tinyint(4) NOT NULL DEFAULT '1',
   `c_language` int(11) NOT NULL DEFAULT '0',

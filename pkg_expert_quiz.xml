@@ -2,7 +2,7 @@
 <extension type="package" version="3.x" method="upgrade">
   <name>Joomla Quiz Deluxe Package</name>
   <author>Joomplace Team</author>
-  <creationDate>June 2017</creationDate>
+  <creationDate>July 2017</creationDate>
   <packagename>expert_quiz</packagename>
   <authorEmail>support@joomplace.com</authorEmail>
   <authorUrl>www.joomplace.com</authorUrl>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <extension type="component" version="3.0" method="upgrade">
   <name>COM_JOOMLAQUIZ</name>
-  <creationDate>June 2017</creationDate>
+  <creationDate>July 2017</creationDate>
   <author>JoomPlace Team</author>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>

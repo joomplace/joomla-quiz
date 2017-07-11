@@ -437,9 +437,9 @@ blockquote span{
 .jq_question_text_cont{
 	padding-top: 1px;
 }
-#jq_quiz_container > :first-child{
-	margin-top: -40px;/* moves on one level with .jq_time_tick_container */
-}
+/*#jq_quiz_container > :first-child{*/
+	/*margin-top: -40px;!* moves on one level with .jq_time_tick_container *!*/
+/*}*/
 .jq_question_name-wr,
 .jq_points_container,
 .jq_time_tick_container{

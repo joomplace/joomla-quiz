@@ -474,7 +474,28 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								$quest_blank .= "\n\t\t\t\t\t\t<blank_text><![CDATA[".$choice->c_text."]]></blank_text>";
 								$quest_blank .= "\n\t\t\t\t\t</quest_blank>";
 							}
-							break;		
+
+							//Get Fake data
+                            $db = JFactory::getDbo();
+                            $query = $db->getQuery(true)
+                                ->select('*')
+                                ->from($db->quoteName('#__quiz_t_faketext'))
+                                ->where($db->quoteName('c_quest_id') . ' = '
+                                    . $db->quote($quest->c_id));
+                            $db->setQuery($query);
+                            $fake_data = $db->loadAssocList();
+
+                            $quest_blank_fake = '';
+                            foreach ($fake_data as $key => $item) {
+                                $quest_blank_fake
+                                    .= "\n\t\t\t\t\t<fake_data_item c_question_id=\""
+                                    . $quest->c_id . "\">";
+                                $quest_blank_fake .= "\n\t\t\t\t\t\t<fake_data_item_text><![CDATA["
+                                    . $item['c_text']
+                                    . "]]></fake_data_item_text>";
+                                $quest_blank_fake .= "\n\t\t\t\t\t</fake_data_item>";
+                            }
+							break;
 					case 7:
 							$query = "SELECT * FROM #__quiz_t_hotspot as h WHERE h.c_question_id = ".$quest->c_id;
 							$database->SetQuery($query);
@@ -501,6 +522,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 			$quiz_xml .= "\n\t\t\t\t<blank_data>";
 			$quiz_xml .= $quest_blank;
 			$quiz_xml .= "\n\t\t\t\t</blank_data>";
+            $quiz_xml .= "\n\t\t\t\t<blank_data_fake>";
+            $quiz_xml .= $quest_blank_fake;
+            $quiz_xml .= "\n\t\t\t\t</blank_data_fake>";
 			$quiz_xml .= "\n\t\t\t\t<hotspot_data>";
 			$quiz_xml .= $quest_hotspot;
 			$quiz_xml .= "\n\t\t\t\t</hotspot_data>";

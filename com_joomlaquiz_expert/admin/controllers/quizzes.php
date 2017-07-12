@@ -485,7 +485,6 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             $db->setQuery($query);
                             $fake_data = $db->loadAssocList();
 
-                            $quest_blank_fake = '';
                             foreach ($fake_data as $key => $item) {
                                 $quest_blank_fake
                                     .= "\n\t\t\t\t\t<fake_data_item c_question_id=\""
@@ -1178,7 +1177,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 													}
 													$query = "SELECT max(c_id) FROM #__quiz_t_blank";
 													$database->setQuery($query);
-													$new_blank_id = $database->loadResult();
+                                                    зарядка Type-c			$new_blank_id = $database->loadResult();
 													$query = "INSERT INTO #__quiz_t_text(c_id,c_blank_id,c_text,ordering) ";
 													$query .= " VALUES('',".$db->quote($new_blank_id).",".$db->quote($ch_data->blank_text).",".$db->quote($ch_data->ordering).")";
 													$database->setQuery($query);

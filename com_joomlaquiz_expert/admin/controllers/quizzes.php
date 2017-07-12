@@ -438,6 +438,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 					case 1:
 					case 2:
 					case 3:
+                    case 10:
 							$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = ".$quest->c_id;
 							$database->SetQuery($query);
 							$choice_data = $database->LoadObjectList();

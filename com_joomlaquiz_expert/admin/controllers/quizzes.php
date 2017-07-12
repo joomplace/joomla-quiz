@@ -1190,6 +1190,35 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 												}
 											}
 										}
+										//Add Fake data
+                                        if (count($qcat->blank_data_fake)) {
+                                            foreach ($qcat->blank_data_fake as $ch_data)
+                                            {
+                                                if ($ch_data->c_question_id == $q_quest->id) {
+                                                    $db = JFactory::getDbo();
+                                                    $query = $db->getQuery(true);
+
+                                                    $colums = array(
+                                                        'c_id',
+                                                        'c_quest_id',
+                                                        'c_text'
+                                                    );
+
+                                                    $values = array(
+                                                        '\'\'',
+                                                        $db->quote($new_quest_id),
+                                                        $db->quote($ch_data->fake_data_item_text)
+                                                    );
+
+                                                    $query->insert($db->quoteName('#__quiz_t_faketext'))
+                                                        ->columns($db->quoteName($colums))
+                                                        ->values(implode(',', $values));
+
+                                                    $db->setQuery($query)
+                                                        ->execute();
+                                                }
+                                            }
+                                        }
 										if(count($qcat->blank_distr_data))
 										{
 											foreach($qcat->blank_distr_data as $ch_data)

@@ -354,8 +354,8 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 		$lists['c_pieces']['input'] = '<input type="text" size="35" name="c_pieces" value="'.(isset($c_pieces) ? $c_pieces : '').'">';
 		$lists['c_pieces']['label'] = 'Puzzle Difficulty (In pieces):';
 		
-		$lists['c_width']['input'] = '<input type="text" size="35" name="c_width" value="'.(isset($row->c_width) ? $row->c_width : '').'">';
-		$lists['c_width']['label'] = 'Image Width:';
+		/*$lists['c_width']['input'] = '<input type="text" size="35" name="c_width" value="'.(isset($row->c_width) ? $row->c_width : '').'">';
+		$lists['c_width']['label'] = 'Image Width:';*/
 		
 		$lists['c_timer']['input'] = '<input type="text" size="35" name="c_timer" value="'.(isset($row->c_timer) ? $row->c_timer : '').'">';
 		$lists['c_timer']['label'] = 'Time Limit:';

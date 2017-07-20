@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<alphauserpoints type="plugin">
-    <rule>JoomlaQuiz points</rule>
-    <description>Assign points when a user completes a quiz</description>
-    <component>com_joomlaquiz</component>
-    <plugin_function>plgup_joomlaquizpoints</plugin_function>
-    <fixed_points>false</fixed_points>
-<version>3.7.0</version></alphauserpoints>

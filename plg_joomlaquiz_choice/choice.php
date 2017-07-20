@@ -16,6 +16,8 @@ class PlgJoomlaquizChoice extends JPlugin
      * TODO: move to interface
      * move to interface start
      */
+    protected $autoloadLanguage = true;
+
     public function __construct($subject, array $config = array())
     {
         parent::__construct($subject, $config);
@@ -39,9 +41,8 @@ class PlgJoomlaquizChoice extends JPlugin
         return $this->renderLayout('quiz.question.'.$this->getType(), $questionData,dirname(__FILE__).DIRECTORY_SEPARATOR.'layouts');
     }
 
-    // TODO: make abstract
     protected function getType(){
-        return 'choice';
+        return $this->_name;
     }
     /*
      * move to interface stop

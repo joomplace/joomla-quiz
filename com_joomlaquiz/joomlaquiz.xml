@@ -9,24 +9,6 @@
   <authorUrl>www.joomplace.com</authorUrl>
   <version>4.0.0-pre</version>
   <description>This component manages Quizzes and Quiz Clients</description>
-  <scriptfile>script.php</scriptfile>
-  <install>
-    <sql>
-      <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
-      <file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8mb4.sql</file>
-    </sql>
-  </install>
-  <uninstall>
-    <sql>
-      <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
-      <file driver="mysql" charset="utf8mb4">sql/uninstall.mysql.utf8mb4.sql</file>
-    </sql>
-  </uninstall>
-  <update>
-    <schemas>
-      <schemapath type="mysql">sql/updates/mysql</schemapath>
-    </schemas>
-  </update>
   <files folder="site">
     <filename>Dispatcher.php</filename>
     <filename>joomlaquiz.php</filename>

@@ -12,14 +12,26 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 class plgContentQuizSharedLinks extends JPlugin {
 
-	function onContentPrepare($context, &$article, &$params, $limitstart)
-	{
+    function __construct(& $subject, $config)
+    {
+        parent::__construct($subject, $config);
+        $this->loadLanguage();
+    }
+
+    function onContentPrepare($context, &$article, &$params, $limitstart)
+    {
         // simple performance check to determine whether bot should process further
         if (strpos($article->text, 'quiz_results') === false) {
             return true;
         }
 
         $regex = '/task%3Dresults.sturesult%26id%3D(\d+)%26share_id%3D(\d+)/';
+
+        $shareTitle = '<p class="lead">' . JText::_('PLG_CONTENT_QUIZSHAREDLINKS_SHARE_TITLE') . '</p>';
+
+        $position = '<div id="jq_share">';
+
+        $article->text = str_replace($position, $position.$shareTitle, $article->text);
 
         /**
          * $matches[1] contains quiz id

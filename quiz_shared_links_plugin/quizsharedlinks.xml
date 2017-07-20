@@ -10,10 +10,14 @@
 	<version>3.7.2</version>
 	<description>Replaces shared icons link from quiz results page to quiz main page</description>
 	<files>
+		<folder>language</folder>
 		<filename plugin="quizsharedlinks">quizsharedlinks.php</filename>
 		<filename>index.html</filename>
 		<filename>quizsharedlinks.xml</filename>
 	</files>
+	<languages folder="language/en-GB">
+		<language tag="en-GB">en-GB.plg_content_quizsharedlinks.ini</language>
+	</languages>
 	<config>
 		<fields name="params">
 		</fields>

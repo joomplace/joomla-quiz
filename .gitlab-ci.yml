@@ -1,46 +1,42 @@
-stages:
-  - build
+#stages:
+#  - build
 
-build:regular:
-  stage: build
-  image: php:7.0-apache
-  before_script:
-    - apt-get update -qq && apt-get install -y -qq zip
-    - zip -v
-  script:
-    - if grep -rn './' -e "\xEF\xBB\xBF"; then exit 1; fi
-    - grep -E -o '<version>(.*?)</version>' ./pkg_quiz.xml | sed -E 's/<version>|<\/version>//g' | while read version; do find ./com_joomlaquiz/admin/sql/updates/ -maxdepth 2 -name "*.sql" -print |  sed -E 's/.*\/|\.sql//g' | while read sqin; do if [ "$sqin" \> "$version" ]; then exit 1; fi; done; done
-# delete updater temporary
-    - sed -E -i 's/<file.*?_joomplaceupdater.zip<\/file>//g' ./pkg_quiz.xml
-    - mkdir packages
-    - grep -E -o '<file.*>(.*?)</file>' ./pkg_quiz.xml |  sed -E 's/<file[^>]+>|.zip<\/file>//g' | while read in; do if [ "$in" != 'plg_installer_joomplaceupdater' ]; then cd ./"$in"; zip -r ./../packages/"$in".zip ./*; cd ./../; fi; done
-    - pwd
-  artifacts:
-    paths:
-    - packages/
-    - pkg_quiz.xml
-    name: "pkg_quiz_${CI_BUILD_REF_NAME}"
-    when: on_success
-    expire_in: 1 day
-
-build:expert:
-  stage: build
-  image: php:7.0-apache
-  before_script:
-    - apt-get update -qq && apt-get install -y -qq zip
-    - zip -v
-  script:
-    - if grep -rn './' -e "\xEF\xBB\xBF"; then exit 1; fi
-    - grep -E -o '<version>(.*?)</version>' ./pkg_expert_quiz.xml | sed -E 's/<version>|<\/version>//g' | while read version; do find ./com_joomlaquiz_expert/admin/sql/updates/ -maxdepth 2 -name "*.sql" -print |  sed -E 's/.*\/|\.sql//g' | while read sqin; do if [ "$sqin" \> "$version" ]; then exit 1; fi; done; done
-# delete updater temporary
-    - sed -E -i 's/<file.*?_joomplaceupdater.zip<\/file>//g' ./pkg_expert_quiz.xml
-    - mkdir packages
-    - grep -E -o '<file.*>(.*?)</file>' ./pkg_expert_quiz.xml |  sed -E 's/<file[^>]+>|.zip<\/file>//g' | while read in; do if [ "$in" != 'plg_installer_joomplaceupdater' ]; then cd ./"$in"; zip -r ./../packages/"$in".zip ./*; cd ./../; fi; done
-    - pwd
-  artifacts:
-    paths:
-    - packages/
-    - pkg_expert_quiz.xml
-    name: "pkg_expert_quiz_${CI_BUILD_REF_NAME}"
-    when: on_success
-    expire_in: 1 day
+#build:regular:
+#  stage: build
+#  image: alex7r/lamp:ccp
+#  script:
+#    - if grep -rn './' -e "\xEF\xBB\xBF"; then exit 1; fi
+#    - grep -E -o '<version>(.*?)</version>' ./pkg_quiz.xml | sed -E 's/<version>|<\/version>//g' | while read version; do find ./com_joomlaquiz/admin/sql/updates/ -maxdepth 2 -name "*.sql" -print |  sed -E 's/.*\/|\.sql//g' | while read sqin; do if [ "$sqin" \> "$version" ]; then exit 1; fi; done; done
+#    # delete updater temporary
+#    - sed -E -i 's/<file.*?_joomplaceupdater.zip<\/file>//g' ./pkg_quiz.xml
+#    - mkdir packages
+#    - grep -E -o '<file.*>(.*?)</file>' ./pkg_quiz.xml
+#      |
+#      sed -r 's/<file.*?src="([^"]*?)".*?>(.*).zip<\/file>|<file.*?>((.*)).zip<\/file>/\1\3^\2\4/'
+#      |
+#      while read in;
+#      do
+#        rootdir=`pwd`;
+#        source=$(echo $in | cut -f1 -d^);
+#        dest=$(echo $in | cut -f2 -d^);
+#        if [ "$dest" != 'plg_installer_joomplaceupdater' ];
+#          then
+#            if [[ $source =~ ^https? ]];
+#              then
+#                cd $rootdir/packages/;
+#                wget --output-document=$dest.zip $source;
+#                cd $rootdir;
+#              else
+#                cd $rootdir/$source;
+#                zip -r $rootdir/packages/$dest.zip ./*;
+#                cd $rootdir/;
+#            fi;
+#        fi;
+#      done
+#  artifacts:
+#    paths:
+#    - packages/
+#    - pkg_quiz.xml
+#    name: "pkg_quiz_${CI_BUILD_REF_NAME}"
+#    when: on_success
+#    expire_in: 1 day

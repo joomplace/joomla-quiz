@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<field name="asset_id" type="hidden" filter="unset" />
+	<fieldset name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+	>
+		<field name="rules" type="rules"
+			component="com_joomlaquiz"
+			filter="rules"
+			validate="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			section="component" />
+	</fieldset>
+</config>

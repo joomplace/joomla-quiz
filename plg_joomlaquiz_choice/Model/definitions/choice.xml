@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="basic">
+        <field
+            name="question"
+            mysql_type="int(11)"
+        />
+        <field
+            name="text"
+            mysql_type="varchar(256)"
+        />
+        <field
+            name="right"
+            mysql_type="int(1)"
+        />
+        <field
+            name="points"
+            mysql_type="float(4,2)"
+        />
+    </fieldset>
+</form>

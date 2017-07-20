@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="basic" addfieldpath="/administrator/components/com_categories/models/fields">
+        <field
+                name="type"
+                type="hidden"
+                required="true"
+                mysql_type="varchar(64)"
+                default="choice"
+        />
+        <field
+                name="title"
+                type="text"
+                mysql_type="varchar(256)"
+                size="40"
+                required="true"
+        />
+        <field
+                name="catid"
+                type="categoryedit"
+                extension="com_joomlaquiz.question"
+                allowAdd="true"
+                mysql_type="int(11)"
+        />
+    </fieldset>
+</form>

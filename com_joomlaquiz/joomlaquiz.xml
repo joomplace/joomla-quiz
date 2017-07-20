@@ -7,7 +7,7 @@
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
   <authorEmail>support@joomplace.com</authorEmail>
   <authorUrl>www.joomplace.com</authorUrl>
-  <version>3.7.0</version>
+  <version>4.0.0-pre</version>
   <description>This component manages Quizzes and Quiz Clients</description>
   <scriptfile>script.php</scriptfile>
   <install>
@@ -28,45 +28,27 @@
     </schemas>
   </update>
   <files folder="site">
-    <filename>metadata.xml</filename>
-    <filename>controller.php</filename>
-    <filename>index.html</filename>
+    <filename>Dispatcher.php</filename>
     <filename>joomlaquiz.php</filename>
-    <folder>assets</folder>
-    <folder>controllers</folder>
-    <folder>helpers</folder>
+    <folder>Controller</folder>
     <folder>language</folder>
     <folder>layouts</folder>
-    <folder>libraries</folder>
-    <folder>models</folder>
-    <folder>tables</folder>
     <folder>views</folder>
   </files>
   <languages folder="site/language">
     <language tag="en-GB">en-GB.com_joomlaquiz.ini</language>
   </languages>
   <administration>
-    <menu link="index.php?option=com_joomlaquiz&amp;view=dashboard">COM_JOOMLAQUIZ</menu>
-    <submenu>
-      <menu link="option=com_joomlaquiz&amp;view=quizzes">COM_JOOMLAQUIZ_MENU_QUIZZES</menu>
-      <menu link="option=com_joomlaquiz&amp;view=questions">COM_JOOMLAQUIZ_MENU_QUESTIONS</menu>
-      <menu link="option=com_joomlaquiz&amp;view=configuration">COM_JOOMLAQUIZ_MENU_CONFIG</menu>
-      <menu link="option=com_joomlaquiz&amp;view=results">COM_JOOMLAQUIZ_MENU_RESULTS</menu>
-      <menu link="option=com_joomlaquiz&amp;view=dashboard">COM_JOOMLAQUIZ_MENU_ABOUT_JOOMLAQUIZ</menu>
-    </submenu>
+    <menu link="index.php?option=com_joomlaquiz">COM_JOOMLAQUIZ</menu>
     <files folder="admin">
       <filename>access.xml</filename>
       <filename>config.xml</filename>
-      <filename>controller.php</filename>
-      <filename>index.html</filename>
+      <filename>Dispatcher.php</filename>
       <filename>joomlaquiz.php</filename>
-      <folder>assets</folder>
-      <folder>controllers</folder>
+      <folder>Controller</folder>
       <folder>helpers</folder>
       <folder>language</folder>
-      <folder>models</folder>
-      <folder>sql</folder>
-      <folder>tables</folder>
+      <folder>Model</folder>
       <folder>views</folder>
     </files>
     <languages folder="admin/language">

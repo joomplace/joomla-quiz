@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="data">
+        <fieldset addfieldpath="/plugins/joomlaquiz/choice/form/fields" name="options" label="CHOICE_OPTIONS">
+            <field
+                    name="options"
+                    type="options"
+            />
+        </fieldset>
+    </fields>
+</form>

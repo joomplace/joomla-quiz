@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.7" type="plugin" group="joomlaquiz" method="upgrade">
+	<name>plg_joomlaquiz_choice</name>
+	<author>JoomPlace Team</author>
+	<creationDate>July 2017</creationDate>
+	<copyright>Copyright (C) 2005 - 2017 JoomPlace. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>admin@joomla.org</authorEmail>
+	<authorUrl>www.joomla.org</authorUrl>
+	<version>4.0.0</version>
+	<description>PLG_JOOMLAQUIZ_CHOICE_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="choice">choice.php</filename>
+		<folder>Model</folder>
+		<folder>layouts</folder>
+		<folder>form</folder>
+		<folder>sql</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.plg_joomlaquiz_choice.ini</language>
+	</languages>
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+</extension>

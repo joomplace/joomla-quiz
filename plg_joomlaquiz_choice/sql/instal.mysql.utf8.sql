@@ -1,0 +1,1 @@
+UPDATE `prfx_extensions` SET `enabled` = 1 WHERE `element` = 'choice' AND `folder` = 'joomlaquiz';

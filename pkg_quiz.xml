@@ -12,7 +12,7 @@
   <files folder="packages">
     <file type="component" id="com_joomlaquiz">com_joomlaquiz.zip</file>
     <file type="plugin" id="choice" group="joomlaquiz">plg_choice.zip</file>
-    <file type="library" src="https://github.com/joomplace/X/archive/master.zip" id="JoomPlaceX">lib_JoomPlaceX.zip</file>
+    <file type="library" src="https://github.com/joomplace/X/archive/0.9-beta.0.zip" id="JoomPlaceX">lib_JoomPlaceX.zip</file>
     <file type="plugin" src="https://github.com/joomplace/Xautoloader/archive/master.zip" id="joomplaceXautoloader" group="system">plg_system_joomplaceXautoloader.zip</file>
     <file type="plugin" id="updater" group="installer">plg_installer_joomplaceupdater.zip</file>
   </files>

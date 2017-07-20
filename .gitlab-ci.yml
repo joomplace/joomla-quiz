@@ -6,7 +6,7 @@ build:regular:
   image: alex7r/lamp:ccp
   script:
     - if grep -rn './' -e "\xEF\xBB\xBF"; then exit 1; fi
-    - grep -E -o '<version>(.*?)</version>' ./pkg_quiz.xml | sed -E 's/<version>|<\/version>//g' | while read version; do find ./com_joomlaquiz/admin/sql/updates/ -maxdepth 2 -name "*.sql" -print |  sed -E 's/.*\/|\.sql//g' | while read sqin; do if [ "$sqin" \> "$version" ]; then exit 1; fi; done; done
+    - grep -E -o '<version>(.*?)</version>' ./pkg_quiz.xml | sed -E 's/<version>|<\/version>//g' | while read version; do find ./com_joomlaquiz/admin/ -maxdepth 2 -name "sql/updates/*.sql" -print |  sed -E 's/.*\/|\.sql//g' | while read sqin; do if [ "$sqin" \> "$version" ]; then exit 1; fi; done; done
     # delete updater temporary
     - sed -E -i 's/<file.*?_joomplaceupdater.zip<\/file>//g' ./pkg_quiz.xml
     - mkdir packages

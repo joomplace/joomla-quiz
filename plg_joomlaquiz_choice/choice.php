@@ -71,19 +71,34 @@ class PlgJoomlaquizChoice extends JPlugin
             $form = JFactory::getApplication()->input->get('jform', array(), 'ARRAY');
             $options = json_decode($form['data']['options']);
             $questionId = $question->id;
-            array_map(function ($option) use ($questionId) {
+            $i = 0;
+            array_map(function ($option) use ($questionId, &$i) {
                 if (!isset($option->id)) {
                     $option->id = null;
                 }
                 $option->question = $questionId;
+                $option->ordering = ++$i;
                 $choice           = new Choice($option->id);
                 $choice->bind($option);
                 $choice->store();
             }, $options);
-            // TODO: add delete
+            $deleteOptions = json_decode($form['data']['deleteOptions']);
+            $choiceModel = new Choice();
+            array_map(function ($id)use($choiceModel){
+                $choiceModel->delete($id);
+            },array_filter($deleteOptions));
         }
 
         return true;
+    }
+
+    public function onQuestionBeforeSave2Copy(array &$data){
+        if($this->typeStrict($data['type'])) {
+            $data['data']['options'] = json_encode(array_map(function($option){
+                unset($option->id);
+                return $option;
+            },json_decode($data['data']['options'])));
+        }
     }
 
     public function onQuestionRender(Question $question){

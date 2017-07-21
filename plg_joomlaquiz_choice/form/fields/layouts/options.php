@@ -8,6 +8,8 @@
 
 /** @var JFormField $displayData */
 JFactory::getDocument()->addScript('https://unpkg.com/vue');
+JFactory::getDocument()->addScript('https://unpkg.com/sortablejs@1.4.2');
+JFactory::getDocument()->addScript('https://unpkg.com/vue-sortable@0.1.3');
 $options = new \Joomla\Registry\Registry;
 $options->set('relative', true);
 $options->set('pathOnly', true);
@@ -21,6 +23,7 @@ JFactory::getDocument()->addScript($path);
 
 $data = new \Joomla\Registry\Registry();
 $data->set('options', $displayData->value?$displayData->value:array());
+$data->set('deleteOptions', array());
 $data->set('newOption', (object)array('text'=>'','right'=>($data->get('options')?false:true),'points'=>''));
 ?>
 <script>
@@ -28,6 +31,7 @@ $data->set('newOption', (object)array('text'=>'','right'=>($data->get('options')
 </script>
 <div id="choiceOptions" assignEnterHit="#addOption">
     <input type="hidden" v-bind:value="printData" name="<?= $displayData->name ?>" />
+    <input type="hidden" v-bind:value="printDelete" name="<?= str_replace('options','deleteOptions',$displayData->name) ?>" />
     <table class="table table-striped">
         <thead>
             <tr>
@@ -47,8 +51,8 @@ $data->set('newOption', (object)array('text'=>'','right'=>($data->get('options')
                 </th>
             </tr>
         </thead>
-        <tbody>
-            <tr v-for="(option, i) in options">
+        <tbody v-sortable="{onEnd: reorder}">
+            <tr v-for="(option, i) in options" :key="option.ordering">
                 <td>
                     {{i+1}}
                 </td>
@@ -62,10 +66,10 @@ $data->set('newOption', (object)array('text'=>'','right'=>($data->get('options')
                     {{option.right}}
                 </td>
                 <td>
-                    {{option.points}}
+                    {{parseFloat(option.points).toFixed(2)}}
                 </td>
                 <td>
-
+                    <button type="button" class="btn btn-small" @click="deleteOption(i)">Delete</button>
                 </td>
             </tr>
         </tbody>

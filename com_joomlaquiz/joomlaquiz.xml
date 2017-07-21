@@ -29,7 +29,6 @@
       <filename>joomlaquiz.php</filename>
       <folder>Controller</folder>
       <folder>helpers</folder>
-      <folder>language</folder>
       <folder>Model</folder>
       <folder>views</folder>
     </files>

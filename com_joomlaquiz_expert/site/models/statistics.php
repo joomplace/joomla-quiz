@@ -97,7 +97,7 @@ class JoomlaquizModelStatistics extends JModelList
 		$database->setQuery( $query );
 		$summary['quiz_pass_score'] = $database->loadResult();
 		
-		$query = "SELECT * FROM #__quiz_t_question WHERE c_quiz_id = '".$quiz_id."' AND published = 1 AND c_type NOT IN (8,9) ORDER BY ordering, c_id";
+		$query = "SELECT * FROM #__quiz_t_question WHERE c_quiz_id = '".$quiz_id."' AND published = 1 AND c_type NOT IN (9) ORDER BY ordering, c_id";
 		$database->SetQuery( $query );
 		$questions = $database->LoadObjectList();
 		

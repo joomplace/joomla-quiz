@@ -207,11 +207,35 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetStatistic(&$data){
-		return true;		
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('qs.c_answer'))
+            ->from($db->quoteName('#__quiz_r_student_survey', 'qs'))
+            ->innerJoin($db->quoteName('#__quiz_r_student_quiz', 'qq')
+                . ' ON '
+                . $db->quoteName('qs.c_sq_id') . ' = ' . $db->quoteName('qq.c_id')
+            )
+            ->where($db->quoteName('qq.c_quiz_id') . ' = ' . $db->quote($data['question']->c_quiz_id))
+        ;
+        $db->setQuery($query);
+        $choice_data = $db->loadObjectList();
+
+        $data['question']->choice_data = $choice_data;
+        $question = $data['question'];
+
+        return $question;
 	}
 
 	public function onStatisticContent(&$data){
-		return true;		
+        if (is_array($data['question']->choice_data)) {
+            echo '<tr>';
+            echo '<td colspan="4">';
+            foreach ($data['question']->choice_data as $key => $cdata) {
+                echo $key + 1 . '. ' . $cdata->c_answer . '<br />';
+            }
+            echo '</td>';
+            echo '</tr>';
+        }
 	}
 
 	//Administration part
@@ -398,11 +422,35 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetAdminQuestionData(&$data){
-			return;
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('qs.c_answer'))
+            ->from($db->quoteName('#__quiz_r_student_survey', 'qs'))
+            ->innerJoin($db->quoteName('#__quiz_r_student_quiz', 'qq')
+                . ' ON '
+                . $db->quoteName('qs.c_sq_id') . ' = ' . $db->quoteName('qq.c_id')
+            )
+            ->where($db->quoteName('qq.c_quiz_id') . ' = ' . $db->quote($data['question']->c_quiz_id))
+        ;
+        $db->setQuery($query);
+        $choice_data = $db->loadObjectList();
+
+        $data['question']->choice_data = $choice_data;
+        $question = $data['question'];
+
+        return $question;
 	}
 	
 	public function onGetAdminStatistic(&$data){
-		return;
+        if (is_array($data['question']->choice_data)) {
+            echo '<tr>';
+            echo '<td colspan="4">';
+            foreach ($data['question']->choice_data as $key => $cdata) {
+                echo $key + 1 . '. ' . $cdata->c_answer . '<br />';
+            }
+            echo '</td>';
+            echo '</tr>';
+        }
 	}
 	
 	public function onGetAdminCsvData(&$data){

@@ -111,7 +111,7 @@ $extension = 'com_joomlaquiz';
 							<table>
 								<tr>
 									<td width="400"><strong><?php echo JText::_('COM_JOOMLAQUIZ_OPTIONS');?></strong></td>
-									<td width="50"><strong><?php echo JText::_('COM_JOOMLAQUIZ_COUNT');?></strong></td>
+                                    <td width="50"><strong><?php if($question->c_type != 8)echo JText::_('COM_JOOMLAQUIZ_COUNT');?></strong></td>
 									<td width="100">&nbsp;</td>
 									<td width="300">&nbsp;</td>
 								</tr>

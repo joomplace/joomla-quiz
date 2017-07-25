@@ -185,15 +185,29 @@ class JoomlaquizModelCertificates extends JModelList
 			break;
 		}
 			
-			
 		$query = "SELECT * FROM #__quiz_cert_fields WHERE cert_id = '{$certif->id}' ORDER BY c_id";
 		$database->setQuery($query);
 		$fields = $database->loadObjectList();
 
-		$ad = 0;			
 		if (is_array($fields) && count($fields)) {
 			foreach($fields as $field){
 				$font = JPATH_SITE . "/media/".(isset($field->font)? $field->font: 'arial.ttf');
+                $img_width = $im_fullsize[0];
+                $box = imagettfbbox($field->text_h, 0, $font, $field->f_text);
+                $box_width = abs($box[4] - $box[0]);
+
+                switch((int)$certif->crtf_align) {
+                    case 1:
+                        $ad = ($img_width/2 - $box_width/2);
+                        break;
+                    case 2:
+                        $field->text_x = -$field->text_x;
+                        $ad = $img_width - $box_width;
+                        break;
+                    default:
+                        $ad = 0;
+                        break;
+                }
 				if ($field->shadow) imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2, $grey, $font, $field->f_text);
 					
 				imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);

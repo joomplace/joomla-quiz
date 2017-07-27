@@ -375,7 +375,8 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		for($s=0;$s<count($data['data']['c_blank']);$s++){
 			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', false);
-            $str = '{blank' . ($s+1) . '}=' . $data['data']['c_blank'][$s]['c_answer'].'; ';
+            $status = $data['data']['c_blank'][$s]['is_correct'] ? '[Correct]' : '[Incorrect]';
+            $str = '{blank' . ($s+1) . '}=' . $data['data']['c_blank'][$s]['c_answer'] . $status . '; ';
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 		}
 				

@@ -21,5 +21,9 @@
 				value_field="title"
 			/>
 		</fieldset>
+		<fieldset name="assesmenttext" label="COM_JOOMLAQUIZ_ASSESMENT_TEXT_FORMFIELD_TITLE_LABEL">
+			<field name="assesment_descr_before" type="editor" buttons="true" hide="pagebreak,readmore,testimonial" class="inputbox" filter="raw" label="COM_JOOMLAQUIZ_ASSESMENT_TEXT_DESC_BEFORE"/>
+			<field name="assesment_descr_after" type="editor" buttons="true" hide="pagebreak,readmore,testimonial" class="inputbox" filter="raw" label="COM_JOOMLAQUIZ_ASSESMENT_TEXT_DESC_AFTER"/>
+		</fieldset>
 	</fields>
 </metadata>

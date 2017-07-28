@@ -15,6 +15,8 @@ class Quiz extends \JoomPlaceX\Model
         'published' => array(
             'mysql_type' => 'int(1) unsigned',
             'type' => 'radio',
+            'label' => 'QUESTION_PUBLISHED_LABEL',
+            'description' => 'QUIZ_PUBLISHED_LABEL_DESC',
             'class' => 'btn-group',
             'nullable' => false,
             'default' => 0,

@@ -10,11 +10,14 @@
 $quiz = $this->quiz;
 /** @var \Joomplace\Component\Joomlaquiz\Administrator\Model\Question[] $questions */
 $questions = $this->questions;
-
+$assesment = $this->assesment
 ?>
 <h2>
     <?= $quiz->title ?>
 </h2>
+<p>
+    <?php echo $assesment->assesment_descr_before; ?>
+</p>
 <form class="form-horizontal" assesmentTest>
     <?php
         $categories = array();
@@ -50,6 +53,9 @@ $questions = $this->questions;
         },$categories);
     ?>
 </div>
+<p>
+    <?php echo $assesment->assesment_descr_after; ?>
+</p>
 <script>
     jQuery(document).ready(function($){
         $('[assesmentTest]').on('change','select',function(e){

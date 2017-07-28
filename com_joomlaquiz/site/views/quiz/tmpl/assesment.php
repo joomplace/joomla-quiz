@@ -13,14 +13,14 @@ $questions = $this->questions;
 /** @var JMenuItem $activeMenuItem */
 $activeMenuItem = JFactory::getApplication()->getMenu()->getActive();
 
-$itemQuery = $activeMenuItem->get('query');
+$menuParams = $activeMenuItem->getParams();
 
 ?>
 <h2>
     <?= $quiz->title ?>
 </h2>
 <p>
-    <?php echo $itemQuery['assesment_descr_before']; ?>
+    <?php echo $menuParams->get('assesment_descr_before'); ?>
 </p>
 <form class="form-horizontal" assesmentTest>
     <?php
@@ -58,7 +58,7 @@ $itemQuery = $activeMenuItem->get('query');
     ?>
 </div>
 <p>
-    <?php echo $itemQuery['assesment_descr_after']; ?>
+    <?php echo $menuParams->get('assesment_descr_after'); ?>
 </p>
 <script>
     jQuery(document).ready(function($){

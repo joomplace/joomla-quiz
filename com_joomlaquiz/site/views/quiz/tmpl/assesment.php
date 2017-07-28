@@ -10,13 +10,17 @@
 $quiz = $this->quiz;
 /** @var \Joomplace\Component\Joomlaquiz\Administrator\Model\Question[] $questions */
 $questions = $this->questions;
-$assesment = $this->assesment
+/** @var JMenuItem $activeMenuItem */
+$activeMenuItem = JFactory::getApplication()->getMenu()->getActive();
+
+$itemQuery = $activeMenuItem->get('query');
+
 ?>
 <h2>
     <?= $quiz->title ?>
 </h2>
 <p>
-    <?php echo $assesment->assesment_descr_before; ?>
+    <?php echo $itemQuery['assesment_descr_before']; ?>
 </p>
 <form class="form-horizontal" assesmentTest>
     <?php
@@ -54,7 +58,7 @@ $assesment = $this->assesment
     ?>
 </div>
 <p>
-    <?php echo $assesment->assesment_descr_after; ?>
+    <?php echo $itemQuery['assesment_descr_after']; ?>
 </p>
 <script>
     jQuery(document).ready(function($){

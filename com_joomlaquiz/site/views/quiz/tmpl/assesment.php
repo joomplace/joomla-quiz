@@ -20,7 +20,7 @@ $menuParams = $activeMenuItem->getParams();
     <?= $quiz->title ?>
 </h2>
 <p>
-    <?php echo $menuParams['assesment_descr_before']; ?>
+    <?php echo $menuParams->get('assesment_descr_before'); ?>
 </p>
 <form class="form-horizontal" assesmentTest>
     <?php
@@ -58,7 +58,7 @@ $menuParams = $activeMenuItem->getParams();
     ?>
 </div>
 <p>
-    <?php echo $menuParams['assesment_descr_after']; ?>
+    <?php echo $menuParams->get('assesment_descr_after'); ?>
 </p>
 <script>
     jQuery(document).ready(function($){

@@ -142,7 +142,7 @@ class JoomlaquizModelResults extends JModelList
 				->join('left', $db->qn('#__quiz_t_quiz','q').' ON '.$db->qn('sq.c_quiz_id').' = '.$db->qn('q.c_id'))
 				->where($db->qn('sq.c_quiz_id').' = '.$db->q($row->c_quiz_id));
 			
-			if(!$user->authorise('core.manage','com_joomlaquiz')){
+			if(!$user->authorise('core.manage')){
 				$query->where($db->qn('c_student_id').' = '.$db->q($user->id));
 			}
 			

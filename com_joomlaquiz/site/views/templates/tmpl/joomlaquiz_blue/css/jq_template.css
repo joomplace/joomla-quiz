@@ -1486,33 +1486,35 @@ h4.jq_package_title{
 
 
 div.incorrect_answer {
-	background: url(../images/incorrect.png) no-repeat;
-	background-position: left middle;
-	background-color: #FFCCCC;
-	border: 1px solid #666666;
-	font-weight: bold;
-	min-width: 200px;
-	font-size: 18px;
-	vertical-align:middle;
-	min-height: 40px;	
-	padding: 10px 5px 0 50px;
-/*	opacity: 0.75;*/
-	z-index: 1000;
+    /*background: url(../images/incorrect.png) no-repeat;*/
+    background: url("../images/incorrect.png") no-repeat 1px #e6e9d6;
+    background-position: left middle;
+    background-color: #FFCCCC;
+    border: 1px solid #666666;
+    /*font-weight: bold;*/
+    min-width: 200px;
+    /*font-size: 18px;*/
+    vertical-align:middle;
+    min-height: 45px;
+    padding: 10px 5px 0 50px;
+    /*	opacity: 0.75;*/
+    z-index: 1000;
 }
 
 div.correct_answer {
-	background: url(../images/correct.png) no-repeat;
-	background-position: left middle;
-	background-color: #CCFFCC;
-	border: 1px solid #666666;
-	font-weight: bold;
-	min-width: 200px;
-	font-size: 18px;
-	vertical-align:middle;
-	min-height: 40px;	
-	padding: 10px 5px 0 50px;
-/*	opacity: 0.75;	*/
-	z-index: 1000;
+    /*background: url(../images/correct.png) no-repeat;*/
+    background: url("../images/correct.png") no-repeat 1px #e6e9d6;
+    background-position: left middle;
+    background-color: #CCFFCC;
+    border: 1px solid #666666;
+    /*font-weight: bold;*/
+    min-width: 200px;
+    /*font-size: 18px;*/
+    vertical-align:middle;
+    min-height: 45px;
+    padding: 10px 5px 0 50px;
+    /*	opacity: 0.75;	*/
+    z-index: 1000;
 }
 
 
@@ -1533,6 +1535,12 @@ div.correct_answer {
 .quest_pos
 {
 	text-align: left;
+}
+
+.quest_pos label {
+    margin-bottom: 0px;
+    margin-left: 5px;
+    font-weight: inherit;
 }
 
 table.jq_results_container {
@@ -1720,4 +1728,82 @@ table#quiz_table label {
 
 .certificateMessage{
     margin-bottom: 20px;
+}
+
+/*--------------global-------------- */
+button:focus,
+input:focus,
+.jq_mquestions input:focus + label,
+.jq_mchoice input:focus + label,
+.jq_mresponse input:focus  + label
+{
+    border:1px dotted #000 !important;
+    outline:none;
+}
+
+.jq_mquestions input + label,
+.jq_mchoice input + label,
+.jq_mresponse input  + label{
+    border: 1px dotted transparent;
+}
+.jq_mquestions tr, td
+{
+    border: none !important;
+}
+.jq_mquestions, .jq_mchoice, .jq_mresponse, .jq_mdropdown
+{
+    border: none !important;
+}
+.jq_mquestions,
+.jq_mchoice,
+.jq_mresponse{
+    width:auto;
+}
+.jq_mquestions td:not(#foo)  > input[type='radio'],
+.jq_mchoice td:not(#foo)  > input[type='radio'],
+.jq_mresponse td:not(#foo)  > input[type='checkbox'] {
+    /*opacity: 0;*/
+    float: left;
+    width: 18px;
+}
+.jq_mquestions td:not(#foo) > input[type='radio'] + label,
+.jq_mchoice td:not(#foo) > input[type='radio'] + label,
+.jq_mresponse td:not(#foo) > input[type='checkbox'] + label{
+    margin: 0;
+    clear: none;
+    display:block;
+    padding: 4px 0 4px 24px;
+    cursor: pointer;
+    background: url(./../images/check_on.png) left 4px no-repeat;
+    line-height:14px;
+}
+.jq_mquestions td:not(#foo) > input[type='radio'] + label{
+    background: url(./../images/radio_off.png) left 4px no-repeat;
+}
+.jq_mquestions td:not(#foo) > input[type='radio']:checked + label {
+    background-image: url(./../images/radio_on.png);
+    background-repeat: no-repeat;
+}
+.jq_input_pos{
+    text-align:left;
+    vertical-align: middle;
+}
+.jq_input_pos input{
+    margin:0;
+}
+.dc_buttons_container .jq_input_pos {
+    padding: 5px 10px;
+}
+.jq_input_pos{
+    text-align:left;
+}
+.jq_input_pos input{
+    margin:0;
+}
+.dc_buttons_container .jq_input_pos {
+    padding: 5px 10px;
+}
+.quest_pos_td
+{
+    padding-right:15px;
 }

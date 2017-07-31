@@ -618,9 +618,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$qch_ids = $database->LoadResult();
 				
 				if($qch_ids) {
-					$query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
+                    $query = "SELECT IF(`q`.`parent_id`,`q`.`parent_id`,`q`.`c_id`) as `qid` FROM `#__quiz_r_student_question` AS `qr` LEFT JOIN `#__quiz_t_question` AS `q` ON `qr`.`c_question_id` = `q`.`c_id` WHERE `qr`.`c_stu_quiz_id` = '".$stu_quiz_id."' AND (`q`.`parent_id` != '0' OR `q`.`c_type` != '15')";
 					$database->SetQuery( $query );
-					$q_ids = $database->loadColumn();
+                    $q_ids = array_unique($database->loadColumn());
 
 					if (!count($q_ids)) {
 						$q_ids = array(0);
@@ -2780,7 +2780,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 					
 				if (is_array($q_ids) && count($q_ids)) {
 					$diff = array_diff ($qchids, $q_ids);
-					if (count($diff) && count($diff) == 1) {
+                    if (count($diff)) {
+                        if (count($diff) == 1
+                            && array_pop($diff) == $q_data->c_id
+                        ) {
+                            $is_last = 1;
+                        }
+                    } else {
 						$is_last = 1;
 					}
 				}
@@ -2843,7 +2849,21 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$panel_str = "\t" . '<quiz_panel_data><![CDATA[';
 		$panel_data = $q_data;
 		$panel_str .= JoomlaQuiz_template_class::JQ_panel_start();
-		
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('c_question')
+            ->from('#__quiz_t_question');
+        $panel_data = array_map(function($quest)use($db,$query){
+            $query->clear('where');
+            $query->where($db->qn('parent_id').' = '.$db->q($quest->c_id));
+            $sub_quest_text = $db->setQuery($query)->loadResult();
+            if($sub_quest_text){
+                $quest->c_question = $sub_quest_text;
+            }
+            return $quest;
+        } ,$panel_data);
+
 		$k = $n = 1;
 		$cquests = array();
 		$all_quests = array();

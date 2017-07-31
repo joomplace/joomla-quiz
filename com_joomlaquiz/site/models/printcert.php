@@ -212,11 +212,11 @@ class JoomlaquizModelPrintcert extends JModelList
 					$arr = $this->revUni($arr);
 				}
 				
-				switch(intval($certif->crtf_align)) {
+				switch((int)($certif->crtf_align)) {
 					case 1:
 						for ($i = 0; $i< $count_lines; $i++) {
 							$cur_w = $text_lines_xrights[$i] - $text_lines_xlefts[$i];
-							$ad = intval(($max_w - $cur_w)/2) - intval($max_w/2);
+							$ad = (int)(($max_w - $cur_w)/2) - (int)($max_w/2);
 							if ($allow_shadow) imagettftext($im, $font_size, 0, $font_x + $ad+2, $font_y+2, $grey, $font, $text_array[$i]);
 							imagettftext($im, $font_size, 0, $font_x + $ad, $font_y, $black, $font, $text_array[$i]);
 							$font_y = $font_y + $text_lines_heights[$i] + 3;
@@ -235,7 +235,7 @@ class JoomlaquizModelPrintcert extends JModelList
 					default:
 						for ($i = 0; $i< $count_lines; $i++) {
 							$cur_w = $text_lines_xrights[$i] - $text_lines_xlefts[$i];
-							$ad = intval($max_w - $cur_w) - intval($max_w);
+							$ad = (int)($max_w - $cur_w) - (int)($max_w);
 							if ($allow_shadow) imagettftext($im, $font_size, 0, $font_x + $ad+2, $font_y+2, $grey, $font, $text_array[$i]);
 							imagettftext($im, $font_size, 0, $font_x + $ad, $font_y, $black, $font, $text_array[$i]);
 							$font_y = $font_y + $text_lines_heights[$i] + 3;
@@ -248,9 +248,27 @@ class JoomlaquizModelPrintcert extends JModelList
 				$database->setQuery($query);
 				$fields = $database->loadObjectList();
 
-				$ad = 0;		
 				if (is_array($fields) && count($fields)) {
 					foreach($fields as $field){
+
+                        //Determine the alignment of the text
+                        $img_width = $im_fullsize[0];
+                        $box = imagettfbbox($field->text_h, 0, $font, $field->f_text);
+                        $box_width = abs($box[4] - $box[0]);
+
+                        switch((int)$certif->crtf_align) {
+                            case 1:
+                                $ad = ($img_width/2 - $box_width/2);
+                                break;
+                            case 2:
+                                $field->text_x = -$field->text_x;
+                                $ad = $img_width - $box_width;
+                                break;
+                            default:
+                                $ad = 0;
+                                break;
+                        }
+
 						$field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text),$stu_quiz,'');
 						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
 						$field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);

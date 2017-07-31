@@ -21,6 +21,13 @@ if(!$path){
 }
 JFactory::getDocument()->addScript($path);
 
+//hide 'correct' field on question edit page
+JFactory::getDocument()->addStyleDeclaration('.table thead th:nth-child(3),
+                                              .table tr td:nth-child(3) {
+                                                    display:none;
+                                              }'
+                                         );
+
 $data = new \Joomla\Registry\Registry();
 $data->set('options', $displayData->value?$displayData->value:array());
 $data->set('deleteOptions', array());

@@ -5,7 +5,7 @@
 * @package JoomlaQuiz
 * @subpackage mquestion.php
 * @author JoomPlace Team
-* @copyright Copyright (C) JoomPlace, www.joomplace.com
+* @Copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
@@ -24,7 +24,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 
 		$database = JFactory::getDBO();
-		$query = "SELECT c_id as value, c_choice as text, '-1' as c_right, '0' as c_review, '".($data['q_data']->c_title_true?$data['q_data']->c_title_true:JText::_('COM_QUIZ_SIMPLE_TRUE'))."' as title_true, '".($data['q_data']->c_title_false?$data['q_data']->c_title_false:JText::_('COM_QUIZ_SIMPLE_FALSE'))."' as title_false FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."'";
+		$query = "SELECT c_id as value, c_choice as text, c_right, '0' as c_review, '".($data['q_data']->c_title_true?$data['q_data']->c_title_true:JText::_('COM_QUIZ_SIMPLE_TRUE'))."' as title_true, '".($data['q_data']->c_title_false?$data['q_data']->c_title_false:JText::_('COM_QUIZ_SIMPLE_FALSE'))."' as title_false FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."'";
 		if ($data['qrandom'])
 			$query .=  "\n ORDER BY rand()";
 		else
@@ -397,16 +397,16 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
-		//$data['pdf']->SetFont('freesans');
+		$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
 		
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily);
+		$data['pdf']->setFont($fontFamily, 'B');
 		//$data['pdf']->setStyle('b', true);
 		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-		$data['pdf']->setFont($fontFamily);
+		$data['pdf']->setFont($fontFamily, 'B');
 		//$data['pdf']->setStyle('b', false);
 		$data['pdf']->Ln();
 				
@@ -420,12 +420,12 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			}
 					
 			$data['pdf']->Ln();
-			$data['pdf']->setFont($fontFamily);
+			$data['pdf']->setFont($fontFamily, 'B');
 			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-			$data['pdf']->setFont($fontFamily);
+			$data['pdf']->setFont($fontFamily, 'B');
 			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_choice'][$j]['c_choice'] . ' - ' . ($data['data']['c_choice'][$j]['c_choice_id']? $data['data']['c_choice'][$j]['c_title_true']: $data['data']['c_choice'][$j]['c_title_false']);
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

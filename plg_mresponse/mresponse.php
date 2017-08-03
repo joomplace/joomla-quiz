@@ -5,7 +5,7 @@
 * @package JoomlaQuiz
 * @subpackage choice.php
 * @author JoomPlace Team
-* @copyright Copyright (C) JoomPlace, www.joomplace.com
+* @Copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
@@ -20,7 +20,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 	public function onCreateQuestion(&$data) {
 		
 		$database = JFactory::getDBO();
-		$query = "SELECT c_id as value, c_choice as text, '0' as c_right, '0' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."'";
+		$query = "SELECT c_id as value, c_choice as text, c_right, '0' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."'";
 		if ($data['qrandom'])
 			$query .=  "\n ORDER BY rand()";
 		else
@@ -358,7 +358,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 	
 	public function onGetPdf(&$data){
 
-		//$data['pdf']->SetFont('freesans');
+		$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
 		
 		for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {
@@ -371,12 +371,12 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 			}
 					
 			$data['pdf']->Ln();
-			$data['pdf']->setFont($fontFamily);
+			$data['pdf']->setFont($fontFamily, 'B');
 			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-			$data['pdf']->setFont($fontFamily);
+			$data['pdf']->setFont($fontFamily, 'B');
 			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_choice'][$j]['c_choice'];
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
@@ -384,11 +384,11 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		}
 
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily);
+		$data['pdf']->setFont($fontFamily, 'B');
 		//$data['pdf']->setStyle('b', true);
 		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-		$data['pdf']->setFont($fontFamily);
+		$data['pdf']->setFont($fontFamily, 'B');
 		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);

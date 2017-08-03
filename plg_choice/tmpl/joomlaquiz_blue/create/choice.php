@@ -3,7 +3,7 @@
 * Joomlaquiz Deluxe Component for Joomla 3
 * @package Joomlaquiz Deluxe
 * @author JoomPlace Team
-* @copyright Copyright (C) JoomPlace, www.joomplace.com
+* @Copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
@@ -23,8 +23,12 @@ class JoomlaquizViewCreateChoice
 				$jq_tmpl_html .= "<table align='left' class='jq_mchoice'> \n";
 				foreach ($qdata as $qone) {
 					if (!isset($qone->value)) continue;
+
+					$class = $qone->c_right ? 'ques_top' : 'ques_down';
+
+					$qone->c_right = 0;
 					
-					$jq_tmpl_html .= "<tr><td valign='top' class='jq_input_pos' ><input id='quest_choice_".$qone->value."' name='quest_choice' value='".$qone->value."' type='radio'  ".($qone->c_right == 1? ' checked="checked" ':"")."></td><td align='left' class='quest_pos'><label for='quest_choice_".$qone->value."'>".stripslashes($qone->text)."</label></td>" . "\n";				
+					$jq_tmpl_html .= "<tr><td valign='top' class='jq_input_pos' ><input id='quest_choice_".$qone->value."' name='quest_choice' value='".$qone->value."' type='radio'  ".($qone->c_right == 1? ' checked="checked" ':"")."></td><td align='left' class='quest_pos'><label class='$class' for='quest_choice_".$qone->value."'>".stripslashes($qone->text)."</label></td>" . "\n";				
 					$jq_tmpl_html .= "</tr>" . "\n";
 				}			
 				$jq_tmpl_html .= "</table>" . "\n";

@@ -5,7 +5,7 @@
 * @package JoomlaQuiz
 * @subpackage choice.php
 * @author JoomPlace Team
-* @copyright Copyright (C) JoomPlace, www.joomplace.com
+* @Copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 
@@ -24,7 +24,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 		$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 		
 		$database = JFactory::getDBO();
-		$query = "SELECT c_id as value, c_choice as text, '0' as c_right, '0' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."'";
+		$query = "SELECT c_id as value, c_choice as text, c_right, '0' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."'";
 		if ($data['qrandom'])
 			$query .=  "\n ORDER BY rand()";
 		else
@@ -368,17 +368,17 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 				$correct_answer .= $k." ";
 			}
 
-			//$data['pdf']->SetFont('freesans');
+			$data['pdf']->SetFont('freesans');
 			$fontFamily = $data['pdf']->getFontFamily();
 					
 			$data['pdf']->Ln();
 
-			$data['pdf']->setFont($fontFamily);
+			$data['pdf']->setFont($fontFamily, 'B');
 			//$data['pdf']->setStyle('b', true);
 			$str = "  $k.";
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 
-			$data['pdf']->setFont($fontFamily);
+			$data['pdf']->setFont($fontFamily, 'B');
 			//$data['pdf']->setStyle('b', false);
 			$str = $data['data']['c_choice'][$j]['c_choice'];
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
@@ -386,11 +386,11 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 		}
 
 		$data['pdf']->Ln();
-		$data['pdf']->setFont($fontFamily);
+		$data['pdf']->setFont($fontFamily, 'B');
 		//$data['pdf']->setStyle('b', true);
 		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-		$data['pdf']->setFont($fontFamily);
+		$data['pdf']->setFont($fontFamily, 'B');
 		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
@@ -560,15 +560,8 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 				$ans_right[] = $sss;
 			}
 		}
-        else{
-            $msg .= JText::_('COM_JOOMLAQUIZ_QUESTION_NOT_COMPLETE');
-        }
-
-        if(JFactory::getApplication()->input->get('task')=='save2copy'){
-            $_POST['jq_hid_fields_ids'] = array_map(function($el){
-                return '';
-            }, $_POST['jq_hid_fields_ids']);
-        }
+		else
+		$msg .= JText::_('COM_JOOMLAQUIZ_QUESTION_NOT_COMPLETE');
 		if (isset($_POST['jq_hid_fields'])) {
 			$mcounter = 0;
 			$fids_arr = array();
@@ -583,7 +576,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 					$new_field->c_choice = stripslashes($f_row);
 					$new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);
 					
-					$new_field->c_right = in_array(($field_order), $ans_right)?1:0;
+					$new_field->c_right = in_array(($field_order+ 1), $ans_right)?1:0;
 					$new_field->ordering = $field_order;
 					$new_field->a_point = floatval($_POST['jq_a_points'][$mcounter]);
 					$new_field->c_quiz_id	= intval($_POST['jform']['c_quiz_id']);

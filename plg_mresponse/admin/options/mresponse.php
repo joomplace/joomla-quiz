@@ -1,15 +1,3 @@
-<?php
-/**
- * Joomlaquiz Component for Joomla 3
- * @package Joomlaquiz
- * @author JoomPlace Team
- * @copyright Copyright (C) JoomPlace, www.joomplace.com
- * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
- */
-
-defined('_JEXEC') or die;
-
-?>
 <table class="table table-striped" id="qfld_tbl" cellpadding="10">
 	<tr>
 		<th width="20px" align="center"><?php echo JText::_('COM_JOOMLAQUIZ_SHARP');?></th>

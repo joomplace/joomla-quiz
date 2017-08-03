@@ -331,6 +331,11 @@ textarea.jq_survey {
     float:left;
 }
 
+.jq_question_info_container span#jq_quest_num_container {
+    padding-left:40px;
+    float:left;
+}
+
 .jq_quiz_container_tbl {
     min-height:250px;
     height:auto !important;

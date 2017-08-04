@@ -10,9 +10,9 @@
         />
         <field
                 name="title"
-                type="text"
-                mysql_type="varchar(256)"
-                size="40"
+                type="editor"
+                width="1000px"
+                hide="readmore,pagebreak"
                 required="true"
         />
         <field

@@ -73,10 +73,10 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 		
 		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."' AND c_right = 1";
 		$database->SetQuery( $query );
-		$tmp_pointz = $database->LoadResult();
-		if(floatval($tmp_pointz))
-			$data['q_data']->c_point = $data['q_data']->c_point.' - '.(floatval($tmp_pointz) + $data['q_data']->c_point);
-		
+        $tmp_points = $database->LoadResult();
+        if((float)$tmp_points)
+            $data['q_data']->c_point = ((float)$tmp_points + $data['q_data']->c_point);
+
 		return $data['q_data'];
 	}
 	

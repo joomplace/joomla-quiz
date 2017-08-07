@@ -67,19 +67,26 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		
 		return $data['ret_str'];
 	}
-	
-	public function onPointsForAnswer(&$data){
-		$database = JFactory::getDBO();
-		
-		$query = "SELECT SUM(a_points) FROM #__quiz_t_matching WHERE c_question_id = '".$data['q_data']->c_id."'";
-		$database->SetQuery( $query );
-		$tmp_pointz = $database->LoadResult();
-		if(floatval($tmp_pointz))
-			$data['q_data']->c_point = $data['q_data']->c_point.' - '.(floatval($tmp_pointz) + $data['q_data']->c_point);
-		
-		return $data['q_data'];
-	}
-	
+
+    public function onPointsForAnswer(&$data){
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('SUM('. $db->quoteName('a_points') . ')')
+            ->select('MIN('. $db->quoteName('a_points') . ')')
+            ->from($db->quoteName('#__quiz_t_matching'))
+            ->where($db->quoteName('c_question_id') . ' = ' . $db->quote($data['q_data']->c_id))
+        ;
+        $db->setQuery($query);
+        list($max_point, $min_point) = $db->loadRow();
+
+        if (isset($max_point, $min_point)) {
+            $data['q_data']->c_point = ($data['q_data']->c_point
+                    + (float)$min_point)
+                . ' - ' . ((float)$max_point + $data['q_data']->c_point);
+        }
+        return $data['q_data'];
+    }
+
 	public function onSaveQuestion(&$data){
 		
 		$database = JFactory::getDBO();

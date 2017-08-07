@@ -15,6 +15,14 @@ function createDD_imageMatch(){
 				if(jq_jQuery(ui.item).prev()){
 					jq_jQuery(ui.item).prev().val('true');
 				}	
-			}
+			},
+            update: function (event, ui) {
+                var td_id = jq_jQuery(ui.item).parent().attr('id');
+                var number_of_items = jq_jQuery('#'+td_id).children('.groupItem').length;
+                if (number_of_items > 1) {
+                    var sender_id = jq_jQuery(ui.sender).attr('id');
+                    jq_jQuery('#'+sender_id).sortable("cancel")
+                }
+            }
 		}).disableSelection();
 }

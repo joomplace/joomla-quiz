@@ -244,6 +244,7 @@
 				type="radio"
 				class="btn-group"
 				label="COM_JOOMLAQUIZ_SHOW_QUESTION_X"
+				description="COM_JOOMLAQUIZ_SHOW_QUESTION_X_OF_Y_MESSAGE"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
@@ -254,6 +255,7 @@
 				type="radio"
 				class="btn-group"
 				label="COM_JOOMLAQUIZ_SHOW_POINT_VALUE"
+				description="COM_JOOMLAQUIZ_SHOW_POINT_VALUE_X_MESSAGE"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>

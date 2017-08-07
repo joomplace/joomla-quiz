@@ -231,6 +231,7 @@ object{
 .jq_footer_link a{
 	padding-left:15px;
 	margin-right:15px;
+	padding-bottom:10px;
 }
 .jq_ffeedback_header_left{
 	float:left;

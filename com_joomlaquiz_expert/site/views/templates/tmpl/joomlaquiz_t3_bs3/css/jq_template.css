@@ -1205,3 +1205,6 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
   margin: 0px -16px -16px;
   padding: 20px 0px;
 }
+.btn:hover, .btn:focus{
+	background-position: 0 -26px !important;
+}

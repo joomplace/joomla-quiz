@@ -596,3 +596,6 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 	font-weight:bold;
 	color:#333;
 }
+.btn:hover, .btn:focus{
+	background-position: 0 -26px !important;
+}

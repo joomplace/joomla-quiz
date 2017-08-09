@@ -91,7 +91,7 @@ class JoomlaquizModelResults extends JModelList
 			->group($db->qn('squ.c_stu_quiz_id'))
 			->order($db->qn('sq.c_date_time').' DESC');
 			
-		if(!$user->authorise('core.manage','com_joomlaquiz')){
+		if(!$user->authorise('core.manage')){
 			$query->where($db->qn('c_student_id').' = '.$db->q($user->id));
 		}
 		

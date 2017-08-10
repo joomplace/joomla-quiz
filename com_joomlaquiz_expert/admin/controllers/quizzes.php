@@ -1177,7 +1177,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 													}
 													$query = "SELECT max(c_id) FROM #__quiz_t_blank";
 													$database->setQuery($query);
-                                                    зарядка Type-c			$new_blank_id = $database->loadResult();
+                                                    $new_blank_id = $database->loadResult();
 													$query = "INSERT INTO #__quiz_t_text(c_id,c_blank_id,c_text,ordering) ";
 													$query .= " VALUES('',".$db->quote($new_blank_id).",".$db->quote($ch_data->blank_text).",".$db->quote($ch_data->ordering).")";
 													$database->setQuery($query);

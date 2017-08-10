@@ -962,6 +962,19 @@ function jq_processFeedback(task, is_preview, skip_question){
 							var ftext = feedback.getElementsByTagName('quiz_message_box')[0].firstChild.data;
 							var fclassName = prev_correct == '1'? 'correct_answer': 'incorrect_answer';
 							createPopupText(feedback_quest_id, ftext, fclassName);
+
+                            var wrongAnswers = document.querySelectorAll(".ques_down");
+
+                            for (var i = 0; i < wrongAnswers.length; i++) {
+                                wrongAnswers[i].style.backgroundColor = '#f5b2b2';
+                                wrongAnswers[i].classList.remove('ques_down');
+                            }
+
+                            var rightAnswers = document.querySelectorAll(".ques_top");
+
+                            for (var i = 0; i < rightAnswers.length; i++) {
+                                rightAnswers[i].classList.remove('ques_top');
+                            }
 						}
 					}
 

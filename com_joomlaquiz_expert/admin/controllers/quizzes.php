@@ -485,7 +485,6 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             $db->setQuery($query);
                             $fake_data = $db->loadAssocList();
 
-                            $quest_blank_fake = '';
                             foreach ($fake_data as $key => $item) {
                                 $quest_blank_fake
                                     .= "\n\t\t\t\t\t<fake_data_item c_question_id=\""

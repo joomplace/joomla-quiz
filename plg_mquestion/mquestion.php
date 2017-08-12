@@ -91,6 +91,9 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$c_temp_cor = 0;
 		$c_temp_incor = 0;
 		$data['is_avail'] = 1;
+        $data['incorrect_answer'] = array_map(function($option){
+            return $option->c_id;
+        },$ddd3);
 		$ans_array = explode(',', $data['answer']);
 		
 		if (count($ddd) && (count($ddd2) || count($ddd3))) {
@@ -296,7 +299,6 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$query = "SELECT b.c_id FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' AND b.c_question_id = a.c_id AND b.c_right <> '1' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd3 = $database->LoadObjectList();
-		
 		$ans_array = explode(',',$data['answer']);
 		if ((count($ddd2) || count($ddd3)) && count($ddd)) {
 			$data['is_correct'] = 1;

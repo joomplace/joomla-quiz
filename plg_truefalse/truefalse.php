@@ -86,7 +86,14 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		$query = "SELECT b.a_point FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' and b.c_question_id = a.c_id and b.c_id = '".$data['answer']."'  AND a.published = 1";
 		$database->SetQuery( $query );
 		$c_quest_score = $database->LoadResult();
-		
+
+        $query = "SELECT b.c_id FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' and b.c_question_id = a.c_id and b.c_right = '0' AND a.published = 1";
+        $database->SetQuery( $query );
+        $ddd3 = $database->LoadObjectList();
+
+        $data['incorrect_answer'] = array_map(function($option){
+            return $option->c_id;
+        },$ddd3);
 		$data['c_all_attempts'] = 1;
 		$data['is_avail'] = 1;
 		if (count($ddd)) {
@@ -228,7 +235,7 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$ddd = $database->LoadObjectList();
 		if (count($ddd)) { if ($ddd[0]->c_id == $data['answer']) { $data['is_correct'] = 1; }}
-				
+
 		return $data;
 	}
 	

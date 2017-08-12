@@ -943,6 +943,20 @@ function jq_processFeedback(task, is_preview, skip_question){
 				if (feedback_quest_id) {
 					is_do_feedback++;
 
+                    var incorrect_answer = jq_jQuery(feedback).find('incorrect_answer').html().split(',');
+                    var u_answered = jq_jQuery('input:checked');
+
+                    jq_jQuery.each(u_answered, function(i,item){
+                        var tr = jq_jQuery(item).closest('tr');
+                        if(!tr.hasClass('answered_row')){
+                            tr.addClass('answered_row');
+                        }
+                    });
+                    jq_jQuery.each(incorrect_answer, function(i,v){
+                        jq_jQuery('#quest_choice_'+v).closest('tr').addClass('incorrect_answer_row');
+                        jq_jQuery('#quest_choice_1_'+v).closest('tr').addClass('incorrect_answer_row');
+                    });
+
 					var feedback_quest_type = feedback.getElementsByTagName('feedback_quest_type')[0].firstChild.data;
 					if (!jq_getObj('div_qoption'+feedback_quest_id)) {
 						null;
@@ -962,19 +976,6 @@ function jq_processFeedback(task, is_preview, skip_question){
 							var ftext = feedback.getElementsByTagName('quiz_message_box')[0].firstChild.data;
 							var fclassName = prev_correct == '1'? 'correct_answer': 'incorrect_answer';
 							createPopupText(feedback_quest_id, ftext, fclassName);
-
-                            var wrongAnswers = document.querySelectorAll(".ques_down");
-
-                            for (var i = 0; i < wrongAnswers.length; i++) {
-                                wrongAnswers[i].style.backgroundColor = '#f5b2b2';
-                                wrongAnswers[i].classList.remove('ques_down');
-                            }
-
-                            var rightAnswers = document.querySelectorAll(".ques_top");
-
-                            for (var i = 0; i < rightAnswers.length; i++) {
-                                rightAnswers[i].classList.remove('ques_top');
-                            }
 						}
 					}
 

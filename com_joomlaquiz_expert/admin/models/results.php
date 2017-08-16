@@ -131,8 +131,8 @@ class JoomlaquizModelResults extends JModelList
 			}
 			$sub_query = (string)$sub_query;
 			
-			$query->join('LEFT', "($sub_query) AS `sqr` ON `sqr`.`c_stu_quiz_id` = `sq`.`c_id`");
-			$query->select('`sqr`.`q_count`');
+//			$query->join('LEFT', "($sub_query) AS `sqr` ON `sqr`.`c_stu_quiz_id` = `sq`.`c_id`");
+//			$query->select('`sqr`.`q_count`');
 			
 			// Filter by search in title.
 			$search = $this->getState('filter.search');

@@ -153,7 +153,7 @@ class JoomlaquizModelQuiz extends JModelList
 		if ($quiz_params->one_time == 1 && $db->setQuery($query)->loadResult()) {
 			$quiz_params = new stdClass;
 			$quiz_params->error = 1;
-			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_ALEARY_PASSED').'</p>';
+			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_ALREADY_PASSED').'</p>';
 			return $quiz_params;
 		}
 

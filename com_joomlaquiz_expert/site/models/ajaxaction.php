@@ -1484,7 +1484,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$footer_ar[2] = "<div class='jq_footer_link jq_certificate'><a href='javascript:void(0)' onclick=\"window.open ('".$urlPrefix."task=printcert.get_certificate&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_QUIZ_FIN_BTN_CERTIFICATE')."</a></div>";
 					}
 					if ($quiz->c_enable_print && !$c_manual) {
-						$footer_ar[1] = "<div class='jq_footer_link jq_print'><a href='javascript:void(0)' onclick=\"window.open ('".JURI::root(true)."index.php?option=com_joomlaquiz&task=printresult.get_pdf&lang="._JQ_JF_LANG."&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_FIN_BTN_PRINT')."</a></div>";
+						$footer_ar[1] = "<div class='jq_footer_link jq_print'><a href='javascript:void(0)' onclick=\"window.open ('" . JURI::root(true) . "/index.php?option=com_joomlaquiz&task=printresult.get_pdf&lang="._JQ_JF_LANG."&stu_quiz_id=".$stu_quiz_id."&user_unique_id=' + user_unique_id,'blank');\">".JText::_('COM_FIN_BTN_PRINT')."</a></div>";
 					}
 					if ($quiz->c_email_to == 2) {
 						$footer_ar[3] = "<div class='jq_footer_link jq_email'><a href='javascript:void(0)' onclick=\"jq_emailResults();\">".JText::_('COM_QUIZ_FIN_BTN_EMAIL')."</a></div>";

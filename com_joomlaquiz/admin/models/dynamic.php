@@ -67,7 +67,7 @@ class JoomlaquizModelDynamic extends JModelAdmin
 		$fields[] = JHTML::_('select.option','order_id', 'Order_id');
 		$fields[] = JHTML::_('select.option','quiz_name', 'Quiz name');
 		
-		$query = "SELECT * FROM #__quiz_t_question WHERE c_type IN (1,2,3,6) AND c_quiz_id = '".$quiz_id."'";
+		$query = "SELECT * FROM #__quiz_t_question WHERE c_type IN (1,2,3,6,8) AND c_quiz_id = '".$quiz_id."'";
 		$database->setQuery( $query );
 		$questions = $database->loadObjectList( );
 		

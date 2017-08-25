@@ -95,7 +95,7 @@ if(isset($quizzes[0]) && isset($quizzes[0]->available) && $quizzes[0]->available
 							<table>
 							<tr>
 								<td width="400"><strong><?php echo JText::_('COM_STATISTICS_OPTIONS');?></strong></td>
-								<td width="50" align="center"><strong><?php echo JText::_('COM_STATISTICS_COUNT');?></strong></td>
+                                <td width="50" align="center"><strong><?php if($question->c_type != 8)echo JText::_('COM_STATISTICS_COUNT');?></strong></td>
 								<td width="100">&nbsp;</td>
 								<td width="300">&nbsp;</td>
 							</tr>

@@ -7,7 +7,7 @@
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.3</version>
+	<version>3.7.4</version>
 	<description>This module will display a list of the last X quizzes with score</description>
 	<files>
 		<filename module="mod_quiz_lastten">mod_quiz_lastten.php</filename>

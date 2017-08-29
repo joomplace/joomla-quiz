@@ -122,6 +122,7 @@ class JoomlaquizController extends JControllerLegacy
                     $rules->$rule->$guest_group = $row->c_guest;
                 }
                 $asset->rules = json_encode($rules);
+                $asset->name = $asset_name;
                 $asset->store();
                 if (!$user->authorise('core.view', $asset_name)
                     && $user->authorise('core.view', $asset_name)

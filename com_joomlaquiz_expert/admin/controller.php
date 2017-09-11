@@ -138,5 +138,6 @@ class JoomlaquizController extends JControllerLegacy
             $db->setQuery("ALTER TABLE `#__quiz_t_quiz` DROP `c_guest`;")
                 ->execute();
         }
+        $db->setQuery('DELETE FROM `#__quiz_t_quiz` WHERE `c_title` = "Questions Pool"')->execute();
     }
 }

@@ -627,3 +627,7 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
 		padding: 0; 
 	}
 }
+
+.jq_footer_container #jq_feed_questions .jq_feedback_question_content_inner td:last-child,.jq_footer_container #jq_feed_questions .review_statistic{
+    display:none;
+}

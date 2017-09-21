@@ -203,7 +203,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				
 				//$quiz_time = JHtml::_('date',time(),'Y-m-d H:i:s');
 				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params)"
-			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', NOW(), '".$my->id."', '0', '0', '".$quiz_time."', '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).")";
+			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', NOW(), '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).")";
 				$database->SetQuery($query);
 				$database->query();
 				$stu_quiz_id = $database->insertid();

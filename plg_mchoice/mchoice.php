@@ -705,7 +705,9 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
         $question_result->c_question_id = $data['quest_id'];
         $question_result->c_score = round($total_points/count($question_data) * $all_points,2);
         $question_result->is_correct = $data['is_correct'];
-        $question_result->c_attempts = (array_key_exists($question_result->c_question_id, $answers)) ? 1 : 0;
+
+        $answeredIds = array_keys($answers);
+        $question_result->c_attempts = (in_array($question_result->c_question_id, $answeredIds)) ? 1 : 0;
 
         $db->insertObject('#__quiz_r_student_question', $question_result);
 //        $session->set('quiz.'.$data['stu_quiz_id'].'.question.'.$data['quest_id'], null);

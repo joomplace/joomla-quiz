@@ -440,9 +440,14 @@ div.correct_answer {
 
 .choice_static
 {
+    display: none;
     text-align: left;
     padding-left:40px;
     color:#666666;
+}
+
+td.sectiontableheader:nth-last-child(1) {
+    display: none;
 }
 
 .review_statistic

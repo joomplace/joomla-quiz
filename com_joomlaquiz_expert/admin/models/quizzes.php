@@ -310,6 +310,15 @@ class JoomlaquizModelQuizzes extends JModelList
 		$db = JFactory::getDBO();
 		$option = "com_joomlaquiz";
 		if (count( $cid )) {
+            $names = "'com_joomlaquiz.quiz.".implode( "', 'com_joomlaquiz.quiz.", $cid )."'";
+            $query = "DELETE FROM #__assets"
+                . "\n WHERE ".$db->qn('name')." IN ( $names )"
+            ;
+            $db->setQuery( $query );
+            if (!$db->execute()) {
+                echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                exit();
+            }
 			$cids = implode( ',', $cid );
 			$query = "DELETE FROM #__quiz_t_quiz"
 			. "\n WHERE c_id IN ( $cids )"

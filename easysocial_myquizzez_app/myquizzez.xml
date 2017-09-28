@@ -28,7 +28,7 @@
 	<!--
 		Give a version for your app. Ideal to follow the semantic version guideline, http://semver.org/
 	-->
-	<version>3.7.4</version>
+	<version>3.7.5</version>
 
 	<!--
 		Any copyright message for your app

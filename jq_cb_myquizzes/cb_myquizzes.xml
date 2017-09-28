@@ -2,12 +2,12 @@
 <cbinstall version="2.3" type="plugin" group="user">
 	<name>CB Joomlaquiz Tab</name>
 	<author>JoomPlace.com</author>
-	<creationDate>August 2017</creationDate>
+	<creationDate>September 2017</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.4</version>
+	<version>3.7.5</version>
 	<description>JoomlaQuiz plugin for Community Builder.</description>
 	<files>
 		<filename plugin="cb_myquizzes">cb_myquizzes.php</filename>

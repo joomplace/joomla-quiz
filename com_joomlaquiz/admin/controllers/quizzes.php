@@ -384,7 +384,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 			$quiz_xml .= "\n\t\t\t\t<quiz_enable_sertif><![CDATA[".$quiz->c_enable_sertif."]]></quiz_enable_sertif>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_skin><![CDATA[".$quiz->c_skin."]]></quiz_skin>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_random>".$quiz->c_random."</quiz_random>";
-			$quiz_xml .= "\n\t\t\t\t<quiz_guest>".$quiz->c_guest."</quiz_guest>";
+			//$quiz_xml .= "\n\t\t\t\t<quiz_guest>".$quiz->c_guest."</quiz_guest>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_published><![CDATA[".$quiz->published."]]></quiz_published>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_slide><![CDATA[".$quiz->c_slide."]]></quiz_slide>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_language><![CDATA[".$quiz->c_language."]]></quiz_language>";
@@ -1022,7 +1022,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_right_message, c_wrong_message, c_pass_message, 
 								c_unpass_message, c_enable_review, c_email_to, 
 								c_enable_print, c_enable_sertif, c_skin, 
-								c_random, c_guest, published, 
+								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
 								c_resbycat, c_feed_option, paid_check, c_pagination)  ";
@@ -1035,7 +1035,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_rmess).",".$db->quote($qcat->quiz_wmess).",".$db->quote($qcat->quiz_pass_message).",
 								".$db->quote($qcat->quiz_unpass_message).", ".$db->quote(@$qcat->quiz_enable_review).",".$db->quote($qcat->quiz_email_to).",
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
-								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_guest).",".$db->quote($qcat->quiz_published).",
+								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
 								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote($qcat->quiz_resbycat).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";

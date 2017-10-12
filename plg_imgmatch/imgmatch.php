@@ -600,7 +600,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 			$base_Dir = JPATH_SITE."/images/joomlaquiz/images/resize";
 			$filename = explode(".", $userfile_name);
 		
-			if (preg_match("/[^0-9a-zA-Z_]/", $filename[0])) {
+			if (preg_match("/[^0-9a-zA-Z_\-]/", $filename[0])) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_FILE_MUST')."'); window.history.go(-1);</script>\n";
 				die();
 			}

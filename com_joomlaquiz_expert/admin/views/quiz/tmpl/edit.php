@@ -172,7 +172,7 @@ window.onload = function (){
 			</div>
 			<div class="control-group">
                 <div class="control-label">
-				    <label title="" class="control-label" for="jformc_skin" id="jformc_skin-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_TEMPLATE');?></label>
+				    <label data-content="<?php echo JText::_('COM_JOOMLAQUIZ_TEMPLATE_DESC');?>" data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_TEMPLATE_DESC');?>" class="control-label hasPopover" for="jformc_skin" id="jformc_skin-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_TEMPLATE_LABEL');?></label>
                 </div>
 				<div class="controls">
 					<?php echo $this->jq_templates; ?>
@@ -180,7 +180,7 @@ window.onload = function (){
 			</div>
 			<div class="control-group">
                 <div class="control-label">
-				    <label title="" class="control-label" for="jformc_c_certificate" id="jformc_c_certificate-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_CERTIFICATE');?></label>
+                    <label data-content="<?php echo JText::_('COM_JOOMLAQUIZ_CERTIFICATE_DESC');?>" data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_CERTIFICATE_DESC');?>" class="control-label hasPopover" for="jformc_c_certificate" id="jformc_c_certificate-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_CERTIFICATE_LABEL');?></label>
                 </div>
 				<div class="controls">
 					<?php echo $this->c_certificates; ?>
@@ -615,8 +615,8 @@ window.onload = function (){
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="" id="jform_pool_rand-lbl" aria-invalid="false"><?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES');?></label>
-				<div class="controls">
+                <label data-content="<?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES_DESC');?>" data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES_DESC');?>" class="control-label hasPopover" for="head_cat" id="jform_pool_rand-lbl" aria-invalid="false"><?php echo JText::_('COM_JOOMLAQUIZ_TEMPLATE_LABEL');?></label>
+                <div class="controls">
 					<?php echo $this->head_cat;?>
 				</div>
 			</div>

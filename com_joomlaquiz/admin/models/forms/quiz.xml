@@ -13,11 +13,13 @@
 			section="quiz"
 			filter="rules"
 			validate="rules"
-			label="JCONFIG_PERMISSIONS_LABEL" />
+			label="JCONFIG_PERMISSIONS_LABEL"
+			description="JCONFIG_PERMISSIONS_DESC"/>
 
 		<field name="c_title" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_TITLE" 
-                labelclass="control-label" required="true">
+			   label="COM_JOOMLAQUIZ_TITLE_LABEL"
+			   description="COM_JOOMLAQUIZ_TITLE_DESC"
+			   labelclass="control-label" required="true">
 		</field>
 		<field 
 			name="c_category_id" 
@@ -27,20 +29,22 @@
 			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUIZCAT" 
 		/>
 		<field name="c_author" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_AUTHOR2" 
+				label="COM_JOOMLAQUIZ_AUTHOR2_LABEL"
+			    description="COM_JOOMLAQUIZ_AUTHOR2_DESC"
 				labelclass="control-label">
 		</field>
 		<field
 				name="c_show_author"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_SHOW_AUTHOR"
+				label="COM_JOOMLAQUIZ_SHOW_AUTHOR_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_AUTHOR_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<field name="paid_check" type="list" default="0" label="COM_JOOMLAQUIZ_QUIZ_TYPE" 
+		<field name="paid_check" type="list" default="0" label="COM_JOOMLAQUIZ_QUIZ_TYPE_LABEL" description="COM_JOOMLAQUIZ_QUIZ_TYPE_DESC"
 		labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_FREE</option>
 			<option value="1">COM_JOOMLAQUIZ_PAID</option>
@@ -72,7 +76,8 @@
 				name="c_show_timer"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_SHOW_TIMER"
+				label="COM_JOOMLAQUIZ_SHOW_TIMER_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_TIMER_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
@@ -82,7 +87,7 @@
 				label="COM_JOOMLAQUIZ_TIME_LIMIT2" 
 				description="COM_JOOMLAQUIZ_SPECIFY_THE_TIME" labelclass="control-label">
 		</field>
-		<field name="c_timer_style" type="list" default="0" label="COM_JOOMLAQUIZ_TIMER_STYLE" 
+		<field name="c_timer_style" type="list" default="0" label="COM_JOOMLAQUIZ_TIMER_STYLE_LABEL" description="COM_JOOMLAQUIZ_TIMER_STYLE_DESC"
              labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_STANDART</option>
 			<option value="1">COM_JOOMLAQUIZ_REMAINING_TIME</option>
@@ -100,20 +105,23 @@
 				name="c_once_per_day"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_RESET_TIME_LIMIT"
+				label="COM_JOOMLAQUIZ_RESET_TIME_LIMIT_LABEL"
+				description="COM_JOOMLAQUIZ_RESET_TIME_LIMIT_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field name="c_passing_score" type="text" default="" size="30"
-			   label="COM_JOOMLAQUIZ_PASSING_SCORE2"
+			   label="COM_JOOMLAQUIZ_PASSING_SCORE2_LABEL"
+			   description="COM_JOOMLAQUIZ_PASSING_SCORE2_DESC"
 			   labelclass="control-label">
 		</field>
 		<field name="one_time"
 			   type="radio"
 			   class="btn-group"
-			   label="COM_JOOMLAQUIZ_ONE_TIME"
+			   label="COM_JOOMLAQUIZ_ONE_TIME_LABEL"
+			   description="COM_JOOMLAQUIZ_ONE_TIME_DESC"
 			   labelclass="control-label"
 			   default="0">
 			<option value="0">COM_JOOMLAQUIZ_NO</option>
@@ -127,7 +135,7 @@
 		<field name="c_description" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="raw"
-			label="COM_JOOMLAQUIZ_DESCRIPTION" required="false" />
+			label="COM_JOOMLAQUIZ_DESCRIPTION_LABEL" description="COM_JOOMLAQUIZ_DESCRIPTION_DESC" required="false" />
 			
 		<field name="c_short_description" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
@@ -159,7 +167,7 @@
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<field name="c_enable_skip" type="list" default="0" label="COM_JOOMLAQUIZ_ENABLE_SKIP_QUESTION" 
+		<field name="c_enable_skip" type="list" default="0" label="COM_JOOMLAQUIZ_ENABLE_SKIP_QUESTION_LABEL" description="COM_JOOMLAQUIZ_ENABLE_SKIP_QUESTION_DESC"
 		labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_NO</option>
 			<option value="1">COM_JOOMLAQUIZ_YES_MAKE_ALL</option>
@@ -169,7 +177,8 @@
 				name="c_show_result"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_SHOW_HIDE_RESULT"
+				label="COM_JOOMLAQUIZ_SHOW_HIDE_RESULT_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_HIDE_RESULT_DESC"
 				labelclass="control-label"
 				default="1">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
@@ -255,7 +264,8 @@
 				name="c_show_quest_pos"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_SHOW_QUESTION_X"
+				label="COM_JOOMLAQUIZ_SHOW_QUESTION_X_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_QUESTION_X_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
@@ -265,31 +275,33 @@
 				name="c_show_quest_points"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_SHOW_POINT_VALUE"
+				label="COM_JOOMLAQUIZ_SHOW_POINT_VALUE_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_POINT_VALUE_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<field name="c_redirect_after" type="list" default="0" label="COM_JOOMLAQUIZ_REDIRECT_AFTER" 
+		<field name="c_redirect_after" type="list" default="0" label="COM_JOOMLAQUIZ_REDIRECT_AFTER_LABEL" description="COM_JOOMLAQUIZ_REDIRECT_AFTER_DESC"
 		 labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_NO</option>
 			<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field name="c_redirect_link" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_REDIRECT_URL" 
+				label="COM_JOOMLAQUIZ_REDIRECT_URL_LABEL" description="COM_JOOMLAQUIZ_REDIRECT_URL_DESC"
 				 labelclass="control-label">
 		</field>
-		<field name="c_redirect_linktype" type="list" default="0" label="COM_JOOMLAQUIZ_OR_USE" 
+		<field name="c_redirect_linktype" type="list" default="0" label="COM_JOOMLAQUIZ_OR_USE_LABEL" description="COM_JOOMLAQUIZ_OR_USE_DESC"
 		labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_NO</option>
 			<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field name="c_redirect_delay" type="text" default="" size="10"
-				label="COM_JOOMLAQUIZ_DELAY_BEFORE" 
+				label="COM_JOOMLAQUIZ_DELAY_BEFORE_LABEL"
+			    description="COM_JOOMLAQUIZ_DELAY_BEFORE_DESC"
 				labelclass="control-label">
 		</field>
-		<field name="c_grading" type="list" default="0" label="COM_JOOMLAQUIZ_QUIZ_GRADING" 
+		<field name="c_grading" type="list" default="0" label="COM_JOOMLAQUIZ_QUIZ_GRADING_LABEL" description="COM_JOOMLAQUIZ_QUIZ_GRADING_DESC"
 		labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_DEFAULT</option>
 			<option value="1">COM_JOOMLAQUIZ_FIRST_ATTEMP</option>
@@ -327,7 +339,8 @@
 				name="c_feedback_pdf"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_ENABLE_FEEDBACK_IN_PDF"
+				label="COM_JOOMLAQUIZ_ENABLE_FEEDBACK_IN_PDF_LABEL"
+				description="COM_JOOMLAQUIZ_ENABLE_FEEDBACK_IN_PDF_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
@@ -337,7 +350,8 @@
 				name="c_show_qfeedback"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_SHOW_QUESTION_FEEDBACK"
+				label="COM_JOOMLAQUIZ_SHOW_QUESTION_FEEDBACK_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_QUESTION_FEEDBACK_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
@@ -358,26 +372,28 @@
 				name="c_share_buttons"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_SHOW_SOCIAL_BUTTONS"
+				label="COM_JOOMLAQUIZ_SHOW_SOCIAL_BUTTONS_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_SOCIAL_BUTTONS_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<field name="c_image" type="media" directory="stories" label="COM_JOOMLAQUIZ_ADD_IMAGE"/>
+		<field name="c_image" type="media" directory="stories" label="COM_JOOMLAQUIZ_ADD_IMAGE_LABEL" description="COM_JOOMLAQUIZ_ADD_IMAGE_DESC" />
 		<field name="c_right_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="raw"
-			label="COM_JOOMLAQUIZ_WHEN_ANSWER_CORRECT" required="false" />
+			label="COM_JOOMLAQUIZ_WHEN_ANSWER_CORRECT_LABEL" description="COM_JOOMLAQUIZ_WHEN_ANSWER_CORRECT_DESC" required="false" />
 		<field name="c_wrong_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="raw"
-			label="COM_JOOMLAQUIZ_WHEN_ANSWER_INCORRECT" required="false" />
+			label="COM_JOOMLAQUIZ_WHEN_ANSWER_INCORRECT_LABEL" description="COM_JOOMLAQUIZ_WHEN_ANSWER_INCORRECT_DESC" required="false" />
 		<field
 				name="c_statistic"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_SHOW_FINAL_STAT"
+				label="COM_JOOMLAQUIZ_SHOW_FINAL_STAT_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_FINAL_STAT_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
@@ -389,8 +405,8 @@
 			<option value="2">COM_JOOMLAQUIZ_BY_SCORE</option>
 			<option value="1">COM_JOOMLAQUIZ_BY_SCORE_IN_PERCENTS</option>
 		</field>
-		<field name="c_pass_message" type="textarea" class="inputbox" label="COM_JOOMLAQUIZ_IF_USER_PASSES" required="false" default=""/>
-		<field name="c_unpass_message" type="textarea" class="inputbox" label="COM_JOOMLAQUIZ_IF_USER_FAILS" required="false" default=""/>
+		<field name="c_pass_message" type="textarea" class="inputbox" label="COM_JOOMLAQUIZ_IF_USER_PASSES_LABEL" description="COM_JOOMLAQUIZ_IF_USER_PASSES_DESC" required="false" default=""/>
+		<field name="c_unpass_message" type="textarea" class="inputbox" label="COM_JOOMLAQUIZ_IF_USER_FAILS_LABEL" description="COM_JOOMLAQUIZ_IF_USER_FAILS_DESC" required="false" default=""/>
 	</fieldset>
 	<fieldset name="quiz_question_pool_option"
 		label="COM_JOOMLAQUIZ_POOL_OPTIONS"
@@ -398,7 +414,8 @@
 		<field name="c_pool" type="radio"
 			class="btn-group"
 			default="0"	
-			label="COM_JOOMLAQUIZ_POOL_OPTIONS"
+			label="COM_JOOMLAQUIZ_POOL_OPTIONS_LABEL"
+			description="COM_JOOMLAQUIZ_POOL_OPTIONS_DESC"
 			labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_DONT_USE</option>
 			<option value="1">COM_JOOMLAQUIZ_RANDOM_QUESTIONS</option>

@@ -320,20 +320,13 @@ class JoomlaquizModelQcategory extends JModelList
         $categories = new JCategories(array('extension'=>'com_joomlaquiz','access'=>true));
         $input = JFactory::getApplication()->input;
         $cur_cat = $categories->get($input->get( 'cat_id'));
-        if ($_SERVER['REMOTE_ADDR'] == '82.209.244.106') {
-            echo "<pre>";
-            print_r($input);
-            echo "</pre>";
-            echo "<pre>";
-            var_dump($cur_cat);
-            echo "</pre>";
-            echo "<pre>";
-            print_r($categories);
-            echo "</pre>";
-            die();
+        if($cur_cat){
+            $subs = $cur_cat->getChildren(true);
+            $rel_level = $cur_cat->level;
+        }else{
+            $subs = array();
+            $rel_level = 0;
         }
-        $subs = $cur_cat->getChildren(true);
-        $rel_level = $cur_cat->level;
 
         $ids = array($cur_cat->id);
         foreach($subs as $s){

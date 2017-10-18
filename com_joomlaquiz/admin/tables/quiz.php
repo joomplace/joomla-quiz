@@ -28,44 +28,47 @@ class JoomlaquizTableQuiz extends JTable
         }
 
 		function store($updateNulls = false){
-
-            $jform = JFactory::getApplication()->input->get('jform',array(),'array');
-            $database = JFactory::getDBO();
 			
-			if ((int)$jform['c_id'] < 1)
+			$database = JFactory::getDBO();
+			
+			if ((int)$_POST['jform']['c_id'] < 1)
 			{
 				$query = "SELECT COUNT(*) "
 				. "\n FROM #__quiz_t_quiz"
-				. "\n WHERE  c_title = '".$jform['c_title']."'";
+				. "\n WHERE  c_title = '".$_POST['jform']['c_title']."'";
 				
 				$database->setQuery( $query );
 				$rows_dubl = $database->loadResult();
 
-				if((int)$rows_dubl>0)
+				if($rows_dubl>0)
 				{
 					echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_QUIZ_WITH_THE_SAME_TITLE')."'); window.history.go(-1); </script>\n";
 					exit();
 				}
 			}
 			
-			if (!(int)$jform['c_id']) {
+			if (!$_POST['jform']['c_id']) {
 				$date = strtotime(JFactory::getDate());
 				$s_day = mktime(0,0,0,JHtml::_('date',strtotime($date), 'm'), JHtml::_('date',strtotime($date), 'd'), JHtml::_('date',strtotime($date), 'Y'));
 				$this->c_created_time = JHtml::_('date',strtotime($s_day), 'Y-m-d');
 			}
 			
-			if($jform['c_id']){
-				$this->c_id = $jform['c_id'];
+			if($_POST['jform']['c_id']){
+				$this->c_id = $_POST['jform']['c_id'];
 			}
 			
 			if(!$this->c_user_id) $this->c_user_id = JFactory::getUser()->id;
 
-			$this->c_pass_message = $jform['c_pass_message'];
-			$this->c_unpass_message = $jform['c_unpass_message'];
+			$jinput = JFactory::getApplication()->input;
+			$jform = $jinput->get('jform', array(), 'ARRAY');
+
+			$this->c_pass_message = $_POST['jform']['c_pass_message'];
+			$this->c_unpass_message = $_POST['jform']['c_unpass_message'];
 
 			//==================================================
 			// Access rules.
 			//==================================================
+			
 			if (isset($jform['rules']))
 			{
 				$rulesArray = $jform['rules'];
@@ -87,9 +90,9 @@ class JoomlaquizTableQuiz extends JTable
 				$this->setRules($rules);
 			}
 
-			$this->c_category_id = $jform['c_category_id'];
-			$this->c_skin = $jform['c_skin'];
-			$this->c_certificate = $jform['c_certificate'];
+			$this->c_category_id = $_POST['jform']['c_category_id'];
+			$this->c_skin = $_POST['jform']['c_skin'];
+			$this->c_certificate = $_POST['jform']['c_certificate'];
 			$res = parent::store($updateNulls);			
 			// -- add pool ----//
 
@@ -99,9 +102,9 @@ class JoomlaquizTableQuiz extends JTable
 				echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 				exit();
 			}
-			switch((int)$jform['c_pool']){
+			switch($_POST['jform']['c_pool']){
 				case 1:
-					$query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('".$this->c_id."','0','".(int)$jform['pool_rand']."')";
+					$query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('".$this->c_id."','0','".$_POST['jform']['pool_rand']."')";
 					$database->setQuery( $query );
 					if (!$database->execute()) {
 						echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -109,27 +112,27 @@ class JoomlaquizTableQuiz extends JTable
 					}
 					break;
 				case 2:
-                case 3:
-					if(isset($_POST['pool_cats']) && !empty($_POST['pool_cats'])) {
-                        foreach ($_POST['pool_cats'] as $hid_pcat) {
-                            if (isset($_POST['pnumber_' . $hid_pcat]) && (int)$_POST['pnumber_' . $hid_pcat] > 0) {
-                                $query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('" . $this->c_id . "','" . $hid_pcat . "','" . $_POST['pnumber_' . $hid_pcat] . "')";
-                                $database->setQuery($query);
-                                if (!$database->execute()) {
-                                    echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
-                                    exit();
-                                }
-                            }
-                        }
-                    }
-                    break;
+					if(sizeof($_POST['pool_cats'])>0)
+					foreach ($_POST['pool_cats'] as $hid_pcat)
+					{
+						if($_POST['pnumber_'.$hid_pcat])
+						{
+							$query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('".$this->c_id."','".$hid_pcat."','".$_POST['pnumber_'.$hid_pcat]."')";
+							$database->setQuery( $query );
+							if (!$database->execute()) {
+								echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+								exit();
+							}
+						}
+					}
 				default : break;
+				
 			}	
 			
 			// -- add feedback options --//
-			if(isset($jform['c_feed_option']) && $jform['c_feed_option'] )
+			if(isset($_POST['jform']['c_feed_option']) && $_POST['jform']['c_feed_option'] )
 			{
-				$query = "DELETE FROM #__quiz_feed_option WHERE quiz_id=".(int)$this->c_id;
+				$query = "DELETE FROM #__quiz_feed_option WHERE quiz_id=".$this->c_id;
 				$database->setQuery( $query );
 				if (!$database->execute()) {
 					echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";

@@ -629,7 +629,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_flag` tinyint(3) NOT NULL,
   `c_hide_feedback` tinyint(3) NOT NULL,
   `c_auto_breaks` tinyint(5) NOT NULL,
-  `c_prob_total_q` int(11) NOT NULL DEFAULT '0',
   `c_share_buttons` tinyint(3) NOT NULL,
   `asset_id` int(18) NOT NULL,
   `c_quiz_access_message` text NOT NULL,

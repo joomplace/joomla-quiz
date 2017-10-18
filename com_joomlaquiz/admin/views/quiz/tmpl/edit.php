@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 $app = JFactory::getApplication();
@@ -35,10 +35,13 @@ jQuery("#jform_c_pool1").click(function () {
 		jQuery("#cat_pool_with_head input").attr("disabled", true);
    });
 jQuery("#jform_c_pool2").click(function () {
-		jQuery("#jform_pool_rand").attr("disabled", true);
-		jQuery("#head_cat").attr("disabled", false);
-		jQuery("#cat_pool_with_head input").attr("disabled", false);
-   });
+        jQuery("#jform_pool_rand").attr("disabled", true);
+        jQuery("#head_cat").attr("disabled", false);
+        jQuery("#cat_pool_with_head input").attr("disabled", false);
+    });
+jQuery("#jform_c_pool3").click(function () {
+    jQuery("#cat_pool_with_head input").attr("disabled", false);
+});
 jQuery("#jform_c_ismetadescr1").click(function () {
         jQuery("#jform_c_metadescr").removeAttr("disabled");
     });
@@ -64,6 +67,7 @@ window.onload = function (){
     var checked2 = document.getElementById('jform_c_pool0').getAttribute('checked');
     var checked3 = document.getElementById('jform_c_pool1').getAttribute('checked');
     var checked4 = document.getElementById('jform_c_pool2').getAttribute('checked');
+    var checked_c_pool3 = document.getElementById('jform_c_pool3').getAttribute('checked');
     var checked5 = document.getElementById('jform_c_ismetadescr1').getAttribute('checked');
     var checked6 = document.getElementById('jform_c_iskeywords1').getAttribute('checked');
     var checked7 = document.getElementById('jform_c_ismetatitle1').getAttribute('checked');
@@ -93,6 +97,10 @@ window.onload = function (){
 		jQuery("#cat_pool_with_head input").attr("disabled", false);
     }
 
+    if(checked_c_pool3!=null){
+        jQuery("#cat_pool_with_head input").attr("disabled", false);
+    }
+
     if(checked5!=null){
         document.getElementById('jform_c_metadescr').disabled = false;
     } else{
@@ -112,6 +120,29 @@ window.onload = function (){
     }
 
 }
+
+jQuery(function($) {
+   'use strict';
+   var catFields = $('#cat_pool_with_head input[id^="cat_field_"]');
+   function probabilityTotalPercents(){
+       var totalPercents = 0;
+       $(catFields).each(function(){
+           totalPercents = totalPercents + $(this).val()*1;
+       });
+       return totalPercents;
+   }
+   $('#probability_total_percents').text( probabilityTotalPercents() + '%' );
+
+   $(catFields).on('input keyup', function(){
+       var totalPercents = probabilityTotalPercents();
+       if(totalPercents <= 100){
+           $('#probability_total_percents').text(totalPercents + '%');
+       } else {
+           $(this).val('');
+           alert('The total of percents is more than 100. Please change the data.');
+       }
+   });
+});
 
 </script>
 <?php echo $this->loadTemplate('menu');?>
@@ -594,18 +625,12 @@ window.onload = function (){
 		<div class="tab-pane" id="question-pool-option">
 		<fieldset class="adminform">
 			<div class="control-group">
-				<?php echo $this->form->getLabel('c_pool'); ?>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_pool'); ?>
-				</div>
+				<?php echo $this->form->renderField('c_pool'); ?>
 			</div>
 			<div class="control-group">
-				<?php echo $this->form->getLabel('c_auto_breaks'); ?>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_auto_breaks'); ?>
-				</div>
+                <?php echo $this->form->renderField('c_auto_breaks'); ?>
 			</div>
-			<div class="control-group">
+			<div class="control-group" data-showon='[{"field":"jform[c_pool]","values":["0","1","2"],"sign":"=","op":""}]'>
 				<div class="control-label">
                     <?php echo $this->form->getLabel('pool_rand'); ?>
                 </div>
@@ -613,7 +638,18 @@ window.onload = function (){
 					<input type="text" size="10" value="<?php echo $this->q_count;?>" id="jform_pool_rand" name="jform[pool_rand]" class="" aria-invalid="false">
 				</div>
 			</div>
-			<div class="control-group">
+            <div class="control-group"><?php echo $this->form->renderField('c_prob_total_q'); ?></div>
+            <div class="control-group" data-showon='[{"field":"jform[c_pool]","values":["3"],"sign":"=","op":""}]'>
+                <?php echo $this->form->renderField('spacer'); ?>
+            </div>
+            <div class="control-group" data-showon='[{"field":"jform[c_pool]","values":["3"],"sign":"=","op":""}]'>
+                <label class="control-label hasPopover" for="probability_total_percents"
+                       id="jform_probability_total_percents-lbl" data-content="<?php echo JText::_('COM_JOOMLAQUIZ_PROBABILITY_TOTAL_PERCENTS_DESC');?>"
+                       data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_PROBABILITY_TOTAL_PERCENTS_LABEL'); ?>">
+                    <?php echo JText::_('COM_JOOMLAQUIZ_PROBABILITY_TOTAL_PERCENTS_LABEL');?></label>
+                <div class="controls" id="probability_total_percents" style="font-weight:bold; color:#1a3867;"></div>
+            </div>
+			<div class="control-group" data-showon='[{"field":"jform[c_pool]","values":["0","1","2"],"sign":"=","op":""}]'>
 				<label class="control-label" for="" id="jform_pool_rand-lbl" aria-invalid="false"><?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES');?></label>
 				<div class="controls">
 					<?php echo $this->head_cat;?>
@@ -625,7 +661,7 @@ window.onload = function (){
 					foreach ($this->jq_pool_cat as $listcat)
 					{
 						$is_num_cat = '';
-						if( $this->item->c_pool==2 && isset($this->if_pool))
+						if( ((int)$this->item->c_pool==2 || (int)$this->item->c_pool==3) && isset($this->if_pool))
 						{
 							foreach($this->if_pool as $poolz)
 							{

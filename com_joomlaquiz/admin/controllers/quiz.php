@@ -59,9 +59,7 @@ class JoomlaquizControllerQuiz extends JControllerForm
 		return parent::batch($model);
 	}
 
-	public function save($key=null, $urlVar=null){
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
+	public function save(){
 		$task = JFactory::getApplication()->input->getCmd('task');
 		if($task=='save2copy'){
 			$data = JFactory::getApplication()->input->get('jform',array(),'array');
@@ -80,7 +78,7 @@ class JoomlaquizControllerQuiz extends JControllerForm
 		}
 	}
 	
-	public function cancel($key=null){
+	public function cancel(){
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes');
 	}
 }

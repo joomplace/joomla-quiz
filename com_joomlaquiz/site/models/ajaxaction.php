@@ -170,7 +170,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$database->SetQuery( $query );
 				$unique_pass_id = $database->LoadResult();			
 			}
-
+			
 			if (!$unique_pass_id) {
 				$unique_pass_id = md5(uniqid(rand(), true));
 			}
@@ -231,7 +231,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						echo '<p align="left">'.JText::_('COM_QUIZ_LPATH_NOT_AVAILABLE').'</p>';
 						return '';
 					}
-
+					
 					if($rel_check[0]->type == 'l') {
 						$query = "SELECT * FROM `#__quiz_lpath` WHERE `id` = '{$rel_check[0]->rel_id}' AND published = 1";
 						$database->SetQuery( $query );
@@ -300,7 +300,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				
 				$old_quiz = true;
 			}
-
+			
 			$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '".$quiz_id."' AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 			$database->SetQuery($query);
 			$q_data = $database->LoadObjectList();
@@ -310,8 +310,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			//---- pools ---------//
 			switch($quiz->c_pool)
 			{
-				//Random questions
-			    case '1':	$query = "SELECT q_count FROM #__quiz_pool WHERE q_id = '".$quiz_id."' LIMIT 1";
+				case '1':	$query = "SELECT q_count FROM #__quiz_pool WHERE q_id = '".$quiz_id."' LIMIT 1";
 							$database->SetQuery($query);
 							$pool_rand = $database->LoadResult();
 							if( $pool_rand )
@@ -327,52 +326,28 @@ class JoomlaquizModelAjaxaction extends JModelList
 								
 							}
 							break;
-				//By categories
-                case '2':	$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz_id."'";
-                    $database->SetQuery($query);
-                    $poolcat_data = $database->LoadObjectList();
-                    if (count($poolcat_data))
-                    {
-                        foreach( $poolcat_data as $dapool )
-                        {
-                            if( $dapool->q_count )
-                            {
-                                $query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '0' AND q.published = 1 AND q.c_ques_cat = '".$dapool->q_cat."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
-                                $database->SetQuery($query);
-                                $pool_data = $database->LoadObjectList();
-                                for($i=0;$i<($dapool->q_count);$i++)
-                                {
-                                    if(isset($pool_data[$i]))
-                                        $q_data[count($q_data)] = $pool_data[$i];
-                                }
-                            }
-                        }
-                    }
-                    break;
-
-                //By Probability
-                case '3':	$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz_id."'";
-                    $database->SetQuery($query);
-                    $poolcat_data = $database->LoadObjectList();
-                    if (count($poolcat_data))
-                    {
-                        foreach( $poolcat_data as $dapool )
-                        {
-                            if( $dapool->q_count )
-                            {
-                                $query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '0' AND q.published = 1 AND q.c_ques_cat = '".$dapool->q_cat."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
-                                $database->SetQuery($query);
-                                $pool_data = $database->LoadObjectList();
-                                $dapool_q_count = round((int)$dapool->q_count / 100 * (int)$quiz->c_prob_total_q, 0);
-                                for($i=0;$i<$dapool_q_count;$i++)
-                                {
-                                    if(isset($pool_data[$i]))
-                                        $q_data[count($q_data)] = $pool_data[$i];
-                                }
-                            }
-                        }
-                    }
-                    break;
+							
+				case '2':	$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz_id."'";
+							$database->SetQuery($query);
+							$poolcat_data = $database->LoadObjectList();
+							if (count($poolcat_data))
+							{
+								foreach( $poolcat_data as $dapool )
+								{
+									if( $dapool->q_count )
+										{
+											$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '0' AND q.published = 1 AND q.c_ques_cat = '".$dapool->q_cat."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
+											$database->SetQuery($query);
+											$pool_data = $database->LoadObjectList();
+											for($i=0;$i<($dapool->q_count);$i++)
+											{
+												if(isset($pool_data[$i]))
+													$q_data[count($q_data)] = $pool_data[$i];
+											}
+										}
+								}
+							}
+				break;
 				
 				default:	break;
 			}
@@ -1803,31 +1778,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 										}
 									}
 						break;
-
-                        //By Probability
-                        case '3':
-                            $query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz_id."'";
-                            $database->SetQuery($query);
-                            $poolcat_data = $database->LoadObjectList();
-                            if (count($poolcat_data))
-                            {
-                                foreach( $poolcat_data as $dapool )
-                                {
-                                    if( $dapool->q_count )
-                                    {
-                                        $query = "SELECT * FROM #__quiz_t_question WHERE c_quiz_id = '0' AND published = 1 ".($qch_id > 0? " AND `c_id` = '".$qch_id."' ": '')." AND c_ques_cat = '".$dapool->q_cat."' ORDER BY rand()";
-                                        $database->SetQuery($query);
-                                        $pool_data = $database->LoadObjectList();
-                                        $dapool_q_count = round((int)$dapool->q_count / 100 * (int)$quiz->c_prob_total_q, 0);
-                                        for($i=0;$i<$dapool_q_count;$i++)
-                                        {
-                                            if(isset($pool_data[$i]))
-                                                $q_data[count($q_data)] = $pool_data[$i];
-                                        }
-                                    }
-                                }
-                            }
-                            break;
 						
 						default:	break;
 					}

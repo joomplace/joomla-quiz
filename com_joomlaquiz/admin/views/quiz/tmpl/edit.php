@@ -644,10 +644,11 @@ jQuery(function($) {
             </div>
             <div class="control-group" data-showon='[{"field":"jform[c_pool]","values":["3"],"sign":"=","op":""}]'>
                 <label class="control-label hasPopover" for="probability_total_percents"
-                       id="jform_probability_total_percents-lbl" data-content="<?php echo JText::_('COM_JOOMLAQUIZ_PROBABILITY_TOTAL_PERCENTS_DESC');?>"
+                       id="jform_probability_total_percents-lbl"
+                       data-content="<?php echo JText::_('COM_JOOMLAQUIZ_PROBABILITY_TOTAL_PERCENTS_DESC');?>"
                        data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_PROBABILITY_TOTAL_PERCENTS_LABEL'); ?>">
                     <?php echo JText::_('COM_JOOMLAQUIZ_PROBABILITY_TOTAL_PERCENTS_LABEL');?></label>
-                <div class="controls" id="probability_total_percents" style="font-weight:bold; color:#1a3867;"></div>
+                <div class="controls" id="probability_total_percents" style="font-weight:bold; color:#1a3867; height:18px; width:50px;">&nbsp;</div>
             </div>
 			<div class="control-group" data-showon='[{"field":"jform[c_pool]","values":["0","1","2"],"sign":"=","op":""}]'>
 				<label class="control-label" for="" id="jform_pool_rand-lbl" aria-invalid="false"><?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES');?></label>

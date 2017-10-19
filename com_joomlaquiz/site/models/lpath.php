@@ -181,6 +181,15 @@ class JoomlaquizModelLpath extends JModelList
 					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->description, 'content', 'fulltext', $lpath_all[$i]->all_id);
 				}
 
+                if($row->type == 'a' && (int)$lpath_all[$i]->bf_id > 0) {
+				    //check BreezingForms is submit
+                    if($this->checkIdBreezingForms($lpath_all[$i]->bf_id)){
+                        $lpath_all[$i]->bf_record = 1;
+                    } else {
+                        $lpath_all[$i]->bf_record = 0;
+                    }
+                }
+
 				$lpath_all[$i]->show_link = $link;
 				if($link == true && $row->type != 'a'  && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {
 					$link = false;
@@ -208,4 +217,23 @@ class JoomlaquizModelLpath extends JModelList
 		$database->SetQuery( $query );
 		return $database->loadObjectList();
 	}
+
+
+	private function checkIdBreezingForms($bf_id=0){
+        $user = JFactory::getUser();
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('id', 'form', 'user_id'))
+            ->from($db->quoteName('#__facileforms_records'))
+            ->where($db->quoteName('form') .'=' . (int)$bf_id)
+            ->where($db->quoteName('user_id') .'=' . (int)$user->id);
+        $db->setQuery((string)$query);
+        $id = $db->loadResult();
+        if((int)$id > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -100,6 +100,7 @@ ALTER TABLE `#__quiz_lpath_quiz` ADD COLUMN `lid` INT(11) NOT NULL AFTER `id`;
 ALTER TABLE `#__quiz_lpath_quiz` ADD COLUMN `type` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `lid`;
 ALTER TABLE `#__quiz_lpath_quiz` ADD COLUMN `qid` INT(11) NOT NULL AFTER `type`;
 ALTER TABLE `#__quiz_lpath_quiz` ADD COLUMN `order` INT(11) NOT NULL AFTER `qid`;
+ALTER TABLE `#__quiz_lpath_quiz` ADD COLUMN `bf_id` INT(11) NOT NULL DEFAULT '0' COMMENT 'ID related Breezing Forms' AFTER `qid`;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_lpath_stage` (
 `id` INT(11) NOT NULL AUTO_INCREMENT ,

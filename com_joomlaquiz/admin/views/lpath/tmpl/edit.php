@@ -17,7 +17,7 @@ $input = $app->input;
 
 ?>
 <?php echo $this->loadTemplate('menu');?>
-<form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&layout=edit&id='.(int) $this->item->id); ?>" enctype="multipart/form-data" method="post" name="adminForm" id="lpath-form" class="form-validate"><div id="j-main-container" class="span10 form-horizontal">
+<form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=lpath&layout=edit&id='.(int) $this->item->id); ?>" enctype="multipart/form-data" method="post" name="adminForm" id="lpath-form" class="form-validate"><div id="j-main-container" class="span10 form-horizontal">
         <ul class="nav nav-tabs" id="quizTabs">
             <li class="active"><a href="#basic" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_LP_BASIC_SETTINGS');?></a></li>
             <li><a href="#permissions" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_LP_PERMISSIONS_SETTINGS');?></a></li>
@@ -77,6 +77,7 @@ $input = $app->input;
                         <th width="20px" align="center" class="title"></th>
                         <th width="20px" align="center" class="title"></th>
                         <th width="20px" align="center" class="title"></th>
+                        <th width="50px" align="center"><?php echo JText::_('COM_JOOMLAQUIZ_LPATCH_BREEZINGFORMS_ID');?></th>
                         <th width="auto"></th>
                     </tr>
                     <?php
@@ -95,6 +96,11 @@ $input = $app->input;
                             <td><a href="javascript: void(0);" onclick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a></td>
                             <td><?php if ($ii > 1) { ?><a href="javascript: void(0);" onclick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a><?php } ?></td>
                             <td><?php if ($ii < $ind_last) { ?><a href="javascript: void(0);" onclick="javascript:Down_tbl_row(this); return false;" title="Move Down"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/downarrow.png"  border="0" alt="Move Down"></a><?php } ?></td>
+                            <?php if($frow->type == 'a'): ?>
+                                <td align="left"><input type="number" name="jq_hid_fields_bfid[]" value="<?php echo (int)$frow->bf_id ? (int)$frow->bf_id : 0; ?>" /></td>
+                            <?php else: ?>
+                                <td><input type="hidden" name="jq_hid_fields_bfid[]" value="<?php echo (int)$frow->bf_id ? (int)$frow->bf_id : 0; ?>" /></td>
+                            <?php endif; ?>
                             <td></td>
                         </tr>
                     <?php
@@ -256,6 +262,8 @@ $input = $app->input;
 				var cell3 = document.createElement("td");
 				var cell4 = document.createElement("td");
 				var cell5 = document.createElement("td");
+                var cell6 = document.createElement("td");
+                var cell7 = document.createElement("td");
 				cell1.align = 'center';
 				cell1.innerHTML = 0;
 				cell2.innerHTML = element.parentNode.parentNode.cells[1].innerHTML;
@@ -263,13 +271,17 @@ $input = $app->input;
 				cell3.innerHTML = element.parentNode.parentNode.cells[2].innerHTML;
 				cell4.innerHTML = '<'+'a href="javascript: void(0);" onclick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a>';
 				cell5.innerHTML = '<'+'a href="javascript: void(0);" onclick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a>';
+                var sell7Value = element.parentNode.parentNode.cells[6].childNodes[0].value;
+				cell7.innerHTML = element.parentNode.parentNode.cells[6].innerHTML;
+                cell7.childNodes[0].value = sell7Value;
 				element.parentNode.parentNode.parentNode.deleteRow(element.parentNode.parentNode.sectionRowIndex);
 				row.appendChild(cell1);
 				row.appendChild(cell2);
 				row.appendChild(cell3);
 				row.appendChild(cell4);
 				row.appendChild(cell5);
-				row.appendChild(document.createElement("td"));
+                row.appendChild(cell6);
+                row.appendChild(cell7);
 				row.appendChild(document.createElement("td"));
 				ReAnalize_tbl_Rows(sec_indx - 2, tbl_id);
 			}
@@ -289,6 +301,8 @@ $input = $app->input;
 				var cell3 = document.createElement("td");
 				var cell4 = document.createElement("td");
 				var cell5 = document.createElement("td");
+                var cell6 = document.createElement("td");
+                var cell7 = document.createElement("td");
 				cell1.align = 'center';
 				cell1.innerHTML = 0;
 				cell2.innerHTML = inner_cell2;
@@ -296,12 +310,16 @@ $input = $app->input;
 				cell3.innerHTML = inner_cell3;
 				cell4.innerHTML = '<'+'a href="javascript: void(0);" onclick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a>';
 				cell5.innerHTML = '<'+'a href="javascript: void(0);" onclick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a>';
+                var sell7Value = element.parentNode.parentNode.cells[6].childNodes[0].value;
+				cell7.innerHTML = element.parentNode.parentNode.cells[6].innerHTML;
+                cell7.childNodes[0].value = sell7Value;
 				row.appendChild(cell1);
 				row.appendChild(cell2);
 				row.appendChild(cell3);
 				row.appendChild(cell4);
 				row.appendChild(cell5);
-				row.appendChild(document.createElement("td"));
+                row.appendChild(cell6);
+                row.appendChild(cell7);
 				row.appendChild(document.createElement("td"));
 				ReAnalize_tbl_Rows(sec_indx, tbl_id);
 			}
@@ -336,6 +354,7 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name, field_type) {
 			var cell5 = document.createElement("td");
 			var cell6 = document.createElement("td");
 			var cell7 = document.createElement("td");
+            var cell8 = document.createElement("td");
 
 			var input_hidden_id = document.createElement("input");
 			//input_hidden_id.id = "hid";
@@ -357,7 +376,12 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name, field_type) {
 			cell3.innerHTML = elem_type_names[elem_type];
 			cell4.innerHTML = '<'+'a href="javascript: void(0);" onclick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a>';
 			cell5.innerHTML = '<'+'a href="javascript: void(0);" onclick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a>';
-			cell6.innerHTML = '';
+			if (elem_type=='a') {
+                cell7.innerHTML = '<input type="number" name="jq_hid_fields_bfid[]" value="" placeholder="ID Related BreezingForms" />';
+            } else {
+                cell7.innerHTML = '<input type="hidden" name="jq_hid_fields_bfid[]" value="0" />';
+            }
+			cell8.innerHTML = '';
 			row.appendChild(cell1);
 			row.appendChild(cell2);
 			row.appendChild(cell3);

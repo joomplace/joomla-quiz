@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_lpath_quiz` (
   `type` char(1) NOT NULL,
   `qid` int(11) NOT NULL,
   `order` int(11) NOT NULL,
+  `bf_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ID related Breezing Forms',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 

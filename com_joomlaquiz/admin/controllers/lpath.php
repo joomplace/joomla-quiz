@@ -49,7 +49,10 @@ class JoomlaquizControllerLpath extends JControllerForm
 	}
 	
 	public function save(){
-		parent::save();
+
+	    JSession::checkToken() or die( 'Invalid Token' );
+
+	    parent::save();
 		$task = JFactory::getApplication()->input->getCmd('task');
 				
 		if($task == 'apply'){

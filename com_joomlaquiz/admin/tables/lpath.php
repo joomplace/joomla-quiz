@@ -28,8 +28,8 @@ class JoomlaquizTableLpath extends JTable
         }
 
 		function store($updateNulls = false){
-			
-			$database = JFactory::getDBO();
+
+            $database = JFactory::getDBO();
 			if($_POST['jform']['id']){
 				$this->id = $_POST['jform']['id'];
 			}
@@ -76,14 +76,15 @@ class JoomlaquizTableLpath extends JTable
 			$insert = array();
 			$quiz_ids = JFactory::getApplication()->input->get('jq_hid_fields_ids', array(), 'array');
 			$quiz_types = JFactory::getApplication()->input->get('jq_hid_fields_types', array(), 'array');
-			
+            $bfid_ids = JFactory::getApplication()->input->get('jq_hid_fields_bfid', array(), 'array');
+
 			if(!empty($quiz_ids)) {
 				foreach($quiz_ids as $order => $quiz_id) {
-					$insert[] = "('{$this->id}', '{$quiz_types[$order]}', '$quiz_id', '$order')";
+                    $insert[] = "('{$this->id}', '{$quiz_types[$order]}', '$quiz_id', '$order', '{$bfid_ids[$order]}')";
 				}
 				
 				$query = 'INSERT INTO #__quiz_lpath_quiz'
-				. "\n (`lid`, `type`, `qid`, `order`)"
+				. "\n (`lid`, `type`, `qid`, `order`, `bf_id`)"
 				. "\n VALUES"
 				. "\n " . implode(", \n", $insert)
 				;

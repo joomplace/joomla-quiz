@@ -67,7 +67,7 @@ class JoomlaquizModelLpath extends JModelAdmin
 	public function getLpathAll($lid){
 		$database = JFactory::getDBO();
 		if($lid) {
-			$query = 'SELECT l_q.qid AS id, IF(l_q.type = \'q\', q.c_title, c.title) AS title, l_q.type'
+			$query = 'SELECT l_q.qid AS id, IF(l_q.type = \'q\', q.c_title, c.title) AS title, l_q.type, l_q.bf_id'
 			. ' FROM #__quiz_lpath_quiz AS l_q'
 			. ' LEFT JOIN #__quiz_t_quiz AS q ON (q.c_id = l_q.qid AND l_q.type = \'q\')'
 			. ' LEFT JOIN #__content AS c ON (c.id = l_q.qid AND l_q.type = \'a\')'

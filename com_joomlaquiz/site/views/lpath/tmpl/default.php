@@ -45,6 +45,55 @@ if(isset($lpath->error) && $lpath->error){
 				);
 			}
 			jq_jQuery(document).ready(function() {JO_initAccordion();});
+			
+			jQuery(function($){
+			    'use strict';
+			    var jpQuizLpathActiveTab = sessionStorage.getItem('jpQuiz-lpath-activeTab') || '-1';
+			    if(jpQuizLpathActiveTab*1 >= 0){
+                    setTimeout(function(){    
+                        $('.jq_lpath_step_descr').each(function(indx, element){
+                            if(indx*1 == jpQuizLpathActiveTab*1){
+                                $(this).slideDown();
+                                sessionStorage.removeItem('jpQuiz-lpath-activeTab');
+                                return false;
+                            }
+                        });
+                    }, 1000);
+                }
+			    var bfRecords = [], first = 1, i = 0;
+			    $('.jq_lpath_step_descr').each(function(indx, element){
+			        if( !!$(this).attr('data-bf') ){
+			            var bfItemRecord = $(this).attr('data-bf');
+			            bfRecords[i] = bfItemRecord;
+			            if(first == 0 && bfItemRecord == 0 && bfRecords[i-1] == 0){
+			                $('a', this).eq(0).attr('href', location.href)
+			                                  .removeClass('jcepopup')
+			                                  .css({'opacity':0.5}).on('click',function(event){
+                                event.preventDefault(); alert(\"Please fill forms on the previous steps.\");
+                            });
+			            } else {
+			                $('a', this).eq(0).on('click',function(){
+			                    setTimeout(function(){
+                                    $('.jq_lpath_step_descr').each(function(indx, element){
+                                        if($(this).css('display') == 'block'){
+                                            sessionStorage.setItem('jpQuiz-lpath-activeTab', indx);
+                                            return false;
+                                        }
+                                    });
+                                    $('body').on('click', function(event) {
+                                        if(event.target.id == 'jcemediabox-popup-frame' || event.target.id == 'jcemediabox-popup-closelink'){
+                                            window.location.reload();
+                                        }
+                                    });
+                                    
+                                }, 2000);
+			                });
+			            }
+			            first = 0;
+			            i++;
+			        }
+			    });
+			});
 		");
 
 	?>
@@ -69,7 +118,8 @@ if(isset($lpath->error) && $lpath->error){
 						<div class="jq_lpath_step_expand" style="float:right;">[<?php echo JText::_('COM_JQ_SHOW_DESCRIPTION');?>]</div>
 					<?php } ?>
 				</div>
-				<div class="jq_lpath_step_descr<?php echo ($lpath_item->show_link && isset($lpath_all[$k+1])&&!$lpath_all[$k+1]->show_link?'':'')?>">
+				<div class="jq_lpath_step_descr<?php echo ($lpath_item->show_link && isset($lpath_all[$k+1])&&!$lpath_all[$k+1]->show_link?'':'')?>"
+                        <?php echo ($lpath_item->type == 'a' && isset($lpath_item->bf_record)) ? 'data-bf="'.(int)$lpath_item->bf_record.'"' : ''; ?> >
 					<?php
 					$short_des = explode('<hr id="system-readmore" />',$lpath_item->short_description);
 					echo JHtml::_('content.prepare',$short_des[0]);

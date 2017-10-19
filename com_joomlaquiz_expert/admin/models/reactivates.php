@@ -79,9 +79,7 @@ class JoomlaquizModelReactivates extends JModelList
 			$no_virtuemart = false;
 		else
 			$no_virtuemart = true;
-			
-        $db = JFactory::getDBO();
-        
+
         $where = array();
 		if($user_id > 0) {
 			$where[] = '(users.id = ' . $user_id . ')';
@@ -90,63 +88,19 @@ class JoomlaquizModelReactivates extends JModelList
 			$where[] = '(users.name LIKE (\'%' . $search . '%\'))';
 		}
 
-        $query = $db->getQuery(true)
-            ->select($db->qn(
-                array(
-                    'users.name',
-                    'payments.id',
-                ),
-                array(
-                    'name',
-                    'order_id',
-                )
-            ))
-            ->select('\'\' AS `order_status`')
-            ->select("CONVERT (`payments`.`status` USING utf8) COLLATE utf8_unicode_ci AS order_status_name")
-            ->select('\'0\' AS `vm`')
-            ->from($db->qn('#__quiz_payments', 'payments'))
-            ->innerJoin($db->qn('#__users', 'users')
-                . ' ON '
-                . $db->qn('users.id') . ' = ' . $db->qn('payments.user_id')
-            );
-        if(count($where)){
-            foreach ($where as $item){
-                $query->where($item);
-            }
+        if($no_virtuemart){
+            $query = "SELECT users.name, payments.id AS order_id, '' AS order_status, payments.status AS `order_status_name` , '0' AS `vm`" .
+                "\n FROM `#__quiz_payments` as `payments`" .
+                "\n INNER JOIN `#__users` AS `users` ON `users`.`id` = `payments`.`user_id`" .
+                (count($where)? "\n WHERE " . implode(' AND ', $where): "");
+        } else {
+            $query = "SELECT users.name, orders.virtuemart_order_id as order_id, orders.order_status, order_status.order_status_name, '1' AS `vm`" .
+                "\n FROM `#__virtuemart_orders` AS `orders`" .
+                "\n INNER JOIN `#__users` AS `users` ON `users`.`id` = `orders`.`virtuemart_user_id`" .
+                "\n LEFT JOIN `#__virtuemart_orderstates` AS `order_status` ON `order_status`.`order_status_code` = `orders`.`order_status`" .
+                (count($where)? "\n WHERE " . implode(' AND ', $where): "");
         }
 
-        if (!$no_virtuemart){
-            $query_vm = $db->getQuery(true)
-                ->select($db->qn(
-                    array(
-                        'users.name',
-                        'orders.virtuemart_order_id',
-                        'orders.order_status'
-                    ),
-                    array(
-                        'name',
-                        'order_id',
-                        'order_status'
-                    )
-                ))
-                ->select("CONVERT (`order_status`.`order_status_name` USING utf8) COLLATE utf8_unicode_ci AS order_status_name")
-                ->select('\'1\' AS `vm`')
-                ->from($db->qn('#__virtuemart_orders', 'orders'))
-                ->innerJoin($db->qn('#__users', 'users')
-                    . ' ON '
-                    . $db->qn('users.id') . ' = ' . $db->qn('orders.virtuemart_user_id')
-                )
-                ->leftJoin($db->qn('#__virtuemart_orderstates', 'order_status')
-                    . ' ON '
-                    . $db->qn('order_status.order_status_code') . ' = ' . $db->qn('orders.order_status')
-                );
-            if (count($where)) {
-                foreach ($where as $item) {
-                    $query_vm->where($item);
-                }
-            }
-            $query .= ' UNION ALL(' . $query_vm . ')';
-        }
 		$query .= "\n ORDER BY name, vm, order_id";
 
        	return $query;

@@ -122,13 +122,14 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="nowrap has-context">
                         <div class="pull-left">
-                            <?php if($item->order_status == 'C' || $item->order_status == 'U' || $item->order_status_name == 'Confirmed'): ?>
-								<a href="<?php echo $link; ?>">
-							<?php endif; ?>
-							<?php  if ($item->vm) printf("%08d", $item->order_id); else echo 'Payment #'.$item->order_id; ?>
-                            <?php if($item->order_status == 'C' || $item->order_status == 'U'  || $item->order_status_name == 'Confirmed'): ?>
-								</a>
-							<?php endif; ?>
+                            <?php $vm_confirmed_statuses = array('C','U'); ?>
+                            <?php if(in_array($this->escape($item->order_status), $vm_confirmed_statuses)): ?>
+                                <a href="<?php echo $link; ?>">
+                            <?php endif; ?>
+                                <?php  if ($item->vm) printf("%08d", $item->order_id); else echo 'Payment #'.$item->order_id; ?>
+                            <?php if(in_array($this->escape($item->order_status), $vm_confirmed_statuses)): ?>
+                                </a>
+                            <?php endif; ?>
                         </div>
 					</td>
 					<td class="has-context">
@@ -141,34 +142,13 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="has-context">
                         <div class="pull-left">
-                        	<?php if($item->order_status_name){
-                                switch ($item->order_status){
-                                    case 'C':
-                                        $item->order_status_name = 'Confirmed';
-                                        break;
-                                    case 'U':
-                                        $item->order_status_name = 'Confirmed by shopper';
-                                        break;
-                                    case 'S':
-                                        $item->order_status_name = 'Shipped';
-                                        break;
-                                    case 'X':
-                                        $item->order_status_name = 'Cancelled';
-                                        break;
-                                    case 'R':
-                                        $item->order_status_name = 'Refunded';
-                                        break;
-                                    case 'F':
-                                        $item->order_status_name = 'Completed';
-                                        break;
-                                    case 'D':
-                                        $item->order_status_name = 'Denied';
-                                        break;
-                                    case 'P':
-                                        $item->order_status_name = 'Pending';
-                                        break;
-                                }
-                        	}?>
+                        	<?php
+                                $vm_statuses = array(
+                                    'C' => 'Confirmed', 'U' => 'Confirmed by shopper', 'S' => 'Shipped', 'X' => 'Cancelled',
+                                    'R' => 'Refunded', 'F' => 'Completed', 'D' => 'Denied', 'P' => 'Pending'
+                                );
+                                $item->order_status_name = $vm_statuses[$item->order_status];
+                            ?>
                             <?php echo ($item->order_status_name ? $item->order_status_name : $item->order_status); ?>
                         </div>
 					</td>

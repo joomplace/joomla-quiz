@@ -69,7 +69,8 @@ if(isset($lpath->error) && $lpath->error){
 			                $('a', this).eq(0).attr('href', location.href)
 			                                  .removeClass('jcepopup')
 			                                  .css({'opacity':0.5}).on('click',function(event){
-                                event.preventDefault(); alert(\"Please fill forms on the previous steps.\");
+                                event.preventDefault(); 
+                                alert(\"Please complete the previous assessment. You will only be able to access this assessment once the previous assessment has been completed.\");
                             });
 			            } else {
 			                $('a', this).eq(0).on('click',function(){

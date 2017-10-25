@@ -97,10 +97,18 @@ class JoomlaquizModelLpath extends JModelList
 			}
 		
 			$passed_steps = array('q'=>array(), 'a'=>array());
-			$query = "SELECT `type`, `qid`"
-				. "\n FROM `#__quiz_lpath_stage`"
-				. "\n WHERE uid = '{$my->id}' AND oid = '{$package_id}' AND rel_id = '{$rel_id}' AND lpid = '{$lpath->id}' AND stage = 1"
-				;
+            if($lpath->package_id && $lpath->rel_id){
+                $query = "SELECT `type`, `qid`"
+                    . "\n FROM `#__quiz_lpath_stage`"
+                    . "\n WHERE uid = '{$my->id}' AND oid = '{$package_id}' AND rel_id = '{$rel_id}' AND lpid = '{$lpath->id}' AND stage = 1"
+                ;
+            } else {
+                $query = $database->getQuery(true);
+                $query->select( $database->qn(array('type', 'qid')) )
+                    ->from($database->qn('#__quiz_lpath_stage'))
+                    ->where( $database->qn('uid') . '=' . (int)$my->id )
+                    ->where( $database->qn('lpid') . '=' . (int)$lpath->id );
+            }
 			$database->SetQuery( $query );
 			$lpath_stages = $database->loadObjectList();
 
@@ -108,16 +116,25 @@ class JoomlaquizModelLpath extends JModelList
 			foreach($lpath_stages as $ls) {
 				$passed_steps[$ls->type][$ls->qid] = 1;	
 			}
-		
-			$query = "SELECT * FROM #__quiz_r_student_quiz WHERE c_student_id = '{$my->id}' AND c_order_id = '{$package_id}' AND c_rel_id = '{$rel_id}' AND c_passed = 1 ";
-			$database->SetQuery( $query );		
+
+            if($lpath->package_id && $lpath->rel_id){
+                $query = "SELECT * FROM #__quiz_r_student_quiz WHERE c_student_id = '{$my->id}' AND c_order_id ='{$package_id}' AND c_rel_id = '{$rel_id}' AND c_passed = 1 ";
+            } else {
+                $query = "SELECT * FROM #__quiz_r_student_quiz WHERE c_student_id = '{$my->id}' AND c_passed = 1 ";
+            }
+			$database->SetQuery( $query );
 			$passed_quizzes = $database->loadObjectList();
 			if(is_array($passed_quizzes) && count($passed_quizzes))
 			foreach($passed_quizzes as $ls) {
 				if (!array_key_exists($ls->c_quiz_id, $passed_steps['q'])){
-					$query = "UPDATE `#__quiz_lpath_stage` SET `stage` = 1 "
-								. "\n WHERE uid = {$my->id} AND rel_id = {$rel_id} AND oid = $package_id AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$ls->c_quiz_id}";
-					$database->SetQuery( $query );
+                    if($lpath->package_id && $lpath->rel_id){
+                        $query = "UPDATE `#__quiz_lpath_stage` SET `stage` = 1 "
+                            . "\n WHERE uid = {$my->id} AND rel_id = {$rel_id} AND oid = $package_id AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$ls->c_quiz_id}";
+                    } else {
+                        $query = "UPDATE `#__quiz_lpath_stage` SET `stage` = 1 "
+                            . "\n WHERE uid = {$my->id} AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$ls->c_quiz_id}";
+                    }
+				    $database->SetQuery( $query );
 					$database->execute();
 					$passed_steps['q'][$ls->c_quiz_id] = 1;
 				}

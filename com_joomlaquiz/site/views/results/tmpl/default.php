@@ -59,7 +59,7 @@ if(!$my->id && !$is_share) {
 		
 	$layout = new JLayoutFile('joomlaquiz.results');
 	$layout->setComponent('com_joomlaquiz');
-	$html = $layout->sublayout($my->authorise('core.manage','com_joomlaquiz')?'manager':'user',(object)array('items'=>$rows,'pagination'=>$pagination));
+	$html = $layout->sublayout($my->authorise('core.managefe','com_joomlaquiz')?'manager':'user',(object)array('items'=>$rows,'pagination'=>$pagination));
 	if(!$html) $html = $layout->render((object)array('items'=>$rows,'pagination'=>$pagination));
 	echo $html;
 	

@@ -33,7 +33,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		
 		if (count($st_quiz_data)) {
 			$st_quiz_data = $st_quiz_data[0];
-			if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id || $unique_pass_id == $st_quiz_data->unique_pass_id))  ||  $my->authorise('core.manage','com_joomlaquiz')) {			
+			if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id || $unique_pass_id == $st_quiz_data->unique_pass_id))  ||  $my->authorise('core.managefe','com_joomlaquiz')) {
 				$this->JQ_PrintPDF($stu_quiz_id);
 				die();
 			}

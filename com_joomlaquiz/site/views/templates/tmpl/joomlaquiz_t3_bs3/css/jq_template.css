@@ -413,7 +413,7 @@ blockquote span{
 
 .jq_question_info_container {
 	text-align: center;
-	/*position: absolute;*/
+	position: absolute;
 	width: 100%;
 }
 	

@@ -299,6 +299,11 @@ class JoomlaquizModelDynamic extends JModelAdmin
 				header("Content-Disposition: inline; filename=quiz_results.csv ");
 				header('Pragma: no-cache');
 			}
+
+            //add BOM to fix UTF-8 in Excel
+            $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) );
+            $csv_data = $bom.$csv_data;
+
 			echo $csv_data;
 			die();
 		}

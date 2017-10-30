@@ -37,13 +37,13 @@ class JoomlaquizHelper
 			$appsLib = JqAppPlugins::getInstance();
 			$database = JFactory::getDBO();
 			
-			$query = "SELECT qtq.c_id, qtq.c_type, qtq.c_ques_cat as q_cat, qtq.c_point as fuly_score, qrs.c_score as us_score FROM #__quiz_r_student_question as qrs, #__quiz_t_question as qtq WHERE qrs.c_question_id = qtq.c_id AND qrs.c_stu_quiz_id = '".$start_id."' AND qtq.published = 1";
+			$query = "SELECT qtq.c_id, qtq.c_type, qtq.c_ques_cat as q_cat, qtq.c_point as fuly_score, qrs.c_score as us_score FROM #__quiz_r_student_question as qrs, #__quiz_t_question as qtq WHERE qrs.c_question_id = qtq.c_id AND qrs.c_stu_quiz_id = '".(int)$start_id."' AND qtq.published = 1";
 			$database->SetQuery( $query );
 			$score_bycat = $database->LoadObjectList();
 			
 			$quest_cats = array();
 			foreach($score_bycat as $cat){
-				$quest_cats[] =  $cat->q_cat;
+                $quest_cats[] =  $database->q((int)$cat->q_cat);
 			}
 			
 			$query = "SELECT id AS qc_id,title AS qc_category FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `id` IN (".implode(',',$quest_cats).") ORDER BY `lft` ASC";
@@ -66,6 +66,7 @@ class JoomlaquizHelper
 					$score = 0;
 					$points = $score_bycat[$i]->fuly_score;
 					$type = JoomlaquizHelper::getQuestionType($score_bycat[$i]->c_type);
+                    $type = htmlspecialchars($type, ENT_QUOTES, 'UTF-8');
 					
 					$data = array();
 					$data['quest_type'] = $type;
@@ -308,11 +309,11 @@ class JoomlaquizHelper
 		
 			$database = JFactory::getDBO();
 			$n=1;
-			$query = "SELECT `c_id` FROM `#__quiz_t_blank` WHERE `c_question_id` = ".$qdata->c_id;
+			$query = "SELECT `c_id` FROM `#__quiz_t_blank` WHERE `c_question_id` = ".(int)$qdata->c_id;
 			$database->setQuery($query);
 			$blanks = (array)$database->loadColumn();
 
-            $query = "( SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id  IN ('".implode("','", $blanks)."') ) UNION (SELECT c_id, c_text FROM #__quiz_t_faketext WHERE c_quest_id = ".$qdata->c_id.") ORDER BY rand()";
+            $query = "( SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id  IN ('".implode("','", $blanks)."') ) UNION (SELECT c_id, c_text FROM #__quiz_t_faketext WHERE c_quest_id = ".(int)$qdata->c_id.") ORDER BY rand()";
             $database->setQuery($query);
             $answers = $database->loadColumn(1);
 			
@@ -333,15 +334,15 @@ class JoomlaquizHelper
 		
 		public static function Blnk_replace_quest($q_id, $q_text, $stu_quiz_id=0, $c_qform=0){
 			$database = JFactory::getDBO();
-			$query = "SELECT c_id FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$stu_quiz_id."' AND c_question_id = '".$q_id."'";
+			$query = "SELECT c_id FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".(int)$stu_quiz_id."' AND c_question_id = '".(int)$q_id."'";
 			$database->SetQuery( $query );
 			$sid = $database->loadResult( );
 			
-			$query = "SELECT c_answer FROM #__quiz_r_student_blank WHERE c_sq_id = '".$sid."' ORDER BY c_id";
+			$query = "SELECT c_answer FROM #__quiz_r_student_blank WHERE c_sq_id = '".(int)$sid."' ORDER BY c_id";
 			$database->SetQuery( $query );
 			$answers = $database->loadColumn();			
 
-			$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id=".$q_id;
+			$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id=".(int)$q_id;
 			$database->setQuery($query);
 			$blnk = $database->loadObjectList();
 			for($i=0;$i<count($blnk);$i++){
@@ -365,22 +366,22 @@ class JoomlaquizHelper
 
 			$database = JFactory::getDBO();
 			
-			$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id=".$q_id." ORDER BY ordering";
+			$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id=".(int)$q_id." ORDER BY ordering";
 			$database->setQuery($query);
 			$blnk = $database->loadObjectList();
 			
-			$query = "SELECT * FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$stu_quiz_id."' AND c_question_id = '".$q_id."'";
+			$query = "SELECT * FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".(int)$stu_quiz_id."' AND c_question_id = '".(int)$q_id."'";
 			$database->SetQuery( $query );
 			$rsq = $database->loadObject( );
 						
-			$query = "SELECT * FROM #__quiz_r_student_blank WHERE c_sq_id = '".$rsq->c_id."' ORDER BY c_id ";
+			$query = "SELECT * FROM #__quiz_r_student_blank WHERE c_sq_id = '".(int)$rsq->c_id."' ORDER BY c_id ";
 			$database->SetQuery( $query );
 			$tmp = $database->LoadAssocList();
 			$q_text = str_replace("{blank", "{Blank", $q_text);			
 			for($i=0;$i<count($blnk);$i++){
 				if(!$blnk[$i]->ordering)
 					$blnk[$i]->ordering = $i;
-				$query = "SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id = ".$blnk[$i]->c_id." ORDER BY ordering";
+				$query = "SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id = ".(int)$blnk[$i]->c_id." ORDER BY ordering";
 				$database->setQuery($query);
 				$tmp2 = $database->loadObjectList();
 				$c_texts = array();
@@ -406,12 +407,12 @@ class JoomlaquizHelper
 			
 			$database = JFactory::getDBO();
 
-			$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id=".$q_id;
+			$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id=".(int)$q_id;
 			$database->setQuery($query);
 			$blnk = $database->loadObjectList();
 			for($i=0;$i<count($blnk);$i++){
 				
-				$query = "SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id = ".$blnk[$i]->c_id." ORDER BY ordering ";
+				$query = "SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id = ".(int)$blnk[$i]->c_id." ORDER BY ordering ";
 				$database->setQuery($query);
 				$tmp2 = $database->loadObjectList();
 				$c_texts = array();
@@ -440,7 +441,7 @@ class JoomlaquizHelper
 			{	
 				global $Itemid;
 				if(JFactory::getApplication()->input->get('Itemid') != 0) {
-				  $Itemid = $jqItemid = JFactory::getApplication()->input->get('Itemid');
+				  $Itemid = $jqItemid = JFactory::getApplication()->input->getInt('Itemid');
 				  $ret = '&Itemid='.$jqItemid;
 				}else{
 				  $Itemid = $jqItemid = 0;
@@ -456,7 +457,7 @@ class JoomlaquizHelper
 			
 			$database = JFactory::getDBO();
 
-			$query = "SELECT q.c_title AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
+			$query = "SELECT q.c_title AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".(int)$sid."' AND sq.c_quiz_id = q.c_id";
 			$database->SetQuery( $query );
 			$info = $database->LoadAssocList();
 			$info = $info[0];
@@ -565,14 +566,14 @@ class JoomlaquizHelper
 			if (!$order_id && !$rel_id) {
 				if ($quiz->c_number_times) {			
 					//no period, just check number of tries	
-					$query = "SELECT COUNT(*) FROM #__quiz_r_student_quiz WHERE `c_quiz_id` = '".$quiz_id."' ". ($quiz->c_allow_continue ? ' AND c_finished = 1 ': ''). " AND {$unique_pass_str} AND `params` = ".$database->quote($cust_params)." ";
+					$query = "SELECT COUNT(*) FROM #__quiz_r_student_quiz WHERE `c_quiz_id` = '".(int)$quiz_id."' ". ($quiz->c_allow_continue ? ' AND c_finished = 1 ': ''). " AND {$unique_pass_str} AND `params` = ".$database->quote($cust_params)." ";
 					$database->SetQuery( $query );
 					$number_times_passed = (int)$database->loadResult();
 					
 					if ($number_times_passed < $quiz->c_number_times) {
 						return true;
 					} elseif ($quiz->c_min_after) {
-						$query = "SELECT `c_date_time` FROM #__quiz_r_student_quiz WHERE `c_quiz_id` = '".$quiz_id."' ". ($quiz->c_allow_continue ? ' AND c_finished = 1 ': ''). " AND {$unique_pass_str} ORDER BY `c_id` DESC LIMIT ".$quiz->c_number_times;
+						$query = "SELECT `c_date_time` FROM #__quiz_r_student_quiz WHERE `c_quiz_id` = '".(int)$quiz_id."' ". ($quiz->c_allow_continue ? ' AND c_finished = 1 ': ''). " AND {$unique_pass_str} ORDER BY `c_id` DESC LIMIT ".$quiz->c_number_times;
 						$database->SetQuery( $query );
 						$user_tries = $database->loadColumn();
 						$last_try_date = strtotime($user_tries[count($user_tries)-1]);
@@ -805,11 +806,17 @@ class JoomlaquizHelper
 			$database = JFactory::getDBO();
 			$query = $database->getQuery(true);
 
+            $qch_ids_arr = explode(',', $qch_ids);
+            for($i=0; $i<count($qch_ids_arr); $i++){
+                $qch_ids_arr[$i] = $database->q($qch_ids_arr[$i]);
+            }
+
 			//$query = "SELECT SUM(c_point) FROM #__quiz_t_question WHERE c_id IN (".$qch_ids.") AND published = 1 AND c_type <> 11";
 			$query->select ('SUM(c_point)')
 				->from($database->qn('#__quiz_t_question'))
 				//->where("`c_id` IN (".$database->qn($qch_ids).")")
-				->where("`c_id` IN (".$qch_ids.")")
+				//->where("`c_id` IN (".$qch_ids.")")
+                ->where($database->qn('c_id') . ' IN ('.implode(',', $qch_ids_arr).')')
 				->where($database->qn('published')." = 1")
 				->where($database->qn('c_type')." <> 11");
 			

@@ -39,7 +39,7 @@ class JoomlaquizControllerQuiz extends JControllerForm
 			$database->SetQuery( $query );
 			$quiz_id = $database->LoadResult();
 
-			$query = "SELECT a.*, b.`template_name` FROM `#__quiz_t_quiz` as a, `#__quiz_templates` as b WHERE a.`c_id` = '".$quiz_id."' and a.`c_skin` = b.`id`";
+			$query = "SELECT a.*, b.`template_name` FROM `#__quiz_t_quiz` as a, `#__quiz_templates` as b WHERE a.`c_id` = '".(int)$quiz_id."' and a.`c_skin` = b.`id`";
 			$database->SetQuery($query);
 			$quiz_params = $database->LoadObjectList();					
 			

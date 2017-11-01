@@ -99,7 +99,7 @@ class JoomlaquizModelDynamic extends JModelAdmin
                     $questList = implode(',', $questList);
 
                     $query->clear();
-                    $query->select($db->qn('*'))
+                    $query->select('*')
                         ->from($db->qn('#__quiz_t_question'))
                         ->where($db->qn('c_type') . " IN ('1','2','3','6','8')")
                         ->where($db->qn('c_id') . ' IN ('.$questList.')');

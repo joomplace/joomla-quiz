@@ -426,8 +426,9 @@ EOF_MSG;
 	public static function JQ_createBlank($blank_id, $blank_value='', $css_class='', $blk_id=0, $qform=0, $q_id = '') { //html template for 'Blank' questions
 		if ($qform){
 			$jq_tmpl_html = "<span class='jq_blank_container jq_blank jq_blank_droppable q".$q_id." ".$css_class."' id=\"blk_id_".$blk_id."\"><span class=\"jq_blank_draggable\" id=\"_blk_id_".$blk_id."\">".$blank_value."</span>&nbsp;</span><input type='hidden' name='quest_blank_".$blank_id."' onblur=\"javascript: check_Blank(".$blk_id.", this.value)\" size='32' value=\"".$blank_value."\" id=\"hid_blk_id_".$blk_id."\" /> \n";
-		} else {	
-			$jq_tmpl_html = "<input type='text' name='quest_blank_".$blank_id."' class='inputbox jq_blank q".$q_id." ".$css_class."' size='32' style='display: inline-block !important; width: auto !important;' value=\"".$blank_value."\" /> \n";
+		} else {
+            $jq_tmpl_html = "<input type='text' name='quest_blank_".$blank_id."' class='inputbox jq_blank q".$q_id." ".$css_class."' size='32' style='display: inline-block !important; width: auto !important;
+                            padding: 4px 6px !important; height: 18px !important; margin-bottom: 9px !important; font-size: 13px !important; line-height: 18px !important;' value=\"".$blank_value."\" /> \n";
 		}
 		return $jq_tmpl_html;
 	}

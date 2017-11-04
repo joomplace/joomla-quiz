@@ -622,3 +622,10 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
 		padding: 0; 
 	}
 }
+
+@media print {
+    body {
+        visibility: hidden;
+        display: none;
+    }
+}

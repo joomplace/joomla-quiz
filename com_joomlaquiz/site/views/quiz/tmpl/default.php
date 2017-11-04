@@ -25,7 +25,7 @@ $lang = JFactory::getLanguage();
 $lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 
 $mainframe = JFactory::getApplication();
-
+	
 if (!isset($quiz->c_show_quest_points)) {
 	$quiz->c_show_quest_points = 1;
 }
@@ -50,6 +50,7 @@ if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_im
 
 <script language="JavaScript" src="<?php echo JURI::root(true);?>/components/com_joomlaquiz/assets/js/bits_mycommon.js" type="text/javascript"></script>
 <script language="JavaScript" src="<?php echo JURI::root(true);?>/components/com_joomlaquiz/assets/js/bits_message.js" type="text/javascript"></script>
+<script language="JavaScript" src="<?php echo JURI::root(true);?>/components/com_joomlaquiz/assets/js/copy_prohibited.js" type="text/javascript"></script>
 <?php
 	include_once(JPATH_SITE.'/components/com_joomlaquiz/views/quiz/tmpl/js/joomlaquiz.js.php');
 ?>

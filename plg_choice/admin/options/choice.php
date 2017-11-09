@@ -88,10 +88,70 @@ if (JComponentHelper::getParams('com_joomlaquiz')
                 ?>
             </td>
             <td valign="top" align="left">
-                <input type="text" name="jq_hid_fields[]"
-                       value="<?php echo htmlspecialchars(stripslashes($frow->c_choice)) ?>"/>
-                <input type="hidden" name="jq_hid_fields_ids[]"
-                       value="<?php echo $frow->c_id ?>"/>
+               <!-- <input type="text" name="jq_hid_fields[]" -->
+                   <!--    value="<?php echo htmlspecialchars(stripslashes($frow->c_choice)) ?>"/> -->
+             <!--   <input type="hidden" name="jq_hid_fields_ids[]"
+                       value="<?php echo $frow->c_id ?>"/> -->
+
+                <?php
+                $config_option_text = array(
+                    'configuration'=> array(
+                        'toolbars' => (object) array(
+                            '0'=> (object) array(
+                                'menu' => array(),
+                                'toolbar1' => array(
+                                    "bold",
+                                    "italic",
+                                    "underline",
+                                    "strikethrough",
+                                    "|",
+                                    "alignleft",
+                                    "aligncenter",
+                                    "alignright",
+                                    "alignjustify",
+                                    "|",
+                                    "formatselect",
+                                    "fontselect",
+                                    "fontsizeselect",
+                                    "|",
+                                    "bullist",
+                                    "numlist",
+                                    "indent",
+                                    "|",
+                                    "undo",
+                                    "|",
+                                    "link",
+                                    "unlink",
+                                    "image",
+                                    "|",
+                                    "code",
+                                    "|",
+                                    "forecolor",
+                                    "backcolor",
+                                    "|",
+                                    "subscript",
+                                    "superscript",
+                                    "|",
+                                    "charmap",
+                                    "|",
+                                    "blockquote",
+                                    "|"
+                                )
+                            )
+                        ),
+                        'setoptions' => (object) array(
+                            '0'=> (object) array(
+                                'inline' => true,
+                                'html_height' => 200
+                            )
+                        )
+                    )
+                );
+
+                echo $editor->display('jq_hid_fields[' . $ii . ']',
+                    $frow->c_choice, 500, 670, '20', '10', true,
+                    null, null, null, $config_option_text);
+                ?>
             </td>
             <td align="center" valign="top"><a href="javascript: void(0);"
                                                onClick="javascript:Delete_tbl_row(this); return false;"
@@ -126,62 +186,10 @@ if (JComponentHelper::getParams('com_joomlaquiz')
                 <td><?php echo JText::_('COM_JOOMLAQUIZ_FEEDBACK_OPTION'); ?></td>
                 <td colspan="5">
                     <?php
-                    $config = array(
-//                        'configuration'=> array(
-//                            'toolbars' => (object) array(
-//                                '0'=> (object) array(
-//                                    'menu' => array(),
-//                                    'toolbar1' => array(
-//                                        "bold",
-//                                        "italic",
-//                                        "underline",
-//                                        "strikethrough",
-//                                        "|",
-//                                        "alignleft",
-//                                        "aligncenter",
-//                                        "alignright",
-//                                        "alignjustify",
-//                                        "|",
-//                                        "formatselect",
-//                                        "fontselect",
-//                                        "fontsizeselect",
-//                                        "|",
-//                                        "bullist",
-//                                        "numlist",
-//                                        "indent",
-//                                        "|",
-//                                        "undo",
-//                                        "|",
-//                                        "link",
-//                                        "unlink",
-//                                        "image",
-//                                        "|",
-//                                        "code",
-//                                        "|",
-//                                        "forecolor",
-//                                        "backcolor",
-//                                        "|",
-//                                        "subscript",
-//                                        "superscript",
-//                                        "|",
-//                                        "charmap",
-//                                        "|",
-//                                        "blockquote",
-//                                        "|"
-//                                    )
-//                                )
-//                            ),
-//                            'setoptions' => (object) array(
-//                                '0'=> (object) array(
-//                                    'inline' => true,
-//                                    'html_height' => 200
-//                                )
-//                            )
-//                        )
-                    );
+
                     echo $editor->display('jq_incorrect_feed[' . $ii . ']',
                         $frow->c_incorrect_feed, 500, 170, '20', '10', true,
-                        null, null, null, $config);
+                        null, null, null, $config_option_text);
                     ?>
                 </td>
             </tr>
@@ -201,10 +209,14 @@ if (JComponentHelper::getParams('com_joomlaquiz')
         <th align="left"><?php echo JText::_('COM_JOOMLAQUIZ_OPTION_POINTS'); ?></th>
     </tr>
     <tr>
-        <td align="left" valign="top" width="280">
+        <td align="left" valign="top" width="600">
             <div>
-                <input id="new_field" class="text_area" style="width:210px "
-                       type="text" name="new_field"/>
+               <!-- <input id="new_field" class="text_area" style="width:210px "
+                       type="text" name="new_field"/> -->
+
+                <div id="new_field"><?php echo $editor->display('new_jq_hid_field',
+                        '', 500, 170, '20', '10', true,
+                        null, null, null, $config_option_text); ?></div>
             </div>
         </td>
         <td align="left" valign="top" width="280">
@@ -219,7 +231,9 @@ if (JComponentHelper::getParams('com_joomlaquiz')
                 <input class="modal-button btn" type="button"
                        name="add_new_field" style="width:70px;margin-left:10px;"
                        value="Add"
-                       onClick="javascript:Add_new_tbl_field('new_field', 'qfld_tbl', 'jq_hid_fields[]');"/>
+                       onClick="javascript:Add_new_tbl_field('new_field', 'qfld_tbl', 'jq_hid_fields[]');
+                                tinyMCE.execCommand('mceToggleEditor', false, 'jq_hid_fields[' + ii + ']');
+                                tinyMCE.execCommand('mceToggleEditor', false, 'jq_incorrect_feed[' + ii + ']');"/>
             </div>
         </td>
         <td></td>
@@ -232,7 +246,8 @@ if (JComponentHelper::getParams('com_joomlaquiz')
                 <br/>
                 <br/>
                 <div id="new_editor"><?php echo $editor->display('new_incorrect_feed',
-                        '', 500, 170, '20', '10'); ?></div>
+                        '', 500, 170, '20', '10',true,
+                        null, null, null, $config_option_text); ?></div>
             </td>
         </tr>
     <?php } ?>

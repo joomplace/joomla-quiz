@@ -9,8 +9,6 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.application.component.modellist');
-
 class JoomlaquizModelCleaning extends JModelAdmin
 {
     public function getForm($data = array(), $loadData = true)

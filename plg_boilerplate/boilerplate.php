@@ -123,4 +123,8 @@ class plgJoomlaquizBoilerplate extends plgJoomlaquizQuestion
 	public function onScoreByCategory(&$data){
 		return true;
 	}
+
+    public function onCleaning (&$data) {
+        return true;
+    }
 }

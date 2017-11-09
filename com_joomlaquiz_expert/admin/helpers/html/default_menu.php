@@ -72,6 +72,9 @@ $document->addStyleSheet(JURI::root().'administrator/components/com_joomlaquiz/a
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_joomlaquiz&view=dynamic"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_VIEW_DYNAMIC');?></a></li>
 					</ul>
 				</li>
+                <li class="dropdown">
+                    <a href="index.php?option=com_joomlaquiz&view=cleaning" role="button" class="dropdown-toggle"><?php echo JText::_('COM_JOOMLAQUIZ_MENU_CLEANING')?></a>
+                </li>
             </ul>
             <ul class="nav pull-right">
                 <li id="fat-menu" class="dropdown">

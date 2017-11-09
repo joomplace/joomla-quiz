@@ -772,4 +772,17 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 			
 		return $data['answer'];	
 	}
+
+	public function onCleaning (&$data) {
+		$db = JFactory::getDBO();
+		$quest_id = $data['quest_id'];
+		$quest_type = $data['quest_type'];
+        $query = "DELETE FROM #__quiz_t_memory WHERE c_question_id = '" . $quest_id . "'";
+        $db->setQuery($query);
+        $db->execute();
+
+        $query = "DELETE FROM #__quiz_r_student_memory WHERE c_sq_id = '" . $quest_id . "'";
+        $db->setQuery($query);
+        $db->execute();
+	}
 }

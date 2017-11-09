@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="cleaning_params"
+              label="COM_JOOMLAQUIZ_CLEANING_PARAMS">
+        <field name="cleaning_from"
+               type="calendar"
+               label="COM_JOOMLAQUIZ_CLEANING_FROM"
+               required="true"
+        />
+        <field name="cleaning_to"
+               type="calendar"
+               label="COM_JOOMLAQUIZ_CLEANING_TO"
+               required ="true"/>
+    </fieldset>
+</form>

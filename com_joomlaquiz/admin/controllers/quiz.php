@@ -83,4 +83,16 @@ class JoomlaquizControllerQuiz extends JControllerForm
 	public function cancel($key=null){
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes');
 	}
+
+    /**
+     * Returns the total number of questions in the "Question category"
+     */
+    public function getTotalQuestionsInQuestionCategory(){
+        JSession::checkToken() or jexit (JText::_('JINVALID_TOKEN'));
+        $qcatid = $this->input->getInt('qcatid', 0);
+        $model = $this->getModel('Quiz', '', array());
+        echo $model->getTotalQuestionsInQuestionCategory($qcatid);
+        JFactory::getApplication()->close();
+    }
+
 }

@@ -122,26 +122,109 @@ window.onload = function (){
 }
 
 jQuery(function($) {
-   'use strict';
-   var catFields = $('#cat_pool_with_head input[id^="cat_field_"]');
-   function probabilityTotalPercents(){
-       var totalPercents = 0;
-       $(catFields).each(function(){
-           totalPercents = totalPercents + $(this).val()*1;
-       });
-       return totalPercents;
-   }
-   $('#probability_total_percents').text( probabilityTotalPercents() + '%' );
+    'use strict';
+    //By Probability
 
-   $(catFields).on('input keyup', function(){
-       var totalPercents = probabilityTotalPercents();
-       if(totalPercents <= 100){
-           $('#probability_total_percents').text(totalPercents + '%');
-       } else {
-           $(this).val('');
-           alert('The total of percents is more than 100. Please change the data.');
-       }
-   });
+    var catFields = $('#cat_pool_with_head input[id^="cat_field_"]'),
+        probabilitySelected = false;
+
+    $('.probability_catqty').each(function() {
+        var curId = $(this).attr('id').split('probability_catqty_')[1];
+        if ($('#cat_field_' + curId).val()) {
+            var curCatQtyQuestions = Math.round($('#cat_field_' + curId).val() / 100 * $('#jform_c_prob_total_q').val());
+            $(this).html(curCatQtyQuestions + ' questions');
+        }
+    });
+
+    function checkProbabilitySelected(){
+        probabilitySelected = false;
+        if( $('#jform_c_pool3').prop('checked') ){
+            probabilitySelected = true;
+        }
+        return probabilitySelected;
+    }
+    checkProbabilitySelected();
+
+    $('input[name="jform[c_pool]"]').on('click', function(){
+        checkProbabilitySelected();
+    });
+
+    function probabilityTotalPercents(){
+        var totalPercents = 0;
+        $(catFields).each(function() {
+            totalPercents = totalPercents + $(this).val() * 1;
+        });
+        return totalPercents;
+    }
+
+    $('#probability_total_percents').text( probabilityTotalPercents() + '%' );
+
+    $(catFields).on('input keyup', function(){
+        if( probabilitySelected ) {    //By Probability
+            //check percents
+            var totalPercents = probabilityTotalPercents();
+            if (totalPercents <= 100) {
+                $('#probability_total_percents').text(totalPercents + '%');
+            } else {
+                $(this).val('');
+                alert('The total of percents is more than 100. Please change the data.');
+            }
+            //checking the number of questions in the category
+            checkCategoryTotalQuestions( $(this).attr('id').split('cat_field_')[1], $(this).val() );
+        }
+    });
+
+    function checkCategoryTotalQuestions(qcatid, fieldValue){
+        var token = $('input', '#tokenWrap').attr('name'),
+            data = {};
+        token = encodeURIComponent( token );
+        data.qcatid = qcatid;
+        data[token] = 1;
+        $.ajax({
+            type:'POST',
+            url:  '/administrator/index.php?option=com_joomlaquiz&task=quiz.getTotalQuestionsInQuestionCategory',
+            data: data
+        })
+            .done(function(msg) {
+                //console.log(msg);
+                if(!msg) return false;
+                var curCatFieldVal = $('#cat_field_'+qcatid).val(),
+                    curCatWantQtyQuestions = Math.round(curCatFieldVal*1 /100 * $('#jform_c_prob_total_q').val()),
+                    curCatShowQtyQuestions = curCatWantQtyQuestions;
+                console.log(curCatFieldVal, curCatWantQtyQuestions, msg);
+                if( curCatWantQtyQuestions > msg*1 ){
+                    alert('Total number of questions in the category - '+msg+'. You want to show ' +
+                        + curCatWantQtyQuestions + ' questions. '+ msg +' questions will be displayed.');
+                    curCatShowQtyQuestions = msg;
+                }
+                if($('#cat_field_'+qcatid).val()) {
+                    $('#probability_catqty_' + qcatid).html(curCatShowQtyQuestions + ' questions');
+                }
+                checkTotalQuestions();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                //console.log( jqXHR );
+                return false;
+            });
+        return true;
+    }
+
+    function checkTotalQuestions(){
+        var defaultQty = $('#jform_c_prob_total_q').val(),
+            sumQty = 0;
+        $('.probability_catqty').each(function(){
+            var curId = $(this).attr('id').split('probability_catqty_')[1];
+            if ($('#cat_field_' + curId).val()) {
+                var curCatQtyQuestions = Math.round($('#cat_field_' + curId).val() / 100 * $('#jform_c_prob_total_q').val());
+                sumQty += curCatQtyQuestions;
+            }
+        });
+        if(sumQty > defaultQty){
+            alert('The total number of questions ('+sumQty+') exceeds the given ('+defaultQty+').');
+        }
+        return true;
+    }
+
 });
 
 </script>
@@ -657,7 +740,8 @@ jQuery(function($) {
 				</div>
 			</div>
 			<div class="control-group">
-                <div id="cat_pool_with_head">
+                <div id="cat_pool_with_head" style="width:50%; height:370px; overflow:auto; background:#F0F0F0;
+                padding:10px; border:1px solid #ccc;">
 				<?php
 					foreach ($this->jq_pool_cat as $listcat)
 					{
@@ -674,9 +758,9 @@ jQuery(function($) {
 						}
 						echo '<div style="display:hidden" class="head_category_' . $listcat->head_category . '">';
 						echo '<table width="100%"><tr>';
-						echo '<div class="control-label"><td align="left" style="width:24%">'.$listcat->text.'</td></div>';
+						echo '<div class="control-label"><td align="left" style="width:50%">'.$listcat->text.'</td></div>';
                         echo '<br/>';
-						echo '<div class="controls"><td><input type="hidden" name="pool_cats[]" value="'.$listcat->value.'"><input id="cat_field_'.$listcat->value.'" type="text" name="pnumber_'.$listcat->value.'" value="'.$is_num_cat.'"></td></div>';
+                        echo '<div class="controls"><td><input type="hidden" name="pool_cats[]" value="'.$listcat->value.'"><input id="cat_field_'.$listcat->value.'" type="text" name="pnumber_'.$listcat->value.'" value="'.$is_num_cat.'" style="width:50%">&nbsp;&nbsp;<span id="probability_catqty_'.$listcat->value.'" class="probability_catqty">&nbsp;</span></td></div>';
 						echo '</tr></table>';
 						echo '</div>';
 					}
@@ -764,7 +848,7 @@ jQuery(function($) {
 <input type="hidden" name="jform[c_id]" value="<?php echo $this->item->c_id;?>" />
 <input type="hidden" name="return" value="<?php echo $input->getCmd('return');?>" />
 <?php echo $this->form->getInput('asset_id'); ?>
-<?php echo JHtml::_('form.token'); ?>
+<span id="tokenWrap"><?php echo JHtml::_('form.token'); ?></span>
 </div>
 </form>
 <script type="text/javascript">

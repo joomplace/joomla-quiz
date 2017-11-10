@@ -145,4 +145,25 @@ class JoomlaquizModelQuiz extends JModelAdmin
 		
 		return $return;
 	}
+
+    /**
+     * Returns the total number of questions in the "Question category"
+     */
+    public function getTotalQuestionsInQuestionCategory($qcatid=0){
+        $total = 0;
+        if(!(int)$qcatid){
+            return $total;
+        }
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('COUNT(*)')
+            ->from($db->quoteName('#__quiz_t_question'))
+            ->where($db->quoteName('c_ques_cat') . '=' . (int)$qcatid);
+        $db->setQuery((string)$query);
+        $total = $db->loadResult();
+
+        return (int)$total;
+    }
+
 }

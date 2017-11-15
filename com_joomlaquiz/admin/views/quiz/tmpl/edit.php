@@ -123,7 +123,7 @@ window.onload = function (){
 
 jQuery(function($) {
     'use strict';
-    //By Probability
+    //By Probability Start
 
     var catFields = $('#cat_pool_with_head input[id^="cat_field_"]'),
         probabilitySelected = false;
@@ -137,11 +137,10 @@ jQuery(function($) {
     });
 
     function checkProbabilitySelected(){
-        probabilitySelected = false;
         if( $('#jform_c_pool3').prop('checked') ){
             probabilitySelected = true;
         }
-        return probabilitySelected;
+        return true;
     }
     checkProbabilitySelected();
 
@@ -149,35 +148,61 @@ jQuery(function($) {
         checkProbabilitySelected();
     });
 
-    function probabilityTotalPercents(){
+    function getProbabilityTotalPercents(){
         var totalPercents = 0;
         $(catFields).each(function() {
-            totalPercents = totalPercents + $(this).val() * 1;
+            totalPercents = totalPercents + clearDigitalInput($(this).val());
         });
         return totalPercents;
     }
+    $('#probability_total_percents').text( getProbabilityTotalPercents() + '%' );
 
-    $('#probability_total_percents').text( probabilityTotalPercents() + '%' );
+    function clearDigitalInput(val){
+        return val.replace(/\D/g, '') * 1;
+    }
 
-    $(catFields).on('input keyup', function(){
-        if( probabilitySelected ) {    //By Probability
-            //check percents
-            var totalPercents = probabilityTotalPercents();
-            if (totalPercents <= 100) {
-                $('#probability_total_percents').text(totalPercents + '%');
-            } else {
-                $(this).val('');
-                alert('The total of percents is more than 100. Please change the data.');
+    $(catFields).each(function(){
+        $(this).on('focus', function(){
+            if( !$.trim($('#jform_c_prob_total_q').val()) || $.trim($('#jform_c_prob_total_q').val()) == 0 ){
+                $(this).prop('disabled', true);
+                alert('Please fill out first the field "Total number of questions (for probability questions)"');
+                $(this).prop('disabled', false);
             }
-            //checking the number of questions in the category
-            checkCategoryTotalQuestions( $(this).attr('id').split('cat_field_')[1], $(this).val() );
+        }).on('blur', function(){
+            if( !$.trim($(this).val()) ){
+                $(this).next('.probability_catqty').html('&nbsp;');
+                checkTotalQuestions();
+                $('#probability_total_percents').text( getProbabilityTotalPercents() + '%' );
+            }
+        });
+    });
+
+    $(catFields).on('input', function(){
+        if( probabilitySelected ) {    //By Probability
+            if( $.trim($(this).val()) ){
+                var thisVal = clearDigitalInput($.trim($(this).val()));
+                $(this).val(thisVal);
+                //check total percents
+                var totalPercents = getProbabilityTotalPercents();
+                if (totalPercents <= 100) {
+                    $('#probability_total_percents').text(totalPercents + '%');
+                    //check the number of questions in the category
+                    var qcatid = $(this).attr('id').split('cat_field_')[1];
+                    checkCategoryTotalQuestions(qcatid, thisVal);
+                } else {
+                    $(this).prop('disabled', true);
+                    alert('The total of percents is more than 100. Please change the data.');
+                    $(this).val('');
+                    $(this).prop('disabled', false);
+                }
+            }
         }
     });
 
-    function checkCategoryTotalQuestions(qcatid, fieldValue){
+    function checkCategoryTotalQuestions(qcatid, curCatVal){
         var token = $('input', '#tokenWrap').attr('name'),
             data = {};
-        token = encodeURIComponent( token );
+        token = encodeURIComponent(token);
         data.qcatid = qcatid;
         data[token] = 1;
         $.ajax({
@@ -188,43 +213,33 @@ jQuery(function($) {
             .done(function(msg) {
                 //console.log(msg);
                 if(!msg) return false;
-                var curCatFieldVal = $('#cat_field_'+qcatid).val(),
-                    curCatWantQtyQuestions = Math.round(curCatFieldVal*1 /100 * $('#jform_c_prob_total_q').val()),
-                    curCatShowQtyQuestions = curCatWantQtyQuestions;
-                console.log(curCatFieldVal, curCatWantQtyQuestions, msg);
-                if( curCatWantQtyQuestions > msg*1 ){
-                    alert('Total number of questions in the category - '+msg+'. You want to show ' +
-                        + curCatWantQtyQuestions + ' questions. '+ msg +' questions will be displayed.');
-                    curCatShowQtyQuestions = msg;
+                var curCatQtyQuestions = Math.round(curCatVal /100 * ($('#jform_c_prob_total_q').val()*1));
+                if( curCatQtyQuestions > msg*1 ){
+                    curCatQtyQuestions = msg*1;
                 }
-                if($('#cat_field_'+qcatid).val()) {
-                    $('#probability_catqty_' + qcatid).html(curCatShowQtyQuestions + ' questions');
-                }
+                $('#probability_catqty_' + qcatid).html(curCatQtyQuestions + ' question(s)');
                 checkTotalQuestions();
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 //console.log( jqXHR );
                 return false;
             });
-        return true;
     }
 
     function checkTotalQuestions(){
-        var defaultQty = $('#jform_c_prob_total_q').val(),
-            sumQty = 0;
+        var sumQty = 0,
+            wantTotalQuestions = $('#jform_c_prob_total_q').val();
         $('.probability_catqty').each(function(){
-            var curId = $(this).attr('id').split('probability_catqty_')[1];
-            if ($('#cat_field_' + curId).val()) {
-                var curCatQtyQuestions = Math.round($('#cat_field_' + curId).val() / 100 * $('#jform_c_prob_total_q').val());
-                sumQty += curCatQtyQuestions;
-            }
+            var curQty = clearDigitalInput($(this).text());
+            sumQty = sumQty*1 + curQty*1;
         });
-        if(sumQty > defaultQty){
-            alert('The total number of questions ('+sumQty+') exceeds the given ('+defaultQty+').');
+        if( sumQty > wantTotalQuestions ){
+            $('#jform_c_prob_total_q').val(sumQty);
         }
         return true;
     }
 
+    //By Probability End
 });
 
 </script>

@@ -426,7 +426,6 @@
                label="COM_JOOMLAQUIZ_PROBABILITY_TOTAL_QUESTIONS_LABEL"
                description="COM_JOOMLAQUIZ_PROBABILITY_TOTAL_QUESTIONS_DESC"
                labelclass="control-label"
-			   required="true"
                showon="c_pool:3">
         </field>
 	</fieldset>

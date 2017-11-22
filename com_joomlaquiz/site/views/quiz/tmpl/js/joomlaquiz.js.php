@@ -870,7 +870,7 @@ function jq_processFeedback(task, is_preview, skip_question){
 				if (feedback_quest_id) {
 					is_do_feedback++;
 
-                    var correct_answer = jq_jQuery(feedback).find('correct_answer').html().split(',');
+                    var correct_answer = jq_jQuery(feedback).find('correct_answer').text().split(',');
                     var u_answered = jq_jQuery('input:checked');
 
                     jq_jQuery.each(u_answered, function(i,item){

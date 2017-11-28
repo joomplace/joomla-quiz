@@ -218,7 +218,8 @@ class JoomlaquizModelPrintresult extends JModelList
 
 		$pdf = &$pdf_doc->_engine;
 
-		$pdf->SetFont('dejavusans');
+		//$pdf->SetFont('dejavusans');
+		$pdf->SetFont('javiergb');
 		$fontFamily = $pdf->getFontFamily();
 
 		$pdf->getAliasNbPages();

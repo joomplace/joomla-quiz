@@ -63,8 +63,10 @@ class JoomlaquizViewReactivates extends JViewLegacy
     */
 	protected function addToolBar() 
     {
-		JToolBarHelper::editList('reactivate.edit');     	
-		JToolBarHelper::divider();    
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::editList('reactivate.edit');
+        }
     }
 	
 	protected function getSortFields()

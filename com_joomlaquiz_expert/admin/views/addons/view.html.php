@@ -41,7 +41,11 @@ class JoomlaquizViewAddons extends JViewLegacy
         
     protected function addToolbar()
 	{
-		JToolBarHelper::custom('addons.install', 'save-new.png', 'save-new_f2.png', 'COM_JOOMLAQUIZ_INSTALL', false);
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::custom('addons.install', 'save-new.png', 'save-new_f2.png', 'COM_JOOMLAQUIZ_INSTALL',
+                false);
+        }
 	}
 }
 ?>

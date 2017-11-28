@@ -112,16 +112,20 @@ class JoomlaquizViewQuestion extends JViewLegacy
         
     protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
-		$user		= JFactory::getUser();
-		$isNew		= ($this->item->c_id == 0);
-		JToolBarHelper::apply('question.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('question.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('question.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::custom('question.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        JFactory::getApplication()->input->set('hidemainmenu', true);
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::apply('question.apply', 'JTOOLBAR_APPLY');
+            JToolBarHelper::save('question.save', 'JTOOLBAR_SAVE');
+        }
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::custom('question.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW',
+                false);
+            JToolBarHelper::custom('question.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY',
+                false);
+        }
 		JToolBarHelper::cancel('question.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::custom('question.preview_quest', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_QUEST_PREVIEW', false);
-		JToolBarHelper::divider();
 		JToolBarHelper::help('JHELP_COMPONENTS_WEBLINKS_LINKS_EDIT');
 	}
 }

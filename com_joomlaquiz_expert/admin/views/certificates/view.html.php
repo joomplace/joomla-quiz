@@ -52,11 +52,16 @@ class JoomlaquizViewCertificates extends JViewLegacy
     */
 	protected function addToolBar() 
     {
-        JToolBarHelper::addNew('certificate.add');
-		JToolBarHelper::editList('certificate.edit');
-		JToolBarHelper::deleteList('', 'certificates.delete');
-        	
-		JToolBarHelper::divider();    
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::addNew('certificate.add');
+        }
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::editList('certificate.edit');
+        }
+        if ($canDo->get('core.delete')) {
+            JToolBarHelper::deleteList('', 'certificates.delete');
+        }
     }
 	
 	protected function getSortFields()

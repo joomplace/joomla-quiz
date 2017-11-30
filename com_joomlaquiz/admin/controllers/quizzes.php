@@ -810,7 +810,14 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 			$quizis_titles = array();
 
 			if( !empty($quizzes))
-				while ( !empty($quizzes) )
+
+                //+permissions
+                $asset       = JTable::getInstance('Asset');
+                $rule        = "core.view";
+                $guest_groups = JFactory::getUser(0)->getAuthorisedGroups();
+                $guest_group = array_pop($guest_groups);
+
+			    while ( !empty($quizzes) )
 				{
 					if ( !$xmlReader->isDomit )
 					{
@@ -840,7 +847,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_right_message, c_wrong_message, c_pass_message, 
 								c_unpass_message, c_enable_review, c_email_to, 
 								c_enable_print, c_enable_sertif, c_skin, 
-								c_random, c_guest, published, 
+								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
 								c_resbycat,	c_feed_option, paid_check, c_pagination)  ";
@@ -853,7 +860,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_rmess).",".$db->quote($qcat->quiz_wmess).",".$db->quote($qcat->quiz_pass_message).",
 								".$db->quote($qcat->quiz_unpass_message).", ".$db->quote(@$qcat->quiz_enable_review).", ".$db->quote($qcat->quiz_email_to).",
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
-								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_guest).",".$db->quote($qcat->quiz_published).",
+								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
 								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote(@$qcat->quiz_resbycat).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
@@ -862,6 +869,29 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 								exit();
 							}
+
+							else {
+                                //+permissions
+                                $last_id = $database->insertid();
+                                if($last_id && isset($qcat->quiz_guest)) {
+                                    $asset_name = 'com_joomlaquiz.quiz.' . (int)$last_id;
+                                    $asset->loadByName($asset_name);
+                                    $rules = json_decode($asset->rules);
+                                    if (isset($rules->$rule) && !is_array($rules->$rule)) {
+                                        if (!$rules->$rule->$guest_group) {
+                                            $rules->$rule->$guest_group = $qcat->quiz_guest;
+                                        }
+                                    } else {
+                                        $rules->$rule = new stdClass();
+                                        $rules->$rule->$guest_group = $qcat->quiz_guest;
+                                    }
+                                    $asset->rules = json_encode($rules);
+                                    $asset->name = $asset_name;
+                                    $asset->store();
+                                }
+                            }
+
+
 							if($qcat->quiz_image) $quiz_images[] = $qcat->quiz_image;
 							$query = "SELECT max(c_id) FROM #__quiz_t_quiz";
 							$database->setQuery($query);
@@ -1022,7 +1052,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_right_message, c_wrong_message, c_pass_message, 
 								c_unpass_message, c_enable_review, c_email_to, 
 								c_enable_print, c_enable_sertif, c_skin, 
-								c_random, c_guest, published, 
+								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
 								c_resbycat, c_feed_option, paid_check, c_pagination)  ";
@@ -1035,7 +1065,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_rmess).",".$db->quote($qcat->quiz_wmess).",".$db->quote($qcat->quiz_pass_message).",
 								".$db->quote($qcat->quiz_unpass_message).", ".$db->quote(@$qcat->quiz_enable_review).",".$db->quote($qcat->quiz_email_to).",
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
-								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_guest).",".$db->quote($qcat->quiz_published).",
+								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
 								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote($qcat->quiz_resbycat).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
@@ -1045,6 +1075,28 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 								exit();
 							}
+
+                            else {
+                                //+permissions
+                                $last_id = $database->insertid();
+                                if($last_id && isset($qcat->quiz_guest)) {
+                                    $asset_name = 'com_joomlaquiz.quiz.' . (int)$last_id;
+                                    $asset->loadByName($asset_name);
+                                    $rules = json_decode($asset->rules);
+                                    if (isset($rules->$rule) && !is_array($rules->$rule)) {
+                                        if (!$rules->$rule->$guest_group) {
+                                            $rules->$rule->$guest_group = $qcat->quiz_guest;
+                                        }
+                                    } else {
+                                        $rules->$rule = new stdClass();
+                                        $rules->$rule->$guest_group = $qcat->quiz_guest;
+                                    }
+                                    $asset->rules = json_encode($rules);
+                                    $asset->name = $asset_name;
+                                    $asset->store();
+                                }
+                            }
+
 							if($qcat->quiz_image) $quiz_images[] = $qcat->quiz_image;
 							$new_quiz_id = $qcat->id;
 

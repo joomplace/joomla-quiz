@@ -156,7 +156,10 @@ object{
 
 .jq_question_answers_cont{
 	margin:20px 0;
-}	
+}
+.jq_question_answers_cont input[type="radio"]{
+	margin-right: 3px;
+}
 .jq_quiz_align{
 	display:inline-block;
 	*zoom:1;

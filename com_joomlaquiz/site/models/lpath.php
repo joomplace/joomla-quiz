@@ -145,7 +145,7 @@ class JoomlaquizModelLpath extends JModelList
 
 				$lpath_all[$i]->show_link = $link;
 				if($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {
-					$link = false;
+					//$link = false;
 				}
 			}
 			

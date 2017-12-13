@@ -12,8 +12,18 @@ defined('_JEXEC') or die('Restricted Access');
 $lpath_list = $this->lpath_data;
 $document 	= JFactory::getDocument();
 $document->addStyleSheet(JURI::root().'components/com_joomlaquiz/assets/css/joomlaquiz.css');
+
 ?>
 <div class="container-fluid">
+
+	<?php if ($lpath_list != false) { ?>
+	<div class="row lp-link-row">
+		<div class="span12">
+			<h2><?= JFactory::getApplication()->getParams()->get('page_heading',JText::_('COM_JOOMLAQUIZ_LPS_MENU_ITEM')); ?></h2>
+		</div>
+	</div>
+	<?php } ?>
+
 	<?php foreach($lpath_list as $k=>$lpath_item) { ?>
 		<div class="row lp-link-row">
 			<div class="span12 lp-link">
@@ -21,6 +31,7 @@ $document->addStyleSheet(JURI::root().'components/com_joomlaquiz/assets/css/joom
 			</div>
 		</div>
 	<?php } ?>
+	
 </div>
 <?php
 	echo JoomlaquizHelper::poweredByHTML();

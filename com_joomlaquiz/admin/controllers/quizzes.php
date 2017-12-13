@@ -367,6 +367,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 			$quiz_xml .= "\n\t\t\t\t<quiz_full_score>".$quiz->c_full_score."</quiz_full_score>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_title><![CDATA[".$quiz->c_title."]]></quiz_title>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_description><![CDATA[".$quiz->c_description."]]></quiz_description>";
+            $quiz_xml .= "\n\t\t\t\t<quiz_short_description><![CDATA[".$quiz->c_short_description."]]></quiz_short_description>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_image><![CDATA[".$quiz->c_image."]]></quiz_image>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_timelimit><![CDATA[".$quiz->c_time_limit."]]></quiz_timelimit>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_minafter><![CDATA[".$quiz->c_min_after."]]></quiz_minafter>";
@@ -841,7 +842,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 							$query = "INSERT INTO #__quiz_t_quiz(
 								c_id, c_category_id, c_number_times, 
 								c_user_id, c_author, c_full_score, 
-								c_title, c_description, c_image, 
+								c_title, c_description, c_short_description, c_image, 
 								c_time_limit, c_min_after, c_once_per_day, 
 								c_passing_score, c_created_time, c_published, 
 								c_right_message, c_wrong_message, c_pass_message, 
@@ -854,7 +855,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 							$query .= "VALUES(
 								'',".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_userid).",".$db->quote($qcat->quiz_author).",".$db->quote($qcat->quiz_full_score).",
-								".$db->quote($qcat->quiz_title).",".$db->quote($qcat->quiz_description).",".$db->quote($qcat->quiz_image).",
+								".$db->quote($qcat->quiz_title).",".$db->quote($qcat->quiz_description).",".$db->quote($qcat->quiz_short_description).",".$db->quote($qcat->quiz_image).",
 								".$db->quote($qcat->quiz_timelimit).",".$db->quote($qcat->quiz_minafter).", ".$db->quote($qcat->quiz_onceperday).",
 								".$db->quote($qcat->quiz_passcore).",".$db->quote($qcat->quiz_createtime).",".$db->quote($qcat->published).",
 								".$db->quote($qcat->quiz_rmess).",".$db->quote($qcat->quiz_wmess).",".$db->quote($qcat->quiz_pass_message).",
@@ -1046,7 +1047,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 							$query = "INSERT INTO #__quiz_t_quiz(
 								c_id, c_category_id, c_number_times,
 								c_user_id, c_author, c_full_score,
-								c_title, c_description, c_image,
+								c_title, c_description, c_short_description, c_image,
 								c_time_limit, c_min_after, c_once_per_day, 
 								c_passing_score, c_created_time, c_published, 
 								c_right_message, c_wrong_message, c_pass_message, 
@@ -1059,7 +1060,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 							$query .= "VALUES(
 								".$db->quote($qcat->id).",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_userid).",".$db->quote($qcat->quiz_author).",".$db->quote($qcat->quiz_full_score).",
-								".$db->quote($qcat->quiz_title).",".$db->quote($qcat->quiz_description).",".$db->quote($qcat->quiz_image).",
+								".$db->quote($qcat->quiz_title).",".$db->quote($qcat->quiz_description).",".$db->quote($qcat->quiz_short_description).",".$db->quote($qcat->quiz_image).",
 								".$db->quote($qcat->quiz_timelimit).",".$db->quote($qcat->quiz_minafter).", ".$db->quote($qcat->quiz_onceperday).",
 								".$db->quote($qcat->quiz_passcore).",".$db->quote($qcat->quiz_createtime).",".$db->quote($qcat->published).",
 								".$db->quote($qcat->quiz_rmess).",".$db->quote($qcat->quiz_wmess).",".$db->quote($qcat->quiz_pass_message).",

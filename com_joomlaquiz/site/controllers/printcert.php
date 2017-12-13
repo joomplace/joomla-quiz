@@ -28,6 +28,12 @@ class JoomlaquizControllerPrintcert extends JControllerForm
 		
 		return;		
 	}
-		
+
+    public function get_lpcertificate(){
+        $model = $this->getModel();
+        $model->JQ_printLPCertificate();
+        return;
+    }
+
 	
 }

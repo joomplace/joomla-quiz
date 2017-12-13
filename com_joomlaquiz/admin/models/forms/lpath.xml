@@ -47,5 +47,6 @@
            section="lp" />
 
     <field name="lp_access_message" type="editor" class="inputbox" label="COM_JOOMLAQUIZ_LP_ACCESS_MSG" required="false" default="" description="COM_JOOMLAQUIZ_DESC_LP_ACCESS_MSG"/>
+	<field name="certificate" type="hidden" filter="integer" />
 
 </form>

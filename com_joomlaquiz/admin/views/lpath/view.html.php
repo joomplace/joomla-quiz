@@ -36,8 +36,16 @@ class JoomlaquizViewLpath extends JViewLegacy
 		
 		$this->quizzes_data['quizzes_list'] = JHTML::_('select.genericlist', $this->quizzes_data['all_quizzes_list'], 'quiz_id', 'class="" size="1"', 'value', 'text' );
 		$this->quizzes_data['articles_list'] = JHTML::_('select.genericlist', $this->articles_data['articles'], 'article_id', 'class="" size="1"', 'value', 'text' );
-		
-		// Check for errors.
+
+        JLoader::register('JoomlaquizModelQuiz', JPATH_COMPONENT_ADMINISTRATOR.'/models/quiz.php');
+        $modelQuiz = new JoomlaquizModelQuiz();
+        $certificates = $modelQuiz->getCertificates();
+        $options = array();
+        $options[] = JHTML::_('select.option', 0, JText::_('COM_JOOMLAQUIZ_NO_CERTIFICATE'));
+        $certificates = array_merge($options, $certificates);
+        $this->certificates = JHTML::_('select.genericlist', $certificates, 'jform[certificate]', 'class="" size="1"', 'value', 'text', $this->item->certificate );
+
+        // Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;

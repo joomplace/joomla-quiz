@@ -55,11 +55,16 @@ class JoomlaquizViewQuizcategories extends JViewLegacy
     */
 	protected function addToolBar() 
     {
-        JToolBarHelper::addNew('quizcategory.add');
-		JToolBarHelper::editList('quizcategory.edit');
-		JToolBarHelper::deleteList('', 'quizcategories.delete');
-        	
-		JToolBarHelper::divider();    
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::addNew('quizcategory.add');
+        }
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::editList('quizcategory.edit');
+        }
+        if ($canDo->get('core.delete')) {
+            JToolBarHelper::deleteList('', 'quizcategories.delete');
+        }
     }
 	
 	protected function getSortFields()

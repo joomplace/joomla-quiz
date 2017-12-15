@@ -44,8 +44,10 @@ class JoomlaquizViewConfiguration extends JViewLegacy
         
     protected function addToolbar()
 	{
-		JToolBarHelper::apply('configuration.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::divider();
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::apply('configuration.apply', 'JTOOLBAR_APPLY');
+        }
 		JToolBarHelper::help('JHELP_COMPONENTS_WEBLINKS_LINKS_EDIT');
 	}
 }

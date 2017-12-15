@@ -77,19 +77,24 @@ class JoomlaquizViewResults extends JViewLegacy
     */
 	protected function addToolBar() 
     {
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
         JToolBarHelper::custom('results.csv_summary', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_SUMMARY', false);
 		JToolBarHelper::custom('results.csv_report', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_CSV', true);
 		JToolBarHelper::custom('results.stu_report', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_VIEW', true);
 		JToolBarHelper::custom('results.csv_flag_questions', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_FLAG_QUESTIONS', true);
-		JToolBarHelper::divider();
-		JToolBarHelper::deleteList('', 'results.delete');
-		JToolBarHelper::custom('results.del_flags', 'delete.png', 'delete_f2.png', 'COM_JOOMLAQUIZ_DELETE_FLAGS', true);	    
+        if ($canDo->get('core.delete')) {
+            JToolBarHelper::deleteList('', 'results.delete');
+            JToolBarHelper::custom('results.del_flags', 'delete.png', 'delete_f2.png', 'COM_JOOMLAQUIZ_DELETE_FLAGS', true);
+        }
     }
 	
 	protected function addStureportToolBar()
 	{
-		JToolBarHelper::custom('result.quest_report', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_VIEW', true);
-		JToolBarHelper::custom('result.del_stu_report', 'delete.png', 'delete_f2.png', 'COM_JOOMLAQUIZ_DELETE', true);
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        JToolBarHelper::custom('result.quest_report', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_VIEW', true);
+        if ($canDo->get('core.delete')) {
+            JToolBarHelper::custom('result.del_stu_report', 'delete.png', 'delete_f2.png', 'COM_JOOMLAQUIZ_DELETE', true);
+        }
 		JToolBarHelper::custom('result.view_reports', 'previous.png', 'previous_f2.png', 'COM_JOOMLAQUIZ_BACK', false);
 	}
 	

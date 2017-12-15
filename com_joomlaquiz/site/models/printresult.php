@@ -201,13 +201,14 @@ class JoomlaquizModelPrintresult extends JModelList
 		);
 		$quiz_id = $info['c_quiz_id'];
 
-		$query = "SELECT q_chain FROM #__quiz_q_chain "
+		/*$query = "SELECT q_chain FROM #__quiz_q_chain "
 			. "\n WHERE s_unique_id = '" . $info['unique_id'] . "'";
 		$database->SetQuery($query);
 		$qch_ids = $database->LoadResult();
 		$qch_ids = str_replace('*', ',', $qch_ids);
-
 		$total = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
+		*/
+        $total = $info['c_max_score'];
 
 		chdir(JPATH_SITE);
 

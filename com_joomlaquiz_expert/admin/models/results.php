@@ -409,7 +409,7 @@ class JoomlaquizModelResults extends JModelList
 		$passed = $app->getUserStateFromRequest('results.filter.passed', 'filter_passed');
 		
 		$query = "SELECT sq.c_id, sq.c_passed, sq.params , sq.c_total_score, sq.c_total_time, sq.c_date_time, sq.c_passed, sq.user_email, sq.user_name,"
-		. "\n q.c_title, q.c_author, q.c_passing_score,sq.c_student_id, u.username, u.name, u.email, q.c_full_score, q.c_pool, ch.q_chain "
+        . "\n q.c_title, q.c_author, q.c_passing_score,sq.c_student_id, u.username, u.name, u.email, sq.c_max_score as c_full_score, q.c_pool, ch.q_chain "
 		. "\n FROM #__quiz_r_student_quiz as sq"
 		. "\n LEFT JOIN #__users as u ON sq.c_student_id = u.id"
 		. "\n LEFT JOIN `#__quiz_q_chain` AS ch ON ch.s_unique_id = sq.unique_id "

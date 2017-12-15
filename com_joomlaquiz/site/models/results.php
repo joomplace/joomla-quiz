@@ -74,7 +74,7 @@ class JoomlaquizModelResults extends JModelList
 			->select($db->qn('q.c_title'))
 			->select($db->qn('q.c_author'))
 			->select($db->qn('q.c_passing_score'))
-			->select($db->qn('q.c_full_score'))
+            ->select($db->qn(array('sq.c_max_score'),array('c_full_score')))   //'sq.c_max_score' as 'c_full_score'
 			->select($db->qn('q.c_pool'))
 			->select($db->qn('q.c_grading'))
 			->select($db->qn('q.c_certificate'))
@@ -131,7 +131,7 @@ class JoomlaquizModelResults extends JModelList
 				->select($db->qn('u.username'))
 				->select($db->qn('u.name'))
 				->select($db->qn('u.email'))
-				->select($db->qn('q.c_full_score'))
+                ->select($db->qn(array('sq.c_max_score'),array('c_full_score')))
 				->select($db->qn('q.c_pool'))
 				->select($db->qn('ch.q_chain'))
 				->select($db->qn('q.c_grading'))

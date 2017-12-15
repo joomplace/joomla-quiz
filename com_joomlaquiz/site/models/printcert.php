@@ -484,7 +484,7 @@ class JoomlaquizModelPrintcert extends JModelList
         foreach ($quiz_ids as $k => $v) {
             $query->clear();
             $query->select($db->qn('sq.c_total_score'))
-                ->select($db->qn('q.c_full_score'))
+                ->select($db->qn(array('sq.c_max_score'),array('c_full_score')))
                 ->select($db->qn('sq.c_total_time'))
                 ->select($db->qn('sq.c_date_time'))
                 ->from($db->qn('#__quiz_r_student_quiz', 'sq'))

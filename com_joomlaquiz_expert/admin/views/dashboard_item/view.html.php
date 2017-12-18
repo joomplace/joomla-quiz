@@ -38,11 +38,14 @@ class JoomlaquizViewDashboard_item extends JViewLegacy
 
     protected function addToolBar()
     {
-        $user = JFactory::getUser();
-		JToolBarHelper::apply('dashboard_item.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('dashboard_item.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('dashboard_item.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::apply('dashboard_item.apply', 'JTOOLBAR_APPLY');
+            JToolBarHelper::save('dashboard_item.save', 'JTOOLBAR_SAVE');
+        }
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::custom('dashboard_item.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+        }
         JToolBarHelper::cancel('dashboard_item.cancel', 'JTOOLBAR_CANCEL');
     }
   

@@ -75,12 +75,19 @@ class JoomlaquizViewTemplates extends JViewLegacy
 		JToolBarHelper::custom('templates.del_template', 'delete.png', 'delete_f2.png', 'COM_JOOMLAQUIZ_UNINSTALL', true);
         JToolBarHelper::divider();
 		*/
-		JToolBarHelper::custom('templates.edit_css', 'edit.png', 'edit_f2.png', 'COM_JOOMLAQUIZ_EDIT_CSS', true);		  
+
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::custom('templates.edit_css', 'edit.png', 'edit_f2.png', 'COM_JOOMLAQUIZ_EDIT_CSS', true);
+        }
     }
 	
 	protected function addCssToolBar() 
     {
-		JToolBarHelper::custom('templates.save_css', 'save.png', 'save_f2.png', 'COM_JOOMLAQUIZ_SAVE', false);
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::custom('templates.save_css', 'save.png', 'save_f2.png', 'COM_JOOMLAQUIZ_SAVE', false);
+        }
 		JToolBarHelper::cancel('templates.cancel', 'JTOOLBAR_CANCEL');
 	}
 	

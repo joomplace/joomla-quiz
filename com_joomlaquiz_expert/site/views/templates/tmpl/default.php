@@ -216,7 +216,7 @@ EOFTMPL;
 		$return_str = <<<EOFTMPL
 			<div class="jq_question_info_container" id="jq_question_info_container">
 				<!-- x -->
-				<span id="jq_quest_num_container"><!-- QUESTION_X_Y --></span>
+				&nbsp;<span id="jq_quest_num_container"><!-- QUESTION_X_Y --></span>
 				<span id="jq_points_container"><!-- POINTS --></span>
 		
 			</div>

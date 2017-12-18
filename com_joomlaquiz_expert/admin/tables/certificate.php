@@ -28,8 +28,12 @@ class JoomlaquizTableCertificate extends JTable
 		
 		function store($updateNulls = false){
 			$database = JFactory::getDBO();
-			
-			$query = "DELETE FROM #__quiz_cert_fields WHERE cert_id = '{$this->id}'";
+			if ($this->id == 0) {
+                $query = "SELECT MAX(id) FROM #__quiz_certificates";
+                $database->setQuery($query);
+                $id = $database->loadResult()+1;
+            }
+			$query = "DELETE FROM #__quiz_cert_fields WHERE cert_id = '{$id}'";
 			$database->setQuery($query);
 			$database->execute();
 			
@@ -43,7 +47,7 @@ class JoomlaquizTableCertificate extends JTable
 			
 			if (is_array($jq_hid_fields_ids ) && count($jq_hid_fields_ids )) {
 				foreach($jq_hid_fields_ids as $i=>$jq_hid_fields_id) {
-					$query = "INSERT INTO #__quiz_cert_fields SET `cert_id` = '".$this->id."', 
+					$query = "INSERT INTO #__quiz_cert_fields SET `cert_id` = '".$id."', 
 								`f_text` = '".$jq_hid_fields[$i]."',
 								`text_x` = '".intval($jq_hid_field_x[$i])."',
 								`text_y` = '".intval($jq_hid_field_y[$i])."', 
@@ -61,7 +65,7 @@ class JoomlaquizTableCertificate extends JTable
 			$res = parent::store();
 
 			$post = JRequest::get('post');
-			$database->setQuery("UPDATE `#__quiz_certificates` SET `text_font` = '".$post['text_font']."' WHERE `id` = '".$this->id."'");
+			$database->setQuery("UPDATE `#__quiz_certificates` SET `text_font` = '".$post['text_font']."' WHERE `id` = '".$id."'");
 			$database->execute();
 
 			return $res;

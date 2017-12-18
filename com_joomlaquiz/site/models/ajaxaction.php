@@ -170,7 +170,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$database->SetQuery( $query );
 				$unique_pass_id = $database->LoadResult();			
 			}
-			
+
 			if (!$unique_pass_id) {
 				$unique_pass_id = md5(uniqid(rand(), true));
 			}
@@ -231,7 +231,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						echo '<p align="left">'.JText::_('COM_QUIZ_LPATH_NOT_AVAILABLE').'</p>';
 						return '';
 					}
-					
+
 					if($rel_check[0]->type == 'l') {
 						$query = "SELECT * FROM `#__quiz_lpath` WHERE `id` = '{$rel_check[0]->rel_id}' AND published = 1";
 						$database->SetQuery( $query );
@@ -300,7 +300,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				
 				$old_quiz = true;
 			}
-			
+
 			$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '".$quiz_id."' AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 			$database->SetQuery($query);
 			$q_data = $database->LoadObjectList();
@@ -310,7 +310,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 			//---- pools ---------//
 			switch($quiz->c_pool)
 			{
-				case '1':	$query = "SELECT q_count FROM #__quiz_pool WHERE q_id = '".$quiz_id."' LIMIT 1";
+				//Random questions
+			    case '1':	$query = "SELECT q_count FROM #__quiz_pool WHERE q_id = '".$quiz_id."' LIMIT 1";
 							$database->SetQuery($query);
 							$pool_rand = $database->LoadResult();
 							if( $pool_rand )
@@ -326,28 +327,98 @@ class JoomlaquizModelAjaxaction extends JModelList
 								
 							}
 							break;
-							
-				case '2':	$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz_id."'";
-							$database->SetQuery($query);
-							$poolcat_data = $database->LoadObjectList();
-							if (count($poolcat_data))
-							{
-								foreach( $poolcat_data as $dapool )
-								{
-									if( $dapool->q_count )
-										{
-											$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '0' AND q.published = 1 AND q.c_ques_cat = '".$dapool->q_cat."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
-											$database->SetQuery($query);
-											$pool_data = $database->LoadObjectList();
-											for($i=0;$i<($dapool->q_count);$i++)
-											{
-												if(isset($pool_data[$i]))
-													$q_data[count($q_data)] = $pool_data[$i];
-											}
-										}
-								}
-							}
-				break;
+				//By categories
+                case '2':	$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz_id."'";
+                    $database->SetQuery($query);
+                    $poolcat_data = $database->LoadObjectList();
+                    if (count($poolcat_data))
+                    {
+                        foreach( $poolcat_data as $dapool )
+                        {
+                            if( $dapool->q_count )
+                            {
+                                $query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '0' AND q.published = 1 AND q.c_ques_cat = '".$dapool->q_cat."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
+                                $database->SetQuery($query);
+                                $pool_data = $database->LoadObjectList();
+                                for($i=0;$i<($dapool->q_count);$i++)
+                                {
+                                    if(isset($pool_data[$i]))
+                                        $q_data[count($q_data)] = $pool_data[$i];
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                //By Probability
+                case '3':
+                    $db = $database;
+                    $query = $db->getQuery(true);
+
+                    $query->select('*')
+                        ->from($db->qn('#__quiz_pool'))
+                        ->where($db->qn('q_id') . '=' . $db->q((int)$quiz_id));
+                    $db->setQuery((string)$query);
+                    $poolcat_data = $db->LoadObjectList();
+
+                    if(!$poolcat_data) {
+                        break;
+                    }
+
+                    $cats_all = array();    //array of ID-categories of all probable variants
+                    foreach ($poolcat_data as $dapool) {
+                        if ($dapool->q_count) {
+                            for ($i = 0; $i < $dapool->q_count; $i++) {
+                                $cats_all[] = $dapool->q_cat;
+                            }
+                        }
+                    }
+                    if (!empty($cats_all)) {
+                        shuffle($cats_all);
+                    }
+
+                    $cats_probability = array();    //array of ID-categories of questions that are included in the quiz
+                    $indexs = array();
+                    for ($i = 0; $i < $quiz->c_prob_total_q; $i++) {
+                        $index = rand(0, 99);
+                        while(in_array($index, $indexs)){
+                            $index = rand(0, 99);
+                        }
+                        $indexs[] = $index;
+                        $cats_probability[] = $cats_all[$index];
+                    }
+
+                    // массив, ключами которого являются значения массива $cats_probability,
+                    // а значениями - частота повторения значений $cats_probability
+                    // array using the values of $cats_probability as keys and their frequency in $cats_probability as values.
+                    $cats_probability_count = array_count_values($cats_probability);
+
+                    foreach($cats_probability_count as $catId => $limit)
+                    {
+                        $query->clear();
+                        $query->select('q.*')
+                            ->from($db->qn('#__quiz_t_question', 'q'))
+                            ->leftJoin( $db->qn('#__quiz_t_qtypes', 'b') .' ON '. $db->qn('b.c_id') .'='. $db->qn('q.c_type') )
+                            ->leftJoin( $db->qn('#__extensions', 'e') .' ON '. $db->qn('e.element') .'='. $db->qn('b.c_type') )
+                            ->where( $db->qn('q.c_quiz_id') .'='. $db->q('0') )
+                            ->where( $db->qn('q.published') .'='. $db->q('1') )
+                            ->where( $db->qn('q.c_ques_cat') .'='. $db->q((int)$catId) )
+                            ->where( $db->qn('e.folder') .'='. $db->q('joomlaquiz') )
+                            ->where( $db->qn('e.type') .'='. $db->q('plugin') )
+                            ->where( $db->qn('e.enabled') .'='. $db->q('1') )
+                            ->order('rand()')
+                            ->setLimit((int)$limit);
+                        $db->setQuery((string)$query);
+                        $pool_data = $db->LoadObjectList();
+
+                        for($i=0; $i<$limit; $i++) {
+                            if(isset($pool_data[$i])) {
+                                $q_data[count($q_data)] = $pool_data[$i];
+                            }
+                        }
+                    }
+
+                    break;
 				
 				default:	break;
 			}
@@ -360,7 +431,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					
 			$kol_quests = count($q_data);
 			
-			if ($old_quiz) {
+			if ($old_quiz && $quiz->c_pool !=3) {
 				$ret_str = '';
 
 				$query = "SELECT c_date_time  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
@@ -423,7 +494,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$chin_nums = '';
 				$quest_num = 0;
 				if ($kol_quests > 0) {			
-					if ($quiz->c_random) {
+					if ($quiz->c_random && $quiz->c_pool !=3) {
 						// -- create random chain questions -----//					
 						$numbers = range (0,($kol_quests - 1));
 						srand ((float)microtime()*1000000);
@@ -1704,7 +1775,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if ($start_quiz != $quiz_id) { return '';}
 				if (!$st_quiz_data[0]->allow_review) { return ''; }
 
-				if ($quiz->c_random) {
+				if ($quiz->c_random || $quiz->c_pool == 3) {
 					
 					// -- my chain ==//
 					$query = "SELECT q_chain FROM #__quiz_q_chain "

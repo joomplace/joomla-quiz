@@ -69,8 +69,47 @@ class JoomlaquizModelDynamic extends JModelAdmin
 		$query = "SELECT * FROM #__quiz_t_question WHERE c_type IN (1,2,3,6,8) AND c_quiz_id = '".$quiz_id."'";
 		$database->setQuery( $query );
 		$questions = $database->loadObjectList( );
-		
-		if (is_array($questions ))	
+
+        if(!$questions || empty($questions)) {
+            //Perhaps it is a Questions Pool?
+            $db = $database;
+            $query = $db->getQuery(true);
+            $query->select($db->qn('q_count'))
+                ->from($db->qn('#__quiz_pool'))
+                ->where($db->qn('q_id') . '=' . (int)$quiz_id);
+            $db->setQuery($query);
+            $qpool = $db->loadResult();
+
+            if ($qpool) {
+                //Yes, it is a Questions Pool
+                $query->clear();
+                $query->select($db->qn('c_question_id'))
+                    ->from($db->qn('#__quiz_r_student_question', 'sqn'))
+                    ->leftJoin($db->qn('#__quiz_r_student_quiz', 'sq') . ' ON ' . $db->qn('sq.c_id').'='.$db->qn('sqn.c_stu_quiz_id'))
+                    ->where($db->qn('sq.c_quiz_id') . '=' . (int)$quiz_id)
+                    ->group($db->qn('c_question_id'));
+                $db->setQuery($query);
+                $qpool_question_ids = $db->loadObjectList();
+
+                if($qpool_question_ids && !empty($qpool_question_ids)){
+                    $questList = array();
+                    foreach ($qpool_question_ids as $key => $value) {
+                        $questList[] = $db->q($value->c_question_id);
+                    }
+                    $questList = implode(',', $questList);
+
+                    $query->clear();
+                    $query->select('*')
+                        ->from($db->qn('#__quiz_t_question'))
+                        ->where($db->qn('c_type') . " IN ('1','2','3','6','8')")
+                        ->where($db->qn('c_id') . ' IN ('.$questList.')');
+                    $db->setQuery($query);
+                    $questions = $db->loadObjectList();
+                }
+            }
+        }
+
+        if (is_array($questions ))
 		foreach($questions as $question){
 			$text = $question->report_name? $question->report_name: strip_tags( $question->c_question);
 			$fields[] = JHTML::_('select.option',$question->c_id, $text);
@@ -260,7 +299,12 @@ class JoomlaquizModelDynamic extends JModelAdmin
 				header("Content-Disposition: inline; filename=quiz_results.csv ");
 				header('Pragma: no-cache');
 			}
-			echo $csv_data;
+
+            //add BOM to fix UTF-8 in Excel
+            $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) );
+            $csv_data = $bom.$csv_data;
+
+            echo $csv_data;
 			die();
 		}
 		

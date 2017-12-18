@@ -358,7 +358,20 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
 		$quiz_xml .= "\n\t\t<quizess>";
 		for ($i=0, $n=count($quiz_data); $i < $n; $i++) {
+
+
 			$quiz = $quiz_data[$i];
+
+            $asset       = JTable::getInstance('Asset');
+            $rule        = "core.view";
+            $user        = JFactory::getUser(0);
+            $guest_group = array_pop($user->getAuthorisedGroups());
+            $asset_name = 'com_joomlaquiz.quiz.' . $quiz->c_id;
+
+
+            $asset->loadByName($asset_name);
+            $rules = json_decode($asset->rules);
+            $is_quiz_quest = $rules->$rule->$guest_group;
 			$quizesname .= $quiz->c_title.',';
 			$quiz_xml .= "\n\t\t\t<quiz id=\"".$quiz->c_id."\" published=\"".$quiz->published."\">";
 			$quiz_xml .= "\n\t\t\t\t<quiz_category>".$quiz->c_category_id."</quiz_category>";
@@ -384,7 +397,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 			$quiz_xml .= "\n\t\t\t\t<quiz_enable_sertif><![CDATA[".$quiz->c_enable_sertif."]]></quiz_enable_sertif>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_skin><![CDATA[".$quiz->c_skin."]]></quiz_skin>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_random>".$quiz->c_random."</quiz_random>";
-			$quiz_xml .= "\n\t\t\t\t<quiz_guest>".$quiz->c_guest."</quiz_guest>";
+			$quiz_xml .= "\n\t\t\t\t<quiz_guest>".$is_quiz_quest."</quiz_guest>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_published><![CDATA[".$quiz->published."]]></quiz_published>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_slide><![CDATA[".$quiz->c_slide."]]></quiz_slide>";
 			$quiz_xml .= "\n\t\t\t\t<quiz_language><![CDATA[".$quiz->c_language."]]></quiz_language>";
@@ -840,12 +853,12 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_right_message, c_wrong_message, c_pass_message, 
 								c_unpass_message, c_enable_review, c_email_to, 
 								c_enable_print, c_enable_sertif, c_skin, 
-								c_random, c_guest, published, 
+								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
 								c_resbycat,	c_feed_option, paid_check, c_pagination)  ";
-							$query .= "VALUES(
-								'',".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
+							$query .= "VALUES(".
+                                $db->quote($free_id). ",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_userid).",".$db->quote($qcat->quiz_author).",".$db->quote($qcat->quiz_full_score).",
 								".$db->quote($qcat->quiz_title).",".$db->quote($qcat->quiz_description).",".$db->quote($qcat->quiz_image).",
 								".$db->quote($qcat->quiz_timelimit).",".$db->quote($qcat->quiz_minafter).", ".$db->quote($qcat->quiz_onceperday).",
@@ -853,15 +866,45 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_rmess).",".$db->quote($qcat->quiz_wmess).",".$db->quote($qcat->quiz_pass_message).",
 								".$db->quote($qcat->quiz_unpass_message).", ".$db->quote(@$qcat->quiz_enable_review).", ".$db->quote($qcat->quiz_email_to).",
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
-								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_guest).",".$db->quote($qcat->quiz_published).",
+								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
 								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote(@$qcat->quiz_resbycat).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
 								$database->setQuery($query);
-							if(!$database->execute()){
-								echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
-								exit();
-							}
+                            if(!$database->execute()){
+                                echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                                exit();
+                            }
+                            $asset       = JTable::getInstance('Asset');
+                            $rule        = "core.view";
+                            $user        = JFactory::getUser(0);
+                            $guest_group = array_pop($user->getAuthorisedGroups());
+                            $asset_name = 'com_joomlaquiz.quiz.' . $free_id;
+
+                            $asset->name = $asset_name;
+                            $asset->title = $qcat->quiz_title;
+                            $rules = json_decode($asset->rules);
+                            if (isset($rules->$rule) && !is_array($rules->$rule)) {
+                                if (!$rules->$rule->$guest_group) {
+                                    $rules->$rule->$guest_group = $qcat->quiz_guest;
+                                }
+                            } else {
+                                $rules->$rule               = new stdClass();
+                                $rules->$rule->$guest_group = $qcat->quiz_guest;
+                            }
+                            $asset->rules = json_encode($rules);
+                            $asset->store();
+                            if (!$user->authorise('core.view', $asset_name)
+                                && $user->authorise('core.view', $asset_name)
+                                != $qcat->quiz_guest
+                            ) {
+                                JFactory::getApplication()
+                                    ->enqueueMessage('There might be something wrong with guest access for quiz #'
+                                        . $free_id . ' ' . $qcat->quiz_title
+                                        . '. Please check quiz settings. (Previously "guest access" was '
+                                        . ($qcat->quiz_guest ? 'enabled' : 'disabled') . ')');
+                            }
+
 							if($qcat->quiz_image) $quiz_images[] = $qcat->quiz_image;
 							$query = "SELECT max(c_id) FROM #__quiz_t_quiz";
 							$database->setQuery($query);
@@ -1022,12 +1065,12 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_right_message, c_wrong_message, c_pass_message, 
 								c_unpass_message, c_enable_review, c_email_to, 
 								c_enable_print, c_enable_sertif, c_skin, 
-								c_random, c_guest, published, 
+								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
 								c_resbycat, c_feed_option, paid_check, c_pagination)  ";
 							$query .= "VALUES(
-								".$db->quote($qcat->id).",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
+								".$db->quote($free_id).",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_userid).",".$db->quote($qcat->quiz_author).",".$db->quote($qcat->quiz_full_score).",
 								".$db->quote($qcat->quiz_title).",".$db->quote($qcat->quiz_description).",".$db->quote($qcat->quiz_image).",
 								".$db->quote($qcat->quiz_timelimit).",".$db->quote($qcat->quiz_minafter).", ".$db->quote($qcat->quiz_onceperday).",
@@ -1035,7 +1078,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_rmess).",".$db->quote($qcat->quiz_wmess).",".$db->quote($qcat->quiz_pass_message).",
 								".$db->quote($qcat->quiz_unpass_message).", ".$db->quote(@$qcat->quiz_enable_review).",".$db->quote($qcat->quiz_email_to).",
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
-								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_guest).",".$db->quote($qcat->quiz_published).",
+								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
 								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote($qcat->quiz_resbycat).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
@@ -1045,6 +1088,37 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 								exit();
 							}
+
+                            $asset       = JTable::getInstance('Asset');
+                            $rule        = "core.view";
+                            $user        = JFactory::getUser(0);
+                            $guest_group = array_pop($user->getAuthorisedGroups());
+                            $asset_name = 'com_joomlaquiz.quiz.' . $free_id;
+
+                            $asset->name = $asset_name;
+                            $asset->title = $qcat->quiz_title;
+                            $rules = json_decode($asset->rules);
+                            if (isset($rules->$rule) && !is_array($rules->$rule)) {
+                                if (!$rules->$rule->$guest_group) {
+                                    $rules->$rule->$guest_group = $qcat->quiz_guest;
+                                }
+                            } else {
+                                $rules->$rule               = new stdClass();
+                                $rules->$rule->$guest_group = $qcat->quiz_guest;
+                            }
+                            $asset->rules = json_encode($rules);
+                            $asset->store();
+                            if (!$user->authorise('core.view', $asset_name)
+                                && $user->authorise('core.view', $asset_name)
+                                != $qcat->quiz_guest
+                            ) {
+                                JFactory::getApplication()
+                                    ->enqueueMessage('There might be something wrong with guest access for quiz #'
+                                        . $free_id . ' ' . $qcat->quiz_title
+                                        . '. Please check quiz settings. (Previously "guest access" was '
+                                        . ($qcat->quiz_guest ? 'enabled' : 'disabled') . ')');
+                            }
+
 							if($qcat->quiz_image) $quiz_images[] = $qcat->quiz_image;
 							$new_quiz_id = $qcat->id;
 

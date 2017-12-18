@@ -451,14 +451,20 @@ class JoomlaquizModelQuiz extends JModelList
 			} else {
 				$username_field = $usersurname_field = $email_field = '';
 			}
-			$quiz_params->c_description = preg_replace('/#name#/', $username_field, $quiz_params->c_description, 1);
-			$quiz_params->c_description = preg_replace('/#surname#/', $usersurname_field, $quiz_params->c_description, 1);
-			$quiz_params->c_description = preg_replace('/#email#/', $email_field, $quiz_params->c_description, 1);
-			
-			JPluginHelper::importPlugin('content');
-			$dispatcher = JEventDispatcher::getInstance();
-			list($processed_desc) = $dispatcher->trigger('onQuizCustomFieldsRender', array($quiz_params->c_description));
-			if($processed_desc) $quiz_params->c_description = $processed_desc;
+
+            if($quiz_params->c_description) {
+                $quiz_params->c_description = preg_replace('/#name#/', $username_field, $quiz_params->c_description, 1);
+                $quiz_params->c_description = preg_replace('/#surname#/', $usersurname_field,
+                    $quiz_params->c_description, 1);
+                $quiz_params->c_description = preg_replace('/#email#/', $email_field, $quiz_params->c_description, 1);
+
+                JPluginHelper::importPlugin('content');
+                $dispatcher = JEventDispatcher::getInstance();
+                list($processed_desc) = !empty($dispatcher->trigger('onQuizCustomFieldsRender', array($quiz_params->c_description))) ? $dispatcher->trigger('onQuizCustomFieldsRender', array($quiz_params->c_description)) : array('');
+                if ($processed_desc) {
+                    $quiz_params->c_description = $processed_desc;
+                }
+            }
 		
 			/* setting up session vars - need to check it it is used anywhere */
 			$_SESSION['quiz_lid'] = $lid;

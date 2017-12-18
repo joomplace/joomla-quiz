@@ -141,7 +141,7 @@ class qXMLImport
 			$element = &$this->domitRoot->getElementsByPath('quizess', 1);
 			return $this->JLMS_parse_XML_elements($element->childNodes,
 				array('id', 'published'),
-				array('quiz_category','quiz_userid','quiz_author',  'quiz_full_score','quiz_title', 'quiz_description', 'quiz_image', 'quiz_timelimit', 'quiz_minafter', 'quiz_onceperday', 'quiz_passcore', 'quiz_createtime', 'quiz_rmess', 'quiz_wmess', 'quiz_pass_message', 'quiz_unpass_message', 'quiz_enable_review', 'quiz_email_to', 'quiz_enable_print', 'quiz_enable_sertif', 'quiz_skin', 'quiz_random', 'quiz_guest', 'quiz_published', 'quiz_slide', 'quiz_language', 'quiz_certificate', 'quiz_feedback', 'quiz_pool', 'quiz_resbycat', 'quiz_feed_option' ),
+				array('quiz_category','quiz_userid','quiz_author','quiz_full_score','quiz_title','quiz_description','quiz_short_description','quiz_image', 'quiz_timelimit', 'quiz_minafter', 'quiz_onceperday', 'quiz_passcore', 'quiz_createtime', 'quiz_rmess', 'quiz_wmess', 'quiz_pass_message', 'quiz_unpass_message', 'quiz_enable_review', 'quiz_email_to', 'quiz_enable_print', 'quiz_enable_sertif', 'quiz_skin', 'quiz_random', 'quiz_guest', 'quiz_published', 'quiz_slide', 'quiz_language', 'quiz_certificate', 'quiz_feedback', 'quiz_pool', 'quiz_resbycat', 'quiz_feed_option' ),
 				true,
 				array('quiz_questions', 'choice_data','match_data','blank_data','hotspot_data'),
 				array(

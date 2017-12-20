@@ -49,6 +49,14 @@ class JoomlaquizControllerCleaning extends JControllerForm
             }
 
             if(count($quiz_id = array_unique($quiz_id))) {
+            	$query = "DELETE FROM #__quiz_pool" . "\n WHERE " . $db->qn('q_id') . " IN ( ". implode(', ', $quiz_id) . ")";
+	            $db->setQuery( $query );
+	            $db->execute();
+
+	            $query = "DELETE FROM #__quiz_feed_option" . "\n WHERE " . $db->qn('quiz_id') . " IN ( ". implode(', ', $quiz_id) . ")";
+	            $db->setQuery( $query );
+	            $db->execute();
+	            
                 $query = "DELETE FROM #__quiz_t_question WHERE c_quiz_id IN ('" . implode("', '", $quiz_id) . "')";
                 $db->setQuery($query);
                 $db->execute();

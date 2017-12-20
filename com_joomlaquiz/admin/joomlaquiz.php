@@ -9,6 +9,11 @@
 
 defined('_JEXEC') or die('Restricted access');
 
+if (!JFactory::getUser()->authorise('core.manage', 'com_joomlaquiz'))
+{
+    throw new JAccessExceptionNotallowed(JText::_('JERROR_ALERTNOAUTHOR'), 403);
+}
+
 JLoader::register('JoomlaquizHelper', JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers' . DIRECTORY_SEPARATOR . 'joomlaquiz.php');
 JLoader::register('plgJoomlaquizQuestion', JPATH_SITE . '/components/com_joomlaquiz/helpers/plgquestion.php');
  

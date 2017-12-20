@@ -171,7 +171,15 @@ class JoomlaquizModelQuizzes extends JModelList
 				$pool_conf_item->q_id = $new_quiz_id;
 				$database->insertObject('#__quiz_pool', $pool_conf_item);
 			}
-			$query = "SELECT c_id FROM #__quiz_t_question WHERE c_quiz_id = '".$quiz2copy['c_id']."'";
+
+            $query = "SELECT * FROM #__quiz_feed_option WHERE quiz_id = '".$quiz2copy['c_id']."'";
+            $feed = $database->SetQuery( $query )->loadObjectList();
+            foreach($feed as $feed_opt){
+                $feed_opt->quiz_id = $new_quiz_id;
+                $database->insertObject('#__quiz_feed_option', $feed_opt);
+            }
+
+            $query = "SELECT c_id FROM #__quiz_t_question WHERE c_quiz_id = '".$quiz2copy['c_id']."'";
 			$database->SetQuery( $query );
 			$cid = $database->loadColumn();
 			if (!is_array( $cid )) {

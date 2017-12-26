@@ -46,28 +46,12 @@ class JoomlaquizControllerResults extends JControllerForm
             $qch_ids = str_replace('*',',',$qch_ids);
             $max_score = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_params->result_data->c_quiz_id);
             $user_score = $quiz_params->result_data->c_total_score;
-            $user_score_percent = ($max_score) ? ($user_score/$max_score) * 100 : 0;
-            $nugno_score = ($quiz_params->result_data->c_passing_score * $max_score) / 100;
-            $query = "SELECT c_total_time FROM #__quiz_r_student_quiz WHERE c_id = '".$quiz_params->result_data->c_id."'";
-            $db->SetQuery( $query );
-            $user_time = $db->LoadResult();
-            $tot_min = floor($user_time / 60);
-            $tot_sec = $user_time - $tot_min*60;
-            $tot_time = str_pad($tot_min,2, "0", STR_PAD_LEFT).":".str_pad($tot_sec,2, "0", STR_PAD_LEFT);
-            $desc =
-                JText::_('COM_QUIZ_RES_MES_SCORE') . ' ' .
-                sprintf(
-                    JText::_('COM_QUIZ_RES_MES_SCORE_TPL'),
-                    number_format($user_score,2, '.', ' '),
-                    number_format($max_score, 2, '.', ' '),
-                    number_format($user_score_percent, 2, '.', ' ')
-                ) . '. ' .
-                JText::_('COM_QUIZ_RES_MES_PAS_SCORE').'  '.sprintf(JText::_('COM_QUIZ_RES_MES_PAS_SCORE_TPL'),$nugno_score, $quiz_params->result_data->c_passing_score) . '. ' .
-                JText::_('COM_QUIZ_RES_MES_TIME').'  '.$tot_time;
+
+            $sshare_message = (JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz_params->result_data->c_quiz_id) && JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz_params->result_data->c_quiz_id)!='COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz_params->result_data->c_quiz_id)?(JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz_params->result_data->c_quiz_id)):(JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE'));
+            $user_score_replaced = sprintf($sshare_message, number_format($user_score, 2, '.', ' '), number_format($max_score, 2, '.', ' ')).$quiz_params->c_title;
 
             $document = JFactory::getDocument();
-            $document->setMetaData( 'og:title', 'Quiz Results', 'property' );
-            $document->setMetaData( 'og:description', $desc, 'property' );
+            $document->setMetaData( 'og:title', $user_score_replaced, 'property' );
         }catch (Exception $e){
             //nothing
         }

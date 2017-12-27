@@ -58,6 +58,9 @@ class JoomlaquizControllerResults extends JControllerForm
 
             $document = JFactory::getDocument();
             $document->setMetaData( 'og:title', $user_score_replaced, 'property' );
+            if(isset($quiz_params->c_image) && file_exists($quiz_params->c_image)){
+                $document->setMetaData( 'og:image', $quiz_params->c_image, 'property' );
+            }
         }catch (Exception $e){
             //nothing
         }

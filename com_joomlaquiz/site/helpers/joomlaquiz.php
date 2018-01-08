@@ -25,7 +25,8 @@ class JoomlaquizHelper
 			if(count($settings)){
 				foreach($settings as $setting){
 					$array = (array) $setting;
-					$data->$array['config_var'] = $array['config_value'];
+					$conf = $array['config_var'];
+					$data->$conf = $array['config_value'];
 				}
 			}
 		

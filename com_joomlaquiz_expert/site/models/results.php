@@ -90,8 +90,8 @@ class JoomlaquizModelResults extends JModelList
 			->where($db->qn('q.c_id').' IN ('.implode(",", $quiz_ids).')')
 			->group($db->qn('squ.c_stu_quiz_id'))
 			->order($db->qn('sq.c_date_time').' DESC');
-			
-		if(!$user->authorise('core.manage','com_joomlaquiz')){
+
+        if(!$user->authorise('core.managefe','com_joomlaquiz')){
 			$query->where($db->qn('c_student_id').' = '.$db->q($user->id));
 		}
 		
@@ -141,8 +141,8 @@ class JoomlaquizModelResults extends JModelList
 				->join('left', $db->qn('#__quiz_q_chain','ch').' ON '.$db->qn('ch.s_unique_id').' = '.$db->qn('sq.unique_id'))
 				->join('left', $db->qn('#__quiz_t_quiz','q').' ON '.$db->qn('sq.c_quiz_id').' = '.$db->qn('q.c_id'))
 				->where($db->qn('sq.c_quiz_id').' = '.$db->q($row->c_quiz_id));
-			
-			if(!$user->authorise('core.manage','com_joomlaquiz')){
+
+            if(!$user->authorise('core.managefe','com_joomlaquiz')){
 				$query->where($db->qn('c_student_id').' = '.$db->q($user->id));
 			}
 			
@@ -232,7 +232,7 @@ class JoomlaquizModelResults extends JModelList
 			$is_share = $db->loadResult();
 		}
 
-		if($user->authorise('core.manage','com_joomlaquiz')){
+        if($user->authorise('core.managefe','com_joomlaquiz')){
 			$is_share = 1;
 		}
 		

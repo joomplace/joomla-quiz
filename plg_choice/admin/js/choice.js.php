@@ -311,7 +311,8 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name) {
     if (quest_type != 10) {
         input_check.type = "radio";
         input_check.setAttribute('name', 'jq_checked[]');
-
+        var jq_checked = document.getElementsByName('jq_checked[]');
+        input_check.value = jq_checked[jq_checked.length-1]?Number(jq_checked[jq_checked.length-1].value)+1:0;
         input_check.checked = false;
 
     } else {

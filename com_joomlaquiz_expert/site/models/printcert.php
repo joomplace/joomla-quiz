@@ -40,7 +40,7 @@ class JoomlaquizModelPrintcert extends JModelList
 		
 		if (count($stu_quiz)) {
 			$stu_quiz = $stu_quiz[0];
-			if ( (($my->id == $stu_quiz->c_student_id || $unique_pass_id == $stu_quiz->unique_pass_id) || $my->authorise('core.manage','com_joomlaquiz')) && ($user_unique_id == $stu_quiz->unique_id) ) {
+            if ( (($my->id == $stu_quiz->c_student_id || $unique_pass_id == $stu_quiz->unique_pass_id) || $my->authorise('core.managefe','com_joomlaquiz')) && ($user_unique_id == $stu_quiz->unique_id) ) {
 				if ($stu_quiz->c_passed != 1) {
 					echo JText::_('COM_QUIZ_MES_NOTPASSED'); die();
 				}

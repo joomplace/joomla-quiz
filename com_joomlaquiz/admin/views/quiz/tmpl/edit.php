@@ -120,6 +120,7 @@ window.onload = function (){
 	<ul class="nav nav-tabs" id="quizTabs">
 	    <li class="active"><a href="#quiz-details" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_DETAILS');?></a></li>
 	    <li><a href="#quiz-description" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_DESCRIPTION');?></a></li>
+		<li><a href="#quiz-default-questions-options" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_DEFAULT_QUESTIONS_OPTIONS');?></a></li>
 	    <li><a href="#additional-option" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_ADDITIONAL_OPTIONS');?></a></li>
 		<li><a href="#feedback-option" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_FEEDBACK_OPTIONS');?></a></li>
 		<li><a href="#question-pool-option" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION_POOL_OPTIONS');?></a></li>
@@ -296,6 +297,73 @@ window.onload = function (){
 			</div>
 		</fieldset>
 	    </div>
+	    <div class="tab-pane" id="quiz-default-questions-options">
+			<fieldset class="adminform">
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_set_default'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_set_default'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_points'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_points'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_attempts'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_attempts'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_enable_questions_feedback'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_enable_questions_feedback'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_f_right_message'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_f_right_message'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_f_wrong_message'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_f_wrong_message'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_f_detailed_wrong_message'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_f_detailed_wrong_message'); ?>
+					</div>
+				</div>
+			</fieldset>
+		</div>
 	    <div class="tab-pane" id="additional-option">
 		<fieldset class="adminform">
 			<div class="control-group">

@@ -50,8 +50,13 @@ class JoomlaquizControllerQuiz extends JControllerForm
 	
 	public function save(){
 		$task = JFactory::getApplication()->input->getCmd('task');
+		 $data = JFactory::getApplication()->input->get('jform',array(),'array');
+
+        if ($data['c_set_default']) {
+            $this->setDefaultFields();
+        }
+
 		if($task=='save2copy'){
-			$data = JFactory::getApplication()->input->get('jform',array(),'array');
 			$_SESSION['com_joomlaquiz.copy.quizzes.cids'] = array($data['c_id']);
 			JFactory::getApplication()->input->set('categorycopy',$data['c_category_id']);
 			$model = $this->getModel('Quizzes');
@@ -70,4 +75,29 @@ class JoomlaquizControllerQuiz extends JControllerForm
 	public function cancel(){
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes');
 	}
+
+
+    public function setDefaultFields() {
+        $data = JFactory::getApplication()->input->get('jform',array(),'array');
+        $db = JFactory::getDBO();
+
+        $fields = array($db->qn("c_point") . " = " . $db->q($data["c_default_points"]),
+            $db->qn("c_attempts") . " = " . $db->q($data["c_default_attempts"]),
+            $db->qn("c_feedback") . " = " . $db->q($data["c_default_enable_questions_feedback"]),
+            $db->qn("c_right_message") . " = " . $db->q($data["c_default_f_right_message"]),
+            $db->qn("c_wrong_message") . " = " . $db->q($data["c_default_f_wrong_message"]),
+            $db->qn("c_detailed_feedback") . " = " . $db->q($data["c_default_f_detailed_wrong_message"]));
+
+        $condition = $db->qn("c_quiz_id") . " = " . $db->q($data["c_id"]);
+
+        $query = $db->getQuery(true);
+        $query->update($db->qn("#__quiz_t_question"))
+            ->set($fields)
+            ->where($condition);
+        $db->setQuery($query);
+        $db->execute();
+
+        return true;
+    }
+
 }

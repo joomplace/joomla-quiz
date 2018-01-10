@@ -120,6 +120,7 @@ window.onload = function (){
 	<ul class="nav nav-tabs" id="quizTabs">
 	    <li class="active"><a href="#quiz-details" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_DETAILS');?></a></li>
 	    <li><a href="#quiz-description" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_DESCRIPTION');?></a></li>
+		<li><a href="#quiz-default-questions-options" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_DEFAULT_QUESTIONS_OPTIONS');?></a></li>
 	    <li><a href="#additional-option" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_ADDITIONAL_OPTIONS');?></a></li>
 		<li><a href="#feedback-option" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_FEEDBACK_OPTIONS');?></a></li>
 		<li><a href="#question-pool-option" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION_POOL_OPTIONS');?></a></li>

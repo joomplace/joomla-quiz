@@ -141,6 +141,60 @@
 			filter="raw"
 			label="COM_JOOMLAQUIZ_SHORT_DESCRIPTION" description="COM_JOOMLAQUIZ_SHORT_DESCRIPTION_OF" required="false" />
 	</fieldset>
+
+	<fieldset>
+		<field name="c_set_default"
+			   type="radio"
+			   class="btn-group"
+			   label="COM_JOOMLAQUIZ_SET_DEFAULT"
+			   labelclass="control-label"
+			   default="0">
+			<option value="0">COM_JOOMLAQUIZ_NO</option>
+			<option value="1">COM_JOOMLAQUIZ_YES</option>
+		</field>
+
+		<field name="c_default_points"
+			   type="text"
+			   default=""
+			   size="30"
+			   label="COM_JOOMLAQUIZ_DEFAULT_QUIESTIONS_POINTS"
+			   labelclass="control-label"
+			   required="false"/>
+
+		<field name="c_default_attempts"
+			   type="text"
+			   default=""
+			   size="30"
+			   label="COM_JOOMLAQUIZ_DEFAULT_QUIESTIONS_ATTEMPTS"
+			   labelclass="control-label"
+			   required="false"/>
+
+		<field name="c_default_enable_questions_feedback"
+			   type="radio"
+			   class="btn-group"
+			   label="COM_JOOMLAQUIZ_DEFAULT_ENABLE_QUESTIONS_FEEDBACK"
+			   labelclass="control-label"
+			   default="0">
+			<option value="0">COM_JOOMLAQUIZ_NO</option>
+			<option value="1">COM_JOOMLAQUIZ_YES</option>
+		</field>
+
+		<field name="c_default_f_right_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
+			   class="inputbox"
+			   filter="safehtml"
+			   label="COM_JOOMLAQUIZ_DEFAULT_F_WHEN_ANSWER_CORRECT" required="false" />
+
+		<field name="c_default_f_wrong_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
+			   class="inputbox"
+			   filter="safehtml"
+			   label="COM_JOOMLAQUIZ_DEFAULT_F_WHEN_ANSWER_INCORRECT" required="false" />
+
+		<field name="c_default_f_detailed_wrong_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
+			   class="inputbox"
+			   filter="safehtml"
+			   label="COM_JOOMLAQUIZ_DEFAULT_F_DETAILED_WHEN_ANSWER_INCORRECT" required="false" />
+	</fieldset>
+	
 	<fieldset name="quiz_additional_options"
 		label="COM_JOOMLAQUIZ_ADDITIONAL_OPTIONS"
 	>

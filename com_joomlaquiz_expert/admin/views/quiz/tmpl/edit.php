@@ -446,6 +446,73 @@ window.onload = function (){
 			</div>
 		</fieldset>
 	    </div>
+	    <div class="tab-pane" id="quiz-default-questions-options">
+			<fieldset class="adminform">
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_set_default'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_set_default'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_points'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_points'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_attempts'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_attempts'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_enable_questions_feedback'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_enable_questions_feedback'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_f_right_message'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_f_right_message'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_f_wrong_message'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_f_wrong_message'); ?>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('c_default_f_detailed_wrong_message'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('c_default_f_detailed_wrong_message'); ?>
+					</div>
+				</div>
+			</fieldset>
+		</div>
 		<div class="tab-pane" id="feedback-option">
 		<fieldset class="adminform">
 			<div class="control-group">

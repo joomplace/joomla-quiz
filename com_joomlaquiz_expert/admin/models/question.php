@@ -26,6 +26,18 @@ class JoomlaquizModelQuestion extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		$result = parent::getItem($pk);
+        $is_set_default = JComponentHelper::getParams('com_joomlaquiz')->get('is_set_default');
+
+        if (!$result->c_id  && $is_set_default) {
+            $session = JFactory::getSession();
+            $result->c_point = $session->get('jform_c_point_d');
+            $result->c_attempts = $session->get('jform_c_attempts_d');
+            $result->c_feedback = $session->get('jform_c_feedback_d');
+            $result->c_right_message = $session->get('jform_c_right_message_d');
+            $result->c_wrong_message = $session->get('jform_c_wrong_message_d');
+            $result->c_detailed_feedback = $session->get('jform_c_detailed_feedback_d');
+        }
+
 		return $result;
 	}
 		

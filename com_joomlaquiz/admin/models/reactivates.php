@@ -80,8 +80,6 @@ class JoomlaquizModelReactivates extends JModelList
 		else
 			$no_virtuemart = true;
 			
-        $db = JFactory::getDBO();
-        
         $where = array();
 		if($user_id > 0) {
 			$where[] = '(users.id = ' . $user_id . ')';
@@ -89,18 +87,20 @@ class JoomlaquizModelReactivates extends JModelList
 		if($search) {
 			$where[] = '(users.name LIKE (\'%' . $search . '%\'))';
 		}
+        
+		if($no_virtuemart){
+            $query = "SELECT users.name, payments.id AS order_id, '' AS order_status, payments.status AS `order_status_name` , '0' AS `vm`" .
+                "\n FROM `#__quiz_payments` as `payments`" .
+                "\n INNER JOIN `#__users` AS `users` ON `users`.`id` = `payments`.`user_id`" .
+                (count($where)? "\n WHERE " . implode(' AND ', $where): "");
+        } else {
+            $query = "SELECT users.name, orders.virtuemart_order_id as order_id, orders.order_status, order_status.order_status_name, '1' AS `vm`" .
+                "\n FROM `#__virtuemart_orders` AS `orders`" .
+                "\n INNER JOIN `#__users` AS `users` ON `users`.`id` = `orders`.`virtuemart_user_id`" .
+                "\n LEFT JOIN `#__virtuemart_orderstates` AS `order_status` ON `order_status`.`order_status_code` = `orders`.`order_status`" .
+                (count($where)? "\n WHERE " . implode(' AND ', $where): "");
+        }
 
-        $query = (!$no_virtuemart ? "(SELECT users.name, orders.virtuemart_order_id as order_id, orders.order_status, order_status.order_status_name, '1' AS `vm`"
-		. "\n FROM #__virtuemart_orders AS orders"
-		. "\n INNER JOIN #__users AS users ON users.id = orders.virtuemart_user_id"
-		. "\n LEFT JOIN #__virtuemart_orderstates AS order_status ON order_status.order_status_code = orders.order_status ".(count($where)? "\n WHERE " . implode(' AND ', $where): "").")"
-		. "\n UNION ":'')
-		. "\n (SELECT users.name, payments.id AS order_id, '' AS order_status, payments.status AS `order_status_name` , '0' AS `vm`
-		\n FROM #__quiz_payments AS payments
-		\n INNER JOIN #__users AS users ON users.id = payments.user_id ".(count($where)? "\n WHERE " . implode(' AND ', $where): "").") 
-		"
-		;
-		
 		$query .= "\n ORDER BY name, vm, order_id";
 
        	return $query;

@@ -174,4 +174,49 @@ class JoomlaquizModelLpath extends JModelList
 			return array($lpath, null);
 		}		
 	}
+
+    public function getAllowCertificate($lpath_id=false){
+
+        if(!(int)$lpath_id) {
+            $lpath_id = JFactory::getApplication()->input->getInt('lpath_id', 0);
+        }
+        if((int)$lpath_id == 0) {
+            return false;
+        }
+
+        $user_id = (int)JFactory::getUser()->id;
+        $allow_certificate = true;
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select($db->qn('qid'))
+            ->from($db->qn('#__quiz_lpath_quiz'))
+            ->where($db->qn('lid') .'='. $db->q($lpath_id));
+        $db->setQuery($query);
+        $quiz_ids = $db->loadObjectList();
+
+        if(!$quiz_ids || !is_array($quiz_ids)){
+            $allow_certificate = false;
+        } else {
+            foreach ($quiz_ids as $k => $v) {
+                $query->clear();
+                $query->select($db->qn('c_passed'))
+                    ->from($db->qn('#__quiz_r_student_quiz'))
+                    ->where($db->qn('c_student_id') . '=' . $db->q($user_id))
+                    ->where($db->qn('c_lid') . '=' . $db->q($lpath_id))
+                    ->where($db->qn('c_quiz_id') . '=' . $db->q($v->qid))
+                    ->order('c_id DESC')
+                    ->setLimit(1);
+                $db->setQuery($query);
+                $passed = $db->loadResult();
+                if (!$passed || (int)$passed == 0) {
+                    $allow_certificate = false;
+                }
+            }
+        }
+
+        return $allow_certificate;
+    }
+
 }

@@ -88,6 +88,17 @@ $document->addScriptDeclaration("
 		</div>
 	<?php } ?>
 	</div>
+
+    <?php $certAccessGranted = JFactory::getUser()->authorise('core.lpcertificate', 'com_joomlaquiz.lp.'.$this->lpath_data[0]->id); ?>
+    <?php if($this->lpath_data[0]->certificate && $certAccessGranted && $this->allow_certificate): ?>
+        <div class="jq_lpath_certificate jq_certificate">
+            <a href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&task=printcert.get_lpcertificate&lpid='.(int)$this->lpath_data[0]->id); ?>"
+               target="_blank" rel="nofollow noopener">
+                <?php echo JText::_('COM_QUIZ_FIN_BTN_CERTIFICATE'); ?>
+            </a>
+        </div>
+    <?php endif; ?>
+
 </div>
 
 <?php } 

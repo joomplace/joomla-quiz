@@ -11,6 +11,7 @@
 		<action name="core.result" title="COM_JOOMLAQUIZ_BE_JACTION_RESULT" description="COM_JOOMLAQUIZ_BE_JACTION_RESULT_DESC" />
         <action name="core.certificate" title="COM_JOOMLAQUIZ_BE_JACTION_CERTIFICATE" description="COM_JOOMLAQUIZ_BE_JACTION_CERTIFICATE" />
         <action name="core.review" title="COM_JOOMLAQUIZ_BE_JACTION_REVIEW" description="COM_JOOMLAQUIZ_BE_JACTION_REVIEW" />
+		<action name="core.lpcertificate" title="COM_JOOMLAQUIZ_BE_JACTION_CERTIFICATE_LP" description="COM_JOOMLAQUIZ_BE_JACTION_CERTIFICATE_LP" />
 	</section>
 	<section name="quiz">
 		<action name="core.view" title="COM_JOOMLAQUIZ_BE_JACTION_VIEW" description="COM_JOOMLAQUIZ_BE_JACTION_VIEW_DESC" />
@@ -20,5 +21,6 @@
 	</section>
     <section name="lp">
         <action name="core.access" title="COM_JOOMLAQUIZ_LP_BE_JACTION_ACCESS" description="COM_JOOMLAQUIZ_LP_BE_JACTION_VIEW_ACCESS" />
+		<action name="core.lpcertificate" title="COM_JOOMLAQUIZ_BE_JACTION_CERTIFICATE_LP" description="COM_JOOMLAQUIZ_BE_JACTION_CERTIFICATE_LP" />
     </section>
 </access>

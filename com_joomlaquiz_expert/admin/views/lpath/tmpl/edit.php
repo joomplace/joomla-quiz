@@ -60,6 +60,14 @@ $input = $app->input;
                 </div>
                 <div class="control-group">
                     <div class="control-label">
+                        <label data-content="<?php echo JText::_('COM_JOOMLAQUIZ_LEARNING_PATH_CERTIFICATE_DESC');?>" data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_LEARNING_PATH_CERTIFICATE_DESC');?>" class="control-label hasPopover" for="jform_certificate" id="jform_certificate-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_LEARNING_PATH_CERTIFICATE_LABEL');?></label>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->certificates; ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
                         <?php echo $this->form->getLabel('short_descr'); ?>
                     </div>
                     <div class="controls">

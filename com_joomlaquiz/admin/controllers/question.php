@@ -53,9 +53,17 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		$view->display();
 	}
 
-		public function save(){
-		$data = JFactory::getApplication()->input->get('jform',array(),'array');
-		$task = JFactory::getApplication()->input->get('task');
+	public function save(){
+        $app  = JFactory::getApplication();
+        $data = $app->input->get('jform',array(),'array');
+        $task = $app->input->get('task');
+
+        $c_type = !empty($data['c_type']) ? $data['c_type'] : 0;
+        if (!$data['c_id'] && !$this->c_type) {
+            $new_qtype_id = $app->getUserStateFromRequest("question.new_qtype_id", 'new_qtype_id', 0);
+            $c_type = $new_qtype_id;
+        }
+        $question_type = JoomlaquizHelper::getQuestionType($c_type);
 	
 		switch($task){
 			case 'save2copy':
@@ -66,6 +74,14 @@ class JoomlaquizControllerQuestion extends JControllerForm
 				$this->setRedirect( 'index.php?option=com_joomlaquiz&view=question&layout=edit');
 				break;
 			case 'apply':
+                if(($question_type == 'memory' || $question_type == 'imgmatch') && $_FILES['Filedata']['size'] !== 0) {
+                    require_once(JPATH_SITE."/components/com_joomlaquiz/libraries/apps.php");
+                    $appsLib = JqAppPlugins::getInstance();
+                    $appsLib->loadApplications();
+                    $arrayParams = array();
+                    $arrayParams['quest_type'] = $question_type;
+                    $appsLib->triggerEvent('onAdminSaveOptions', $arrayParams);
+                }
 				parent::save();
 				break;
 			case 'save':

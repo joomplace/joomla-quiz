@@ -1658,6 +1658,22 @@ div.jq_highlight_drag_div {
 	background-repeat:no-repeat;
 }
 
+#jq_continue_link_container:hover::after,
+#jq_submit_link_container:hover::after,
+#jq_start_link_container:hover::after,
+#jq_next_link_container:hover::after,
+#jq_back_link_container:hover::after{
+    content: attr(data-title);
+    position: relative;
+    right: 180%;
+    z-index: 1;
+    background: rgba(255,255,230,0.9);
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    padding: 5px 10px;
+    border: 1px solid #333;
+}
+
 #jq_quiz_task_link_container {
 	visibility:hidden;
 	display:none;

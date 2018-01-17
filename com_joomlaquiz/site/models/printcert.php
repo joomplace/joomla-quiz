@@ -79,6 +79,11 @@ class JoomlaquizModelPrintcert extends JModelList
 				$database->SetQuery("SELECT * FROM #__quiz_certificates WHERE id = '".$stu_quiz->c_certificate."'");
 				$certif = $database->LoadObjectList();
 				$certif = $certif[0];
+
+                if(!file_exists(JPATH_SITE . "/images/joomlaquiz/images/" . $certif->cert_file)){
+                    echo JText::_('COM_QUIZ_CERTIFICATE_FORM_MISSING');
+                    exit;
+                }
 				
 				$loadFile = JPATH_SITE . "/images/joomlaquiz/images/" . $certif->cert_file;
 				$im_fullsize = getimagesize($loadFile);
@@ -351,6 +356,430 @@ class JoomlaquizModelPrintcert extends JModelList
 		
 		echo JText::_('COM_QUIZ_MES_NOTAVAIL');
 	}
+
+    private function getCbFields(){
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $not_in = array('password', 'onlinestatus', 'formatname', 'connections', 'forumrank', 'forumposts', 'forumkarma', 'forumsignature', 'forumview', 'forumorder');
+        for($i=0; $i<count($not_in); $i++){
+            $not_in[$i] = $db->q($not_in[$i]);
+        }
+        $not_in_str = implode(',', $not_in);
+
+        $query->select($db->qn('name'))
+            ->from($db->qn('#__comprofiler_fields'))
+            ->where($db->qn('name') .' NOT IN (' . $not_in_str . ')')
+            ->where($db->qn('table') . ' LIKE ' . $db->q('%comprofiler'));
+        $db->setQuery($query);
+        $cb_fields = $db->loadColumn();
+
+        return $cb_fields;
+    }
+
+    private function getCbData($cb_fields=array(), $user_id=0){
+
+        $cb_data = false;
+        $ftmp = array();
+        $conf = new JConfig();
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        if(count($cb_fields)){
+            foreach ($cb_fields as $cb_field) {
+
+                $query->select('*')
+                    ->from('`information_schema`.`columns`')
+                    ->where($db->qn('table_schema') . '=' . $conf->db)
+                    ->where($db->qn('table_name') . '=' . $conf->dbprefix.'comprofiler')
+                    ->where($db->qn('column_name') . '=' . htmlspecialchars($cb_field, ENT_QUOTES, 'UTF-8'));
+                $db->setQuery($query);
+                $f = $db->loadObjectList();
+
+                if(is_array($f) && count($f)){
+                    $ftmp[] = $cb_field;
+                }
+                $query->clear();
+            }
+        }
+        $cb_fields = $ftmp;
+
+        if (count($cb_fields))
+        {
+            for($i=0; $i<count($cb_fields); $i++){
+                $cb_fields[$i] = $db->qn($cb_fields[$i]);
+            }
+            $cb_fields_str = implode(',', $cb_fields);
+
+            $query->select($db->q($cb_fields_str))
+                ->from($db->qn('#__comprofiler'))
+                ->where($db->qn('user_id') . '=' . (int)$user_id);
+            $db->setQuery($query);
+            $data = $db->loadObjectList();
+            if($data){
+                $cb_data = $data[0];
+            }
+        }
+
+        return $cb_data;
+    }
+
+    public function JQ_printLPCertificate(){
+
+        $lpath_id = JFactory::getApplication()->input->getInt('lpid', 0);
+        $user_id = (int)JFactory::getUser()->id;
+
+        //Check of access by direct link #1
+        $certAccessGranted = JFactory::getUser()->authorise('core.lpcertificate', 'com_joomlaquiz.lp.'.$lpath_id);
+        if(!$certAccessGranted) {
+            echo JText::_('COM_QUIZ_MES_NOTAVAIL');
+            return;
+        }
+        //Check of access by direct link #2
+        JLoader::register('JoomlaquizModelLpath', JPATH_SITE . '/components/com_joomlaquiz/models/lpath.php');
+        $modelLpath = new JoomlaquizModelLpath();
+        if(!$modelLpath->getAllowCertificate((int)$lpath_id)) {
+            echo JText::_('COM_QUIZ_MES_NOTAVAIL');
+            return;
+        }
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query->select('*')
+            ->from($db->qn('#__quiz_lpath'))
+            ->where($db->qn('id') .'='. $db->q($lpath_id));
+        $db->setQuery($query);
+        $lpath = $db->loadObject();
+
+        //Check of access by direct link #3
+        if(!(int)$lpath->certificate) {
+            echo JText::_('COM_QUIZ_MES_NOTAVAIL');
+            return;
+        }
+
+        $query->clear();
+        $query->select($db->qn('qid'))
+            ->from($db->qn('#__quiz_lpath_quiz'))
+            ->where($db->qn('lid') .'='. $db->q($lpath_id));
+        $db->setQuery($query);
+        $quiz_ids = $db->loadObjectList();      //quizzes in the course
+
+        if(!$quiz_ids || !is_array($quiz_ids)) {
+            echo JText::_('COM_QUIZ_MES_NOTAVAIL');
+            return;
+        }
+
+        $total_score_arr = array();
+        $full_score_arr = array();
+        $total_time_arr = array();
+        $last_total_time = 0;
+        $last_date_time = '0000-00-00 00:00:00';
+
+        foreach ($quiz_ids as $k => $v) {
+            $query->clear();
+            $query->select($db->qn('sq.c_total_score'))
+                ->select($db->qn(array('sq.c_max_score'),array('c_full_score')))
+                ->select($db->qn('sq.c_total_time'))
+                ->select($db->qn('sq.c_date_time'))
+                ->from($db->qn('#__quiz_r_student_quiz', 'sq'))
+                ->leftJoin($db->qn('#__quiz_t_quiz', 'q').' ON '. $db->qn('q.c_id') .' = '. $db->qn('sq.c_quiz_id'))
+                ->where($db->qn('sq.c_student_id') . '=' . $db->q($user_id))
+                ->where($db->qn('sq.c_lid') . '=' . $db->q($lpath_id))
+                ->where($db->qn('sq.c_quiz_id') . '=' . $db->q((int)$v->qid))
+                ->where($db->qn('sq.c_passed') . '=' . $db->q('1'))
+                ->order('q.c_id DESC')
+                ->setLimit(1);
+            $db->setQuery($query);
+            $result = $db->loadObjectList();
+
+            if($result && is_array($result) && !empty($result)){
+                $total_score_arr[] = (int)$result[0]->c_total_score;
+                $full_score_arr[] = (int)$result[0]->c_full_score;
+                $total_time_arr[] = (int)$result[0]->c_total_time;
+                if( strtotime($result[0]->c_date_time) > strtotime($last_date_time) ){
+                    $last_date_time = $result[0]->c_date_time;
+                    $last_total_time = $result[0]->c_total_time;
+                }
+            }
+        }
+
+        $total_score = array_sum($total_score_arr);
+        $full_score = array_sum($full_score_arr);
+        $total_time = array_sum($total_time_arr);
+
+        $certificate_percent = 0;
+        if($full_score > 0){
+            $certificate_percent = number_format(($total_score/$full_score) * 100, 2, '.', '');
+        }
+
+        if(file_exists(JPATH_SITE.'/components/com_comprofiler/comprofiler.php')){
+            $cb_fields = $this->getCbFields();
+            if($cb_fields && is_array($cb_fields) && !empty($cb_fields)){
+                $cb_data = $this->getCbData($cb_fields, $user_id);
+            }
+        }
+
+        //next basically copy-paste:
+
+        $db->SetQuery("SELECT * FROM #__quiz_certificates WHERE id = '".$lpath->certificate."'");
+        $certif = $db->LoadObjectList();
+        $certif = $certif[0];
+
+        if(!file_exists(JPATH_SITE . "/images/joomlaquiz/images/" . $certif->cert_file)){
+            echo JText::_('COM_QUIZ_CERTIFICATE_FORM_MISSING');
+            exit;
+        }
+
+        $loadFile = JPATH_SITE . "/images/joomlaquiz/images/" . $certif->cert_file;
+        $im_fullsize = getimagesize($loadFile);
+        if ($im_fullsize[2] == 1) {
+            $im = imagecreatefromgif($loadFile); }
+        elseif ($im_fullsize[2] == 2) {
+            $im = imagecreatefromjpeg($loadFile); }
+        elseif ($im_fullsize[2] == 3) {
+            $im = imagecreatefrompng($loadFile); }
+        else { die();}
+        $white = imagecolorallocate($im, 255, 255, 255);
+        $grey = imagecolorallocate($im, 128, 128, 128);
+        $black = imagecolorallocate($im, 0, 0, 0);
+        $font_size = $certif->text_size;
+        $font_x = $certif->text_x;
+        $font_y = $certif->text_y;
+
+        $query = "SELECT `name`, `username`, `email` from `#__users`";
+        $query .= " WHERE `id` = '".(int)$user_id."'";
+        $db->SetQuery($query);
+        $inform = $db->LoadObjectList();
+        if (count($inform)) {
+            $u_name = $inform[0]->name ? $inform[0]->name : JText::_('COM_QUIZ_USERNAME_ANONYMOUS');
+            $u_usrname = $inform[0]->username ? $inform[0]->username : JText::_('COM_QUIZ_USERNAME_ANONYMOUS');
+            $u_email = $inform[0]->email ? $inform[0]->email : '';
+        } else {
+            $u_usrname = JText::_('COM_QUIZ_USERNAME_ANONYMOUS');
+            $u_name = JText::_('COM_QUIZ_USERNAME_ANONYMOUS');
+            $u_email = '';
+        }
+
+        $font_text = $certif->crtf_text;
+        $font_text = JHtml::_('content.prepare', $this->revUni($font_text), $lpath, '');
+        $font_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$lpath->id.''.$user_id.''.$total_score, 10, 36)), $font_text);
+        $font_text = str_replace("#name#", $this->revUni($u_name), $font_text);
+        $font_text = str_replace("#surname#", '', $font_text);
+        $font_text = str_replace("#email#", $this->revUni($u_email), $font_text);
+        $font_text = str_replace("#username#", $this->revUni($u_usrname), $font_text);
+        $font_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$certificate_percent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $font_text);
+        $font_text = str_replace("#stu_points#", $total_score, $font_text);
+        $font_text = str_replace("#course#", $this->revUni($lpath->title), $font_text);
+        $datetime = strtotime($last_date_time) + $last_total_time;
+
+        if (isset($cb_fields) && count($cb_fields)) {
+            foreach($cb_fields as $cb_field) {
+                if (isset($cb_data) && isset($cb_data->$cb_field)) {
+                    $font_text = str_replace("#{$cb_field}#", $cb_data->$cb_field, $font_text);
+                } else {
+                    $font_text = str_replace("#{$cb_field}#", '', $font_text);
+                }
+            }
+        }
+
+        $str_format = 'Y-m-d';
+        $str_format_pre = '';
+        $first_pos = JoomlaquizHelper::jq_strpos( $font_text,'#date');
+        while( $first_pos !== false ){
+            if ($first_pos !== false) {
+                $first_str = JoomlaquizHelper::jq_substr($font_text, $first_pos+5, strlen($font_text) - $first_pos - 5);
+                $sec_pos = JoomlaquizHelper::jq_strpos( $first_str,'#');
+
+                if($sec_pos === false){
+                    echo JText::_('COM_JOOMLAQUIZ_CLOSE_END_TAG_PLEASE');
+                    die;
+                }
+
+                $str_format = JoomlaquizHelper::jq_substr($first_str, 0, $sec_pos);
+                $str_format_pre = $str_format;
+                if ($str_format) {
+                    if (JoomlaquizHelper::jq_substr($str_format,0,1) == '(') {
+                        $str_format = JoomlaquizHelper::jq_substr($str_format,1);
+                    }
+                    if (JoomlaquizHelper::jq_substr($str_format,-1) == ')') {
+                        $str_format = JoomlaquizHelper::jq_substr($str_format,0,-1);
+                    }
+                }
+            }
+            if (!$str_format) { $str_format = 'Y-m-d';}
+            $date = $datetime;
+            $format = $str_format;
+            $font_text = str_replace('#date'.$str_format_pre.'#', JHTML::_('date', $date , $format), $font_text);
+
+            $first_pos = JoomlaquizHelper::jq_strpos( $font_text,'#date');
+        }
+        $font_text = str_replace('#date#', date('Y-m-d', $datetime), $font_text);
+
+        $font = JPATH_SITE . "/media/".(isset($certif->text_font)? $certif->text_font: 'arial.ttf');
+        $text_array = explode("\n",$font_text);
+        $count_lines = count($text_array);
+        $text_lines_xlefts = array();
+        $text_lines_xrights = array();
+        $text_lines_heights = array();
+        for ($i = 0; $i< $count_lines; $i++) {
+            $font_box = imagettfbbox($font_size, 0, $font, $text_array[$i]);
+            $text_lines_xlefts[$i] = $font_box[0];
+            $text_lines_xrights[$i] = $font_box[2];
+            $text_lines_heights[$i] = $font_box[1]-$font_box[7];
+            if ($text_lines_heights[$i] < $font_size) { $text_lines_heights[$i] = $font_size; }
+        }
+        $min_x = 0;
+        $max_x = 0;
+        $max_w = 0;
+        for ($i = 0; $i< $count_lines; $i++) {
+            if ($min_x > $text_lines_xlefts[$i]) $min_x = $text_lines_xlefts[$i];
+            if ($max_x < $text_lines_xrights[$i]) $max_x = $text_lines_xrights[$i];
+            if ($max_w < ($text_lines_xrights[$i]-$text_lines_xlefts[$i])) $max_w = ($text_lines_xrights[$i] - $text_lines_xlefts[$i]);
+        }
+
+        $allow_shadow = ($certif->crtf_shadow == 1);
+
+        foreach($text_array as $arr){
+            $arr = $this->revUni($arr);
+        }
+
+        switch(intval($certif->crtf_align)) {
+            case 1:
+                for ($i = 0; $i< $count_lines; $i++) {
+                    $cur_w = $text_lines_xrights[$i] - $text_lines_xlefts[$i];
+                    $ad = intval(($max_w - $cur_w)/2) - intval($max_w/2);
+                    if ($allow_shadow) imagettftext($im, $font_size, 0, $font_x + $ad+2, $font_y+2, $grey, $font, $text_array[$i]);
+                    imagettftext($im, $font_size, 0, $font_x + $ad, $font_y, $black, $font, $text_array[$i]);
+                    $font_y = $font_y + $text_lines_heights[$i] + 3;
+                }
+                break;
+            case 2:
+                for ($i = 0; $i< $count_lines; $i++) {
+                    $cur_w = $text_lines_xrights[$i] - $text_lines_xlefts[$i];
+                    $ad = 0;
+                    if ($allow_shadow) imagettftext($im, $font_size, 0, $font_x + $ad+2, $font_y+2, $grey, $font, $text_array[$i]);
+                    imagettftext($im, $font_size, 0, $font_x + $ad, $font_y, $black, $font, $text_array[$i]);
+                    $font_y = $font_y + $text_lines_heights[$i] + 3;
+                }
+
+                break;
+            default:
+                for ($i = 0; $i< $count_lines; $i++) {
+                    $cur_w = $text_lines_xrights[$i] - $text_lines_xlefts[$i];
+                    $ad = intval($max_w - $cur_w) - intval($max_w);
+                    if ($allow_shadow) imagettftext($im, $font_size, 0, $font_x + $ad+2, $font_y+2, $grey, $font, $text_array[$i]);
+                    imagettftext($im, $font_size, 0, $font_x + $ad, $font_y, $black, $font, $text_array[$i]);
+                    $font_y = $font_y + $text_lines_heights[$i] + 3;
+                }
+
+                break;
+        }
+
+        $query = "SELECT * FROM #__quiz_cert_fields WHERE cert_id = '{$certif->id}' ORDER BY c_id";
+        $db->setQuery($query);
+        $fields = $db->loadObjectList();
+
+        $ad = 0;
+        if (is_array($fields) && count($fields)) {
+            foreach($fields as $field){
+
+                $field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text), $lpath, '');
+                $field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$lpath->id.''.$user_id.''.$total_score, 10, 36)), $field->f_text);
+                $field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);
+                $field->f_text = str_replace("#surname#", '', $field->f_text);
+                $field->f_text = str_replace("#email#", $u_email, $field->f_text);
+                $field->f_text = str_replace("#username#", $this->revUni($u_usrname), $field->f_text);
+                $field->f_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$certificate_percent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $field->f_text);
+                $field->f_text = str_replace("#stu_points#",$total_score, $field->f_text);
+                $field->f_text = str_replace("#course#", $this->revUni($lpath->title), $field->f_text);
+
+                $field->f_text = str_replace("quiz", "course", $field->f_text);
+
+                if (isset($cb_fields) && count($cb_fields)) {
+                    foreach($cb_fields as $cb_field) {
+                        if (isset($cb_data) && isset($cb_data->$cb_field)) {
+                            $field->f_text = str_replace("#{$cb_field}#", $cb_data->$cb_field, $field->f_text);
+                        } else {
+                            $field->f_text = str_replace("#{$cb_field}#", '', $field->f_text);
+                        }
+                    }
+                }
+
+                if (JoomlaquizHelper::jq_strpos($field->f_text, '#date') !== false) {
+                    $str_format = 'Y-m-d';
+                    $str_format_pre = '';
+                    $font_text = $field->f_text;
+                    $first_pos = JoomlaquizHelper::jq_strpos( $font_text,'#date');
+                    while($first_pos !== false ){
+                        if ($first_pos !== false) {
+                            $first_str = JoomlaquizHelper::jq_substr($font_text, $first_pos+5, strlen($font_text) - $first_pos - 5);
+                            $sec_pos = JoomlaquizHelper::jq_strpos( $first_str,'#');
+                            if($sec_pos === false){
+                                echo JText::_('COM_JOOMLAQUIZ_CLOSE_END_TAG_PLEASE');
+                                die;
+                            }
+                            $str_format = JoomlaquizHelper::jq_substr($first_str, 0, $sec_pos);
+                            $str_format_pre = $str_format;
+
+                            if ($str_format) {
+                                if (JoomlaquizHelper::jq_substr($str_format,0,1) == '(') {
+                                    $str_format = JoomlaquizHelper::jq_substr($str_format,1);
+                                }
+                                if (JoomlaquizHelper::jq_substr($str_format,-1) == ')') {
+                                    $str_format = JoomlaquizHelper::jq_substr($str_format,0,-1);
+                                }
+                            }
+
+                        }
+                        if (!$str_format) { $str_format = 'Y-m-d';}
+                        $date = $datetime;
+                        $format = $str_format;
+                        $font_text = str_replace('#date'.$str_format_pre.'#', JHTML::_('date', $date , $format), $font_text);
+                        $first_pos = JoomlaquizHelper::jq_strpos( $font_text,'#date');
+                    }
+                    $font_text = str_replace('#date#', date('Y-m-d', $datetime), $font_text);
+
+                    $field->f_text = $font_text;
+                }
+
+                $font = JPATH_SITE . "/media/".(isset($field->font) ? $field->font: 'arial.ttf');
+                if ($field->shadow) imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2, $grey, $font, $field->f_text);
+
+                imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
+            }
+        }
+
+        if (preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
+            $UserBrowser = "Opera";
+        }
+        elseif (preg_match('~MSIE ([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
+            $UserBrowser = "IE";
+        } else {
+            $UserBrowser = '';
+        }
+        $file_name = 'Certificate.png';
+        header('Content-Type: image/png');
+        header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        if(JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')){
+            header('Content-Disposition: attachment; filename="' . $file_name . '";');
+        }else{
+            header('Content-Disposition: inline; filename="' . $file_name . '";');
+        }
+        if ($UserBrowser == 'IE') {
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+        } else {
+            header('Pragma: no-cache');
+        }
+        @ob_end_clean();
+        imagepng($im);
+        imagedestroy($im);
+        exit;
+
+    }
 	
 	function revUni($text) { 
     

@@ -28,6 +28,16 @@
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
+		<field  name="open_all_quizzes"
+				type="radio"
+				class="btn-group"
+				label="COM_JOOMLAQUIZ_LPATH_OPEN_ALL_QUIZZES_LABEL"
+				description="COM_JOOMLAQUIZ_LPATH_OPEN_ALL_QUIZZES_DESC"
+				labelclass="control-label"
+				default="0">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		<field name="short_descr" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="safehtml"

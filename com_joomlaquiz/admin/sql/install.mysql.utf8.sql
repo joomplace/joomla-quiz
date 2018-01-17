@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_lpath` (
   `asset_id` int(18) NOT NULL,
   `lp_access_message` text NOT NULL,
   `certificate` int(11) NOT NULL DEFAULT '0',
+  `open_all_quizzes` TINYINT(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

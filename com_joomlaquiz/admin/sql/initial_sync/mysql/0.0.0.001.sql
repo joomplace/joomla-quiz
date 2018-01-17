@@ -91,6 +91,7 @@ ALTER TABLE `#__quiz_lpath` ADD COLUMN `published` TINYINT(4) NULL DEFAULT NULL 
 ALTER TABLE `#__quiz_lpath` ADD COLUMN `asset_id` INT(19) NOT NULL AFTER `published`;
 ALTER TABLE `#__quiz_lpath` ADD COLUMN `lp_access_message` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `asset_id`;
 ALTER TABLE `#__quiz_lpath` ADD COLUMN `certificate` INT(11) NOT NULL DEFAULT '0' AFTER `lp_access_message`;
+ALTER TABLE `#__quiz_lpath` ADD COLUMN `open_all_quizzes` TINYINT(3) NOT NULL DEFAULT '0' AFTER `category`;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_lpath_quiz` (
 `id` INT(11) NOT NULL AUTO_INCREMENT ,

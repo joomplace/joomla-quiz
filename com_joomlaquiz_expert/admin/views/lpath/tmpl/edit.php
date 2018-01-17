@@ -68,6 +68,14 @@ $input = $app->input;
                 </div>
                 <div class="control-group">
                     <div class="control-label">
+                        <?php echo $this->form->getLabel('open_all_quizzes'); ?>
+                    </div>
+                    <div class="controls">
+                        <?php echo $this->form->getInput('open_all_quizzes'); ?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label">
                         <?php echo $this->form->getLabel('short_descr'); ?>
                     </div>
                     <div class="controls">

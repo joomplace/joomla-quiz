@@ -144,9 +144,11 @@ class JoomlaquizModelLpath extends JModelList
 				}
 
 				$lpath_all[$i]->show_link = $link;
-				if($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {
-					//$link = false;
-				}
+                if($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])
+                    && ($lpath->open_all_quizzes === null || (int)$lpath->open_all_quizzes == 0)
+                ) {
+                    $link = false;
+                }
 			}
 			
 			return array($lpath, $lpath_all);

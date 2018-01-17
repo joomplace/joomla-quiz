@@ -50,18 +50,25 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		
 		return $data;
 	}
-	
-	public function onPointsForAnswer(&$data){
-		$database = JFactory::getDBO();
-		
-		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."' AND c_right = 1";
-		$database->SetQuery( $query );
-		$tmp_pointz = $database->LoadResult();
-		if(floatval($tmp_pointz))
-			$data['q_data']->c_point = $data['q_data']->c_point.' - '.(floatval($tmp_pointz) + $data['q_data']->c_point);
-		
-		return $data['q_data'];
-	}
+
+    public function onPointsForAnswer(&$data){
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('SUM('. $db->quoteName('a_point') . ')')
+            ->select('MIN('. $db->quoteName('a_point') . ')')
+            ->from($db->quoteName('#__quiz_t_choice'))
+            ->where($db->quoteName('c_question_id') . ' = ' . $db->quote($data['q_data']->c_id))
+            ->andWhere($db->quoteName('c_right') . ' = 1')
+        ;
+        $db->setQuery($query);
+        list($max_point, $min_point) = $db->loadRow();
+
+        if (isset($max_point, $min_point)) {
+            $data['q_data']->c_point = ($data['q_data']->c_point + (float)$min_point)
+                . ' - ' . ((float)$max_point + $data['q_data']->c_point);
+        }
+        return $data['q_data'];
+    }
 	
 	public function onSaveQuestion(&$data){
 		

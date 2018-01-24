@@ -304,30 +304,44 @@ class JoomlaquizHelper
 		}
 		
 		public static function Blnk_replace_answers($qdata) {
-		
-			$database = JFactory::getDBO();
-			$n=1;
-			$query = "SELECT `c_id` FROM `#__quiz_t_blank` WHERE `c_question_id` = ".$qdata->c_id;
-			$database->setQuery($query);
-			$blanks = (array)$database->loadColumn();
 
-            $query = "( SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id  IN ('".implode("','", $blanks)."') ) UNION (SELECT c_id, c_text FROM #__quiz_t_faketext WHERE c_quest_id = ".$qdata->c_id.") ORDER BY rand()";
-            $database->setQuery($query);
-            $answers = $database->loadColumn(1);
+			$db = JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $query->select($db->qn('c_id'))
+                ->from($db->qn('#__quiz_t_blank'))
+                ->where($db->qn('c_question_id') .'='. $db->q((int)$qdata->c_id));
+			$db->setQuery($query);
+            $blanks = $db->loadObjectList();
+
+            if($blanks){
+                for($i=0; $i<count($blanks); $i++){
+                    $q = "(SELECT `c_id`, `c_text` FROM `#__quiz_t_text` WHERE `c_blank_id` = '".(int)$blanks[$i]->c_id."') 
+                        UNION (SELECT `c_id`, `c_text` FROM `#__quiz_t_faketext` WHERE `c_quest_id` = '".(int)$qdata->c_id."' AND `c_blank_id` = '".(int)$blanks[$i]->c_id."')";
+                    $db->setQuery($q);
+                    $answers = $db->loadColumn(1);
+
+                    $html = '';
+                    if ($answers && !empty($answers)) {
+                        if((int)$qdata->c_random) {
+                            srand((float)microtime() * 1000000);
+                            shuffle($answers);
+                        }
+                        $n=1;
+                        $html = '<div style="clear:both;"></div>';
+                        foreach($answers as $answer){
+                            if ($answer != '[empty]') {
+                                $html .= '<div class="jq_draggable_answer '.$qdata->c_image.'" xid="dd_blk_id_'.$i.'_'.($n++).'" data-blank="'.$blanks[$i]->c_id.'">'.$answer.'</div>';
+                            }
+                        }
+                        $html .= '<div style="clear:both;"></div>';
+                    }
+                    $qdata->c_question = str_replace('{answers'.($i+1).'}', $html, $qdata->c_question);
+                }
+            }
+
+            $qdata->c_question = preg_replace('/{answers\d*}/i', '', $qdata->c_question);
 			
-			srand ((float)microtime()*1000000);
-			shuffle ($answers);
-			$html = '';
-			if (count($answers)) {
-				$html = '<div style="clear:both;"></div>';
-				foreach($answers as $answer){
-					if ($answer != '[empty]')
-					$html .= '<div class="jq_draggable_answer '.$qdata->c_image.'" xid="dd_blk_id_'.$n++.'">'.$answer.'</div>';
-				}
-				$html .= '<div style="clear:both;"></div>';
-			}
-			
-			return str_replace('{answers}', $html, $qdata->c_question);
+			return $qdata->c_question;
 		}
 		
 		public static function Blnk_replace_quest($q_id, $q_text, $stu_quiz_id=0, $c_qform=0){

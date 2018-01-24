@@ -462,6 +462,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_faketext` (
   `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `c_quest_id` int(10) unsigned NOT NULL DEFAULT '0',
   `c_text` varchar(255) NOT NULL DEFAULT '',
+  `c_blank_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_quest_id` (`c_quest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;

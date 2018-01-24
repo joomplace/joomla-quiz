@@ -93,8 +93,6 @@ class com_joomlaquizInstallerScript
 				}
 			}
 		}
-		
-		
 
 		$newColumns = array(
 			't_qtypes' => array(
@@ -131,10 +129,20 @@ class com_joomlaquizInstallerScript
             ),
 			'certificates' => array(
 				'text_font' => 'VARCHAR(255) NOT NULL'
-			)
+			),
+            't_faketext' => array(
+                'c_blank_id' => "INT(11) NOT NULL DEFAULT '0'"
+            )
 		);
 
 		$db = JFactory::getDbo();
+
+		$faketext_blanks = true;
+        $faketext_columns = $db->getTableColumns('#__quiz_t_faketext');
+        if(!isset($faketext_columns['c_blank_id'])){
+            $faketext_blanks = false;
+        }
+
 		foreach ($newColumns as $table => $fields)
 		{
 			$oldColumns = $db->getTableColumns('#__quiz_'.$table);
@@ -170,7 +178,56 @@ class com_joomlaquizInstallerScript
 				}
 			}
 		}
-		
+
+		//update `#__quiz_t_faketext`
+		if(!$faketext_blanks){
+            $q = $db->getQuery(true);
+
+            $q->select($db->qn('c_quest_id'))
+                ->from($db->qn('#__quiz_t_faketext'))
+                ->group($db->qn('c_quest_id'));
+            $db->setQuery($q);
+            $faketexts = $db->loadObjectList();
+
+            if($faketexts){
+                foreach($faketexts as $faketext){
+                    $q->clear();
+                    $q->select($db->qn('c_id'))
+                        ->from($db->qn('#__quiz_t_blank'))
+                        ->where($db->qn('c_question_id') .'='. $db->q((int)$faketext->c_quest_id))
+                        ->where($db->qn('ordering') .'='. $db->q('0'));
+                    $db->setQuery($q);
+                    $faketext_blank_id = $db->loadResult();
+
+                    if($faketext_blank_id){
+                        $q->clear();
+                        $faketext_fields = array(
+                            $db->qn('c_blank_id') .'='. $db->q((int)$faketext_blank_id)
+                        );
+                        $faketext_conditions = array(
+                            $db->qn('c_quest_id') .'='. $db->q((int)$faketext->c_quest_id)
+                        );
+                        $q->update($db->qn('#__quiz_t_faketext'))
+                            ->set($faketext_fields)
+                            ->where($faketext_conditions);
+                        $db->setQuery($q)->execute();
+                    }
+                }
+                if(isset($faketext_blank_id)){
+                    unset($faketext_blank_id);
+                }
+                if(isset($faketext_fields)){
+                    unset($faketext_fields);
+                }
+                if(isset($faketext_conditions)){
+                    unset($faketext_conditions);
+                }
+                unset($faketexts);
+            }
+            unset($q);
+        }   //update `#__quiz_t_faketext` end
+
+
 		$db->setQuery("ALTER TABLE `#__quiz_r_student_question` CHANGE `c_score` `c_score` FLOAT( 11 ) NULL DEFAULT '0';");
 		$db->execute();
 		$db->setQuery("ALTER TABLE `#__quiz_r_student_quiz` CHANGE `c_total_score` `c_total_score` FLOAT NOT NULL DEFAULT '0';");

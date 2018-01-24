@@ -400,6 +400,7 @@ PRIMARY KEY (`c_id`)
 
 ALTER TABLE `#__quiz_t_faketext` ADD COLUMN `c_quest_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `c_id`;
 ALTER TABLE `#__quiz_t_faketext` ADD COLUMN `c_text` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_quest_id`;
+ALTER TABLE `#__quiz_t_faketext` ADD COLUMN `c_blank_id` INT(11) NOT NULL DEFAULT '0' AFTER `c_text`;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_hotspot` (
 `c_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,

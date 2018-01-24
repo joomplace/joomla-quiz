@@ -307,13 +307,14 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 $quest_blank .= "\n\t\t\t\t\t\t<blank_text><![CDATA[".$choice->c_text."]]></blank_text>";
                                 $quest_blank .= "\n\t\t\t\t\t</quest_blank>";
                             }
-                            $query = "SELECT c_text, c_id FROM #__quiz_t_faketext WHERE c_quest_id = ".$pool->c_id;
+                            $query = "SELECT c_text, c_id, c_blank_id FROM #__quiz_t_faketext WHERE c_quest_id = ".$pool->c_id;
                             $database->SetQuery($query);
                             $choice_data = $database->LoadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_distr_blank .= "\n\t\t\t\t\t<quest_distr_blank c_question_id=\"".$pool->c_id."\" c_distr_id=\"".$choice->c_id."\">";
                                 $quest_distr_blank .= "\n\t\t\t\t\t\t<distr_text><![CDATA[".$choice->c_text."]]></distr_text>";
+                                $quest_distr_blank .= "\n\t\t\t\t\t\t<distr_blank_id><![CDATA[".$choice->c_blank_id."]]></distr_blank_id>";
                                 $quest_distr_blank .= "\n\t\t\t\t\t</quest_distr_blank>";
                             }
                             break;
@@ -1106,8 +1107,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     {
                                         if($ch_data->c_question_id == $q_quest->id)
                                         {
-                                            $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text) ";
-                                            $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).")";
+                                            $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text, c_blank_id) ";
+                                            $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).",".$db->quote($ch_data->distr_blank_id).")";
                                             $database->setQuery($query);
                                             if(!$database->execute())
                                             {
@@ -1363,8 +1364,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 {
                                     if($ch_data->c_question_id == $q_quest->id)
                                     {
-                                        $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text)";
-                                        $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).")";
+                                        $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text, c_blank_id)";
+                                        $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).",".$db->quote($ch_data->distr_blank_id).")";
                                         $database->setQuery($query);
                                         if(!$database->execute())
                                         {
@@ -1518,8 +1519,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 {
                                     if($ch_data->c_question_id == $q_quest->id)
                                     {
-                                        $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text) ";
-                                        $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).")";
+                                        $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text, c_blank_id) ";
+                                        $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).",".$db->quote($ch_data->distr_blank_id).")";
                                         $database->setQuery($query);
                                         if(!$database->execute())
                                         {

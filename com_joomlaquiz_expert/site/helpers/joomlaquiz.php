@@ -556,8 +556,11 @@ class JoomlaquizHelper
 			
 			JPluginHelper::importPlugin('content');
 			$dispatcher = JEventDispatcher::getInstance();
-			list($cust_params) = $dispatcher->trigger('onQuizCustomFieldsFromUser');
-			if(!$cust_params) $cust_params = '{}';
+            $result_event = $dispatcher->trigger('onQuizCustomFieldsFromUser');
+            $cust_params = '{}';
+            if($result_event && !empty($result_event)){
+                $cust_params = $result_event[0];
+            }
 			
 			//stand alone quiz	or  free learn path
 			if (!$order_id && !$rel_id) {

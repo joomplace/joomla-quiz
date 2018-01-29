@@ -484,8 +484,14 @@ class JoomlaquizModelQuiz extends JModelList
 			
 			JPluginHelper::importPlugin('content');
 			$dispatcher = JEventDispatcher::getInstance();
-			list($processed_desc) = $dispatcher->trigger('onQuizCustomFieldsRender', array($quiz_params->c_description));
-			if($processed_desc) $quiz_params->c_description = $processed_desc;
+            $result_event = $dispatcher->trigger('onQuizCustomFieldsRender', array($quiz_params->c_description));
+            $processed_desc = '';
+            if($result_event && !empty($result_event)){
+                $processed_desc = $result_event[0];
+            }
+            if ($processed_desc) {
+                $quiz_params->c_description = $processed_desc;
+            }
 		
 			/* setting up session vars - need to check it it is used anywhere */
 			$_SESSION['quiz_lid'] = $lid;

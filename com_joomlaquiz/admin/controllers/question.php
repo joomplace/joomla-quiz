@@ -37,12 +37,15 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		return $db->loadResult();
 	}
 	
-	static public function JQ_editorArea($name, $content, $hiddenField, $width, $height, $col, $row)
+	static public function JQ_editorArea($name='', $content, $hiddenField, $width, $height, $col, $row)
 	{
-		$editor = JFactory::getEditor();
+		if(!$name){
+            $name = JFactory::getConfig()->get('editor', 'none');
+        }
+	    $editor = JFactory::getEditor($name);
 		$id = JFactory::getApplication()->input->get('id',0,'INT');
 		if(!$content){
-			$content = self::getContentEditor($id);
+			$content = @self::getContentEditor($id);
 		}
 		echo $editor->display($hiddenField, $content, $width, $height, $col, $row, array('pagebreak', 'readmore'));
 	}
@@ -53,7 +56,7 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		$view->display();
 	}
 
-		public function save(){
+		public function save($key = NULL, $urlVar = NULL){
 		$data = JFactory::getApplication()->input->get('jform',array(),'array');
 		$task = JFactory::getApplication()->input->get('task');
 	
@@ -80,7 +83,7 @@ class JoomlaquizControllerQuestion extends JControllerForm
 
 	}
 
-	public function cancel(){
+	public function cancel($key = NULL){
 		parent::cancel();
 		$data = JFactory::getApplication()->input->get('jform',array(),'array');
 		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id='.$data['c_quiz_id'] );

@@ -11,32 +11,30 @@
 defined('_JEXEC') or die;
 
 if ($wysiwyg) { ?>
-<link rel="stylesheet"
-      href="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/css/thickbox/thickbox.css"
-      type="text/css"/>
-<script language = "javascript" type = "text/javascript" src = "<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" > </script>
-    <?php }?>
-    <?php
-    $editor_name = JFactory::getConfig()->get('editor');
-    $editor = JFactory::getEditor();
+    <link rel="stylesheet" href="<?php echo JURI::root(); ?>administrator/components/com_joomlaquiz/assets/css/thickbox/thickbox.css" type="text/css"/>
+    <script language = "javascript" type = "text/javascript" src = "<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" > </script>
+<?php }
 
-    if (JFactory::getConfig()->get('editor') == 'codemirror') {
-        $PCREpattern = '/\r\n|\s+|\r|\n/u';
-        $edit        = preg_replace($PCREpattern, " ",
-            $editor->display('new_incorrect', '', '500', '170', '20', '10'));
-        $edit        = str_replace("'", "\'", $edit);
-    }
+if (JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true)) {
+    $editor_name = JFactory::getConfig()->get('editor', 'none');
+} else {
+    $editor_name = 'none';
+}
 
-    if (JFactory::getConfig()->get('editor') == 'tinymce') {
-        $PCREpattern = '/\r\n|\s\s+|\r|\n/u';
-        $edit        = preg_replace($PCREpattern, " ",
-            $editor->display('new_incorrect', '', '500', '170', '20', '10'));
-        $edit        = str_replace("'", "\'", $edit);
-    }
+$editor = JFactory::getEditor($editor_name);
 
+$PCREpattern = '/\r\n|\s\s+|\r|\n/u';
+if ($editor_name == 'codemirror') {
+    $PCREpattern = '/\r\n|\s+|\r|\n/u';
+}
+if ($editor_name == 'tinymce') {
+    $PCREpattern = '/\r\n|\s\s+|\r|\n/u';
+}
+$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect', '', '500', '170', '20', '10'));
+$edit = str_replace("'", "\'", $edit);
 
-    ?>
-    <script language = "javascript" type = "text/javascript" >
+?>
+<script language = "javascript" type = "text/javascript" >
 var quest_type = <?php echo $q_om_type; ?>;
 
 function ReAnalize_tbl_Rows(start_index, tbl_id, increaser) {
@@ -49,6 +47,15 @@ function ReAnalize_tbl_Rows(start_index, tbl_id, increaser) {
             tbl_elem.rows[i].cells[0].innerHTML = count;
 
             Redeclare_element_inputs2(tbl_elem.rows[i].cells[1], i);
+
+            jQuery('[name^="jq_hid_fields["]', jQuery(tbl_elem.rows[i].cells[2])).each(function(){
+                jQuery(this).attr('name', 'jq_hid_fields['+(count - 1)+']');
+            });
+
+            jQuery('[name^="jq_incorrect_feed["]', jQuery(tbl_elem.rows[i+1].cells[1])).each(function(){
+                jQuery(this).attr('name', 'jq_incorrect_feed['+(count - 1)+']');
+            });
+
             if (i > 1) {
                 tbl_elem.rows[i].cells[4].innerHTML = '<' + 'a href="javascript: void(0);" onClick="javascript:Up_tbl_row(this); return false;" title="Move Up"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/uparrow.png"  border="0" alt="Move Up"></a>';
             } else {
@@ -161,8 +168,9 @@ function Redeclare_element_inputs2(object, gg) {
 function Delete_tbl_row(element) {
     var del_index = element.parentNode.parentNode.sectionRowIndex;
     var tbl_id = element.parentNode.parentNode.parentNode.parentNode.id;
+    element.parentNode.parentNode.parentNode.deleteRow(del_index+1);
     element.parentNode.parentNode.parentNode.deleteRow(del_index);
-    ReAnalize_tbl_Rows(del_index - 1, tbl_id);
+    ReAnalize_tbl_Rows(del_index - 2, tbl_id, 2);
 }
 
 function Up_tbl_row(element) {
@@ -250,41 +258,49 @@ function Down_tbl_row(element) {
 
 function Add_new_tbl_field(elem_field, tbl_id, field_name) {
 
-    ii = document.getElementsByClassName('row0').length + document.getElementsByClassName('row1').length;
+    var new_element_txt = document.getElementById(elem_field) ? document.getElementById(elem_field).value : '';
 
-    var new_element_txt = document.getElementById(elem_field).value;
-    var add_new_field = document.getElementById("new_field_points").value;
-
-    var new_incorrect_feed = <?php echo $editor->getContent('new_incorrect_feed'); ?>;
-
-    <?php if ($editor_name == 'codemirror') { ?>
-    var new_editor_part1 = document.getElementById('new_editor').children[1];
-    var new_editor = '<?php echo $edit; ?>'.replace(/new_incorrect/g, 'jq_incorrect_feed[' + ii + ']');
-    <?php };
-
-    if ($editor_name == 'tinymce') { ?>
-    var new_editor = '<?php echo $edit; ?>'.replace(/new_incorrect/g, 'jq_incorrect_feed[' + ii + ']');
-
-    document.getElementById("new_incorrect_feed").value = "";
-
-    try {
-
-        if (window.frames["new_incorrect_feed_ifr"].contentWindow.document.querySelector('[data-id="new_incorrect_feed"]') !== undefined) {
-            window.frames["new_incorrect_feed_ifr"].contentWindow.document.querySelector('[data-id="new_incorrect_feed"]').innerHTML = '';
-        }
-        ;
-
-    } catch (err) {
-
+    if(typeof Joomla !== 'undefined'){
+        new_element_txt = Joomla.editors.instances[elem_field] ? Joomla.editors.instances[elem_field].getValue() : '';
     }
-    ;
-    <?php }; ?>
 
-    document.getElementById(elem_field).value = '';
-    if (TRIM_str(new_element_txt) == '') {
+    if (!TRIM_str(new_element_txt)) {
         alert("<?php echo JText::_('COM_JOOMLAQUIZ_PLEASE_ENTER_TEXT');?>");
         return;
     }
+
+    var ii = document.getElementsByClassName('row0').length + document.getElementsByClassName('row1').length;
+
+    var add_new_field = document.getElementById('new_field_points').value;
+
+    var new_incorrect_feed = '';
+    if(document.getElementById('new_incorrect_feed') !== null && document.getElementById('new_incorrect_feed') !== undefined) {
+        new_incorrect_feed = document.getElementById('new_incorrect_feed').value;
+    }
+    if(typeof Joomla !== 'undefined' && Joomla.editors.instances['new_incorrect_feed']){
+        new_incorrect_feed = Joomla.editors.instances['new_incorrect_feed'].getValue();
+    }
+    if(document.getElementById('new_incorrect_feed') !== null && document.getElementById('new_incorrect_feed') !== undefined) {
+        document.getElementById("new_incorrect_feed").value = '';
+    }
+
+    var new_editor = '<?php echo $edit; ?>'.replace(/new_incorrect/g, 'jq_incorrect_feed[' + ii + ']');
+
+    document.getElementById(elem_field).value = '';
+
+    <?php if ($editor_name == 'codemirror') { ?>
+        var new_editor_part1 = document.getElementById('new_editor').children[1];
+    <?php } ?>
+
+    <?php if($editor_name == 'tinymce') { ?>
+        try {
+            if (window.frames["new_incorrect_feed_ifr"].contentWindow.document.querySelector('[data-id="new_incorrect_feed"]') !== undefined) {
+                window.frames["new_incorrect_feed_ifr"].contentWindow.document.querySelector('[data-id="new_incorrect_feed"]').innerHTML = '';
+            }
+        } catch (err) {
+        }
+    <?php } ?>
+
     var tbl_elem = document.getElementById(tbl_id);
     var row = tbl_elem.insertRow(tbl_elem.rows.length);
     var cell1 = document.createElement("td");
@@ -359,15 +375,13 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name) {
     points.setAttribute('maxlength', 10);
     document.getElementById("new_field_points").value = '';
 
-
+    cell8.innerHTML = new_editor;
     <?php if ($editor_name == 'codemirror') { ?>
-    cell8.innerHTML = new_editor;
+        cell8.innerHTML = new_editor;
     <?php };
-
     if ($editor_name == 'tinymce') { ?>
-    cell8.innerHTML = new_editor;
+        cell8.innerHTML = new_editor;
     <?php }; ?>
-
 
     cell1.align = 'center';
     cell1.innerHTML = 0;
@@ -404,15 +418,14 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name) {
         ReAnalize_tbl_Rows(tbl_elem.rows.length - 2, tbl_id, 1);
     }
 
+    document.getElementById('jq_incorrect_feed[' + ii + ']').value = new_incorrect_feed;
 
     <?php if ($editor_name == 'codemirror') { ?>
     document.getElementById('jq_incorrect_feed[' + ii + ']').children[0].after(new_editor_part1);
     document.getElementById('jq_incorrect_feed[' + ii + ']').value = new_incorrect_feed;
-
     <?php }; ?>
 
     <?php if ($editor_name == 'tinymce') { ?>
-
     document.getElementById('jq_incorrect_feed[' + ii + ']').value = new_incorrect_feed;
     <?php }; ?>
 

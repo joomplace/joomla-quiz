@@ -580,8 +580,8 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 					$new_field->c_id = intval($_POST['jq_hid_fields_ids'][$mcounter]);
 					
 					$new_field->c_question_id = $data['qid'];
-					$new_field->c_choice = stripslashes($f_row);
-					$new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);
+                    $new_field->c_choice = stripslashes($_POST['jq_hid_fields'][$mcounter]);
+                    $new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);
 					
 					$new_field->c_right = in_array(($field_order), $ans_right)?1:0;
 					$new_field->ordering = $field_order;

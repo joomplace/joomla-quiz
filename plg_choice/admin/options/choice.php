@@ -11,13 +11,13 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.helper');
-if (JComponentHelper::getParams('com_joomlaquiz')
-    ->get('use_wysiwyg_options_feedbacks', true)
-) {
-    $editor = JEditor::getInstance(JFactory::getConfig()
-        ->get('editor', 'none'));
+if (JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true)) {
+    $editor = JEditor::getInstance(JFactory::getConfig()->get('editor', 'none'));
 } else {
     $editor = JEditor::getInstance('none');
+}
+if($editor->get('_name') == 'none'){
+    JHtml::_('behavior.core');
 }
 ?>
 <style type="text/css">
@@ -88,10 +88,8 @@ if (JComponentHelper::getParams('com_joomlaquiz')
                 ?>
             </td>
             <td valign="top" align="left">
-                <input type="text" name="jq_hid_fields[]"
-                       value="<?php echo htmlspecialchars(stripslashes($frow->c_choice)) ?>"/>
-                <input type="hidden" name="jq_hid_fields_ids[]"
-                       value="<?php echo $frow->c_id ?>"/>
+                <?php echo $editor->display('jq_hid_fields['.$ii.']', $frow->c_choice, 300, 170, '20', '10', true, null, null, null, array('pagebreak', 'readmore')); ?>
+                <input type="hidden" name="jq_hid_fields_ids[]" value="<?php echo $frow->c_id ?>"/>
             </td>
             <td align="center" valign="top"><a href="javascript: void(0);"
                                                onClick="javascript:Delete_tbl_row(this); return false;"
@@ -201,10 +199,9 @@ if (JComponentHelper::getParams('com_joomlaquiz')
         <th align="left"><?php echo JText::_('COM_JOOMLAQUIZ_OPTION_POINTS'); ?></th>
     </tr>
     <tr>
-        <td align="left" valign="top" width="280">
-            <div>
-                <input id="new_field" class="text_area" style="width:210px "
-                       type="text" name="new_field"/>
+        <td align="left" valign="top" width="700">
+            <div style="margin-right: 50px;">
+                <?php echo $editor->display('new_field', '', 600, 170, '20', '10', true, null, null, null, array('pagebreak', 'readmore')); ?>
             </div>
         </td>
         <td align="left" valign="top" width="280">

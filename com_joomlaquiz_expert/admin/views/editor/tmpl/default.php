@@ -7,8 +7,18 @@
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die('Restricted Access');
- 
-$editor = JFactory::getEditor();
+
+if (JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true)) {
+    $editor_name = JFactory::getConfig()->get('editor', 'none');
+} else {
+    $editor_name = 'none';
+}
+$editor = JFactory::getEditor($editor_name);
+
+if($editor_name == 'none'){
+    JHtml::_('behavior.core');
+}
+
 $id = JFactory::getApplication()->input->get( 'id', '' );
 ?>
 <script language="javascript" type="text/javascript">
@@ -42,7 +52,7 @@ function save_content() {
 	}
 </script>
 
-<?php JoomlaquizControllerQuestion::JQ_editorArea( 'cdescription', '', 'cdescription', '100%;', '250', '75', '20' ) ; ?>
+<?php JoomlaquizControllerQuestion::JQ_editorArea( $editor_name, '', 'cdescription', '100%;', '250', '75', '20' ) ; ?>
 
 <style type="text/css" >
 	input.button2 {

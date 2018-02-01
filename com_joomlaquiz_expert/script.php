@@ -328,89 +328,159 @@ class com_joomlaquizInstallerScript
 		
     }
 
+
 	function migrateCategories(){
-	
-		$this->defaultCategoryCheck();
 		
 		$db = JFactory::getDBO();
-		
 		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__quiz_t_category');
-		$quiz_categories = $db->setQuery($query)->loadObjectList('c_id');
-		
-		$error = false;
-		foreach($quiz_categories as $key => $qzc){
-			$extension = 'com_joomlaquiz';
-			$title     = $qzc->c_category;
-			$desc      = $qzc->c_instruction;
-			$parent_id = 1;
-			$quiz_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $qzc->c_id);
-			if(!$quiz_categories[$key]->id){
-				$error = true;
-			}else{
-				$query->clear();
-				$query->update('#__quiz_t_quiz')
-					->set('`c_category_id` = "'.$quiz_categories[$key]->id.'"')
-					->where('`c_category_id` = "'.$quiz_categories[$key]->note.'"');
-				$db->setQuery($query)->execute();
-			}
-		}
-		if(!$error){
-			$query->clear();
-			$query->delete('#__quiz_t_category');
-			$db->setQuery($query)->execute();
-		}
-		
-		/* create pseudo-tree */
-		$query = $db->getQuery(true);
+
+        //quiz categories
+        $error = false;
+
+        $query->select('*')
+            ->from('#__quiz_t_category');
+        $quiz_categories = $db->setQuery($query)->loadObjectList('c_id');
+
+        if($quiz_categories) {
+            $handled_quizzez = array();
+
+            foreach ($quiz_categories as $key => $qzc) {
+                $extension = 'com_joomlaquiz';
+                $title = $qzc->c_category;
+                $desc = $qzc->c_instruction;
+                $parent_id = 1;
+                $quiz_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $qzc->c_id);
+
+                if (!$quiz_categories[$key]->id) {
+                    $error = true;
+                } else {
+                    $query->clear();
+                    $query->select($db->qn('c_id'))
+                        ->from($db->qn('#__quiz_t_quiz'))
+                        ->where($db->qn('c_category_id') .'='. $db->q((int)$quiz_categories[$key]->note));
+                    $quiz_ids = $db->setQuery($query)->loadObjectList();
+                    if ($quiz_ids) {
+                        foreach ($quiz_ids as $quiz_id) {
+                            if (in_array((int)$quiz_id->c_id, $handled_quizzez)) {
+                                continue;
+                            }
+                            $query->clear();
+                            $query->update($db->qn('#__quiz_t_quiz'))
+                                ->set($db->qn('c_category_id') .'='. $db->q((int)$quiz_categories[$key]->id))
+                                ->where($db->qn('c_id') .'='. $db->q((int)$quiz_id->c_id));
+                            if ($db->setQuery($query)->execute()) {
+                                $handled_quizzez[] = (int)$quiz_id->c_id;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!$error) {
+                $query->clear();
+                $query->delete('#__quiz_t_category');
+                $db->setQuery($query)->execute();
+            }
+
+            unset($handled_quizzez);
+        }
+        unset($quiz_categories);
+
+        //questions categories
+        $error = false;
+        // create pseudo-tree
+        $query->clear();
 		$query->select('DISTINCT(qc_tag) AS value, qc_tag')
 			->from('#__quiz_q_cat')
 			->where('TRIM(qc_tag) <> \'\'');
 		$head_categories = $db->setQuery($query)->loadObjectList('qc_tag');
-		
-		foreach($head_categories as $key => $hqc){
-			$extension = 'com_joomlaquiz.questions';
-			$title     = $hqc->qc_tag;
-			$desc      = '';
-			$parent_id = 1;
-			$head_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $hqc->c_id);
-		}
-		/* pseudo-tree done */
-		
-		$query = $db->getQuery(true);
+
+		if($head_categories){
+            foreach ($head_categories as $key => $hqc) {
+                $extension = 'com_joomlaquiz.questions';
+                $title = $hqc->qc_tag;
+                $desc = '';
+                $parent_id = 1;
+                $head_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id);
+            }
+        }
+		// pseudo-tree done
+
+        $query->clear();
 		$query->select('*')
 			->from('#__quiz_q_cat');
 		$quest_categories = $db->setQuery($query)->loadObjectList('qc_id');
-		
-		$error = false;
-		foreach($quest_categories as $key => $quc){
-			$extension = 'com_joomlaquiz.questions';
-			$title     = $quc->qc_category;
-			$desc      = $quc->instruction;
-			$parent_id = $head_categories[$quc->qc_tag]->id;
-			$quest_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $quc->qc_id);
-			if(!$quest_categories[$key]->id){
-				$error = true;
-			}else{
-				$query->clear();
-				$query->update('#__quiz_t_question')
-					->set('`c_ques_cat` = "'.$quest_categories[$key]->id.'"')
-					->where('`c_ques_cat` = "'.$quest_categories[$key]->note.'"');
-				$db->setQuery($query)->execute();
-				$query->clear();
-				$query->update('#__quiz_pool')
-					->set('`q_cat` = "'.$quest_categories[$key]->id.'"')
-					->where('`q_cat` = "'.$quest_categories[$key]->note.'"');
-				$db->setQuery($query)->execute();
-			}
-		}
-		if(!$error){
-			$query->clear();
-			$query->delete('#__quiz_q_cat');
-			$db->setQuery($query)->execute();
-		}
-		
+
+		if($quest_categories) {
+		    $handled_questions      = array();
+            $handled_questions_pool = array();
+
+            foreach ($quest_categories as $key => $quc) {
+                $extension = 'com_joomlaquiz.questions';
+                $title = $quc->qc_category;
+                $desc = $quc->qc_instruction;
+                $parent_id = $head_categories[$quc->qc_tag]->id ? (int)$head_categories[$quc->qc_tag]->id : 1;
+                $quest_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $quc->qc_id);
+
+                if (!$quest_categories[$key]->id) {
+                    $error = true;
+                } else {
+
+                    $query->clear();
+                    $query->select($db->qn('c_id'))
+                        ->from($db->qn('#__quiz_t_question'))
+                        ->where($db->qn('c_ques_cat') .'='. $db->q((int)$quest_categories[$key]->note));
+                    $qids = $db->setQuery($query)->loadObjectList();
+                    if ($qids) {
+                        foreach ($qids as $qid) {
+                            if (in_array((int)$qid->c_id, $handled_questions)) {
+                                continue;
+                            }
+                            $query->clear();
+                            $query->update($db->qn('#__quiz_t_question'))
+                                ->set($db->qn('c_ques_cat') .'='. $db->q((int)$quest_categories[$key]->id))
+                                ->where($db->qn('c_id') .'='. $db->q((int)$qid->c_id));
+                            if ($db->setQuery($query)->execute()) {
+                                $handled_questions[] = (int)$qid->c_id;
+                            }
+                        }
+                    }
+
+                    $query->clear();
+                    $query->select($db->qn('q_id'))
+                        ->from($db->qn('#__quiz_pool'))
+                        ->where($db->qn('q_cat') .'='. $db->q((int)$quest_categories[$key]->note))
+                        ->group('q_id');
+                    $qids_pool = $db->setQuery($query)->loadObjectList();
+                    if ($qids_pool) {
+                        foreach ($qids_pool as $qid_pool) {
+                            if (in_array((int)$qid_pool->q_id, $handled_questions_pool)) {
+                                continue;
+                            }
+                            $query->clear();
+                            $query->update($db->qn('#__quiz_pool'))
+                                ->set($db->qn('q_cat') .'='. $db->q((int)$quest_categories[$key]->id))
+                                ->where($db->qn('q_id') .'='. $db->q((int)$qid_pool->q_id))
+                                ->where($db->qn('q_cat') .'='. $db->q((int)$quest_categories[$key]->note));
+                            if ($db->setQuery($query)->execute()) {
+                                $handled_questions_pool[] = (int)$qid_pool->q_id;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!$error) {
+                $query->clear();
+                $query->delete('#__quiz_q_cat');
+                $db->setQuery($query)->execute();
+            }
+
+            unset($quest_categories);
+            unset($handled_questions);
+            unset($handled_questions_pool);
+            if($head_categories){
+                unset($head_categories);
+            }
+        }
 	}
 	
 	function defaultCategoryCheck()
@@ -474,13 +544,24 @@ class com_joomlaquizInstallerScript
 		   JError::raiseNotice(500, $category->getError());
 		   return false;
 		}
-		if (!$category->store(true))
+		if (!$category->store())
 		{
 		   JError::raiseNotice(500, $category->getError());
 		   return false;
 		}
 		
-		$category->rebuildPath($category->id);
+		// Rebuild the path for the category:
+        if (!$category->rebuildPath($category->id))
+        {
+            JError::raiseNotice(500, $category->getError());
+            return false;
+        }
+        // Rebuild the paths of the category's children:
+        if (!$category->rebuild())
+        {
+            JError::raiseNotice(500, $category->getError());
+            return false;
+        }
 		
 		return $category;
 	}
@@ -519,9 +600,9 @@ class com_joomlaquizInstallerScript
 			$db->setQuery("INSERT INTO `#__categories` (`path`, `extension`, `title`, `alias`, `description`, `parent_id`, `published`, `params`, `metadata`) VALUES ('uncategorised', 'com_joomlaquiz.lpath', 'Uncategorised', 'uncategorised', 'A default category for the joomlaquiz questions.', 1, 1, '{\"target\":\"\",\"image\":\"\"}', '{\"page_title\":\"\",\"author\":\"\",\"robots\":\"\"}')");
 			$db->execute();
 		}
-		
+
+        $this->migrateCategories();
 		$this->defaultCategoryCheck();
-		$this->migrateCategories();
 	}
 }
 ?>

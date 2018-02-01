@@ -782,7 +782,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
         //exstract archive in uniqfolder tmp
         $this->extractBackupArchive( $archive, $extract_dir);
 
-// BEGIN IMPORT
+        // BEGIN IMPORT
         require_once(JPATH_BASE . '/components/com_joomlaquiz/assets/qxmlimport.php' );
         $xmlReader = new qXMLImport( $extract_dir . "export.xml" );
 

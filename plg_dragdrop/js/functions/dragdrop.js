@@ -124,14 +124,27 @@ function stopDrag(e){
 	var dr_obj = jq_getObj(last_drag_id);
 	var is_all_cont = 1;
 	var is_all_ids = 1;
+    var offset = 0;
 	if (dr_obj) {
 		var dr_number = parseInt(last_drag_id.substring(last_drag_id.indexOf('_')+1));
 		dr_obj.className = 'jq_draggable_div';
-		if (questions[n].cont_index) {
+
+        //Offset between two different blocks may vary depending on css
+        if (questions[n].kol_drag_elems > 1) {
+            var divId_1 = "cdiv" + questions[n].cur_quest_id + "_1";
+            var divId_2 = "cdiv" + questions[n].cur_quest_id + "_2";
+            divElem_1 = document.querySelector("#" + divId_1);
+            divElem_2 = document.querySelector("#" + divId_2);
+            offset = divElem_2.offsetTop - divElem_1.offsetTop;
+        } else {
+            offset = 1;
+        }
+
+        if (questions[n].cont_index) {
 			dr_obj.style.position = 'relative';
 			dr_obj.style.left = '-57px';
 
-			dr_obj.style.top = parseInt((questions[n].cont_index - 1)*56 - (56*(dr_number - 1)) + 7) + 'px';
+            dr_obj.style.top = parseInt((questions[n].cont_index - 1) * offset - (offset * (dr_number - 1)) + 7) + 'px';
 
 			questions[n].ids_in_cont[questions[n].cont_index - 1] = dr_number;
 

@@ -44,7 +44,7 @@ class JoomlaquizModelStatistics extends JModelList
 		$header = JText::_('COM_STATISTICS_TITLE');
 		
 		if (!$menu_quiz_id) {
-			$query = "SELECT c_id AS value, c_title AS text FROM #__quiz_t_quiz WHERE c_id > 0 AND published = 1 ".(!$my->id? " AND c_guest = 1": '')." ORDER BY c_title";
+			$query = "SELECT c_id AS value, c_title AS text FROM #__quiz_t_quiz WHERE c_id > 0 AND published = 1 ORDER BY c_title";
 			$database->setQuery( $query );
 			$quizzes = $database->loadObjectList();
 			
@@ -57,7 +57,7 @@ class JoomlaquizModelStatistics extends JModelList
 			$javascript = 'onchange="document.adminForm.submit();"';
 			$quizzes = JHTML::_('select.genericlist', $quizzes, 'quiz_id', 'class="text_area" size="1" style="max-width: 300px;" '.$javascript, 'value', 'text', $quiz_id ); 
 		} else{
-			$query = "SELECT c_title FROM #__quiz_t_quiz WHERE c_id = '{$menu_quiz_id}' AND c_id > 0 AND published = 1 ".(!$my->id? " AND c_guest = 1": '')." ";
+			$query = "SELECT c_title FROM #__quiz_t_quiz WHERE c_id = '{$menu_quiz_id}' AND c_id > 0 AND published = 1 ";
 			$database->setQuery( $query );
 			$quiz_title = $database->loadResult();
 			

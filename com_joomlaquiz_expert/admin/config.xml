@@ -5,7 +5,7 @@
 		label="COM_JOOMLAQUIZ_SETTINGS_GLOBAL"
 		>
 		
-		<field name="wysiwyg_options" type="radio"	default="0"	
+		<field name="wysiwyg_options" type="radio"	default="1"
 			class="btn-group"
 			label="COM_JOOMLAQUIZ_SETTINGS_WYSIWYG_OPTIONS" 
 			description="COM_JOOMLAQUIZ_SETTINGS_WYSIWYG_OPTIONS_DESC">

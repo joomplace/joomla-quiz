@@ -371,7 +371,8 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
-		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);			
+		//$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+        $data['pdf']->writeHTML('<b>'.$str.'</b>', false);
 		for($s=0;$s<count($data['data']['c_blank']);$s++){
 			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', false);

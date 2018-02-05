@@ -48,7 +48,11 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		if(!$content){
 			$content = @self::getContentEditor($id);
 		}
-		echo $editor->display($hiddenField, $content, $width, $height, $col, $row, array('pagebreak', 'readmore'));
+		if($name == 'none'){
+            echo $editor->display($hiddenField, $content, $width, $height, $col, $row, false);
+        } else {
+            echo $editor->display($hiddenField, $content, $width, $height, $col, $row, true);
+        }
 	}
 	
 	public function edit_field(){

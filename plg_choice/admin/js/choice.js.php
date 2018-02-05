@@ -30,7 +30,11 @@ if ($editor_name == 'codemirror') {
 if ($editor_name == 'tinymce') {
     $PCREpattern = '/\r\n|\s\s+|\r|\n/u';
 }
-$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect', '', '500', '170', '20', '10'));
+if($editor_name == 'none'){
+    $edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect', '', '500', '170', '20', '10', '5', false ));
+} else {
+    $edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect', '', '500', '170', '20', '10'));
+}
 $edit = str_replace("'", "\'", $edit);
 
 ?>

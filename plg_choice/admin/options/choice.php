@@ -88,7 +88,13 @@ if($editor->get('_name') == 'none'){
                 ?>
             </td>
             <td valign="top" align="left">
-                <?php echo $editor->display('jq_hid_fields['.$ii.']', $frow->c_choice, 300, 170, '20', '10', true, null, null, null, array('pagebreak', 'readmore')); ?>
+                <?php
+                if($editor->get('_name') == 'none'){
+                    echo $editor->display('jq_hid_fields[' . $ii . ']', $frow->c_choice, 300, 170, '20', '10', false);
+                } else {
+                    echo $editor->display('jq_hid_fields[' . $ii . ']', $frow->c_choice, 300, 170, '20', '10', true, null, null, null, array('pagebreak', 'readmore'));
+                }
+                ?>
                 <input type="hidden" name="jq_hid_fields_ids[]" value="<?php echo $frow->c_id ?>"/>
             </td>
             <td align="center" valign="top"><a href="javascript: void(0);"
@@ -177,9 +183,11 @@ if($editor->get('_name') == 'none'){
 //                            )
 //                        )
                     );
-                    echo $editor->display('jq_incorrect_feed[' . $ii . ']',
-                        $frow->c_incorrect_feed, 500, 170, '20', '10', true,
-                        null, null, null, $config);
+                    if($editor->get('_name') == 'none'){
+                        echo $editor->display('jq_incorrect_feed[' . $ii . ']', $frow->c_incorrect_feed, 500, 170, '20', '10', false);
+                    } else {
+                        echo $editor->display('jq_incorrect_feed[' . $ii . ']', $frow->c_incorrect_feed, 500, 170, '20', '10', true, null, null, null, $config);
+                    }
                     ?>
                 </td>
             </tr>
@@ -201,7 +209,13 @@ if($editor->get('_name') == 'none'){
     <tr>
         <td align="left" valign="top" width="700">
             <div style="margin-right: 50px;">
-                <?php echo $editor->display('new_field', '', 600, 170, '20', '10', true, null, null, null, array('pagebreak', 'readmore')); ?>
+                <?php
+                if($editor->get('_name') == 'none'){
+                    echo $editor->display('new_field', '', 600, 170, '20', '10', false);
+                } else {
+                    echo $editor->display('new_field', '', 600, 170, '20', '10', true, null, null, null, array('pagebreak', 'readmore'));
+                }
+                ?>
             </div>
         </td>
         <td align="left" valign="top" width="280">
@@ -228,8 +242,15 @@ if($editor->get('_name') == 'none'){
                 <b><?php echo JText::_('COM_JOOMLAQUIZ_FEEDBACK_MESSAGE'); ?></b>
                 <br/>
                 <br/>
-                <div id="new_editor"><?php echo $editor->display('new_incorrect_feed',
-                        '', 500, 170, '20', '10'); ?></div>
+                <div id="new_editor">
+                    <?php
+                    if($editor->get('_name') == 'none'){
+                        echo $editor->display('new_incorrect_feed', '', 500, 170, '20', '10', '5', false);
+                    } else {
+                        echo $editor->display('new_incorrect_feed', '', 500, 170, '20', '10');
+                    }
+                    ?>
+                </div>
             </td>
         </tr>
     <?php } ?>

@@ -26,6 +26,19 @@ function setDrnDnAnswers(n) {
 	}
 }
 
+function getCoords(elem) {
+    var box = elem.getBoundingClientRect();
+    coord = {
+        top: box.top + pageYOffset,
+        left: box.left + pageXOffset
+    };
+    coord.bottom = coord.top*1 + elem.clientHeight*1;
+    coord.right = coord.left*1 + elem.clientWidth*1;
+    return coord;
+}
+
+var dragLimits = [];
+
 function startDrag(e){
 	if(!e){var e=window.event};
 	var targ=e.target?e.target:e.srcElement;
@@ -65,8 +78,19 @@ function startDrag(e){
 
 	questions[n].cont_index = 0;
 
-	document.onmousemove=dragDiv;
+	if( typeof dragLimits[targ.id] === "undefined" ){
+        var parentAnswers = document.querySelector('.jq_question_answers_cont'),
+            parentAnswersCoord = getCoords(parentAnswers),
+            dragElemStartCoord = getCoords(targ);
+        dragLimits[targ.id] = {
+            top: (parentAnswersCoord.top - dragElemStartCoord.top),           // < 0
+            bottom: (parentAnswersCoord.bottom - dragElemStartCoord.bottom),
+            left:  (parentAnswersCoord.left - dragElemStartCoord.left),       // < 0
+            right:  (parentAnswersCoord.right - dragElemStartCoord.right)
+        };
+    }
 
+	document.onmousemove=dragDiv;
 }
 
 function dragDiv(e){
@@ -78,14 +102,44 @@ function dragDiv(e){
 	if (last_drag_id_drag != '') {
 		if (last_drag_id_drag != targ.id) {
 			var ddd = jq_getObj(last_drag_id_drag);
-			ddd.style.left = coordX+e.clientX-offsetX+'px';
-			ddd.style.top = coordY+e.clientY-offsetY+'px';
+
+            ddd.style.left = coordX+e.clientX-offsetX + 'px';
+            if(parseInt(ddd.style.left, 10) < dragLimits[ddd.id].left*1){
+                ddd.style.left = dragLimits[ddd.id].left + 'px';
+            }
+            if(parseInt(ddd.style.left, 10) > dragLimits[ddd.id].right*1){
+                ddd.style.left = dragLimits[ddd.id].right + 'px';
+            }
+
+            ddd.style.top = coordY+e.clientY-offsetY + 'px';
+            if(parseInt(ddd.style.top, 10) < dragLimits[ddd.id].top*1){
+                ddd.style.top = dragLimits[ddd.id].top + 'px';
+            }
+            if(parseInt(ddd.style.top, 10) > dragLimits[ddd.id].bottom*1){
+                ddd.style.top = dragLimits[ddd.id].bottom + 'px';
+            }
+
 			return;
 		}
 	}
 	if (targ.id.substring(0, 4) != 'ddiv') {return;}
-	targ.style.left	= coordX+e.clientX-offsetX+'px';
-	targ.style.top	= coordY+e.clientY-offsetY+'px';
+
+    targ.style.left = coordX+e.clientX-offsetX + 'px';
+    if(parseInt(targ.style.left, 10) < dragLimits[targ.id].left*1){
+        targ.style.left = dragLimits[targ.id].left + 'px';
+    }
+    if(parseInt(targ.style.left, 10) > dragLimits[targ.id].right*1){
+        targ.style.left = dragLimits[targ.id].right + 'px';
+    }
+
+    targ.style.top = coordY+e.clientY-offsetY + 'px';
+    if(parseInt(targ.style.top, 10) < dragLimits[targ.id].top*1){
+        targ.style.top = dragLimits[targ.id].top + 'px';
+    }
+    if(parseInt(targ.style.top, 10) > dragLimits[targ.id].bottom*1){
+        targ.style.top = dragLimits[targ.id].bottom + 'px';
+    }
+
 	var is_on_cont = false;
 	for (i=1; i<=questions[n].kol_drag_elems; i++) {
 		an_div = jq_getObj('cdiv'+questions[n].cur_quest_id+'_' + i);

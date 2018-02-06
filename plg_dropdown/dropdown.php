@@ -545,7 +545,8 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
+
+	    $task = JFactory::getApplication()->input->getCmd('task', '');
 		$database = JFactory::getDBO();
 		
 		$database->setQuery("UPDATE #__quiz_t_question SET `c_random` = '".$_POST['jform']['c_random']."' WHERE `c_id` = '".$data['qid']."'");
@@ -557,8 +558,9 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 		if (isset($_POST['jq_hid_fields_left'])) {
 			foreach ($_POST['jq_hid_fields_left'] as $f_row) {					
 					$new_field = new stdClass;
-					if(intval($_POST['jq_hid_fields_ids'][$mcounter]))
-					$new_field->c_id = intval($_POST['jq_hid_fields_ids'][$mcounter]);
+					if(intval($_POST['jq_hid_fields_ids'][$mcounter])) {
+                        $new_field->c_id = ($task == 'save2copy') ? 0 : intval($_POST['jq_hid_fields_ids'][$mcounter]);
+                    }
 					$new_field->c_question_id = $data['qid'];
 					$new_field->c_left_text = stripslashes($f_row);
 					$new_field->c_right_text = (isset($_POST['jq_hid_fields_right'][$field_order])?stripslashes($_POST['jq_hid_fields_right'][$field_order]):'');

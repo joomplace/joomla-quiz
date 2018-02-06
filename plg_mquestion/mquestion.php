@@ -596,7 +596,8 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
+
+        $task = JFactory::getApplication()->input->getCmd('task', '');
 		$database = JFactory::getDBO();
 		
 		$database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '".$_POST['jform']['c_qform']."', `c_partial` = '".$_POST['jform']['c_partial']."', `c_random` = '".$_POST['jform']['c_random']."', `c_title_true` = '".$_POST['c_title_true']."', `c_title_false` = '".$_POST['c_title_false']."' WHERE c_id = '".$data['qid']."'");
@@ -618,9 +619,9 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			foreach ($_POST['jq_hid_fields'] as $f_row) {
 					
 					$new_field = new stdClass;
-					if(intval($_POST['jq_hid_fields_ids'][$mcounter]))
-						$new_field->c_id = intval($_POST['jq_hid_fields_ids'][$mcounter]);
-						
+					if(intval($_POST['jq_hid_fields_ids'][$mcounter])) {
+                        $new_field->c_id = ($task == 'save2copy') ? 0 : intval($_POST['jq_hid_fields_ids'][$mcounter]);
+                    }
 					$new_field->c_question_id = $data['qid'];
 					$new_field->c_choice = stripslashes($f_row);
 					$new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);

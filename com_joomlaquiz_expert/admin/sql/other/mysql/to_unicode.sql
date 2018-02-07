@@ -10,8 +10,6 @@ ALTER TABLE `#__quiz_certificates` CHANGE `cert_file` `cert_file` varchar(50) CH
 ALTER TABLE `#__quiz_certificates` CHANGE `crtf_align` `crtf_align` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "0";
 ALTER TABLE `#__quiz_certificates` CHANGE `crtf_text` `crtf_text` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_certificates` CHANGE `text_font` `text_font` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
-ALTER TABLE `#__quiz_configuration` CHANGE `config_var` `config_var` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
-ALTER TABLE `#__quiz_configuration` CHANGE `config_value` `config_value` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_constants` CHANGE `key_value` `key_value` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_constants` CHANGE `default_value` `default_value` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_dashboard_items` CHANGE `title` `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";

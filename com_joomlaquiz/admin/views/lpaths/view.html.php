@@ -78,10 +78,6 @@ class JoomlaquizViewLpaths extends JViewLegacy
         if ($canDo->get('core.delete')) {
             JToolBarHelper::deleteList('', 'lpaths.delete');
         }
-        if ($canDo->get('core.create') && $canDo->get('core.edit')) {
-            $bar->appendButton('Custom',
-                '<div class="btn-group"><a class="btn btn-small" onclick="javascript: tb_start(this);return false;" href="index.php?option=com_joomlaquiz&amp;tmpl=component&amp;view=configuration&amp;KeepThis=true&amp;TB_iframe=true&amp;height=350&amp;width=700" href="#"><i class="icon-options"></i>' . JText::_('COM_JOOMLAQUIZ_OPTIONS') . '</a></div>');
-        }
     }
 	
 	protected function getSortFields()

@@ -246,12 +246,6 @@ class com_joomlaquizInstallerScript
 			$db->execute();
 		}
 		
-		$db->setQuery("SELECT COUNT(*) FROM `#__quiz_configuration` WHERE `config_var` = 'wysiwyg_options'");
-		if (!$db->loadResult()) {
-				$db->setQuery("INSERT INTO `#__quiz_configuration` ( `config_var` , `config_value` ) VALUES ('wysiwyg_options', '0');");
-				$db->execute();
-		}
-		
 		//add quiz pool
 		$db->SetQuery("SELECT count(*) FROM `#__quiz_t_quiz` WHERE `c_title` = 'Questions Pool'");
 		if(!$db->LoadResult()){
@@ -548,10 +542,13 @@ class com_joomlaquizInstallerScript
 			$db->execute();
 		}
 
-
-
 		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_question_id` int(12) NOT NULL, `c_paths` text NOT NULL, PRIMARY KEY (`c_id`))");
 		$db->execute();
+
+        if ( $type == 'update' ) {
+            $db->setQuery("DROP TABLE IF EXISTS `#__quiz_configuration`");
+            $db->execute();
+        }
 
 		$this->migrateCategories();
         $this->defaultCategoryCheck();

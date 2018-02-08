@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_memory` (
 
 ALTER TABLE `#__quiz_certificates` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 ALTER TABLE `#__quiz_cert_fields` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
-ALTER TABLE `#__quiz_configuration` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 ALTER TABLE `#__quiz_constants` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 ALTER TABLE `#__quiz_dashboard_items` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 ALTER TABLE `#__quiz_export` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;

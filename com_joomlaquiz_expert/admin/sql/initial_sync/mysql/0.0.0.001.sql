@@ -26,12 +26,6 @@ ALTER TABLE `#__quiz_cert_fields` ADD COLUMN `text_h` INT(11) NOT NULL DEFAULT '
 ALTER TABLE `#__quiz_cert_fields` ADD COLUMN `shadow` TINYINT(4) NOT NULL DEFAULT '0' AFTER `text_h`;
 ALTER TABLE `#__quiz_cert_fields` ADD COLUMN `font` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'arial.ttf' AFTER `shadow`;
 
-CREATE TABLE IF NOT EXISTS `#__quiz_configuration` (
- `config_var` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
-) ENGINE = InnoDB  CHARACTER SET utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
-
-ALTER TABLE `#__quiz_configuration` ADD COLUMN `config_value` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `config_var`;
-
 CREATE TABLE IF NOT EXISTS `#__quiz_constants` (
  `c_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
  PRIMARY KEY (`c_id`)

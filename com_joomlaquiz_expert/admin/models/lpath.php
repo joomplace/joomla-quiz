@@ -145,10 +145,9 @@ class JoomlaquizModelLpath extends JModelAdmin
 		$return['lpath_article'] = $lpath_article;
 		
 		$catid_where = "";
-		$settings = JoomlaquizHelper::getSettings();
-		$c_catid = (isset($settings->lp_content_catid) && @$settings->lp_content_catid) ? $settings->lp_content_catid : 0;
+		$c_catid = JComponentHelper::getParams('com_joomlaquiz')->get('lp_content_catid', 0);
 
-		if(!isset($settings->include_articles_from_subcats) OR (isset($settings->include_articles_from_subcats) && !$settings->include_articles_from_subcats)){
+        if(!JComponentHelper::getParams('com_joomlaquiz')->get('include_articles_from_subcats', 0)){
 			$catid_where = ($c_catid) ? " AND `catid` = '".$c_catid."'" : "";
 		} else {
 			$cat_ids = $this->getAllCategories($c_catid);

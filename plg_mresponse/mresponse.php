@@ -458,9 +458,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 	//Administration part
 	public function onGetAdminOptions(&$data)
 	{
-		$settings = JoomlaquizHelper::getSettings();
 		$q_om_type = 2;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
 		
 		$db = JFactory::getDBO();
 		$choices = array();
@@ -468,7 +466,6 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		if($data['question_id']){
 			$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '".$data['question_id']."' ORDER BY ordering";
 			$db->SetQuery( $query );
-			$choices = array();
 			$choices = $db->LoadObjectList();
 		}
 		
@@ -482,10 +479,8 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetAdminJavaScript(&$data){
-		
-		$settings = JoomlaquizHelper::getSettings();
+
 		$q_om_type = 2;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
 		$question_id = $data['question_id'];
 		
 		ob_start();

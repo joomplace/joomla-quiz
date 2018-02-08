@@ -185,10 +185,6 @@ class JoomlaquizViewQuestions extends JViewLegacy
             JToolBarHelper::custom('questions.copy_question_sel', 'copy.png', 'copy_f2.png', 'COM_JOOMLAQUIZ_COPY', true);
         }
 		JToolBarHelper::custom('questions.quizzes', 'previous.png', 'previous_f2.png', 'COM_JOOMLAQUIZ_QUIZZES', false);
-        if ($canDo->get('core.create')) {
-            JToolBarHelper::custom('questions.hotspot_converter', 'move.png', 'move_f2.png', 'COM_JOOMLAQUIZ_HOTSPOT_CONVERTER', true);
-            $bar->appendButton('Custom', '<div class="btn-group"><a class="btn btn-small" onclick="javascript: tb_start(this);return false;" href="index.php?option=com_joomlaquiz&amp;tmpl=component&amp;view=configuration&amp;KeepThis=true&amp;TB_iframe=true&amp;height=350&amp;width=700" href="#"><i class="icon-options"></i>' . JText::_('COM_JOOMLAQUIZ_OPTIONS') . '</a></div>');
-        }
     }
 	
 	protected function getSortFields()

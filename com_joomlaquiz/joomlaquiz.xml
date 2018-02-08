@@ -50,7 +50,6 @@
     <submenu>
       <menu link="option=com_joomlaquiz&amp;view=quizzes">COM_JOOMLAQUIZ_MENU_QUIZZES</menu>
       <menu link="option=com_joomlaquiz&amp;view=questions">COM_JOOMLAQUIZ_MENU_QUESTIONS</menu>
-      <menu link="option=com_joomlaquiz&amp;view=configuration">COM_JOOMLAQUIZ_MENU_CONFIG</menu>
       <menu link="option=com_joomlaquiz&amp;view=results">COM_JOOMLAQUIZ_MENU_RESULTS</menu>
       <menu link="option=com_joomlaquiz&amp;view=dashboard">COM_JOOMLAQUIZ_MENU_ABOUT_JOOMLAQUIZ</menu>
     </submenu>

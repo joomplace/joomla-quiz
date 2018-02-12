@@ -291,6 +291,9 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name) {
     var new_editor = '<?php echo $edit; ?>'.replace(/new_incorrect/g, 'jq_incorrect_feed[' + ii + ']');
 
     document.getElementById(elem_field).value = '';
+    if(typeof Joomla !== 'undefined' && Joomla.editors.instances[elem_field]){
+        Joomla.editors.instances[elem_field].setValue('');
+    }
 
     <?php if ($editor_name == 'codemirror') { ?>
         var new_editor_part1 = document.getElementById('new_editor').children[1];

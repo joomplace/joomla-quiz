@@ -548,7 +548,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	
 	public function onGetAdminOptions($data)
 	{
-		$database = JFactory::getDBO();
+        $q_om_type = 14;
+        $wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+
+        $database = JFactory::getDBO();
 		
 		$row = new stdClass;
 		$row->choices = array();
@@ -573,7 +576,8 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	public function onGetAdminJavaScript(&$data){
 
 		$q_om_type = 14;
-		$question_id = $data['question_id'];
+        $wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+        $question_id = $data['question_id'];
 		
 		ob_start();
 		require_once(JPATH_SITE."/plugins/joomlaquiz/dalliclick/admin/js/dalliclick.js.php");

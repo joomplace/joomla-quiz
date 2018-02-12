@@ -501,6 +501,9 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 	
 	public function onGetAdminOptions($data)
 	{
+		$q_om_type = 10;
+		$wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+
 		$db = JFactory::getDBO();
 		$choices = array();
 		$return = array();
@@ -563,6 +566,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 	public function onGetAdminJavaScript(&$data){
 
 		$q_om_type = 10;
+		$wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
 
 		ob_start();
 		require_once(JPATH_SITE."/plugins/joomlaquiz/mquestion/admin/js/mquestion.js.php");

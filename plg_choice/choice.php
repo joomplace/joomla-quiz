@@ -460,6 +460,9 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 	
 	public function onGetAdminOptions($data)
 	{
+		$q_om_type = 1;
+		$wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+
 		$db = JFactory::getDBO();
 		$choices = array();
 		$return = array();
@@ -514,6 +517,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 	public function onGetAdminJavaScript(&$data){
 
 		$q_om_type = 1;
+		$wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
 		$question_id = $data['question_id'];
 		
 		ob_start();

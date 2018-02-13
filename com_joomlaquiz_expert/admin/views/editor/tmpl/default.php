@@ -19,24 +19,32 @@ if($editor_name == 'none'){
     JHtml::_('behavior.core');
 }
 
-$id = JFactory::getApplication()->input->get( 'id', '' );
+$id = JFactory::getApplication()->input->getInt('id', 0);
 ?>
 <script language="javascript" type="text/javascript">
-	function getObj_frame(name) {
-		if (parent.document.getElementById) { return parent.document.getElementById(name); }
-		else if (parent.document.all) { return parent.document.all[name]; }
-		else if (parent.document.layers) { return parent.document.layers[name]; }
-	}
-			
-	function getObj(name) {
-		if (document.getElementById)  {  return document.getElementById(name);  }
-		else if (document.all)  {  return document.all[name];  }
-		else if (document.layers)  {  return document.layers[name];  }
+function getObj_frame(name) {
+	if (parent.document.getElementById) { return parent.document.getElementById(name); }
+	else if (parent.document.all) { return parent.document.all[name]; }
+	else if (parent.document.layers) { return parent.document.layers[name]; }
+}
+
+function getObj(name) {
+	if (document.getElementById)  {  return document.getElementById(name);  }
+	else if (document.all)  {  return document.all[name];  }
+	else if (document.layers)  {  return document.layers[name];  }
 }
 				
 function get_content() {
 	var qwerty = getObj_frame('test_<?php echo $id;?>').innerHTML;
-	WFEditor.setContent('cdescription',qwerty);
+    if(typeof Joomla !== 'undefined') {
+        Joomla.editors.instances.cdescription.setValue(qwerty);
+    }
+}
+
+function reset_content() {
+    if(typeof Joomla !== 'undefined') {
+        Joomla.editors.instances.cdescription.setValue('');
+    }
 }
 			
 function save_content() {
@@ -48,11 +56,13 @@ function save_content() {
 	try {
 		getObj_frame('ta_<?php echo $id;?>').value = getObj_frame('test_<?php echo $id;?>').innerHTML;
 	} catch(e) {}
-		parent.tb_remove();
-	}
+	parent.tb_remove();
+}
 </script>
 
-<?php JoomlaquizControllerQuestion::JQ_editorArea( $editor_name, '', 'cdescription', '100%;', '250', '75', '20' ) ; ?>
+<form>
+    <?php JoomlaquizControllerQuestion::JQ_editorArea( $editor_name, '', 'cdescription', '100%;', '250', '75', '20' ) ; ?>
+</form>
 
 <style type="text/css" >
 	input.button2 {
@@ -66,7 +76,7 @@ function save_content() {
 	border:1px solid #666666;
 	cursor:pointer;
 	background-color:#FAFAFA;
-	background-image:url(<?php echo JURI::root();?>administrator/components/com_joomlaquiz/images/bg_button.gif);
+	/*background-image:url(<?php echo JURI::root();?>administrator/components/com_joomlaquiz/images/bg_button.gif);*/
 	color:#000000;
 }
 			
@@ -79,19 +89,11 @@ input.button2:hover, input.button3:hover {
 </style>
 <div style="width:100%; text-align:right;">
 	<input type="button" value="<?php echo JText::_('COM_JOOMLAQUIZ_CANCEL'); ?>" class="button2" onclick="javascript: parent.tb_remove();" />
-	<input type="button" value="<?php echo JText::_('COM_JOOMLAQUIZ_RESET'); ?>" class="button2" onclick="javascript: get_content();" />&nbsp;&nbsp;
-
+	<input type="button" value="<?php echo JText::_('COM_JOOMLAQUIZ_RESET'); ?>" class="button2" onclick="javascript: reset_content();" />&nbsp;&nbsp;
 	<input type="button"  value="<?php echo JText::_('COM_JOOMLAQUIZ_SAVE'); ?>" class="button2" onclick="javascript: save_content();" />
 </div>
 <script language="javascript" type="text/javascript">
-	window.addEvent('domready', function() {
-		var qwerty = getObj_frame('test_<?php echo $id;?>').innerHTML;
-		<?php 				
-		echo $editor->setContent('cdescription', ''); 
-		?>		
-		timerID2 = setTimeout("get_content()", 300);
-	});
-				
-	window.onload=get_content;
-	timerID = setTimeout("get_content()", 300);
+    window.onload = function() {
+        setTimeout("get_content()", 300);
+    };
 </script>

@@ -37,12 +37,12 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		return $db->loadResult();
 	}
 	
-	static public function JQ_editorArea($name='', $content, $hiddenField, $width, $height, $col, $row)
+	static public function JQ_editorArea($name=null, $content, $hiddenField, $width, $height, $col, $row)
 	{
 		if(!$name){
             $name = JFactory::getConfig()->get('editor', 'none');
         }
-	    $editor = JFactory::getEditor($name);
+        $editor = JEditor::getInstance($name);
 		$id = JFactory::getApplication()->input->get('id',0,'INT');
 		if(!$content){
 			$content = @self::getContentEditor($id);

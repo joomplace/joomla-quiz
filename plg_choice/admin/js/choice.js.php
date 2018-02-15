@@ -5,19 +5,25 @@
 <?php 	
 		$editor_name = JFactory::getConfig()->get('editor');
 
-		if  (JFactory::getConfig()->get('editor') == 'codemirror') {
-			$PCREpattern  =  '/\r\n|\s+|\r|\n/u';
-			$editor = JFactory::getEditor();
-			$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
-			$edit = str_replace("'", "\'", $edit);
-		}
+        $PCREpattern  =  '/\r\n|\s\s+|\r|\n/u';
 
-		if (JFactory::getConfig()->get('editor') == 'tinymce') {
-			$PCREpattern  =  '/\r\n|\s\s+|\r|\n/u';
-			$editor = JFactory::getEditor();
-			$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
-			$edit = str_replace("'", "\'", $edit);
-		}
+        if  (JFactory::getConfig()->get('editor') == 'codemirror') {
+            $PCREpattern  =  '/\r\n|\s+|\r|\n/u';
+            //$editor = JFactory::getEditor();
+            //$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
+            //$edit = str_replace("'", "\'", $edit);
+        }
+
+        if (JFactory::getConfig()->get('editor') == 'tinymce') {
+            $PCREpattern  =  '/\r\n|\s\s+|\r|\n/u';
+            //$editor = JFactory::getEditor();
+            //$edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
+            //$edit = str_replace("'", "\'", $edit);
+        }
+
+        $editor = JFactory::getEditor();
+        $edit = preg_replace($PCREpattern, " ", $editor->display('new_incorrect','','500','170','20','10'));
+        $edit = str_replace("'", "\'", $edit);
 		
 		
 ?>

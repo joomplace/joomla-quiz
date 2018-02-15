@@ -69,7 +69,8 @@ function createDD(){
                     jq_jQuery('.jq_draggable_answer[xid="'+xid+'"]').css('visibility','visible');
                 } else {
                     if (ui.draggable.hasClass("jq_draggable_answer")){
-                        ui.draggable.css('visibility','hidden');
+                        //ui.draggable.css('visibility','hidden');
+                        ui.draggable.attr('style', 'position:relative; visibility:hidden');  //fix in Firefox
                         ui.draggable.attr('id', 'dd_'+this.id);
                     } else {
                         ui.draggable.remove();

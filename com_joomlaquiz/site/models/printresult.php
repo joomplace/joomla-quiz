@@ -210,17 +210,29 @@ class JoomlaquizModelPrintresult extends JModelList
 		*/
         $total = $info['c_max_score'];
 
-		chdir(JPATH_SITE);
+        $lang = \JFactory::getLanguage()->getTag();
+        $alt_lang = array(
+            'ar-AA', //Arabic (Unitag)
+            'ar-SA', //Arabic (Saudi Arabia)
+            'he-IL', //Hebrew (Israel)
+            'ja-JP', //Japanese (Japan)
+            'zh-CN', //Chinese (China)
+            'zh-HK', //Chinese (Hong Kong)
+            'zh-TW'  //Chinese (Taiwan)
+        );
 
-		require_once(JPATH_SITE
-			. '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
+		chdir(JPATH_SITE);
+		require_once(JPATH_SITE . '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
 
 		$pdf_doc = new jq_pdf();
-
 		$pdf = &$pdf_doc->_engine;
 
-		//$pdf->SetFont('dejavusans');
-		$pdf->SetFont('javiergb');
+		if(in_array($lang, $alt_lang)){
+            $pdf->SetFont('javiergb');
+        } else {
+            $pdf->SetFont('dejavusans');
+        }
+
 		$fontFamily = $pdf->getFontFamily();
 
 		$pdf->getAliasNbPages();

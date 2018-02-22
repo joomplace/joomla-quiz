@@ -355,6 +355,31 @@ $input = $app->input;
                             <?php echo $this->form->getInput('c_email_to'); ?>
                         </div>
                     </div>
+                    <?php
+                    if ($this->form->getValue('c_email_to') == 2) {
+                        $email_to_user_display_text = 'block';
+                    } else {
+                        $email_to_user_display_text = 'none';
+                    }
+
+                    ?>
+                    <div class="control-group" id="email_to_user_introduction" style = "display:<?php echo $email_to_user_display_text; ?>">
+                        <div class="control-label">
+                            <?php echo $this->form->getLabel('c_email_to_introduction'); ?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('c_email_to_introduction'); ?>
+                        </div>
+
+                    </div>
+                    <div class="control-group" id="email_to_user_ending" style = "display:<?php echo $email_to_user_display_text; ?>">
+                        <div class="control-label">
+                            <?php echo $this->form->getLabel('c_email_to_ending'); ?>
+                        </div>
+                        <div class="controls">
+                            <?php echo $this->form->getInput('c_email_to_ending'); ?>
+                        </div>
+                    </div>
                     <div class="control-group">
                         <div class="control-label">
                             <?php echo $this->form->getLabel('c_email_chk'); ?>
@@ -747,6 +772,17 @@ $input = $app->input;
         } else {
             document.getElementById('feed_toins').style.display = 'block';
             document.getElementById('by_score_id').style.display = 'block';
+        }
+    }
+
+    document.getElementById('jform_c_email_to').onchange = function ()
+    {
+        if (document.getElementById('jform_c_email_to').value == 2) {
+            document.getElementById('email_to_user_introduction').style.display = 'block';
+            document.getElementById('email_to_user_ending').style.display = 'block';
+        } else {
+            document.getElementById('email_to_user_introduction').style.display = 'none';
+            document.getElementById('email_to_user_ending').style.display = 'none';
         }
     }
 

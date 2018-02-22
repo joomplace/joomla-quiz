@@ -439,12 +439,12 @@ class JoomlaquizHelper
         return $ret;
     }
 
-    public static function JQ_Email($sid, $email_to)
+    public static function JQ_Email($sid, $email_to, $send_intro_end = false)
     {
 
         $database = JFactory::getDBO();
 
-        $query = "SELECT q.c_title AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '" . $sid . "' AND sq.c_quiz_id = q.c_id";
+        $query = "SELECT q.c_title AS quiz_id, q.c_email_to_introduction, q.c_email_to_ending FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '" . $sid . "' AND sq.c_quiz_id = q.c_id";
         $database->SetQuery($query);
         $info = $database->LoadAssocList();
         $info = $info[0];
@@ -456,7 +456,7 @@ class JoomlaquizHelper
         if (!class_exists('JoomlaquizModelPrintresult')) {
             require_once(JPATH_SITE . '/components/com_joomlaquiz/models/printresult.php');
         }
-        $str = JoomlaquizModelPrintresult::JQ_PrintResultForMail($sid);
+        $str = ($send_intro_end ? $info['c_email_to_introduction'] : '') . JoomlaquizModelPrintresult::JQ_PrintResultForMail($sid) . ($send_intro_end ? $info['c_email_to_ending'] : '');
 
         $email = $email_to;
         $subject = JText::_('COM_QUIZ_RESULTS') . '(' . $info['quiz_id'] . ')';

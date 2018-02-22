@@ -443,6 +443,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $quiz_xml .= "\n\t\t\t\t<quiz_unpass_message><![CDATA[" . $quiz->c_unpass_message . "]]></quiz_unpass_message>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_enable_review>" . $quiz->c_enable_review . "</quiz_enable_review>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_email_to>" . $quiz->c_email_to . "</quiz_email_to>";
+                $quiz_xml .= "\n\t\t\t\t<quiz_email_to_introduction>" . $quiz->c_email_to_introduction . "</quiz_email_to_introduction>";
+                $quiz_xml .= "\n\t\t\t\t<quiz_email_to_ending>" . $quiz->c_email_to_ending . "</quiz_email_to_ending>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_enable_print><![CDATA[" . $quiz->c_enable_print . "]]></quiz_enable_print>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_enable_sertif><![CDATA[" . $quiz->c_enable_sertif . "]]></quiz_enable_sertif>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_skin><![CDATA[" . $quiz->c_skin . "]]></quiz_skin>";
@@ -918,7 +920,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_time_limit, c_min_after, c_once_per_day,
 								c_passing_score, c_created_time, c_published,
 								c_right_message, c_wrong_message, c_pass_message,
-								c_unpass_message, c_enable_review, c_email_to,
+								c_unpass_message, c_enable_review, c_email_to, c_email_to_introduction,c_email_to_ending,
 								c_enable_print, c_enable_sertif, c_skin,
 								c_random, published,
 								c_slide, c_language, c_certificate,
@@ -1129,7 +1131,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_time_limit, c_min_after, c_once_per_day,
 								c_passing_score, c_created_time, c_published,
 								c_right_message, c_wrong_message, c_pass_message,
-								c_unpass_message, c_enable_review, c_email_to,
+								c_unpass_message, c_enable_review, c_email_to,c_email_to_introduction,c_email_to_ending,
 								c_enable_print, c_enable_sertif, c_skin,
 								c_random, published,
 								c_slide, c_language, c_certificate,

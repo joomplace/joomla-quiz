@@ -595,6 +595,8 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_unpass_message` text NOT NULL,
   `c_enable_review` char(1) NOT NULL DEFAULT '',
   `c_email_to` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `c_email_to_introduction` text NOT NULL,
+  `c_email_to_ending` text NOT NULL,
   `c_email_chk` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `c_enable_print` char(1) NOT NULL DEFAULT '',
   `c_enable_sertif` char(1) NOT NULL DEFAULT '',

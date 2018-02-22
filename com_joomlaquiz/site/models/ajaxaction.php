@@ -1660,8 +1660,10 @@ class JoomlaquizModelAjaxaction extends JModelList
                         $database->SetQuery($query);
                         $c_manual = (int) $database->LoadResult();
 
+                        $send_intro_end = false;
                         $email_address = '';
                         if ($rows[0]->c_email_to == 2) {
+                            $send_intro_end = true;
                             $email_address = strval($_REQUEST['email_address']);
                         } else {
                             $email_address = $rows[0]->email;
@@ -1677,7 +1679,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                                 $result = 3;
                             }
                         } else {
-                            $result = JoomlaquizHelper::JQ_Email($stu_quiz_id, $email_address);
+                            $result = JoomlaquizHelper::JQ_Email($stu_quiz_id, $email_address, $send_intro_end);
                         }
                     }
                 }

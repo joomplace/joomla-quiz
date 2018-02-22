@@ -505,6 +505,8 @@ ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_pass_message` TEXT CHARACTER SET utf8
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_unpass_message` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_pass_message`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_enable_review` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_unpass_message`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_email_to` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `c_enable_review`;
+ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_email_to_introduction` TEXT NOT NULL AFTER `c_email_to`;
+ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_email_to_ending` TEXT NOT NULL AFTER `c_email_to_introduction`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_email_chk` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `c_email_to`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_enable_print` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_email_chk`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_enable_sertif` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_enable_print`;

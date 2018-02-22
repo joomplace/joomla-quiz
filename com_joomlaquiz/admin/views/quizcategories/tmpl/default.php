@@ -125,10 +125,13 @@ $sortFields = $this->getSortFields();
                                         $length = 100;
                                         $dots = "...";
                                         $spacebar = ' ';
-                                        if (strlen($category) > $length) {
-                                            $part = substr($category, 0, $length);
-                                            while (substr($part, -1) != $spacebar) {
-                                                $part = substr($part, 0, strlen($part) - 1);
+                                        if (mb_strlen($category) > $length) {
+                                            $part = mb_substr($category, 0, $length);
+                                            $pos = mb_strrpos($part, $spacebar);
+                                            if ($pos === false) {
+                                                $part = mb_substr($part, 0, $length);
+                                            } else {
+                                                $part = mb_substr($part, 0, $pos);
                                             }
                                             $category = $part . $dots;
                                         }

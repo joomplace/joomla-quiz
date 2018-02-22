@@ -151,10 +151,13 @@ $sortFields = $this->getSortFields();
                                         $length = 40;
                                         $dots = "...";
                                         $spacebar = ' ';
-                                        if (strlen($quiz) > $length) {
-                                            $part = substr($quiz, 0, $length);
-                                            while (substr($part, -1) != $spacebar) {
-                                                $part = substr($part, 0, strlen($part) - 1);
+                                        if (mb_strlen($quiz) > $length) {
+                                            $part = mb_substr($quiz, 0, $length);
+                                            $pos = strrpos($part, $spacebar);
+                                            if ($pos === false) {
+                                                $part = mb_substr($part, 0, $length);
+                                            } else {
+                                                $part = mb_substr($part, 0, $pos);
                                             }
                                             $quiz = $part . $dots;
                                         }

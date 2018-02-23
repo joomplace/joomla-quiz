@@ -47,7 +47,7 @@ class JoomlaquizModelQuiz extends JModelList
 		$package_id 	= $jinput->get( 'package_id', 0, 'INT');
 		$vm 			= $package_id < 1000000000;
 		
-		if ($package_id && $rel_id) {
+		if ($package_id && $rel_id && !$vm) {
 			$payment_query = "SELECT user_id, id, pid"
 				. "\n FROM `#__quiz_payments`"
 				. "\n WHERE id = '" . ($package_id-1000000000) . "' AND status IN ('Confirmed')"
@@ -55,8 +55,8 @@ class JoomlaquizModelQuiz extends JModelList
 
 			$db->setQuery($payment_query);
 			$payment = $db->loadObject();
-			
-			if ($user->id != $payment->user_id) {
+
+			if (!$payment || $user->id != $payment->user_id) {
 				$payment_id_query = "SELECT p.id"
 				. "\n FROM `#__quiz_payments` AS p"
 				. "\n INNER JOIN `#__quiz_products` AS qp ON qp.pid = p.pid"
@@ -66,14 +66,13 @@ class JoomlaquizModelQuiz extends JModelList
 				$db->setQuery($payment_id_query);
 				$payment_id = $db->loadResult();
 
-				$vm?$offset=0:$offset=1000000000;
-				if ($package_id) {
-					$package_id = intval($payment_id)+$offset;	
-				}	
+                $offset = $vm ? 0 : 1000000000;
+				if ($package_id && (int)$payment_id) {
+					$package_id = (int)$payment_id + $offset;
+				}
 			}
 		}
 
-		$quiz_params 	= array();
 		$quiz_params = new stdClass;
 		
 		/* видимо предпроверка на то куплен ли пакет */

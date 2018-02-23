@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 ?>
@@ -17,8 +17,7 @@ JHtml::_('formbehavior.chosen', 'select');
 <form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&layout=edit&id='.(int) $this->item->id); ?>" enctype="multipart/form-data" method="post" name="adminForm" id="payment-form" class="form-validate">
 	<div id="j-main-container" class="span10 form-horizontal">
 		<?php
-								
-		$count = count($this->lists['all']);			
+		$count = count($this->lists['all']);
 		$product_id = '0';
 		$k =0;
 		for($i=0; $i<$count; $i++) { 
@@ -29,31 +28,29 @@ JHtml::_('formbehavior.chosen', 'select');
 		<div class="col100">
 			<fieldset class="adminform"><legend><?php echo $row->product_title; ?></legend>			
 			<table class="table table-striped" cellpadding="10" cellspacing="10">
-					<thead>
-						<tr>
-							<th width="20"></th>
-							<th class="title" width="50%"><?php echo JText::_('COM_JOOMLAQUIZ_NAME');?></th>
-							<th class="title" width="50px"><?php echo JText::_('COM_JOOMLAQUIZ_TYPE');?></th>
-							<th class="title"><?php echo JText::_('COM_JOOMLAQUIZ_RESTRICTIONS');?></th>
-							<th width="100px"><?php echo JText::_('COM_JOOMLAQUIZ_RESET');?></th>
-						</tr>
-					</thead>					
+				<thead>
+					<tr>
+						<th width="20"></th>
+						<th class="title" width="50%"><?php echo JText::_('COM_JOOMLAQUIZ_NAME');?></th>
+						<th class="title" width="50px"><?php echo JText::_('COM_JOOMLAQUIZ_TYPE');?></th>
+						<th class="title"><?php echo JText::_('COM_JOOMLAQUIZ_RESTRICTIONS');?></th>
+						<th width="100px"><?php echo JText::_('COM_JOOMLAQUIZ_RESET');?></th>
+					</tr>
+				</thead>
 			<?php
 			}
 				$reactivated = (array_key_exists($row->id, $this->lists['products_stat']) ? $this->lists['products_stat'][$row->id] : null);
-
 				$display = 0;
 				$row->suffix = '';
 				if($row->xdays > 0) {
 					$display = 1;
-							
 					$day_start = 0;
 					if(empty($reactivated->xdays_start) || !$reactivated->xdays_start || $reactivated->xdays_start == '0000-00-00 00:00:00') {
 						$day_start = ($row->date_added && $row->date_added != '0000-00-00 00:00:00' ? $row->date_added : 0);
 					} else {
 						$day_start = $reactivated->xdays_start;
 					}
-					$days_left_ts = strtotime(JFactory::getDate()) - ($day_start ? strtotime($day_start) : 0);
+					$days_left_ts = strtotime(\JFactory::getDate()) - ($day_start ? strtotime($day_start) : 0);
 					$days_left = floor($days_left_ts/(60*60*24));
 							
 					$color = ($days_left < $row->xdays ? 'green' : 'red');
@@ -90,7 +87,7 @@ JHtml::_('formbehavior.chosen', 'select');
 					$row->suffix .= sprintf(($row->type == 'q' ? JText::_('COM_JOOMLAQUIZ_QUIZ_PERIOD') : JText::_('COM_JOOMLAQUIZ_LPATH_PERIOD')), implode(' ', $period));
 					$row->suffix .= '</span>';
 				}
-						
+
 				if($row->attempts > 0) {
 					$r_a = isset($reactivated->attempts)? intval($reactivated->attempts): 0;
 					$color = ( ($row->attempts * $this->lists['product_quantity'] ) > $r_a ? 'green' : 'red');
@@ -133,15 +130,14 @@ JHtml::_('formbehavior.chosen', 'select');
 		}
 		?>	    
 	<input type="hidden" name="task" value="" />
+    <input type="hidden" name="shop" value="<?php echo $this->lists['shop_name']; ?>" />
 	<input type="hidden" name="oid" value="<?php echo $this->lists['oid']; ?>" />
 	<?php echo JHtml::_('form.token'); ?>	
 	</div>
 </form>
 <script type="text/javascript">
-
-Joomla.submitbutton = function(task)
-	{
-		Joomla.submitform(task, document.getElementById('payment-form'));
-	}
-
+    Joomla.submitbutton = function(task)
+    {
+        Joomla.submitform(task, document.getElementById('payment-form'));
+    }
 </script>

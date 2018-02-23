@@ -23,25 +23,29 @@ class JoomlaquizTableProducts extends JTable
          */
         function __construct(&$db) 
         {
-                parent::__construct('#__quiz_products', 'pid', $db);
+            parent::__construct('#__quiz_products', 'pid', $db);
         }
 		
 		function store($updateNulls = false){
-			
-			$database = JFactory::getDBO();
 
-			$product_id = ($_POST['product_id'])? $_POST['product_id'] : '-1';
-			$quiz_product_id = ($_POST['quiz_product_id'])? $_POST['quiz_product_id'] : '-1';
-			$product_id_int = (string)intval($product_id);
-				$name = ($_POST['jform']['name']) ? $_POST['jform']['name'] : '';
-			
-			if($product_id == '-1' && $quiz_product_id){
-				if ($name == '') {
-					echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_PRODUCT')."'); window.history.go(-1); </script>\n";
-					exit();
-				}
+            $app   = \JFactory::getApplication();
+            $database = \JFactory::getDBO();
+            $dataPOST = $app->input->getArray(array());
 
-				$product_id = $quiz_product_id;
+            $product_id = '-1';
+            if(isset($dataPOST['vm_product_id']) && $dataPOST['vm_product_id'] != -1){
+                $product_id = (int)$dataPOST['vm_product_id'];
+            }
+            if(isset($dataPOST['hikashop_product_id']) && $dataPOST['hikashop_product_id'] != -1){
+                $product_id = (int)$dataPOST['hikashop_product_id'];
+            }
+            $product_id_int = (string)intval($product_id);
+
+            $name = htmlspecialchars(trim($dataPOST['jform']['name']), ENT_QUOTES, 'UTF-8');
+
+            if($product_id == -1 && $name == ''){
+				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_PRODUCT')."'); window.history.go(-1); </script>\n";
+				exit();
 			}
 
 			$quiz_sku = '';

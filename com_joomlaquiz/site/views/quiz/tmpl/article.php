@@ -18,6 +18,7 @@ $params = $article_data->params;
 $user = $article_data->user;
 $print = $article_data->print;
 $access = $article_data->access;
+$shop_name = $article_data->shop;
 
 $document 	= JFactory::getDocument();
 $document->addStyleSheet(JURI::root().'components/com_joomlaquiz/views/templates/tmpl/joomlaquiz_standard/css/jq_template.css');
@@ -148,9 +149,9 @@ OR ($params->get('show_hits'))); ?>
 <table class="jq_footer_container" cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr>	
 	<td class="sectiontableheader">
-	<div class='jq_footer_link jq_lpath'><a href="<?php echo JRoute::_("index.php?option=com_joomlaquiz&view=lpath&".($article->rel_id? "package_id=".$article->package_id."&rel_id=".$article->rel_id: "lpath_id=".$article->lid).JoomlaquizHelper::JQ_GetItemId() ); ?>"><?php echo JText::_('COM_LPATH_QUIZZES_LIST'); ?></a></div>
+	<div class='jq_footer_link jq_lpath'><a href="<?php echo JRoute::_("index.php?option=com_joomlaquiz&view=lpath".($shop_name ? "&shop=".$shop_name : "")."&".($article->rel_id? "package_id=".$article->package_id."&rel_id=".$article->rel_id: "lpath_id=".$article->lid).JoomlaquizHelper::JQ_GetItemId() ); ?>"><?php echo JText::_('COM_LPATH_QUIZZES_LIST'); ?></a></div>
 	<?php if($article->next) {?>
-	<div class='jq_footer_link jq_nquiz'><a href="<?php echo JRoute::_("index.php?option=com_joomlaquiz&view=quiz&".($article->rel_id? "package_id=".$article->package_id."&rel_id=".$article->rel_id: "lid=".$article->lid) . $article->next.JoomlaquizHelper::JQ_GetItemId()); ?>"><?php echo JText::_('COM_LPATH_NEXT_QUIZ'); ?></a></div>
+	<div class='jq_footer_link jq_nquiz'><a href="<?php echo JRoute::_("index.php?option=com_joomlaquiz&view=quiz".($shop_name ? "&shop=".$shop_name : "")."&".($article->rel_id? "package_id=".$article->package_id."&rel_id=".$article->rel_id: "lid=".$article->lid) . $article->next.JoomlaquizHelper::JQ_GetItemId()); ?>"><?php echo JText::_('COM_LPATH_NEXT_QUIZ'); ?></a></div>
 	<?php } ?>
 	</td>
 </tr>

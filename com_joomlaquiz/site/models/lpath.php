@@ -20,17 +20,19 @@ class JoomlaquizModelLpath extends JModelList
 		$database = JFactory::getDBO();
 		$mainframe = JFactory::getApplication();
 		$my = JFactory::getUser();
-		
+		$jinput = $mainframe->input;
+
 		if($mainframe->isAdmin()){
 			$params = JComponentHelper::getParams('com_joomlaquiz');
 		} else {
 			$params = $mainframe->getParams();
 		}
 		
-		$lpath_id = intval(JFactory::getApplication()->input->get( 'lpath_id', $params->get('lpath_id', 0) ));
-		$rel_id = intval(JFactory::getApplication()->input->get( 'rel_id', 0));
-		$package_id = intval(JFactory::getApplication()->input->get( 'package_id', 0));
-		$vm = $package_id < 1000000000;
+		$lpath_id = $jinput->getInt('lpath_id', $params->get('lpath_id', 0, 'INT'));
+		$rel_id = $jinput->getInt('rel_id', 0);
+		$package_id = $jinput->getInt('package_id', 0);
+		$shop = $package_id < 1000000000;
+		$shop_name = $jinput->get('shop', '');
 		
 		$lpath = new stdClass;
 		if (!$my->id) { 
@@ -42,7 +44,7 @@ class JoomlaquizModelLpath extends JModelList
 		$_SESSION['quiz_check_rel_item'] = 0;	
 		
 		if (!$lpath_id) {
-			$lpath_id = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $vm);
+			$lpath_id = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $shop_name);
 		} else {
 			$query = "SELECT `paid_check` "
 			. "\n FROM #__quiz_lpath"
@@ -73,9 +75,7 @@ class JoomlaquizModelLpath extends JModelList
 
 			$lpath->rel_id = $rel_id;
 			$lpath->package_id = $package_id;
-			JoomlaquizHelper::JQ_GetJoomFish($lpath->title, 'quiz_lpath', 'title', $lpath->id);
-			JoomlaquizHelper::JQ_GetJoomFish($lpath->short_descr, 'quiz_lpath', 'short_descr', $lpath->id);
-			JoomlaquizHelper::JQ_GetJoomFish($lpath->descr, 'quiz_lpath', 'descr', $lpath->id);
+            $lpath->shop = $shop_name;
 
 			$query = "SELECT l_q.*, q.*, c.*, '{$package_id}' AS `package_id`, "
 				. ' IF(l_q.type = \'q\', q.c_id, c.id) AS all_id, IF(l_q.type = \'q\', q.c_title, c.title) AS title, '
@@ -141,34 +141,17 @@ class JoomlaquizModelLpath extends JModelList
 			}
 
 			$link = true;
-			if(is_array($lpath_all ) && count($lpath_all ))
-			foreach($lpath_all as $i=>$row) {
-				if($row->type == 'q') {
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->c_title, 'quiz_t_quiz', 'c_title', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->description, 'quiz_t_quiz', 'c_description', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->short_description, 'quiz_t_quiz', 'c_short_description', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->c_right_message, 'quiz_t_quiz', 'c_right_message', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->c_wrong_message, 'quiz_t_quiz', 'c_wrong_message', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->c_pass_message, 'quiz_t_quiz', 'c_pass_message', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->c_unpass_message, 'quiz_t_quiz', 'c_unpass_message', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->c_metadescr, 'quiz_t_quiz', 'c_metadescr', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->c_keywords, 'quiz_t_quiz', 'c_keywords', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->c_metatitle, 'quiz_t_quiz', 'c_metatitle', $lpath_all[$i]->all_id);
-
-				} else {
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->title, 'content', 'title', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->short_description, 'content', 'introtext', $lpath_all[$i]->all_id);
-					JoomlaquizHelper::JQ_GetJoomFish($lpath_all[$i]->description, 'content', 'fulltext', $lpath_all[$i]->all_id);
-				}
-
-				$lpath_all[$i]->show_link = $link;
-				if($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {
-					$link = false;
-				}
-			}
-			
+			if(is_array($lpath_all ) && count($lpath_all )) {
+                foreach ($lpath_all as $i => $row) {
+                    $lpath_all[$i]->show_link = $link;
+                    if ($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {
+                        $link = false;
+                    }
+                }
+            }
 			return array($lpath, $lpath_all);
-		} else {
+		}
+		else {
 			$lpath->error = 1;
 			$lpath->message = '<p align="left">'.JText::_('COM_QUIZ_LPATH_NOT_AVAILABLE').'</p>';
 			return array($lpath, null);

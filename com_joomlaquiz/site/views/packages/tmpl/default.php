@@ -57,11 +57,17 @@ if(isset($this->packages->error) && $this->packages->error){
         </div>
         <br />
         <div class="jq_packages_container">
-        <?php foreach($this->packages as $package) {
+        <?php
+        $shops_name_suffixes = array(
+            'virtuemart' => 'vm',
+            'hikashop' => 'hs'
+        );
+
+        foreach($this->packages as $package) {
             if ($package->package_number > 1000000000) {
-                $package_number = sprintf("%06d", $package->package_number - 1000000000);
+                $package_number = sprintf("%06dmp", $package->package_number - 1000000000);
             } else {
-                $package_number = sprintf("%06d", $package->package_number) . ' ('.$package->shop.')';
+                $package_number = sprintf("%06d", $package->package_number) . $shops_name_suffixes[$package->shop];
             }
             ?>
             <div class="jq_package_title_container">

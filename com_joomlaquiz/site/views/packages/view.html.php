@@ -26,7 +26,7 @@ class JoomlaquizViewPackages extends JViewLegacy
 
         $load_vm_lang = false;
         foreach ($this->packages as $item){
-            if($item->shop && $item->shop == 'virtuemart'){
+            if(isset($item->shop) && $item->shop && $item->shop == 'virtuemart'){
                 $load_vm_lang = true;
                 break;
             }

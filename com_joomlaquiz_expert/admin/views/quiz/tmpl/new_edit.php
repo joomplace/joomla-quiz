@@ -326,6 +326,7 @@ $input = $app->input;
 
                             <?php echo $this->form->renderField('c_email_to_introduction'); ?>
                             <?php echo $this->form->renderField('c_email_to_ending'); ?>
+
                             <div class="control-group">
                                 <div class="control-label">
                                     <?php echo $this->form->getLabel('c_redirect_after'); ?>

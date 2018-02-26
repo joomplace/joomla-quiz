@@ -468,9 +468,12 @@ EOF_MSG;
 		return $panel_str;
 	}
 	
-	public static function JQ_panel_data($panel_row, $all_quests, $cquests, $stu_quiz_id, $k, $n){
-		$panel_str = '<tr class="sectiontableentry'.$k.'"><td><a href="javascript:void(0)" onClick="javascript:JQ_gotoQuestionOn('.$panel_row->c_id.')">'.$panel_row->c_question.'</a></td><td width="25px" align="center"><div id="result_point_'.$panel_row->c_id.'">-</div></td><td width="25px" align="center"><div id="quest_result_'.$panel_row->c_id.'">'.($stu_quiz_id && in_array($panel_row->c_id, $all_quests)? (in_array($panel_row->c_id, $cquests)?"<img src='".JURI::root()."components/com_joomlaquiz/assets/images/tick.png' border=0>":"<img src='".JURI::root()."components/com_joomlaquiz/assets/images/publish_x.png' border=0>"):'-').'</div></td></tr>';
-		
+	public static function JQ_panel_data($panel_row, $all_quests, $cquests, $stu_quiz_id, $k, $n, $panel_show_results=0){
+		if($panel_show_results) {
+            $panel_str = '<tr class="sectiontableentry' . $k . '"><td><a href="javascript:void(0)" onClick="javascript:JQ_gotoQuestionOn(' . $panel_row->c_id . ')">' . $panel_row->c_question . '</a></td><td width="25px" align="center"><div id="result_point_' . $panel_row->c_id . '">-</div></td><td width="25px" align="center"><div id="quest_result_' . $panel_row->c_id . '">' . ($stu_quiz_id && in_array($panel_row->c_id, $all_quests) ? (in_array($panel_row->c_id, $cquests) ? "<img src='" . JURI::root() . "components/com_joomlaquiz/assets/images/tick.png' border=0>" : "<img src='" . JURI::root() . "components/com_joomlaquiz/assets/images/publish_x.png' border=0>") : '-') . '</div></td></tr>';
+        } else {
+            $panel_str = '<tr class="sectiontableentry' . $k . '"><td><a href="javascript:void(0)" onClick="javascript:JQ_gotoQuestionOn(' . $panel_row->c_id . ')">' . $panel_row->c_question . '</a></td></tr>';
+        }
 		return $panel_str;
 	}
 }

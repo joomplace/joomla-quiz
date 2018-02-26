@@ -230,12 +230,24 @@
 				name="c_slide"
 				type="radio"
 				class="btn-group"
-				label="COM_JOOMLAQUIZ_ENABLE_SLIDE_PANEL"
-				description="COM_JOOMLAQUIZ_WILL_BE_ON_THE"
+				label="COM_JOOMLAQUIZ_CSLIDE_LABEL"
+				description="COM_JOOMLAQUIZ_CSLIDE_DESC"
 				labelclass="control-label"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
+		</field>
+		<field
+				name="c_slide_show_results"
+				type="radio"
+				class="btn-group"
+				label="COM_JOOMLAQUIZ_CSLIDE_SHOW_RESULTS_LABEL"
+				description="COM_JOOMLAQUIZ_CSLIDE_SHOW_RESULTS_DESC"
+				labelclass="control-label"
+				default="0"
+				showon="c_slide:1">
+			<option value="0">COM_JOOMLAQUIZ_NO</option>
+			<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field
 				name="c_resbycat"

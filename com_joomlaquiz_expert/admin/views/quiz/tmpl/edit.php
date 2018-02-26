@@ -371,6 +371,7 @@ window.onload = function (){
 					<?php echo $this->form->getInput('c_slide'); ?>
 				</div>
 			</div>
+            <?php echo $this->form->renderField('c_slide_show_results'); ?>
 			<div class="control-group">
 				<div class="control-label"">
                     <?php echo $this->form->getLabel('c_resbycat'); ?>

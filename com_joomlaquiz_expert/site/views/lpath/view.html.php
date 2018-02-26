@@ -19,7 +19,7 @@ class JoomlaquizViewLpath extends JViewLegacy
     public function display($tpl = null)
     {
         $this->lpath_data = $this->get('LearningPaths');
-        $this->allow_certificate = $this->get('AllowCertificate');
+        $this->allow_certificate = $this->_models[$this->_defaultModel]->getAllowCertificate(!empty($this->lpath_data[0]->id) ? $this->lpath_data[0]->id : false);
 
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {

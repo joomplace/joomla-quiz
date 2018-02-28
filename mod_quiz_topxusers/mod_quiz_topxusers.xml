@@ -2,12 +2,12 @@
 <extension version="3.0" type="module" client="site" method="upgrade">
 	<name>Top X user quiz results</name>
 	<author>JoomPlace Team</author>
-	<creationDate>September 2017</creationDate>
+	<creationDate>February 2018</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.5</version>
+	<version>3.7.6</version>
 	<description>This module will display a list of the top X users</description>
 	<files>
 		<filename module="mod_quiz_topxusers">mod_quiz_topxusers.php</filename>

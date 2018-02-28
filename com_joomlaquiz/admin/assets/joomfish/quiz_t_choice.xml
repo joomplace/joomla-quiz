@@ -2,7 +2,7 @@
 <joomfish type="contentelement">
   <name>Joomlaquiz - Answers (M.Choice, M.Response Questions)</name>
   <author>JoomPlace</author>
-  <version>3.7.5</version>
+  <version>3.7.6</version>
   <description>Definition for the JoomlaQuiz component</description>
   <reference>
 	<table name="quiz_t_choice">

@@ -211,7 +211,7 @@ class JoomlaquizModelPackages extends JModelList
                 $database->SetQuery($query);
                 $products_stat = $database->loadObjectList('qp_id');
 
-                $ts = strtotime(\JFactory::getDate());
+                $ts = strtotime(\JFactory::getDate('now', JFactory::getConfig()->get('offset', 'UTC')));
 
                 $bought_quizzes = array();
                 $bq_count = 0;

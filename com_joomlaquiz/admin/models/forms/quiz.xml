@@ -214,12 +214,14 @@
 		<field name="c_email_to_introduction" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="raw"
+                        height="200"
                         showon="c_email_to:2"
 			label="COM_JOOMLAQUIZ_USER_TO_INTRODUCTION" description="COM_JOOMLAQUIZ_USER_TO_INTRODUCTION_DESC" labelclass="control-label" required="false" />
                 
 		<field name="c_email_to_ending" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="raw"
+                        height="200"
                         showon="c_email_to:2"
 			label="COM_JOOMLAQUIZ_USER_TO_ENDING" description="COM_JOOMLAQUIZ_USER_TO_ENDING_DESC" required="false" />
 		<field

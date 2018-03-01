@@ -75,7 +75,10 @@ class JoomlaquizModelPackages extends JModelList
         $payments = $database->loadObjectList();
 
         $orders = array();
-        if (is_array($payments) && count($payments)) {
+        if( (is_array($payments) && count($payments))
+            || (is_array($orders_virtuemart) && count($orders_virtuemart))
+            || (is_array($orders_hikashop) && count($orders_hikashop))
+        ) {
             $orders = array_merge($orders_virtuemart, $orders_hikashop, $payments);
         }
 

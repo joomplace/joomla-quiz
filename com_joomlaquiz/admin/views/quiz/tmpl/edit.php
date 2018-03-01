@@ -16,6 +16,12 @@ $app = JFactory::getApplication();
 $input = $app->input;
 
 ?>
+<style type="text/css">
+    .mce-edit-area #jform_c_email_to_introduction_ifr, .mce-edit-area #jform_c_email_to_ending_ifr {
+        width: 100% !important;
+        height: 200px !important;
+    }
+</style>
 <script>
     jQuery(document).ready(function () {
         window.counter = Number("<?php echo(count($this->jq_pool_cat)); ?>");

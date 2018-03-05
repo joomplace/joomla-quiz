@@ -66,7 +66,11 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         if ((preg_match('/pretty_green/', $data['cur_template']) || preg_match('/pretty_blue/', $data['cur_template'])) && $data['q_data']->c_qform) {
             $data['ret_add_script'] = "jq_jQuery(function() {jq_jQuery('.chzn-select').chosen()});";
         }
-
+        preg_match_all('/src=\"([^\/](?!\:\/\/)[^\"]*)\"/i', $data['ret_str'], $preg);
+        if (!empty($preg[1]))
+            foreach ($preg[1] as $p) {
+                $data['ret_str'] = str_replace('src="' . $p, 'src="/' . $p, $data['ret_str']);
+            }
         return $data;
     }
 

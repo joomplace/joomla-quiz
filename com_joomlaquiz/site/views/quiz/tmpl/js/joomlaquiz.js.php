@@ -1228,6 +1228,11 @@ function jq_StartQuizOn() {
 			return false;
 		}
 	}
+    
+    if(document.getElementById('jq_class_period') && document.getElementById('jq_class_period').value == ''){
+		alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_CLASS_PERIOD_PLEASE',true);?>');
+		return false;
+	}
 
 	if (!quiz_blocked) {
 		jq_jQuery('#jq_quiz_container1').css('opacity', 0.7);
@@ -1247,6 +1252,7 @@ function jq_StartQuiz() {
 	var uname = (document.getElementById('jq_user_name') && document.getElementById('jq_user_name').value != '') ? document.getElementById('jq_user_name').value : '';
 	var usurname = (document.getElementById('jq_user_surname') && document.getElementById('jq_user_surname').value != '') ? document.getElementById('jq_user_surname').value : '';
 	var uemail = (document.getElementById('jq_user_email') && document.getElementById('jq_user_email').value != '') ? document.getElementById('jq_user_email').value : '';
+    var class_period = (document.getElementById('jq_class_period') && document.getElementById('jq_class_period').value != '') ? document.getElementById('jq_class_period').value : '';
 	var custom_info = '';
 	<?php 
 		JPluginHelper::importPlugin('content');
@@ -1257,10 +1263,15 @@ function jq_StartQuiz() {
 	uname = encodeURIComponent(uname);
 	usurname = encodeURIComponent(usurname);
 	uemail = encodeURIComponent(uemail);
+    class_period = encodeURIComponent(class_period);
 	
 	if (qs) {
 		custom_info = custom_info+'&qs='+qs;
 	}
+    
+    if(class_period) {
+        custom_info = custom_info+'&class_period='+class_period;
+    }
 
 	jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + custom_info, 1);
 }

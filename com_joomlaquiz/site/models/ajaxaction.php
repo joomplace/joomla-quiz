@@ -184,7 +184,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			}
 			
 			if (!$stu_quiz_id) {
-
+                $class_period = '';
 				if ($my->id) {
 					$user_name = $my->username;
 					$user_email = $my->email;
@@ -192,6 +192,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$user_name = addslashes(JRequest::getString('uname', ''));
 					$user_surname = addslashes(JRequest::getString('usurname', ''));
 					$user_email = addslashes(JRequest::getString('uemail', ''));
+                    $class_period = addslashes(JRequest::getString('class_period', ''));
 				}
 				
 				JPluginHelper::importPlugin('content');
@@ -203,8 +204,8 @@ class JoomlaquizModelAjaxaction extends JModelList
                  * @imoortant: do not use JDate, as this will cause double time transform
                  */
                 $quiz_time = date( 'Y-m-d H:i:s');
-				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params)"
-			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', NOW(), '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).")";
+				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params, class_period)"
+			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', NOW(), '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).",".$database->quote($class_period).")";
 				$database->SetQuery($query);
 				$database->query();
 				$stu_quiz_id = $database->insertid();

@@ -248,7 +248,18 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str = $info['c_title'];
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
+        
+        if(!empty($info['class_period'])) {
+            $pdf->setFont($fontFamily, 'B');
+            $str = JText::_('COM_QUIZ_PDF_CLASS_PERIOD') . "&nbsp;";
+            $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
+            $pdf->setFont($fontFamily);
+            $str =  $info['class_period'];
+            $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+            $pdf->Ln();
+        }
+        
 		$pdf->setFont($fontFamily, 'B');
 		$str = JText::_('COM_QUIZ_PDF_UNAME') . "&nbsp;";
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);

@@ -472,13 +472,15 @@ class JoomlaquizModelQuiz extends JModelList
 				$username_field = '<label for="jq_user_name">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_NAME').'</label><input style="max-width:100%;" type="text" size="35" name="jq_user_name" id="jq_user_name" class="inputbox jq_inputbox" value=""/>';
 				$usersurname_field = '<label for="jq_user_surname">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_SURNAME').'</label><input style="max-width:100%;" type="text" size="35" name="jq_user_surname" id="jq_user_surname" class="inputbox jq_inputbox" value=""/>';
 				$email_field = '<label for="jq_user_email">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_EMAIL').'</label><input style="max-width:100%;" type="text" size="35" name="jq_user_email" id="jq_user_email" class="jq_inputbox" value=""/>';
+                $class_period_field = '<label for="jq_class_period">'.JText::_('COM_JOOMLAQUIZ_INPUT_USER_CLASS_PERIOD').'</label><input style="max-width:100%;" type="text" size="35" name="jq_class_period" id="jq_class_period" class="jq_inputbox" value=""/>';
 
 			} else {
-				$username_field = $usersurname_field = $email_field = '';
+				$username_field = $usersurname_field = $email_field = $class_period_field = '';
 			}
 			$quiz_params->c_description = preg_replace('/#name#/', $username_field, $quiz_params->c_description, 1);
 			$quiz_params->c_description = preg_replace('/#surname#/', $usersurname_field, $quiz_params->c_description, 1);
 			$quiz_params->c_description = preg_replace('/#email#/', $email_field, $quiz_params->c_description, 1);
+            $quiz_params->c_description = preg_replace('/#class_period#/', $class_period_field, $quiz_params->c_description, 1);
 			
 			JPluginHelper::importPlugin('content');
 			$dispatcher = JEventDispatcher::getInstance();

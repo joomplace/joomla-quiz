@@ -111,8 +111,15 @@ class JoomlaquizModelPrintresult extends JModelList
 		$str .= "\n";
 		$str .= JText::_('COM_QUIZ_PDF_QTITLE')." ".$info['c_title']."\n";
 		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?($info['username']):JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
-		$str .= JText::_('COM_QUIZ_PDF_NAME')." ".(($info['name'])?$info['name']:$info['user_name'])."\n";
-		$str .= JText::_('COM_QUIZ_PDF_UEMAIL')." ".(($info['email'])?$info['email']:$info['user_email'])."\n";
+		$str .= JText::_('COM_QUIZ_PDF_NAME')." ".(($info['name'])?$info['name']:$info['user_name'].' '.(!empty($info['user_surname'])? $info['user_surname'] : ''))."\n";
+        $user_email = '';
+        if(!empty($info['email'])) {
+            $user_email = $info['email'];
+        } elseif(!empty($info['user_email'])) {
+            $user_email = $info['user_email'];
+        }
+        if(!empty($user_email))
+            $str .= JText::_('COM_QUIZ_PDF_UEMAIL')." ".$user_email."\n";
 		$str .= JText::_('COM_QUIZ_PDF_USCORE')." ".number_format($info['c_total_score'],1)."\n";
 		$str .= JText::_('COM_QUIZ_PDF_TOTSCORE')." ".number_format($total,1)."\n";
 		$str .= JText::_('COM_QUIZ_PDF_PASSCORE')." ".$info['c_passing_score']."\n";
@@ -267,15 +274,16 @@ class JoomlaquizModelPrintresult extends JModelList
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 		$pdf->Ln();
 
-		$pdf->setFont($fontFamily, 'B');
-		$str = JText::_('COM_QUIZ_PDF_UEMAIL') . "&nbsp;";
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+        if(!empty($info['email'])) {
+            $pdf->setFont($fontFamily, 'B');
+            $str = JText::_('COM_QUIZ_PDF_UEMAIL') . "&nbsp;";
+            $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-		$pdf->setFont($fontFamily);
-		$str = $info['email'];
-		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
-		$pdf->Ln();
-
+            $pdf->setFont($fontFamily);
+            $str = $info['email'];
+            $pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+            $pdf->Ln();
+        }
 		$pdf->setFont($fontFamily, 'B');
 		$str = JText::_('COM_QUIZ_PDF_USCORE') . "&nbsp;";
 		$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);

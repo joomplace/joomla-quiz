@@ -3503,11 +3503,13 @@ class JoomlaquizModelAjaxaction extends JModelList
             $is_correct = 0;
         }
 
-        if(!$is_correct){
+        $c_detailed_feedback = '';
+        if(!$is_correct && (($c_quest_cur_attempt + 1) == $c_all_attempts)){
             /* may be need to be moved */
             $query = "SELECT c_detailed_feedback from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";
             $database->SetQuery( $query );
-            $c_detailed_feedback = '</br>'.$database->LoadResult();
+            $c_detailed_feedback = $database->loadResult();
+            $c_detailed_feedback = ($c_detailed_feedback == '') ? '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'] : '</br>'.$c_detailed_feedback;
         }
 
         $ret_str .= "\t" . '<quiz_prev_correct>'.$is_correct.'</quiz_prev_correct>' . "\n";

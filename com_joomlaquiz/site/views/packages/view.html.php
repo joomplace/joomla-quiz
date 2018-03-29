@@ -23,16 +23,15 @@ class JoomlaquizViewPackages extends JViewLegacy
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-
         $load_vm_lang = false;
         foreach ($this->packages as $item){
-            if($item->vm){
+            if(isset($item->shop) && $item->shop && $item->shop == 'virtuemart'){
                 $load_vm_lang = true;
                 break;
             }
         }
         if($load_vm_lang){
-            JFactory::getLanguage()->load('com_virtuemart_orders', 'components/com_virtuemart');
+            \JFactory::getLanguage()->load('com_virtuemart_orders', 'components/com_virtuemart');
         }
 
 		parent::display($tpl);

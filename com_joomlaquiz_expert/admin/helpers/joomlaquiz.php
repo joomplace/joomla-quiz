@@ -268,13 +268,10 @@ class JoomlaquizHelper
 
 		public static function getVirtuemartCategories() {
 			VmConfig::loadConfig();
-			VmConfig::loadJLang('com_virtuemart');
 
-			$db = JFactory::getDBO();
+			$db = \JFactory::getDBO();
 			$query = $db->getQuery(true);
-
 			$categoriesVm = array();
-
 
 			$query->select($db->qn(array('vm_pc.virtuemart_category_id', 'vm_c.category_name')));
 			$query->from($db->qn('#__virtuemart_categories', 'vm_pc'));
@@ -289,6 +286,26 @@ class JoomlaquizHelper
 
 			return $categoriesVm;
 		}
+
+        public static function getHikaShopCategories() {
+            $db = \JFactory::getDBO();
+            $query = $db->getQuery(true);
+            $categories_HikaShop = array();
+
+            $query->select($db->qn(array('category_id', 'category_name')))
+                ->from($db->qn('#__hikashop_category'))
+                ->where($db->qn('category_type') .'='. $db->q('product'))
+                ->order('category_name');
+
+            $db->setQuery( $query );
+            $categories = $db->loadObjectList();
+
+            for($i = 0; $i < count($categories); $i++) {
+                $categories_HikaShop[$categories[$i]->category_id] = $categories[$i]->category_name;
+            }
+
+            return $categories_HikaShop;
+        }
 
 		public static function getQuizzesForSelect(){
 			$db = JFactory::getDBO();

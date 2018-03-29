@@ -34,9 +34,10 @@ class JoomlaquizViewProducts extends JViewLegacy
         $items 		= $this->get('Items');
         $pagination = $this->get('Pagination');
         $state		= $this->get('State');
-        
-		$this->categoriesFields = $this->get('Categories');
-		
+
+        $this->vm_categories = !$GLOBALS['no_virtuemart'] ? $this->get('VmCategories') : '';
+        $this->hikashop_categories = $GLOBALS['isHikaShop'] ? $this->get('HikaShopCategories') : '';
+
 		$quizzesFields = JHTML::_('select.options', $this->get('Quizzes'), 'value', 'text', $app->getUserStateFromRequest('products.filter.quiz_id', 'filter_quiz_id') );
 		
 		JHtmlSidebar::addFilter(

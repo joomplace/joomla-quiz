@@ -73,11 +73,19 @@ $sortFields = $this->getSortFields();
                             <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
                     </select>
             </div>
-			<div class="btn-group pull-right">
-                    <label for="category_id" class="element-invisible"><?php echo JText::_('COM_JOOMLAQUIZ_USERNAME2');?></label>
-                    <?php echo $this->categoriesFields;?>
+            <?php if($this->vm_categories): ?>
+            <div class="btn-group pull-right">
+                <label for="filter_vm_category_id" class="element-invisible"><?php echo JText::_('COM_JOOMLAQUIZ_USERNAME2');?></label>
+                <?php echo $this->vm_categories; ?>
             </div>
-			
+            <?php endif; ?>
+            <?php if($this->hikashop_categories): ?>
+                <div class="btn-group pull-right">
+                    <label for="filter_hikashop_category_id" class="element-invisible"><?php echo JText::_('COM_JOOMLAQUIZ_USERNAME2');?></label>
+                    <?php echo $this->hikashop_categories; ?>
+                </div>
+            <?php endif; ?>
+
         <div class="clearfix"> </div>
         <table class="table table-striped" id="productList">
             <thead>

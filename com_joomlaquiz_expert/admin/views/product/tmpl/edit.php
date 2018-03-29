@@ -10,7 +10,7 @@ defined('_JEXEC') or die;
 JHtml::_('bootstrap.tooltip');
 JHTML::_('behavior.calendar');
 JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 $relations = $this->lists['relation'];
@@ -18,44 +18,72 @@ $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
 ?>
 <style>
-	label
-	{
+	label {
 		display:inline;
 	}
 </style>
 <?php echo $this->loadTemplate('menu');?>
 <script>
-    jQuery(document).ready(function(){
+    jQuery(function($) {
+        $("#q_access_0_2").click(function () {
+            $('#period1').text('<?php echo JText::_("COM_JOOMLAQUIZ_ACCESS_DAYS")?>');
+        });
+        $("#q_access_1_2").click(function () {
+            $('#period1').text('<?php echo JText::_("COM_JOOMLAQUIZ_ACCESS_PERIOD")?>');
+        });
+        $("#l_access_0_3").click(function () {
+            $('#period2').text('<?php echo JText::_("COM_JOOMLAQUIZ_ACCESS_DAYS")?>');
+        });
+        $("#l_access_1_3").click(function () {
+            $('#period2').text('<?php echo JText::_("COM_JOOMLAQUIZ_ACCESS_PERIOD")?>');
+        });
 
-        jQuery("#q_access_0_2").click(function () {
-            jQuery('#period1').text('<?php echo JText::_("COM_JOOMLAQUIZ_ACCESS_DAYS")?>');
-        });
-        jQuery("#q_access_1_2").click(function () {
-            jQuery('#period1').text('<?php echo JText::_("COM_JOOMLAQUIZ_ACCESS_PERIOD")?>');
-        });
-        jQuery("#l_access_0_3").click(function () {
-            jQuery('#period2').text('<?php echo JText::_("COM_JOOMLAQUIZ_ACCESS_DAYS")?>');
-        });
-        jQuery("#l_access_1_3").click(function () {
-            jQuery('#period2').text('<?php echo JText::_("COM_JOOMLAQUIZ_ACCESS_PERIOD")?>');
+        if($('#vm_product_id').length && $('#hikashop_product_id').length){
+            $('#vm_product_id').on('change', function () {
+               if($(this).val() != -1){
+                   $('#hikashop_product_id').val(-1).trigger('liszt:updated');
+               }
+            });
+            $('#hikashop_product_id').on('change', function () {
+                if($(this).val() != -1){
+                    $('#vm_product_id').val(-1).trigger('liszt:updated');
+                }
+            });
+        }
+        $('#product-form').on('submit', function (e) {
+            if($('#vm_product_id').length){
+                $('#vm_product_id').attr('disabled', false).css({'display':'inline-block', 'height':'0px',
+                    'width':'0px', 'padding':'0', 'border':'0'});
+            }
+            if($('#hikashop_product_id').length){
+                $('#hikashop_product_id').attr('disabled', false).css({'display':'inline-block', 'height':'0px',
+                    'width':'0px', 'padding':'0', 'border':'0'});
+            }
         });
     });
-
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&layout=edit&pid='.(int) $this->item->pid); ?>" enctype="multipart/form-data" method="post" name="adminForm" id="product-form" class="form-validate">
 	<div id="j-main-container" class="span10 form-horizontal">
 		<fieldset class="adminform">
 			<div class="control-group form-inline">
-				<label class="control-label" for="jform_product_id" id="jform_product_id-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_PRODUCT_NAME2')?></label>
+				<label class="control-label" for="jform_name" id="jform_name-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_PRODUCT_NAME2')?></label>
 				<div class="controls">
 					<input type="text" size="30" value="<?php echo @$this->lists['name']?>" id="jform_name" name="jform[name]">
 				</div>
 			</div>
-            <?php if(strlen($this->lists['products'])!=0):?>
+            <?php if(strlen($this->lists['vm_products'])!=0):?>
                 <div class="control-group form-inline">
-                    <label class=" control-label" for="jform_product_id" id="jform_product_id-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_OR_SELECT_VM')?></label>
+                    <label class=" control-label" for="jform_vm_product_id" id="jform_vm_product_id-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_OR_SELECT_VM')?></label>
                     <div class="controls">
-                        <?php if (!$this->lists['no_virtuemart']) {?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo JText::_('COM_JOOMLAQUIZ_OR_SELECT_VM');?><?php echo $this->lists['products'];  } else {?><input  type="hidden" name="product_id" value="<?php echo $this->lists['product_id'];?>" /><?php  } ?>
+                        <?php if (!$this->lists['no_virtuemart']) { echo $this->lists['vm_products'];  } else {?><input  type="hidden" name="vm_product_id" value="<?php echo $this->lists['product_id'];?>" /><?php  } ?>
+                    </div>
+                </div>
+            <?php endif;?>
+            <?php if(strlen($this->lists['hikashop_products'])!=0):?>
+                <div class="control-group form-inline">
+                    <label class=" control-label" for="jform_hikashop_product_id" id="jform_hikashop_product_id-lbl"><?php echo JText::_('COM_JOOMLAQUIZ_OR_SELECT_HIKASHOP')?></label>
+                    <div class="controls">
+                        <?php if($this->lists['isHikaShop']) { echo $this->lists['hikashop_products'];  } else {?><input  type="hidden" name="hikashop_product_id" value="<?php echo $this->lists['product_id'];?>" /><?php  } ?>
                     </div>
                 </div>
             <?php endif;?>

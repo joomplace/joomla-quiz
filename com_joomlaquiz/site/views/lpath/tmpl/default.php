@@ -80,7 +80,7 @@ $document->addScriptDeclaration("
 				$item_id_name = ($lpath_item->type == 'q' ? 'quiz_id' : 'article_id');?>
 				<br />
 				<div id="jq_start_link_container" style="float:right; margin-right:15px; line-height: 32px; text-transform: uppercase; width: auto !important; background-position: right center !important;">
-					<a style="padding-right:40px;" href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=quiz'.($lpath->rel_id? '&package_id='.$lpath->package_id.'&rel_id='.$lpath->rel_id: '&lid='.$lpath->id).'&'.$item_id_name.'='.$lpath_item->all_id.JoomlaquizHelper::JQ_GetItemId());?>"><?php echo JText::_('COM_QUIZ_START');?></a>
+					<a style="padding-right:40px;" href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=quiz'.($lpath->shop ? '&shop='.$lpath->shop : '').($lpath->rel_id? '&package_id='.$lpath->package_id.'&rel_id='.$lpath->rel_id: '&lid='.$lpath->id).'&'.$item_id_name.'='.$lpath_item->all_id.JoomlaquizHelper::JQ_GetItemId());?>"><?php echo JText::_('COM_QUIZ_START');?></a>
 				</div><br /><br />
 				<hr>
 			<?php }?>

@@ -52,9 +52,6 @@ class JoomlaquizModelResults extends JModelList
 		if(!$quiz_ids){
 			return 'no_access';
 		}
-
-		/* seems not used */
-		$GLOBALS['quiz_access_cert'] = $quiz_access_cert;
 		
 		/* getting results list */
 		$query->clear();
@@ -316,7 +313,8 @@ class JoomlaquizModelResults extends JModelList
 			$_SESSION['quiz_lid'] = 0;
 			$_SESSION['quiz_rel_id'] = 0;
 			$_SESSION['quiz_package_id'] = 0;
-			
+            $_SESSION['shop_name'] = '';
+
 			$query = "SELECT count(*) FROM #__quiz_t_question WHERE c_quiz_id = '".$quiz_id."' AND c_type = 4 AND published = 1";
 			$db->SetQuery( $query );
 			$quiz_params->if_dragdrop_exist = $db->loadResult();

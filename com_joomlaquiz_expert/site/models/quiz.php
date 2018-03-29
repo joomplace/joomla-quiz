@@ -25,29 +25,31 @@ class JoomlaquizModelQuiz extends JModelList
 
 		/* get menu item params */
 		// check because fails on article save because of content plugin
-		if(!$app->isAdmin())
-			$params = $app->getParams();
-		else
-			$params = new JRegistry();
-		
+		if(!$app->isAdmin()) {
+            $params = $app->getParams();
+        } else {
+            $params = new JRegistry();
+        }
+
 		$error_info = '';
 		if (!isset($quiz_id) || !$quiz_id) {
-			$quiz_id = $jinput->get( 'quiz_id', $params->get('quiz_id', 0, 'INT'), 'INT');
+			$quiz_id = $jinput->getInt('quiz_id', $params->get('quiz_id', 0, 'INT'));
 		}
-		
-		$article_id 	= $jinput->get( 'article_id', 0, 'INT');
+
+		$article_id = $jinput->getInt('article_id', 0);
 		
 		/* not used anywhere in code */
 		// $lpath_id 		= $jinput->get( 'lpath_id', $params->get('lpath_id', 0, 'INT'), 'INT');
 		/* learning path ??? */
-		$lid 			= $jinput->get( 'lid', 0, 'INT');
+		$lid = $jinput->getInt('lid', 0);
 		
 		/* packages needs? */
 		$rel_id 		= $jinput->get( 'rel_id', 0, 'INT');
 		$package_id 	= $jinput->get( 'package_id', 0, 'INT');
-		$vm 			= $package_id < 1000000000;
+		$shop 			= $package_id < 1000000000;
+		$shop_name      = $jinput->get('shop', '');
 
-		if ($package_id && $rel_id) {
+		if ($package_id && $rel_id && !$shop) {
 			$payment_query = "SELECT user_id, id, pid"
 				. "\n FROM `#__quiz_payments`"
 				. "\n WHERE id = '" . ($package_id-1000000000) . "' AND status IN ('Confirmed')"
@@ -55,8 +57,8 @@ class JoomlaquizModelQuiz extends JModelList
 
 			$db->setQuery($payment_query);
 			$payment = $db->loadObject();
-			
-			if ($user->id != $payment->user_id) {
+
+			if (!$payment || $user->id != $payment->user_id) {
 				$payment_id_query = "SELECT p.id"
 				. "\n FROM `#__quiz_payments` AS p"
 				. "\n INNER JOIN `#__quiz_products` AS qp ON qp.pid = p.pid"
@@ -66,37 +68,34 @@ class JoomlaquizModelQuiz extends JModelList
 				$db->setQuery($payment_id_query);
 				$payment_id = $db->loadResult();
 
-				$vm?$offset=0:$offset=1000000000;
-				if ($package_id) {
-					$package_id = intval($payment_id)+$offset;	
-				}	
+                $offset = $shop ? 0 : 1000000000;
+				if ($package_id && (int)$payment_id) {
+					$package_id = (int)$payment_id + $offset;
+				}
 			}
 		}
-		
-		$quiz_params 	= array();
+
 		$quiz_params = new stdClass;
-		
-		/* видимо предпроверка на то куплен ли пакет */
+
 		if( ( $rel_id && !$user->id ) || ( !$package_id && $rel_id ) || ( $package_id && !$rel_id )	){
 			$quiz_params->error = 1;
 			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_NOT_AVAILABLE').'</p>';
 			return $quiz_params;
 		}
-		
+
 		/* понять что это значит */
 		if ($rel_id && !$quiz_id && !$article_id) {
-			$quiz_params = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $vm);
+			$quiz_params = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $shop_name);
 			return $quiz_params;
 		}
-		
-		/* возможно соединить с предыдущей функцией? */
-		if ($rel_id && $article_id) 
-			$lid = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $vm);
+
+		if ($rel_id && $article_id) {
+            $lid = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $shop_name);
+        }
 			
 		/* вход в learning path */
 		if($article_id && $lid){
-		
-			
+
 			$query->clear();
 			$query->select($db->qn('order'))
 				->from($db->qn('#__quiz_lpath_quiz'))
@@ -111,7 +110,7 @@ class JoomlaquizModelQuiz extends JModelList
 				->from($db->qn('#__quiz_lpath_quiz', 'a'))
 				->where($db->qn('a.lid').' = '.$db->q($lid).' AND '.$db->qn('a.order').' > ('.$sub_query.')')
 				->order('a.order ASC');
-
+			
 			$db->setQuery($query,0,1);
 			/* loading next step */
 			$next = $db->loadObject();
@@ -170,8 +169,7 @@ class JoomlaquizModelQuiz extends JModelList
 		}
 
 		/* if one time and already passed - clear data and set message */
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
+        $query->clear();
 		$query->select('1')
 			->from('#__quiz_r_student_quiz')
 			->where($db->qn('c_passed').' = '.$db->q('1'))
@@ -230,17 +228,28 @@ class JoomlaquizModelQuiz extends JModelList
 				if(!empty($products_stat) && array_key_exists($rel_id, $products_stat)) {
 					$confirm_date = strtotime($products_stat[$rel_id]->xdays_start);
 				} else {
-					if ($vm) {
-						$query->clear();
-						$query->select('UNIX_TIMESTAMP('.$db->qn('order_history.created_on').')')
-							->from($db->qn('#__virtuemart_order_histories','order_history'))
-							->join('inner',$db->qn('#__virtuemart_order_items', 'order_item').' ON '.$db->qn('order_item.virtuemart_order_id').' = '.$db->qn('order_history.virtuemart_order_id'))
-							->where($db->qn('order_history.order_status_code').' = '.$db->q('C'))
-							->where($db->qn('order_item.virtuemart_order_id').' = '.$db->q($package_id))
-							->where($db->qn('order_item.virtuemart_product_id').' = '.$db->q($quiz_params->product_data->pid))
-							->order($db->qn('order_history.created_on').' DESC ');
+                    $query->clear();
+					if ($shop) {
+						if($shop_name == 'virtuemart') {
+                            $query->select('UNIX_TIMESTAMP(' . $db->qn('order_history.created_on') . ')')
+                                ->from($db->qn('#__virtuemart_order_histories', 'order_history'))
+                                ->join('inner', $db->qn('#__virtuemart_order_items',
+                                        'order_item') . ' ON ' . $db->qn('order_item.virtuemart_order_id') . ' = ' . $db->qn('order_history.virtuemart_order_id'))
+                                ->where($db->qn('order_history.order_status_code') . ' = ' . $db->q('C'))
+                                ->where($db->qn('order_item.virtuemart_order_id') . ' = ' . $db->q($package_id))
+                                ->where($db->qn('order_item.virtuemart_product_id') . ' = ' . $db->q($quiz_params->product_data->pid))
+                                ->order($db->qn('order_history.created_on') . ' DESC ');
+                        } else if($shop_name == 'hikashop') {
+                            $query->select($db->qn('hh.history_created'))
+                                ->from($db->qn('#__hikashop_history', 'hh'))
+                                ->join('inner', $db->qn('#__hikashop_order_product', 'hop')
+                                    . ' ON ' . $db->qn('hop.order_id') .' = '. $db->qn('hh.history_order_id'))
+                                ->where($db->qn('hh.history_new_status') .' = '. $db->q('confirmed'))
+                                ->where($db->qn('hop.order_id') .' = '. $db->q((int)$package_id))
+                                ->where($db->qn('hop.product_id') .' = '. $db->q((int)$quiz_params->product_data->pid))
+                                ->order($db->qn('hh.history_created') . ' DESC ');
+                        }
 					} else {
-						$query->clear();
 						$query->select('UNIX_TIMESTAMP('.$db->qn('p.confirmed_time').')')
 							->from($db->qn('#__quiz_payments','p'))
 							->where($db->qn('p.status').' = '.$db->q('Confirmed'))
@@ -292,7 +301,7 @@ class JoomlaquizModelQuiz extends JModelList
 			
 			/* Check attempts */
 			$wait_time = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $wait_time);
+			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $wait_time, $shop_name);
 
 			/* if no attempts */
 			if (!$is_attempts) {
@@ -327,10 +336,10 @@ class JoomlaquizModelQuiz extends JModelList
 			$quiz_params->lid_data = $db->loadObject();
 			
 			$tmp = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp);
+			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp, $shop_name);
 			
 			$wait_time = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);
+			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time, $shop_name);
 			if (!$is_attempts) {
 				if ($wait_time){
 					/* might be replaced with spritf */
@@ -367,7 +376,7 @@ class JoomlaquizModelQuiz extends JModelList
 			$doing_quiz = 1;
 			
 			$wait_time = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);
+			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time, $shop_name);
 			if (!$is_attempts) {
 				if ($wait_time){
 					/* might be replaced with spritf */
@@ -402,15 +411,13 @@ class JoomlaquizModelQuiz extends JModelList
             $category = JTable::getInstance('Category');
             $my_acl   = $user->getAuthorisedViewLevels();
             $category->load($quiz_params->c_category_id);
-            if ((!JFactory::getUser()->authorise('core.view',
-                        'com_joomlaquiz.quiz.' . $quiz_params->c_id)
+            if ((!JFactory::getUser()->authorise('core.view', 'com_joomlaquiz.quiz.' . $quiz_params->c_id)
                     || !in_array($category->access, $my_acl))
                 /* c_guest must be excluded (legacy purpose @deprecated 3.8) */
                 && (!JFactory::getUser()->id && !$quiz_params->c_guest)
             ) {
                 $quiz_params->error   = 1;
-                $quiz_params->message = '<p align="left">'
-                    . JText::_('COM_QUIZ_REG_ONLY') . '</p>';
+                $quiz_params->message = '<p align="left">' . JText::_('COM_QUIZ_REG_ONLY') . '</p>';
 
                 return $quiz_params;
             }
@@ -491,7 +498,8 @@ class JoomlaquizModelQuiz extends JModelList
 			$_SESSION['quiz_lid'] = $lid;
 			$_SESSION['quiz_rel_id'] = $rel_id;
 			$_SESSION['quiz_package_id'] = $package_id;
-			
+            $_SESSION['shop_name'] = htmlspecialchars($shop_name, ENT_QUOTES, 'UTF-8');
+
 			$query->clear();
 			$query->select('COUNT(*)')
 				->from('#__quiz_t_question')
@@ -626,7 +634,8 @@ class JoomlaquizModelQuiz extends JModelList
 		$data->user = $user;
 		$data->print = $print;
 		$data->access = $access;
-	
+		$data->shop = JFactory::getApplication()->input->get('shop', '');
+
 		return $data;	
 	}
 }

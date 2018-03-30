@@ -130,7 +130,7 @@ if(isset($this->packages->error) && $this->packages->error){
 
                         <small><?php echo htmlspecialchars($b_quizz->suffix, ENT_QUOTES, 'UTF-8'); ?></small>
                         <br />
-                        <?php echo htmlspecialchars($b_quizz->quiz->c_short_description, ENT_QUOTES, 'UTF-8');?><br />
+                        <?php echo $b_quizz->quiz->c_short_description; ?><br />
                     <?php
                     }
                     ?>

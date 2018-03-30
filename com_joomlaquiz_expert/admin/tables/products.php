@@ -32,7 +32,7 @@ class JoomlaquizTableProducts extends JTable
             $database = \JFactory::getDBO();
             $dataPOST = $app->input->getArray(array());
 
-            $product_id = '-1';
+            $product_id = \JFactory::getApplication()->input->getInt('pid', 0);
             if(isset($dataPOST['vm_product_id']) && $dataPOST['vm_product_id'] != -1){
                 $product_id = (int)$dataPOST['vm_product_id'];
             }
@@ -43,7 +43,10 @@ class JoomlaquizTableProducts extends JTable
 
             $name = htmlspecialchars(trim($dataPOST['jform']['name']), ENT_QUOTES, 'UTF-8');
 
-            if($product_id == -1 && $name == ''){
+            if($name == ''
+                && ((isset($dataPOST['vm_product_id']) && $dataPOST['vm_product_id'] == -1)
+                        || (isset($dataPOST['hikashop_product_id']) && $dataPOST['hikashop_product_id'] == -1))
+            ){
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_PRODUCT')."'); window.history.go(-1); </script>\n";
 				exit();
 			}
@@ -64,7 +67,7 @@ class JoomlaquizTableProducts extends JTable
 				}
 			}
 
-			if (($product_id && $product_id_int != $product_id && !$quiz_sku) || ($product_id == '-1' && $name != '')){
+			if (($product_id && $product_id_int != $product_id && !$quiz_sku) || ($product_id == '0' && $name != '')){
 				$quiz_sku = strtotime(JFactory::getDate());
 				$query = "INSERT INTO #__quiz_product_info SET `quiz_sku` = '".$quiz_sku."', `name` = '{$name}'";
 				$database->setQuery($query);

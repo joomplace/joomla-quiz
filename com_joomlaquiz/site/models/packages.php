@@ -323,7 +323,11 @@ class JoomlaquizModelPackages extends JModelList
                                 if (($data->period_start && $data->period_start != '0000-00-00') || ($data->period_end && $data->period_end != '0000-00-00')) {
                                     $data->suffix = sprintf(JText::_('COM_QUIZ_PERIOD_ATTEMPTS'), $attempts_left, implode(' ', $period));
                                 } else {
-                                    $data->suffix .= ($data->suffix ? ' ' : '') . sprintf(JText::_('COM_QUIZ_ATTEMPTS'), $attempts_left);
+                                    if(isset($data->suffix)){
+                                        $data->suffix .= ' ' . sprintf(JText::_('COM_QUIZ_ATTEMPTS'), $attempts_left);
+                                    } else {
+                                        $data->suffix = sprintf(JText::_('COM_QUIZ_ATTEMPTS'), $attempts_left);
+                                    }
                                 }
                             }
 

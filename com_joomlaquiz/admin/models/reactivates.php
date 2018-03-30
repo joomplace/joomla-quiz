@@ -86,8 +86,8 @@ class JoomlaquizModelReactivates extends JModelList
 			$where[] = '(users.id = ' . (int)$user_id . ')';
 		}
         if ($search) {
-            $search = $db->q('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-            $where[] = "(users.name LIKE ('%' . $search . '%'))";
+            $search = $db->q('%' . str_replace(' ', '%', $db->escape(trim($search), true)) . '%');
+            $where[] = '(users.name LIKE '. $search .')';
         }
 
         $no_shops_query = "SELECT `users`.`name`, `payments`.`id` AS `order_id`, '' AS `order_status`," .

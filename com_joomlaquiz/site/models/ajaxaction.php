@@ -2932,11 +2932,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 	public function JQ_GetPanelData($quiz_id, $q_data, $stu_quiz_id=0) {
 		
 		$database = JFactory::getDBO();
-		$database->setQuery("SELECT qt.template_name FROM #__quiz_templates as qt LEFT JOIN #__quiz_t_quiz as q ON q.c_skin = qt.id WHERE q.c_id = '".$quiz_id."'");
-		$tmpl = $database->loadResult();
-		
-		$panel_str = "\t" . '<quiz_panel_data><![CDATA[';
-		$panel_data = $q_data;
+        $database->setQuery("SELECT qt.template_name, `q`.`c_slide_show_results` FROM #__quiz_templates as qt LEFT JOIN #__quiz_t_quiz as q ON q.c_skin = qt.id WHERE q.c_id = '".$quiz_id."'");
+        $result = $database->loadObject();
+        $tmpl = $result->template_name;
+        $panel_show_results = (int)$result->c_slide_show_results;
+
+        $panel_str = "\t" . '<quiz_panel_data><![CDATA[';
+        $panel_data = $q_data;
 		$panel_str .= JoomlaQuiz_template_class::JQ_panel_start();
 		
 		$k = $n = 1;
@@ -2956,7 +2958,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			
 			$panel_row->c_question = strip_tags($panel_row->c_question);
 			$panel_row->c_question = (strlen($panel_row->c_question)>200? JoomlaquizHelper::jq_substr($panel_row->c_question, 0, 160).'...': $panel_row->c_question);
-			$panel_str .= JoomlaQuiz_template_class::JQ_panel_data($panel_row, $all_quests, $cquests, $stu_quiz_id, $k, $n);
+            $panel_str .= JoomlaQuiz_template_class::JQ_panel_data($panel_row, $all_quests, $cquests, $stu_quiz_id, $k, $n, $panel_show_results);
 			$k = 3 - $k;
 			$n++;
 		}

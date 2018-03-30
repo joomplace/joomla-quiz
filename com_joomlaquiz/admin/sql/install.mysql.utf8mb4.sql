@@ -574,6 +574,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_random` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `published` int(11) NOT NULL DEFAULT '0',
   `c_slide` tinyint(4) NOT NULL DEFAULT '1',
+  `c_slide_show_results` tinyint(3) NOT NULL DEFAULT '0',
   `c_language` int(11) NOT NULL DEFAULT '0',
   `c_certificate` int(11) NOT NULL DEFAULT '0',
   `c_feedback` int(11) NOT NULL DEFAULT '0',

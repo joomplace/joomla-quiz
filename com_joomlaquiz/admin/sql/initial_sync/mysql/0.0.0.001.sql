@@ -512,7 +512,8 @@ ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_skin` TINYINT(3) UNSIGNED NOT NULL DE
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_random` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `c_skin`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `published` INT(11) NOT NULL DEFAULT '0' AFTER `c_random`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_slide` TINYINT(4) NOT NULL DEFAULT '1' AFTER `published`;
-ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_language` INT(11) NOT NULL DEFAULT '0' AFTER `c_slide`;
+ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_slide_show_results` TINYINT(3) NOT NULL DEFAULT '0' AFTER `c_slide`;
+ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_language` INT(11) NOT NULL DEFAULT '0' AFTER `c_slide_show_results`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_certificate` INT(11) NOT NULL DEFAULT '0' AFTER `c_language`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_feedback` INT(11) NOT NULL DEFAULT '0' AFTER `c_certificate`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_pool` INT(11) NOT NULL DEFAULT '0' AFTER `c_feedback`;

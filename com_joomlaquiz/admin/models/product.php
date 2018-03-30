@@ -64,22 +64,24 @@ class JoomlaquizModelProduct extends JModelAdmin
 	}
 	
 	public function getLists(){
-		
-		$lang = JComponentHelper::getParams('com_languages')->get('site','en-GB');
-		$lang = JFactory::getLanguage()->getTag();
-		$lang = strtolower(str_replace('-', '_', $lang));
-		$database = JFactory::getDBO();
-		
-		$no_virtuemart = ($this->isNotVirtuemart()) ? 1 : 0;
+
+		$lang = strtolower(str_replace('-', '_', JFactory::getLanguage()->getTag()));
+		$db = JFactory::getDBO();
+        $product_id = JFactory::getApplication()->input->getInt('pid', 0);
+
+        $lists = array();
+        $lists['product_id'] = $product_id ? $product_id : -1;
+
+        $no_virtuemart = $this->isNotVirtuemart() ? 1 : 0;
+        $lists['no_virtuemart'] = $no_virtuemart;
 		$GLOBALS['no_virtuemart'] = $no_virtuemart;
-			
-		$lists = array();
-		$lists['no_virtuemart'] = $no_virtuemart;
-		$product_id = JFactory::getApplication()->input->get('pid');
-		
-		$lists['product_id'] = $product_id ? $product_id : -1;
-		$lists['products'] = '';
-	
+        $lists['vm_products'] = '';
+
+		$isHikaShop = $this->isHikaShop() ? 1 : 0;
+        $lists['isHikaShop'] = $isHikaShop;
+        $GLOBALS['isHikaShop'] = $isHikaShop;
+        $lists['hikashop_products'] = '';
+
 		if (!$no_virtuemart) {
 			if (!class_exists( 'VmConfig' )) require(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_virtuemart'.DS.'helpers'.DS.'config.php');
 			VmConfig::loadConfig();
@@ -91,25 +93,34 @@ class JoomlaquizModelProduct extends JModelAdmin
 			. "\n ORDER BY text"
 			;
 			
-			$database->setQuery( $query );
+			$db->setQuery( $query );
+            $products = array();
 			$products[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_SELECT_PRODUCT') );
-			$products = @array_merge( $products, $database->loadObjectList() );
-			$lists['products'] = JHTML::_('select.genericlist', $products, 'product_id', 'class="text_area" style="max-width: 300px;" size="1"' . ($product_id ? ' disabled' : ''), 'value', 'text', $product_id );
+			$products = @array_merge( $products, $db->loadObjectList() );
+			$lists['vm_products'] = JHTML::_('select.genericlist', $products, 'vm_product_id', 'class="text_area" style="max-width: 300px;" size="1"' . ($product_id ? ' disabled' : ''), 'value', 'text', $product_id );
+    	}
+
+		if($isHikaShop){
+            $query = "SELECT CONCAT(product_name, ' (', product_code, ')') AS text, product_id AS value FROM #__hikashop_product WHERE product_published = '1' ORDER BY text";
+            $db->setQuery( $query );
+            $products = array();
+			$products[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_SELECT_PRODUCT') );
+			$products = @array_merge( $products, $db->loadObjectList() );
+			$lists['hikashop_products'] = JHTML::_('select.genericlist', $products, 'hikashop_product_id', 'class="text_area" style="max-width: 300px;" size="1"' . ($product_id ? ' disabled' : ''), 'value', 'text', $product_id );
 		}
 		
 		$prod_rel = array();
 		if($product_id) {
-			$lists['products'] .= '<input type="hidden" name="product_id" value="' . $product_id . '" />';
 			$query = "SELECT * FROM #__quiz_products WHERE `pid` = '" . $product_id ."'";
-			$database->setQuery($query);
-			$temp_rel = $database->loadAssocList();
+			$db->setQuery($query);
+			$temp_rel = $db->loadAssocList();
 			foreach($temp_rel as $rel) {
 				$prod_rel[$rel['type']][$rel['rel_id']] = $rel;
 			}
 			
 			$query = "SELECT name FROM #__quiz_product_info WHERE quiz_sku = '{$product_id}'";
-			$database->setQuery( $query );
-			$lists['name'] = $database->loadResult();
+			$db->setQuery( $query );
+			$lists['name'] = $db->loadResult();
 		}
 
 		if($product_id == '-1'){
@@ -123,8 +134,8 @@ class JoomlaquizModelProduct extends JModelAdmin
 		. "\n WHERE published = 1"
 		. "\n ORDER BY c_title"
 		;
-		$database->setQuery( $query );
-		$quizzes = $database->loadObjectList();
+		$db->setQuery( $query );
+		$quizzes = $db->loadObjectList();
 		$lists['quiz'] = $quizzes;
 
 		$query = "SELECT *, id AS value, title AS text"
@@ -132,14 +143,14 @@ class JoomlaquizModelProduct extends JModelAdmin
 		. "\n WHERE published = 1"
 		. "\n ORDER BY title"
 		;
-		$database->setQuery( $query );
-		$lpaths = $database->loadObjectList();
+		$db->setQuery( $query );
+		$lpaths = $db->loadObjectList();
 		$lists['lpath'] = $lpaths;
 		
 		return $lists;
 	}
 	
-	protected function isNotVirtuemart(){
+	public function isNotVirtuemart(){
 		
 		$no_virtuemart = false;
 		if(!defined('DS')) define('DS', '/');
@@ -171,4 +182,13 @@ class JoomlaquizModelProduct extends JModelAdmin
 		
 		return $no_virtuemart;
 	}
+
+	public function isHikaShop(){
+	    $isHikaShop = false;
+	    if (file_exists(JPATH_BASE . '/components/com_hikashop/config.xml')){
+            $isHikaShop = true;
+        }
+	    return $isHikaShop;
+    }
+
 }

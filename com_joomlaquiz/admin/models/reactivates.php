@@ -38,8 +38,6 @@ class JoomlaquizModelReactivates extends JModelList
     
 	protected function populateState($ordering = null, $direction = null)
 	{
-		$app = JFactory::getApplication();
-		
 		$search = $this->getUserStateFromRequest('reactivates.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 		
@@ -60,8 +58,6 @@ class JoomlaquizModelReactivates extends JModelList
 	}
 	
 	public static function delete($cid){
-		$database = JFactory::getDBO();
-		
 		return true;
 	}
 	
@@ -72,57 +68,113 @@ class JoomlaquizModelReactivates extends JModelList
     */
     protected function getListQuery()
     {
-    	$search = $this->getState('filter.search');
-    	$user_id = $this->getState('filter.user_id');
+    	$search = $this->getState('filter.search', '');
+    	$user_id = $this->getState('filter.user_id', 0);
 
-		if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/connection.php'))
-			$no_virtuemart = false;
-		else
-			$no_virtuemart = true;
-        
+        $no_virtuemart = true;
+		if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/connection.php')) {
+            $no_virtuemart = false;
+        }
+        $isHikaShop = false;
+        if (file_exists(JPATH_BASE . '/components/com_hikashop/config.xml')){
+            $isHikaShop = true;
+        }
+
+        $db = \JFactory::getDBO();
         $where = array();
-		if($user_id > 0) {
-			$where[] = '(users.id = ' . $user_id . ')';
+		if((int)$user_id > 0) {
+			$where[] = '(users.id = ' . (int)$user_id . ')';
 		}
-		if($search) {
-			$where[] = '(users.name LIKE (\'%' . $search . '%\'))';
-		}
+        if ($search) {
+            $search = $db->q('%' . str_replace(' ', '%', $db->escape(trim($search), true)) . '%');
+            $where[] = '(users.name LIKE '. $search .')';
+        }
 
-        $novm_query = "SELECT users.name, payments.id AS order_id, '' AS order_status, CONVERT (`payments`.`status` USING utf8) COLLATE utf8_unicode_ci AS order_status_name, '0' AS `vm` " .
-            "FROM #__quiz_payments AS payments INNER JOIN #__users AS users ON users.id = payments.user_id" .
+        $no_shops_query = "SELECT `users`.`name`, `payments`.`id` AS `order_id`, '' AS `order_status`," .
+            " CONVERT (`payments`.`status` USING utf8) COLLATE utf8_unicode_ci AS `order_status_name`, '' AS `shop`" .
+            " FROM `#__quiz_payments` AS `payments`" .
+            " INNER JOIN `#__users` AS `users` ON `users`.`id` = `payments`.`user_id`" .
             (count($where) ? " WHERE ".implode(' AND ', $where) : "");
 
-        if($no_virtuemart) {
-            $query = $novm_query;
-        } else {
-            $query = "(SELECT users.name, orders.virtuemart_order_id as order_id, orders.order_status, CONVERT (`order_status`.`order_status_name` USING utf8) COLLATE utf8_unicode_ci AS order_status_name, '1' AS `vm`" .
-                " FROM #__virtuemart_orders AS orders" .
-                " INNER JOIN #__users AS users ON users.id = orders.virtuemart_user_id" .
-                " LEFT JOIN #__virtuemart_orderstates AS order_status ON order_status.order_status_code = orders.order_status " .
-                (count($where) ? " WHERE ".implode(' AND ', $where) : "").")" .
-                " UNION (".$novm_query.")";
+		$vm_sub_query = "SELECT `virtuemart_order_id` FROM `#__virtuemart_order_items` WHERE `virtuemart_product_id` IN (SELECT `pid` FROM `#__quiz_products`)";
+        $vm_query = "(SELECT `users`.`name`, `orders`.`virtuemart_order_id` as `order_id`, `orders`.`order_status`," .
+            " CONVERT (`order_status`.`order_status_name` USING utf8) COLLATE utf8_unicode_ci AS `order_status_name`, 'virtuemart' AS `shop`" .
+            " FROM `#__virtuemart_orders` AS `orders`" .
+            " INNER JOIN `#__users` AS `users` ON `users`.`id` = `orders`.`virtuemart_user_id`" .
+            " LEFT JOIN `#__virtuemart_orderstates` AS `order_status` ON `order_status`.`order_status_code` = `orders`.`order_status`" .
+            " WHERE `orders`.`virtuemart_order_id` IN (". $vm_sub_query .")" .
+            (count($where) ? " AND ".implode(' AND ', $where) : "").")";
+
+        $hikashop_sub_query = "SELECT `order_id` FROM `#__hikashop_order_product` WHERE `product_id` IN (SELECT `pid` FROM `#__quiz_products`)";
+        $hikashop_query = "(SELECT `users`.`name`, `orders`.`order_id` as `order_id`, `orders`.`order_status`," .
+            " CONVERT (`order_status`.`orderstatus_namekey` USING utf8) COLLATE utf8_unicode_ci AS `order_status_name`, 'hikashop' AS `shop`" .
+            " FROM `#__hikashop_order` AS `orders`" .
+            " LEFT JOIN `#__hikashop_user` AS `hu` ON `hu`.`user_id` = `orders`.`order_user_id`" .
+            " INNER JOIN `#__users` AS `users` ON `users`.`id` = `hu`.`user_cms_id`" .
+            " LEFT JOIN `#__hikashop_orderstatus` AS `order_status` ON `order_status`.`orderstatus_namekey` = `orders`.`order_status`" .
+            " WHERE `orders`.`order_id` IN (". $hikashop_sub_query .")" .
+            (count($where) ? " AND ".implode(' AND ', $where) : "").")";
+
+        // Virtuemart == false , Hikashop == false
+        if($no_virtuemart && !$isHikaShop) {
+            $query = $no_shops_query;
+        }
+        // Virtuemart == true , Hikashop == false
+        else if(!$no_virtuemart && !$isHikaShop) {
+            $query = $vm_query . " UNION (".$no_shops_query.")";
+        }
+        // Virtuemart == false , Hikashop == true
+        else if($no_virtuemart && $isHikaShop){
+            $query = $hikashop_query . " UNION (".$no_shops_query.")";
+        }
+        // Virtuemart == true , Hikashop == true
+        else if(!$no_virtuemart && $isHikaShop){
+            $query = $no_shops_query . " UNION (".$vm_query.") UNION (".$hikashop_query.")";
         }
 		
-		$query .= "\n ORDER BY name, vm, order_id";
+		$query .= " ORDER BY name, shop, order_id";
 
        	return $query;
     }
 	
-	public function getUsers(){
-		if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/connection.php'))
-			$no_virtuemart = false;
-		else
-			$no_virtuemart = true;
+	public function getUsers()
+    {
+        $no_virtuemart = true;
+        if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/connection.php')) {
+            $no_virtuemart = false;
+        }
+        $isHikaShop = false;
+        if (file_exists(JPATH_BASE . '/components/com_hikashop/config.xml')){
+            $isHikaShop = true;
+        }
 			
-		$db = JFactory::getDBO();
-		$query = (!$no_virtuemart ?"(SELECT DISTINCT(users.id) AS value, users.name AS text"
-		. "\n FROM #__virtuemart_orders AS orders"
-		. "\n INNER JOIN #__users AS users ON users.id = orders.virtuemart_user_id )"
-		. "\n UNION ": '')
-		. " (SELECT DISTINCT(users.id) AS value, users.name AS text"
-		. "\n FROM #__quiz_payments AS o"
-		. "\n INNER JOIN #__users AS users ON users.id = o.user_id)"
-		;
+		$db = \JFactory::getDBO();
+
+        $no_shops_query = "(SELECT DISTINCT(`users`.`id`) AS `value`, `users`.`name` AS `text` FROM `#__quiz_payments` AS `o` INNER JOIN `#__users` AS `users` ON `users`.`id` = `o`.`user_id`) ";
+
+        $vm_query = "(SELECT DISTINCT(`users`.`id`) AS `value`, `users`.`name` AS `text` FROM `#__virtuemart_orders` AS `orders` INNER JOIN `#__users` AS `users` ON `users`.`id` = `orders`.`virtuemart_user_id`) ";
+
+        $hikashop_query = "(SELECT DISTINCT(`users`.`id`) AS `value`, `users`.`name` AS `text` " .
+            "FROM `#__hikashop_order` AS `orders` " .
+            "LEFT JOIN `#__hikashop_user` AS `hu` ON `hu`.`user_id` = `orders`.`order_user_id` " .
+            "INNER JOIN `#__users` AS `users` ON `users`.`id` = `hu`.`user_cms_id`) ";
+
+        // Virtuemart == false , Hikashop == false
+        if($no_virtuemart && !$isHikaShop) {
+            $query = $no_shops_query;
+        }
+        // Virtuemart == true , Hikashop == false
+        else if(!$no_virtuemart && !$isHikaShop) {
+            $query = $vm_query . " UNION (".$no_shops_query.")";
+        }
+        // Virtuemart == false , Hikashop == true
+        else if($no_virtuemart && $isHikaShop){
+            $query = $hikashop_query . " UNION (".$no_shops_query.")";
+        }
+        // Virtuemart == true , Hikashop == true
+        else if(!$no_virtuemart && $isHikaShop){
+            $query = $no_shops_query . " UNION (".$vm_query.") UNION (".$hikashop_query.")";
+        }
 		
 		$db->setQuery( $query );
 		$users = $db->loadObjectList();
@@ -130,50 +182,59 @@ class JoomlaquizModelReactivates extends JModelList
 		return $users;
 	}
 
-	public function getProducts($order_id, $vm){
+	public function getProducts($order_id, $shop=''){
 		
-		$db = JFactory::getDBO();
-		$query = "";
-		if ($vm) {
-			$table_list = $db->getTableList();
+		$db = \JFactory::getDBO();
+		$query = '';
+        $products_names = array();
 
+        if (!$shop) {
+            $query = "SELECT `qpi`.`name`";
+            $query .= "\n FROM `#__quiz_payments` AS `p`";
+            $query .= "\n INNER JOIN `#__quiz_product_info` AS `qpi` ON `p`.`pid` = `qpi`.`quiz_sku`";
+            $query .= "\n WHERE `p`.`id` = '". (int)$order_id ."'";
+            $query .= "\n ORDER BY `qpi`.`name` ";
+        }
+		else if ($shop == 'virtuemart') {
+			$table_list = $db->getTableList();
 			$i = 0;
 			foreach ($table_list as $table) {
 				if (strpos($table, 'virtuemart_products_') !== false) {
-					if ($i > 0) $query .= " UNION ";
-					$query .= "(SELECT vm_p_engb.product_name";
-					$query .= "\n FROM #__virtuemart_order_items AS vm_oi";
-					$query .= "\n INNER JOIN " . $table ." AS vm_p_engb ON vm_p_engb.virtuemart_product_id = vm_oi.virtuemart_order_id";
-					$query .= "\n WHERE vm_oi.virtuemart_order_id = " . $order_id;
-					$query .= "\n ORDER BY vm_p_engb.product_name) ";
+					if ($i > 0){
+					    $query .= " UNION ";
+                    }
+					$query .= "(SELECT `vm_p_engb`.`product_name`";
+					$query .= "\n FROM `#__virtuemart_order_items` AS `vm_oi`";
+					$query .= "\n INNER JOIN `" . $table ."` AS `vm_p_engb` ON `vm_p_engb`.`virtuemart_product_id` = `vm_oi`.`virtuemart_product_id`";
+					$query .= "\n WHERE `vm_oi`.`virtuemart_order_id` = '". (int)$order_id ."'";
+					$query .= "\n ORDER BY `vm_p_engb`.`product_name`) ";
 					$i++;
 				}
 			}
-		} else {
-			$query = "SELECT qpi.name";
-			$query .= "\n FROM #__quiz_payments AS p";
-			$query .= "\n INNER JOIN #__quiz_product_info AS qpi ON p.pid = qpi.quiz_sku ";
-			$query .= "\n WHERE p.id = " . $order_id;
-			$query .= "\n ORDER BY qpi.name ";
 		}
+        else if ($shop == 'hikashop') {
+            $query = "SELECT `order_product_name` FROM `#__hikashop_order_product` WHERE `order_id` = '".(int)$order_id."' ORDER BY `order_product_name`";
+        }
 
-		$db->SetQuery( $query );
-		$products_names = $db->loadColumn();
+        if($query) {
+            $db->setQuery($query);
+            $products_names = $db->loadColumn();
+        }
 
 		return $products_names;
 	}
 
     public function getCurrDate()
     {
-        $db = $this->_db;
+        $db = \JFactory::getDBO();
         $query = $db->getQuery(true);
-        $query->select('c_par_value');
-        $query->from('`#__quiz_setup`');
-        $query->where("c_par_name='curr_date'");
 
+        $query->select($db->qn('c_par_value'))
+            ->from($db->qn('#__quiz_setup'))
+            ->where($db->qn('c_par_name') . '=' . $db->q('curr_date'));
 
         $result = $db->setQuery($query)->loadResult();
-        if (strtotime("+2 month",strtotime($result))<=strtotime(JFactory::getDate())) {
+        if ($result && strtotime("+2 month",strtotime($result))<=strtotime(\JFactory::getDate())) {
             return true;
         } else {
             return false;

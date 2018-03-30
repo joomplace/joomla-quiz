@@ -23,28 +23,41 @@ class JoomlaquizControllerReactivate extends JControllerForm
 	
 	public function apply_reactivate()
 	{
-		$database = JFactory::getDBO();
-		$oid = JFactory::getApplication()->input->get('oid', 0);
+		\JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+	    $database = \JFactory::getDBO();
+	    $jinput = \JFactory::getApplication()->input;
+		$oid = $jinput->getInt('oid', 0);
+
 		if (!$oid) {
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_WRONG_ID')."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 		
-		$vm	= $oid < 1000000000;
+		$shop = $oid < 1000000000;
+		$shop_name = $jinput->get('shop', '');
 		
-		$cids = JFactory::getApplication()->input->get('cid', array(), '');
+		$cids = $jinput->get('cid', array(), 'ARRAY');
 		if (!count($cids)) {
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_QUIZZES_OR_LEARNING')."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 		
-		if ($vm){
-			$query = "SELECT virtuemart_user_id FROM #__virtuemart_orders WHERE virtuemart_order_id = '{$oid}' ";
+		if (!$shop){
+            $query = "SELECT `user_id` FROM `#__quiz_payments` WHERE `id` = '".($oid-1000000000)."' ";
 		} else {
-			$query = "SELECT user_id FROM #__quiz_payments WHERE id = '".($oid-1000000000)."' ";
+            if($shop_name == 'virtuemart'){
+                $query = "SELECT `virtuemart_user_id` FROM `#__virtuemart_orders` WHERE `virtuemart_order_id` = '{$oid}' ";
+            }
+            else if($shop_name == 'hikashop'){
+                $query = "SELECT `hu`.`user_cms_id` FROM `#__hikashop_user` AS `hu` " .
+                    "LEFT JOIN `#__hikashop_order` AS `ho` ON `ho`.`order_user_id` = `hu`.`user_id` " .
+                    "WHERE `ho`.`order_id` = '{$oid}'";
+            }
 		}
+
 		$database->SetQuery( $query );
-		$uid = $database->loadResult();
+		$uid = (int)$database->loadResult();
 		if (!$uid) {
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_WRONG_ORDER')."'); window.history.go(-1); </script>\n";
 			exit();
@@ -65,9 +78,9 @@ class JoomlaquizControllerReactivate extends JControllerForm
 		$database->SetQuery( $query );
 		$quiz_products_stat = $database->loadObjectList('qp_id');
 		
-		$xdays = JFactory::getApplication()->input->get('xdays', array(), '');
-		$period = JFactory::getApplication()->input->get('period', array(), '');
-		$attempts = JFactory::getApplication()->input->get('attempts', array(), '');
+		$xdays = $jinput->get('xdays', array(), 'ARRAY');
+		$period = $jinput->get('period', array(), 'ARRAY');
+		$attempts = $jinput->get('attempts', array(), 'ARRAY');
 		
 		foreach($quiz_products as $qp) {
 			$set = array();
@@ -82,26 +95,25 @@ class JoomlaquizControllerReactivate extends JControllerForm
 					$set[] = "`period_end` = ''";
 				} else {
 					$ts_period = strtotime($qp->period_end . ' 23:59:59') - strtotime($qp->period_start . ' 00:00:00');
-					$ts_needed_end = strtotime(JFactory::getDate()) + $ts_period;
-					$set[] = "`period_end` = '" . JHtml::_('date',$ts_needed_end, 'Y-m-d') . "'";	
+					$ts_needed_end = strtotime(\JFactory::getDate()) + $ts_period;
+					$set[] = "`period_end` = '" . JHtml::_('date', $ts_needed_end, 'Y-m-d') . "'";
 				}
 			}
 			
 			if(in_array($qp->id, $attempts)) {
 				$set[] = "`attempts` = '0'";			
-				$query = "UPDATE #__quiz_lpath_stage SET `attempts` = '0' WHERE oid = '{$oid}' AND uid = '{$uid}' AND rel_id IN (" . implode(',', $cids) . ") ";
+				$query = "UPDATE `#__quiz_lpath_stage` SET `attempts` = '0' WHERE `oid` = '{$oid}' AND `uid` = '{$uid}' AND `rel_id` IN (" . implode(',', $cids) . ") ";
 				$database->setQuery($query);
 				$database->execute();
 			}
 
 			if(count($set) && array_key_exists($qp->id, $quiz_products_stat)) {
-				$query = 'UPDATE #__quiz_products_stat SET ' . implode(', ', $set)
-				. ' WHERE `id` = ' . $quiz_products_stat[$qp->id]->id;
+				$query = 'UPDATE `#__quiz_products_stat` SET '. implode(', ', $set) .' WHERE `id` = ' . $quiz_products_stat[$qp->id]->id;
 			} else {
 				$set[] = "`uid` = '" . $uid . "'";
 				$set[] = "`oid` = '" . $oid . "'";
 				$set[] = "`qp_id` = '" . $qp->id . "'";
-				$query = 'INSERT INTO #__quiz_products_stat SET ' . implode(', ', $set);
+				$query = 'INSERT INTO `#__quiz_products_stat` SET ' . implode(', ', $set);
 			}
 			$database->setQuery($query);
 

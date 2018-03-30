@@ -106,7 +106,10 @@ $sortFields = $this->getSortFields();
 			</tfoot>
 			<tbody>
 			<?php foreach ($this->items as $i => $item) :
-				$link 	= 'index.php?option=com_joomlaquiz&view=reactivate&layout=edit&id='. ($item->vm? $item->order_id: $item->order_id+1000000000);
+				$link = 'index.php?option=com_joomlaquiz&view=reactivate&layout=edit&id='. ($item->shop ? $item->order_id: $item->order_id+1000000000);
+			    if($item->shop) {
+                    $link = $link . '&shop=' . htmlspecialchars($item->shop, ENT_QUOTES, 'UTF-8');
+                }
 				$canEdit	= $user->authorise('core.edit',	$extension.'.reactivates.'.$item->order_id);
                 $canCheckin	= $user->authorise('core.admin', 'com_checkin');
                 $canChange	= $user->authorise('core.edit.state', $extension.'.reactivates.'.$item->order_id) && $canCheckin;
@@ -115,24 +118,28 @@ $sortFields = $this->getSortFields();
 					<td class="order nowrap center">
 						<?php echo ($i+1);?>
 					    <input type="text" style="display:none" name="order_id" size="5"
-							value="<?php echo ($item->vm? $item->order_id: $item->order_id+1000000000);?>" class="width-20 text-area-order " />
+							value="<?php echo ($item->shop ? $item->order_id : $item->order_id+1000000000);?>" class="width-20 text-area-order " />
 					</td>
 					<td class="center">
-						<?php echo JHtml::_('grid.id', $i, ($item->vm? $item->order_id: $item->order_id+1000000000)); ?>
+						<?php echo JHtml::_('grid.id', $i, ($item->shop ? $item->order_id : $item->order_id+1000000000)); ?>
 					</td>
 					<td class="nowrap has-context">
                         <div class="pull-left">
                             <?php
-                            $vm_confirmed_statuses = array('C','U');
-                            if(in_array($this->escape($item->order_status), $vm_confirmed_statuses)){
+                            $shop_confirmed_status = false;
+                            $virtuemart_confirmed_statuses = array('C','U');
+                            $hikashop_confirmed_statuses = array('confirmed');
+                            if( ($item->shop == 'virtuemart' && in_array($this->escape($item->order_status), $virtuemart_confirmed_statuses))
+                                || ($item->shop == 'hikashop' && in_array($this->escape($item->order_status), $hikashop_confirmed_statuses))
+                            ){
+                                $shop_confirmed_status = true;
+                            }
+
+                            if($shop_confirmed_status){
                                 echo '<a href="'.$link.'">';
                             }
-                            if ($item->vm){
-                                printf("%08d", (int)$item->order_id);
-                            } else {
-                                echo 'Payment #'.(int)$item->order_id;
-                            }
-                            if(in_array($this->escape($item->order_status), $vm_confirmed_statuses)){
+                            echo $item->shop ? sprintf("%08d", (int)$item->order_id) . ' ('.$item->shop.')' : 'Payment #'.(int)$item->order_id;
+                            if($shop_confirmed_status){
                                 echo '</a>';
                             }
                             ?>
@@ -141,7 +148,7 @@ $sortFields = $this->getSortFields();
 					<td class="has-context">
                         <div class="pull-left">
                             <?php 
-							$products_names = $this->model->getProducts($item->order_id, $item->vm);
+							$products_names = $this->model->getProducts($item->order_id, $item->shop);
 							if (count($products_names)) echo implode('; ', $products_names);
 							?>
                         </div>
@@ -149,12 +156,22 @@ $sortFields = $this->getSortFields();
 					<td class="has-context">
                         <div class="pull-left">
                         	<?php
-                            $vm_statuses = array(
-                                'C' => 'Confirmed', 'U' => 'Confirmed by shopper', 'S' => 'Shipped', 'X' => 'Cancelled',
-                                'R' => 'Refunded', 'F' => 'Completed', 'D' => 'Denied', 'P' => 'Pending'
+                            $shop_statuses = array(
+                                'virtuemart' => array(
+                                    'C' => 'Confirmed', 'U' => 'Confirmed by shopper', 'S' => 'Shipped', 'X' => 'Cancelled',
+                                    'R' => 'Refunded', 'F' => 'Completed', 'D' => 'Denied', 'P' => 'Pending'
+                                ),
+                                'hikashop' => array(
+                                    'created' => 'Created', 'confirmed' => 'Confirmed', 'cancelled' => 'Cancelled',
+                                    'refunded' => 'Refunded', 'shipped' => 'Shipped', 'pending' => 'Pending'
+                                )
                             );
-                            $item->order_status_name = (isset($item->order_status) && $item->order_status) ? $vm_statuses[$item->order_status] : '';
-                            echo ($item->order_status_name ? $item->order_status_name : '');
+
+                            $item->order_status_name = '';
+                            if($item->shop && $item->order_status){
+                                $item->order_status_name = $shop_statuses[$item->shop][$item->order_status];
+                            }
+                            echo $item->order_status_name;
                             ?>
                         </div>
 					</td>

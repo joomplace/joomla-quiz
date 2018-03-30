@@ -12,7 +12,6 @@ defined('_JEXEC') or die('Restricted Access');
 $tag = JFactory::getLanguage()->getTag();
 $lang = JFactory::getLanguage();
 $lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
-
 $lpath = $this->lpath_data[0];
 $lpath_all = $this->lpath_data[1];
 
@@ -70,18 +69,17 @@ $document->addScriptDeclaration("
 			<?php } ?>
 		</div>
 		<div class="jq_lpath_step_descr<?php echo ($lpath_item->show_link && isset($lpath_all[$k+1])&&!$lpath_all[$k+1]->show_link?' expanded':'')?>">
-			<?php 
+			<?php
 				$short_des = explode('<hr id="system-readmore" />',$lpath_item->short_description);
-				echo JHtml::_('content.prepare',$short_des[0]); 
+				echo JHtml::_('content.prepare',$short_des[0]);
 			?>
-			
 			<?php 
 			$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 			if ($lpath_item->show_link) {						
 				$item_id_name = ($lpath_item->type == 'q' ? 'quiz_id' : 'article_id');?>
 				<br />
 				<div id="jq_start_link_container" style="float:right; margin-right:15px; line-height: 32px; text-transform: uppercase; width: auto !important; background-position: right center !important;">
-					<a style="padding-right:40px;" href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=quiz'.($lpath->rel_id? '&package_id='.$lpath->package_id.'&rel_id='.$lpath->rel_id: '&lid='.$lpath->id).'&'.$item_id_name.'='.$lpath_item->all_id.JoomlaquizHelper::JQ_GetItemId());?>"><?php echo JText::_('COM_QUIZ_START');?></a>
+					<a style="padding-right:40px;" href="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=quiz'.($lpath->shop ? '&shop='.$lpath->shop : '').($lpath->rel_id? '&package_id='.$lpath->package_id.'&rel_id='.$lpath->rel_id: '&lid='.$lpath->id).'&'.$item_id_name.'='.$lpath_item->all_id.JoomlaquizHelper::JQ_GetItemId());?>"><?php echo JText::_('COM_QUIZ_START');?></a>
 				</div><br /><br />
 				<hr>
 			<?php }?>

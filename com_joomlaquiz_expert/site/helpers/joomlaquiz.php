@@ -81,9 +81,7 @@ class JoomlaquizHelper
 		}
 		
 		public static function JQ_GetJoomFish(&$original, $table='', $field='', $id = 0) {
-
 			$original = $original;
-			
 		}
 		
 		public static function jq_substr($str, $start, $length=null) {
@@ -504,7 +502,7 @@ class JoomlaquizHelper
 			return $new_text;
 		}
 		
-		public static function isQuizAttepmts($quiz_id, $lid=0, $rel_id=0, $order_id=0, &$msg) {
+		public static function isQuizAttepmts($quiz_id, $lid=0, $rel_id=0, $order_id=0, &$msg, $shop='') {
 		
 			$my = JFactory::getUser();
 			$database = JFactory::getDBO();
@@ -523,7 +521,6 @@ class JoomlaquizHelper
 			$unique_pass_str = '';
 			if (!$my->id && isset($_COOKIE['quizupi'][$quiz_id])) {	
 				$unique_pass_id = $_COOKIE['quizupi'][$quiz_id];
-				
 				$unique_pass_str = " `unique_pass_id` = '".$unique_pass_id."' AND `c_lid` = 0 AND `c_rel_id` = 0 ";	
 			} elseif ($lid && $my->id) {
 				$unique_pass_str = " `c_student_id` = '".$my->id."' AND `c_lid` = '".$lid."' ";
@@ -542,7 +539,7 @@ class JoomlaquizHelper
             if($result_event && !empty($result_event)){
                 $cust_params = $result_event[0];
             }
-			
+
 			//stand alone quiz	or  free learn path
 			if (!$order_id && !$rel_id) {
 				if ($quiz->c_number_times) {			
@@ -575,13 +572,23 @@ class JoomlaquizHelper
 					return true;
 				}		
 			} else {
+                $query = '';
 				if ($order_id < 1000000000) {
-					$query = "SELECT qp.*"
-					. "\n FROM #__virtuemart_orders AS vm_o"
-					. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
-					. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-					. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $order_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
-					;
+					if($shop == 'virtuemart') {
+                        $query = "SELECT qp.*"
+                            . "\n FROM #__virtuemart_orders AS vm_o"
+                            . "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
+                            . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
+                            . "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $order_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')";
+                    } else if($shop == 'hikashop'){
+                        $query = "SELECT `qp`.*"
+                            . "\n FROM `#__hikashop_order` AS `ho`"
+                            . "\n INNER JOIN `#__hikashop_order_product` AS `hop` ON `hop`.`order_id` = `ho`.`order_id`"
+                            . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `hop`.`product_id`"
+                            . "\n LEFT JOIN `#__hikashop_user` AS `hu` ON `hu`.`user_id` = `ho`.`order_user_id`"
+                            . "\n WHERE `hu`.`user_cms_id` = '".(int)$my->id."' AND `ho`.`order_id` = '".(int)$order_id."'"
+                            . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `ho`.`order_status` IN ('confirmed')";
+                    }
 				} else {
 					$query = "SELECT qp.*"
 					. "\n FROM `#__quiz_payments` AS p"
@@ -589,9 +596,11 @@ class JoomlaquizHelper
 					. "\n WHERE p.user_id = {$my->id} AND p.id = '".($order_id-1000000000)."' AND qp.id = '{$rel_id}' AND p.status IN ('Confirmed') "
 					;
 				}
-				$database->SetQuery( $query );
-				$rel_check = $database->loadObjectList();
-				if(empty($rel_check)) {
+				if($query) {
+                    $database->SetQuery($query);
+                    $rel_check = $database->loadObjectList();
+                }
+				if(!isset($rel_check) || empty($rel_check)) {
 					return false;
 				}
 							
@@ -602,15 +611,30 @@ class JoomlaquizHelper
 				
 				$product_quantity = 1;
 				if ($order_id < 1000000000) {
-					$query = "SELECT vm_oi.product_quantity"
-					. "\n FROM #__virtuemart_orders AS vm_o"
-					. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
-					. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-					. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $order_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
-					;
-				
-					$database->SetQuery( $query );
-					$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
+                    $query = '';
+                    if($shop == 'virtuemart') {
+                        $query = "SELECT `vm_oi`.`product_quantity`"
+                        . "\n FROM `#__virtuemart_orders` AS `vm_o`"
+                        . "\n INNER JOIN `#__virtuemart_order_items` AS `vm_oi` ON `vm_oi`.`virtuemart_order_id` = `vm_o`.`virtuemart_order_id`"
+                        . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `vm_oi`.`virtuemart_product_id`"
+                        . "\n WHERE `vm_o`.`virtuemart_user_id` = '".(int)$my->id."' AND `vm_o`.`virtuemart_order_id` = '".(int)$order_id."'"
+                        . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `vm_o`.`order_status` IN ('C')"
+                        ;
+                    } else if($shop == 'hikashop'){
+                        $query = "SELECT `hop`.`order_product_quantity`"
+                            . "\n FROM `#__hikashop_order` AS `ho`"
+                            . "\n INNER JOIN `#__hikashop_order_product` AS `hop` ON `hop`.`order_id` = `ho`.`order_id`"
+                            . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `hop`.`product_id`"
+                            . "\n LEFT JOIN `#__hikashop_user` AS `hu` ON `hu`.`user_id` = `ho`.`order_user_id`"
+                            . "\n WHERE `hu`.`user_cms_id` = '".(int)$my->id."' AND `ho`.`order_id` = '".(int)$order_id."'"
+                            . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `ho`.`order_status` IN ('confirmed')";
+                    }
+                    if($query) {
+                        $database->SetQuery($query);
+                        $product_quantity_result = $database->loadResult();
+                        $product_quantity = (int)$product_quantity_result ? (int)$product_quantity_result : 1;
+                        unset($product_quantity_result);
+                    }
 				}
 				
 				if (!$product_params_attempts)
@@ -631,12 +655,11 @@ class JoomlaquizHelper
 			return false;
 		}
 		
-		public static function JQ_checkPackage($package_id, $rel_id, $vm=1) {
+		public static function JQ_checkPackage($package_id, $rel_id, $shop_name='') {
 		
 			$database = JFactory::getDBO();
 			$my = JFactory::getUser();
 			$mainframe = JFactory::getApplication();
-			
 			$_SESSION['quiz_check_rel_item'] = 0;
 			$rel_id = intval($rel_id);
 			$package_id = intval($package_id);
@@ -647,24 +670,42 @@ class JoomlaquizHelper
 				$quiz_params[0]->error = 1;
 				$quiz_params[0]->message = '';
 				return $quiz_params[0];
-			}		
-		
-			if ($vm) {
-				$query = "SELECT qp.*"
-				. "\n FROM #__virtuemart_orders AS vm_o"
-				. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
-				. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-				. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $package_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
-				;
-			} else {
-				$query = "SELECT qp.*"
-				. "\n FROM `#__quiz_payments` AS p"
-				. "\n INNER JOIN `#__quiz_products` AS qp ON qp.pid = p.pid"
-				. "\n WHERE p.user_id = {$my->id} AND p.id = '".($package_id-1000000000)."' AND qp.id = '{$rel_id}' AND p.status IN ('Confirmed') "
-				;
 			}
-			$database->SetQuery( $query );
-			$rel_check = $database->loadObjectList();
+
+            $rel_check = array();
+            $query = '';
+			if (!$shop_name) {
+                $query = "SELECT `qp`.*"
+                    . "\n FROM `#__quiz_payments` AS `p`"
+                    . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `p`.`pid`"
+                    . "\n WHERE `p`.`user_id` = '".(int)$my->id."' AND `p`.`id` = '".($package_id-1000000000)."'"
+                    . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `p`.`status` IN ('Confirmed')"
+                ;
+			} else {
+				if($shop_name == 'virtuemart'){
+                    $query = "SELECT `qp`.*"
+                        . "\n FROM `#__virtuemart_orders` AS `vm_o`"
+                        . "\n INNER JOIN `#__virtuemart_order_items` AS `vm_oi` ON `vm_oi`.`virtuemart_order_id` = `vm_o`.`virtuemart_order_id`"
+                        . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `vm_oi`.`virtuemart_product_id`"
+                        . "\n WHERE `vm_o`.`virtuemart_user_id` = '".(int)$my->id."' AND `vm_o`.`virtuemart_order_id` = '".(int)$package_id."'"
+                        . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `vm_o`.`order_status` IN ('C')"
+                    ;
+                }
+                else if($shop_name == 'hikashop'){
+                    $query = "SELECT `qp`.*"
+                        . "\n FROM `#__hikashop_order` AS `ho`"
+                        . "\n INNER JOIN `#__hikashop_order_product` AS `hop` ON `hop`.`order_id` = `ho`.`order_id`"
+                        . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `hop`.`product_id`"
+                        . "\n LEFT JOIN `#__hikashop_user` AS `hu` ON `hu`.`user_id` = `ho`.`order_user_id`"
+                        . "\n WHERE `hu`.`user_cms_id` = '".(int)$my->id."' AND `ho`.`order_id` = '".(int)$package_id."'"
+                        . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `ho`.`order_status` IN ('confirmed')"
+                    ;
+                }
+			}
+			if($query) {
+                $database->SetQuery($query);
+                $rel_check = $database->loadObjectList();
+            }
 			if(empty($rel_check)) {
 				$quiz_params[0]->error = 1;
 				$quiz_params[0]->message = '<p align="left">'.JText::_('COM_QUIZ_LPATH_NOT_AVAILABLE').'</p>';
@@ -672,8 +713,7 @@ class JoomlaquizHelper
 			}
 		
 			$product_data = $rel_check[0];
-					
-			$products_stat = array();
+
 			$query = "SELECT *"
 			. "\n FROM #__quiz_products_stat"
 			. "\n WHERE uid = '{$my->id}' AND qp_id = '{$rel_id}' "
@@ -684,27 +724,44 @@ class JoomlaquizHelper
 			
 			//Check for xdays, period
 			if($product_data->xdays) {
-				if(!empty($products_stat) && array_key_exists($rel_id, $products_stat)) {
+				if(is_array($products_stat) && !empty($products_stat) && array_key_exists($rel_id, $products_stat)) {
 					$confirm_date = strtotime($products_stat[$rel_id]->xdays_start);
-				} else {
-					if ($vm) {
-						$query = "SELECT UNIX_TIMESTAMP(order_history.created_on) "
-							. "\n FROM #__virtuemart_order_histories AS order_history"
-							. "\n INNER JOIN #__virtuemart_order_items AS order_item ON order_item.virtuemart_order_id = order_history.virtuemart_order_id"
-							. "\n WHERE order_history.order_status_code = 'C' AND order_item.virtuemart_order_id = $package_id AND order_item.virtuemart_product_id = '{$product_data->pid}'"
-							. "\n ORDER BY order_history.created_on DESC"
-							. "\n LIMIT 1"
-							;
+				}
+				else {
+                    $confirm_date = '';
+                    $query = '';
+                    if (!$shop_name) {
+                        $query = "SELECT UNIX_TIMESTAMP(p.confirmed_time) "
+                            . "\n FROM #__quiz_payments AS p"
+                            . "\n WHERE p.id = '".($package_id-1000000000)."' AND p.status = 'Confirmed' AND  p.pid = '{$product_data->pid}'"
+                            . "\n ORDER BY p.confirmed_time DESC"
+                            . "\n LIMIT 1"
+                        ;
 					} else {
-						$query = "SELECT UNIX_TIMESTAMP(p.confirmed_time) "
-								. "\n FROM #__quiz_payments AS p"
-								. "\n WHERE p.id = '".($package_id-1000000000)."' AND p.status = 'Confirmed' AND  p.pid = '{$product_data->pid}'"
-								. "\n ORDER BY p.confirmed_time DESC"
-								. "\n LIMIT 1"
-								;
+                        if($shop_name == 'virtuemart'){
+                            $query = "SELECT UNIX_TIMESTAMP(order_history.created_on) "
+                                . "\n FROM #__virtuemart_order_histories AS order_history"
+                                . "\n INNER JOIN #__virtuemart_order_items AS order_item ON order_item.virtuemart_order_id = order_history.virtuemart_order_id"
+                                . "\n WHERE order_history.order_status_code = 'C' AND order_item.virtuemart_order_id = $package_id AND order_item.virtuemart_product_id = '{$product_data->pid}'"
+                                . "\n ORDER BY order_history.created_on DESC"
+                                . "\n LIMIT 1"
+                            ;
+                        }
+                        else if($shop_name == 'hikashop'){
+                            $query = "SELECT `hh`.`history_created`"
+                                . "\n FROM `#__hikashop_history` AS `hh`"
+                                . "\n INNER JOIN `#__hikashop_order_product` AS `hop` ON `hop`.`order_id` = `hh`.`history_order_id`"
+                                . "\n WHERE `hh`.`history_new_status` = 'confirmed' AND `hop`.`order_id` = '".(int)$package_id."'"
+                                . "\n AND `hop`.`product_id` = '".(int)$product_data->pid."'"
+                                . "\n ORDER BY `hh`.`history_created` DESC"
+                                . "\n LIMIT 1"
+                            ;
+                        }
 					}
-					$database->setQuery($query);
-					$confirm_date = $database->loadResult();
+                    if($query) {
+                        $database->setQuery($query);
+                        $confirm_date = $database->loadResult();
+                    }
 				}
 				
 				if($confirm_date) {
@@ -747,16 +804,32 @@ class JoomlaquizHelper
 			
 			//Check attempts
 			$product_quantity = 1;
-			if($vm){
-				$query = "SELECT vm_oi.product_quantity"
-				. "\n FROM #__virtuemart_orders AS vm_o"
-				. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
-				. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-				. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = ".$package_id." AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
-				;
-				$database->SetQuery( $query );
-				$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
-			}
+            if($shop_name) {
+                $query = '';
+                if ($shop_name == 'virtuemart') {
+                    $query = "SELECT `vm_oi`.`product_quantity`"
+                        . "\n FROM `#__virtuemart_orders` AS `vm_o`"
+                        . "\n INNER JOIN `#__virtuemart_order_items` AS `vm_oi` ON `vm_oi`.`virtuemart_order_id` = `vm_o`.`virtuemart_order_id`"
+                        . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `vm_oi`.`virtuemart_product_id`"
+                        . "\n WHERE `vm_o`.`virtuemart_user_id` = '".(int)$my->id."' AND `vm_o`.`virtuemart_order_id` = '".(int)$package_id."'"
+                        . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `vm_o`.`order_status` IN ('C')";
+                }
+                else if ($shop_name == 'hikashop') {
+                    $query = "SELECT `hop`.`order_product_quantity`"
+                        . "\n FROM `#__hikashop_order` AS `ho`"
+                        . "\n INNER JOIN `#__hikashop_order_product` AS `hop` ON `hop`.`order_id` = `ho`.`order_id`"
+                        . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `hop`.`product_id`"
+                        . "\n LEFT JOIN `#__hikashop_user` AS `hu` ON `hu`.`user_id` = `ho`.`order_user_id`"
+                        . "\n WHERE `hu`.`user_cms_id` = '".(int)$my->id."' AND `ho`.`order_id` = '".(int)$package_id."'"
+                        . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `ho`.`order_status` IN ('confirmed')";
+                }
+                if($query){
+                    $database->SetQuery($query);
+                    $product_quantity_result = $database->loadResult();
+                    $product_quantity = (int)$product_quantity_result ? (int)$product_quantity_result : 1;
+                    unset($product_quantity_result);
+                }
+            }
 			
 			$attempts = (!empty($products_stat) && array_key_exists($rel_id, $products_stat) && $products_stat[$rel_id]->attempts ? $products_stat[$rel_id]->attempts : 0);
 			if($product_data->attempts && ($product_data->attempts * $product_quantity) <= $attempts) {
@@ -769,13 +842,16 @@ class JoomlaquizHelper
 				$_SESSION['quiz_check_rel_item'] = 1;
 				$_SESSION['quiz_check_rel_order_id'] = $package_id;
 				$_SESSION['quiz_check_rel_item_id'] = $rel_check[0]->rel_id;
-		
-				$mainframe->redirect(JURI::root()."index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$rel_check[0]->rel_id}&force=1");
-			} else if($rel_check[0]->type == 'l') {
+
+                $shop = $shop_name ? "&shop=".htmlspecialchars($shop_name, ENT_QUOTES, 'UTF-8') : "";
+				$mainframe->redirect(JURI::root()."index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$rel_check[0]->rel_id}&force=1".$shop);
+			}
+			else if($rel_check[0]->type == 'l') {
 				$lpath_id = $rel_check[0]->rel_id;
+                return $lpath_id;
 			}
 
-			return $lpath_id;
+			return false;
 		}
 		
 		public static function getTotalScore($qch_ids, $quiz_id){

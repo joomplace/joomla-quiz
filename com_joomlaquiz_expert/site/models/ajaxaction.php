@@ -104,10 +104,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 	
 	protected function userHasAccess($quiz, $user = null){
 		
-		if(!is_object($quiz)){		
-			$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".(int)$quiz."'";
+		if(!is_object($quiz)){
+            $database = JFactory::getDBO();
+            $query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".(int)$quiz."'";
 			$database->SetQuery ($query );
-			$quiz = $database->LoadObject();
+			$quiz = $database->loadObject();
 		}
 		
 		if($user===null){
@@ -133,14 +134,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 		
 		$database = JFactory::getDBO(); 
 		$my = JFactory::getUser();
-		
+		$jinput = JFactory::getApplication()->input;
+
 		$ret_str = '';
 		
-		$quiz_id = intval( JFactory::getApplication()->input->get( 'quiz', 0 ) );
+		$quiz_id = $jinput->getInt('quiz', 0);
 		$lid = intval(empty($_SESSION['quiz_lid']) ? 0 : $_SESSION['quiz_lid']);
 		$rel_id = intval(empty($_SESSION['quiz_rel_id']) ? 0 : $_SESSION['quiz_rel_id']);
 		$package_id = intval(empty($_SESSION['quiz_package_id']) ? 0 : $_SESSION['quiz_package_id']);
-		
+        $shop_name = isset($_SESSION['shop_name']) ? htmlspecialchars($_SESSION['shop_name'], ENT_QUOTES, 'UTF-8') : '';
+
 		$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".$quiz_id."'";
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
@@ -155,8 +158,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if ($quiz_id) {
 			
 			$msg = '';
-			if (!JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, $rel_id, $package_id, $msg))
-				return '';
+			if (!JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, $rel_id, $package_id, $msg, $shop_name)) {
+                return '';
+            }
 			
 			$user_unique_id = md5(uniqid(rand(), true));
 			
@@ -189,9 +193,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$user_name = $my->username;
 					$user_email = $my->email;
 				} else {
-					$user_name = addslashes(JRequest::getString('uname', ''));
-					$user_surname = addslashes(JRequest::getString('usurname', ''));
-					$user_email = addslashes(JRequest::getString('uemail', ''));
+					$user_name = addslashes($jinput->getString('uname', ''));
+					$user_surname = addslashes($jinput->getString('usurname', ''));
+					$user_email = addslashes($jinput->getString('uemail', ''));
 				}
 				
 				JPluginHelper::importPlugin('content');
@@ -210,14 +214,26 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$stu_quiz_id = $database->insertid();
 
 				if($rel_id && $my->id) {
+                    $query = '';
 					if ($package_id < 1000000000) {
-						$query = "SELECT qp.*, vm_oh.created_on AS xdays_start "
-							. "\n FROM #__virtuemart_orders AS vm_o"
-							. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
-							. "\n LEFT JOIN #__virtuemart_order_histories AS vm_oh ON vm_oi.virtuemart_order_id = vm_oh.virtuemart_order_id AND vm_oh.order_status_code IN ('C')"
-							. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-							. "\n WHERE vm_o.virtuemart_user_id = " . $my->id . "  AND vm_o.virtuemart_order_id = $package_id AND vm_o.order_status IN ('C') AND qp.id = " . $rel_id
-							;
+					    if($shop_name && $shop_name == 'virtuemart') {
+                            $query = "SELECT qp.*, vm_oh.created_on AS xdays_start "
+                                . "\n FROM #__virtuemart_orders AS vm_o"
+                                . "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
+                                . "\n LEFT JOIN #__virtuemart_order_histories AS vm_oh ON vm_oi.virtuemart_order_id = vm_oh.virtuemart_order_id AND vm_oh.order_status_code IN ('C')"
+                                . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
+                                . "\n WHERE vm_o.virtuemart_user_id = " . $my->id . "  AND vm_o.virtuemart_order_id = $package_id AND vm_o.order_status IN ('C') AND qp.id = " . $rel_id;
+                        }
+                        else if($shop_name && $shop_name == 'hikashop') {
+                            $query = "SELECT `qp`.*, FROM_UNIXTIME(`hh`.`history_created`) AS `xdays_start`"
+                                . "\n FROM `#__hikashop_order` AS `ho`"
+                                . "\n INNER JOIN `#__hikashop_order_product` AS `hop` ON `hop`.`order_id` = `ho`.`order_id`"
+                                . "\n LEFT JOIN `#__hikashop_history` AS `hh` ON `hh`.`history_order_id` = `hop`.`order_id` AND `hh`.`history_new_status` IN ('confirmed')"
+                                . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `hop`.`product_id`"
+                                . "\n LEFT JOIN `#__hikashop_user` AS `hu` ON `hu`.`user_id` = `ho`.`order_user_id`"
+                                . "\n WHERE `hu`.`user_cms_id` = '".(int)$my->id."' AND `ho`.`order_id` = '".(int)$package_id."'"
+                                . "\n AND `ho`.`order_status` IN ('confirmed') AND `qp`.`id` = '".(int)$rel_id."'";
+                        }
 					} else {
 						$query = "SELECT qp.*, p.confirmed_time AS xdays_start "
 						. "\n FROM `#__quiz_payments` AS p"
@@ -225,10 +241,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 						. "\n WHERE p.user_id = {$my->id} AND p.id = '".($package_id-1000000000)."' AND qp.id = '{$rel_id}' AND p.status IN ('Confirmed') "
 						;
 					}
-					
-					$database->SetQuery( $query );
-					$rel_check = $database->loadObjectList();
-					if(empty($rel_check)) {
+					if($query) {
+                        $database->SetQuery($query);
+                        $rel_check = $database->loadObjectList();
+                    }
+					if(!isset($rel_check) || empty($rel_check)) {
 						echo '<p align="left">'.JText::_('COM_QUIZ_LPATH_NOT_AVAILABLE').'</p>';
 						return '';
 					}
@@ -960,11 +977,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database = JFactory::getDBO(); 
 		$my = JFactory::getUser();
 		$ret_str = '';
-		
+        $jinput = JFactory::getApplication()->input;
+
 		$lid = intval(empty($_SESSION['quiz_lid']) ? 0 : $_SESSION['quiz_lid']);
 		$rel_id = intval(empty($_SESSION['quiz_rel_id']) ? 0 : $_SESSION['quiz_rel_id']);
 		$package_id = intval(empty($_SESSION['quiz_package_id']) ? 0 : $_SESSION['quiz_package_id']);
-		$quiz_id = intval( JFactory::getApplication()->input->get( 'quiz', 0 ) );
+		$quiz_id = $jinput->getInt('quiz', 0);
+        $shop_name = isset($_SESSION['shop_name']) ? htmlspecialchars($_SESSION['shop_name'], ENT_QUOTES, 'UTF-8') : '';
 		
 		$result_mode = 0;
 		if(!empty($_SESSION['jq_result_mode']) 
@@ -996,20 +1015,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (count($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
-		
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_title, 'quiz_t_quiz', 'c_title', $quiz->c_id);
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_right_message, 'quiz_t_quiz', 'c_right_message', $quiz->c_id);
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_wrong_message, 'quiz_t_quiz', 'c_wrong_message', $quiz->c_id);
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_pass_message, 'quiz_t_quiz', 'c_pass_message', $quiz->c_id);
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_unpass_message, 'quiz_t_quiz', 'c_unpass_message', $quiz->c_id);
-		
+
 		$share_id = intval(empty($_SESSION['share_id']) ? 0 : $_SESSION['share_id']);
 		$is_share = false;
-		
+
 		if($share_id){
 			$database->setQuery("SELECT COUNT(id) FROM `#__quiz_r_student_share` WHERE `id` = '".$share_id."'");
 			$is_share = $database->loadResult();
-
 			unset($_SESSION['share_id']);
 		}
 		
@@ -1086,12 +1098,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$quiz_info = $database->LoadObjectList();
 				if (count($quiz_info)) { $quiz_info = $quiz_info[0]; }
 				else { return ''; }
-				
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_title, 'quiz_t_quiz', 'c_title', $quiz_info->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_right_message, 'quiz_t_quiz', 'c_right_message', $quiz_info->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_wrong_message, 'quiz_t_quiz', 'c_wrong_message', $quiz_info->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_pass_message, 'quiz_t_quiz', 'c_pass_message', $quiz_info->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_unpass_message, 'quiz_t_quiz', 'c_unpass_message', $quiz_info->c_id);
 		
 				$query = "SELECT SUM(c_score) FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
 				$database->SetQuery( $query );
@@ -1147,24 +1153,38 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$database->execute();
 					
 					if ($rel_id && $my->id) {
-						
+                        $query = '';
 						if ($package_id < 1000000000) {
-							$query = "SELECT qp.*"
-							. "\n FROM #__virtuemart_orders AS vm_o"
-							. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
-							. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-							. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $package_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
-							;
+						    if($shop_name && $shop_name == 'virtuemart') {
+                                $query = "SELECT `qp`.*"
+                                    . "\n FROM `#__virtuemart_orders` AS `vm_o`"
+                                    . "\n INNER JOIN `#__virtuemart_order_items` AS `vm_oi` ON `vm_oi`.`virtuemart_order_id` = `vm_o`.`virtuemart_order_id`"
+                                    . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `vm_oi`.`virtuemart_product_id`"
+                                    . "\n WHERE `vm_o`.`virtuemart_user_id` = '".(int)$my->id."' AND `vm_o`.`virtuemart_order_id` = '".(int)$package_id."'"
+                                    . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `vm_o`.`order_status` IN ('C')";
+                            }
+                            else if($shop_name && $shop_name == 'hikashop') {
+                                $query = "SELECT `qp`.*"
+                                    . "\n FROM `#__hikashop_order` AS `ho`"
+                                    . "\n INNER JOIN `#__hikashop_order_product` AS `hop` ON `hop`.`order_id` = `ho`.`order_id`"
+                                    . "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `hop`.`product_id`"
+                                    . "\n LEFT JOIN `#__hikashop_user` AS `hu` ON `hu`.`user_id` = `ho`.`order_user_id`"
+                                    . "\n WHERE `hu`.`user_cms_id` = '".(int)$my->id."' AND `ho`.`order_id` = '".(int)$package_id."'"
+                                    . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `ho`.`order_status` IN ('confirmed')";
+						    }
 						} else {
-							$query = "SELECT qp.*"
-							. "\n FROM `#__quiz_payments` AS p"
-							. "\n INNER JOIN `#__quiz_products` AS qp ON qp.pid = p.pid"
-							. "\n WHERE p.user_id = {$my->id} AND p.id = '".($package_id-1000000000)."' AND qp.id = '{$rel_id}' AND p.status IN ('Confirmed') "
+							$query = "SELECT `qp`.*"
+							. "\n FROM `#__quiz_payments` AS `p`"
+							. "\n INNER JOIN `#__quiz_products` AS `qp` ON `qp`.`pid` = `p`.`pid`"
+							. "\n WHERE `p`.`user_id` = '".(int)$my->id."' AND `p`.`id` = '".($package_id-1000000000)."'"
+                            . "\n AND `qp`.`id` = '".(int)$rel_id."' AND `p`.`status` IN ('Confirmed')"
 							;
 						}
-						$database->SetQuery( $query );
-						$rel_check = $database->loadObjectList();
-						if(empty($rel_check)) {
+						if($query) {
+                            $database->SetQuery($query);
+                            $rel_check = $database->loadObjectList();
+                        }
+						if(!isset($rel_check) || empty($rel_check)) {
 							return '';
 						}
 						
@@ -1391,7 +1411,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						
 						if(!empty($prod)) {
 							if(@$prod->type == 'l'){
-								$footer_ar[4] = "<div class='jq_footer_link jq_lpath'><a href='index.php?option=com_joomlaquiz&view=lpath&package_id={$package_id}&rel_id=$rel_id".JoomlaquizHelper::JQ_GetItemId()."'>".JText::_('COM_LPATH_QUIZZES_LIST')."</a></div>";
+								$footer_ar[4] = "<div class='jq_footer_link jq_lpath'><a href='index.php?option=com_joomlaquiz&view=lpath".($shop_name ? "&shop=".$shop_name : "")."&package_id={$package_id}&rel_id=$rel_id".JoomlaquizHelper::JQ_GetItemId()."'>".JText::_('COM_LPATH_QUIZZES_LIST')."</a></div>";
 							}
 							
 							if($user_passed) {
@@ -1407,7 +1427,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		
 								if(!empty($next)) {
 									$footer_ar[6] = "<div class='jq_footer_link jq_nquiz'><a href='"
-										. JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id=" . $rel_id
+										. JRoute::_("index.php?option=com_joomlaquiz&view=quiz".($shop_name ? "&shop=".$shop_name : "")."&package_id={$package_id}&rel_id=" . $rel_id
 										. ($next[0]->type == 'q' ? '&quiz_id=' : '&article_id=') . $next[0]->qid . JoomlaquizHelper::JQ_GetItemId())
 										. "'>".JText::_('COM_LPATH_NEXT_QUIZ')."</a></div>"
 										;
@@ -1422,13 +1442,15 @@ class JoomlaquizModelAjaxaction extends JModelList
 							->where($db->qn('c_passed').' = '.$db->q('1'))
 							->where($db->qn('c_quiz_id').' = '.$db->q($quiz->c_id))
 							->where($db->qn('c_student_id').' = '.$db->q($my->id));
-						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $tmp) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
+						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $tmp, $shop_name)
+                            && (!$quiz->one_time || !$db->setQuery($query)->loadResult()))
+						{
 							$is_attempts = true;
-							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
+							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=quiz".($shop_name ? "&shop=".$shop_name : "")."&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 						}
 					
 					} else if($lid) {
-						$footer_ar[4] = "<div class='jq_footer_link jq_lpath'><a href='index.php?option=com_joomlaquiz&view=lpath&lpath_id={$lid}".JoomlaquizHelper::JQ_GetItemId()."'>".JText::_('COM_LPATH_QUIZZES_LIST')."</a></div>";
+						$footer_ar[4] = "<div class='jq_footer_link jq_lpath'><a href='index.php?option=com_joomlaquiz&view=lpath".($shop_name ? "&shop=".$shop_name : "")."&lpath_id={$lid}".JoomlaquizHelper::JQ_GetItemId()."'>".JText::_('COM_LPATH_QUIZZES_LIST')."</a></div>";
 						if($user_passed) {
 							$query = "SELECT `type`, `qid`"
 							. "\n FROM #__quiz_lpath_quiz"
@@ -1438,10 +1460,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 							;
 							$database->SetQuery( $query );
 							$next = $database->loadObjectList();
-		
+
 							if(!empty($next)) {
 								$footer_ar[6] = "<div class='jq_footer_link jq_nquiz'><a href='"
-									. "index.php?option=com_joomlaquiz&view=quiz&lid=" . $lid
+									. "index.php?option=com_joomlaquiz&view=quiz".($shop_name ? "&shop=".$shop_name : "")."&lid=" . $lid
 									. ($next[0]->type == 'q' ? '&quiz_id=' : '&article_id=') . $next[0]->qid . JoomlaquizHelper::JQ_GetItemId()
 									. "'>".JText::_('COM_LPATH_NEXT_QUIZ')."</a></div>"
 									;
@@ -1456,16 +1478,17 @@ class JoomlaquizModelAjaxaction extends JModelList
 							->where($db->qn('c_passed').' = '.$db->q('1'))
 							->where($db->qn('c_quiz_id').' = '.$db->q($quiz->c_id))
 							->where($db->qn('c_student_id').' = '.$db->q($my->id));
-						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
+						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp, $shop_name) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 							$is_attempts = true;
-							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='"."index.php?option=com_joomlaquiz&view=quiz&lid={$lid}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId()."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
+							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='"."index.php?option=com_joomlaquiz&view=quiz".($shop_name ? "&shop=".$shop_name : "")."&lid={$lid}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId()."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
+
 						}
-					} elseif (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $tmp)
+					} elseif (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $tmp, $shop_name)
 						&& (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 						$is_attempts = true;
 						$plugin = (isset($_REQUEST['plug'])) ? $_REQUEST['plug'] : 0;
 						
-						$href = ($plugin) ? JRoute::_('index.php'.$plugin) : JRoute::_("index.php?option=com_joomlaquiz&view=quiz&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId());
+						$href = ($plugin) ? JRoute::_('index.php'.$plugin) : JRoute::_("index.php?option=com_joomlaquiz&view=quiz".($shop_name ? "&shop=".$shop_name : "")."&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId());
 						$footer_ar[6] = "<div class='jq_footer_link jq_try_again'><a href='".$href."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 					}
 					
@@ -1522,7 +1545,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 					
 					$wait_time = '';
-					$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);
+					$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time, $shop_name);
 
 					$c_statistic = '';	
 					if ((!$result_mode || $result_mode == 3) && $quiz->c_statistic) {

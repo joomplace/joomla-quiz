@@ -99,7 +99,14 @@ class com_joomlaquizInstallerScript
 				'c_type' => "VARCHAR( 50 ) NOT NULL"
 			),
 			't_question' => array(
-				'c_detailed_feedback' => "TEXT NOT NULL"
+				'c_detailed_feedback' => "TEXT NOT NULL",
+                'sq_delayed' => "INT(5) NOT NULL DEFAULT '1'",
+                'c_width' => "INT(10) NOT NULL DEFAULT '150'",
+                'c_timer' => "INT(10) NOT NULL",
+                'c_height' => "INT(10) NOT NULL DEFAULT '150'",
+                'c_column' => "INT(11) NOT NULL DEFAULT '1'",
+                'c_img_cover' => "TEXT NOT NULL",
+                'c_sec_penalty' => "VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'tnnophoto.jpg'"
 			),
 			'r_student_question' => array(
 				'c_flag_question' => "TINYINT( 2 ) NOT NULL"

@@ -35,6 +35,12 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		
 		$data['ret_str'] .= "\t" . '<quest_limit_time>'.$quest_limit_time.'</quest_limit_time>';
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<table id="dd_table" style="border-collapse:separate;">';
+        if(!$data['q_data']->c_width){
+            $data['q_data']->c_width = 100;
+        }
+        if(!$data['q_data']->c_height){
+            $data['q_data']->c_height = 100;
+        }
 		if(count($match_data)){
 			foreach($match_data as $ii => $dd_data){
 				$data['ret_str'] .= "\t" .'<tr>';
@@ -487,6 +493,14 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
+
+        if (!JFolder::exists(JPATH_SITE . '/images/joomlaquiz/images/resize') ) {
+            JFolder::create( JPATH_SITE . '/images/joomlaquiz/images/resize');
+        }
+
+        if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg')) {
+            JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg');
+        }
 		
 		$resize_dir = JPATH_SITE.'/images/joomlaquiz/images/resize';
 		if(!file_exists($resize_dir)){

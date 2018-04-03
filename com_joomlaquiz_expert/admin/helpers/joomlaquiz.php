@@ -15,23 +15,6 @@ require_once( JPATH_ROOT .'/components/com_joomlaquiz/libraries/apps.php' );
  */
 class JoomlaquizHelper
 {
-		public static function getSettings(){
-			$data = new stdClass;
-			$db = JFactory::getDBO();
-		
-			$db->setQuery("SELECT `config_var`, `config_value` FROM #__quiz_configuration");
-			$settings = $db->loadObjectList();
-		
-			if(count($settings)){
-				foreach($settings as $setting){
-					$array = (array) $setting;
-					$data->$array['config_var'] = $array['config_value'];
-				}
-			}
-		
-			return $data;
-		}
-		
 		public static function JQ_Delete_Items($cids, $path, $event){
 			
 			jimport('joomla.filesystem.folder');

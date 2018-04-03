@@ -47,20 +47,6 @@ REPLACE INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text
 (14, 3, '#course#', 690, 410, 16, 1, 'arial.ttf'),
 (15, 3, '#name#', 540, 360, 16, 1, 'arial.ttf');
 
-
-
-
-CREATE TABLE IF NOT EXISTS `#__quiz_configuration` (
-  `config_var` varchar(50) NOT NULL DEFAULT '',
-  `config_value` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-REPLACE INTO `#__quiz_configuration` (`config_var`, `config_value`) VALUES
-('wysiwyg_options', '0');
-
-
-
 CREATE TABLE IF NOT EXISTS `#__quiz_constants` (
   `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `key_value` varchar(255) NOT NULL DEFAULT '',
@@ -606,7 +592,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_enable_sertif` char(1) NOT NULL DEFAULT '',
   `c_skin` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `c_random` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `c_guest` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `published` int(11) NOT NULL DEFAULT '0',
   `c_slide` tinyint(4) NOT NULL DEFAULT '1',
   `c_language` int(11) NOT NULL DEFAULT '0',

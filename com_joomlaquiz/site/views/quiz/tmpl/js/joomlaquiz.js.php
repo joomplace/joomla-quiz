@@ -1052,7 +1052,6 @@ function jq_releaseBlock() {
 function jq_Start_Question_TickTack(limit_time)
 {
 		if(quest_timer_sec <= 0 ){
-			
 			ShowMessage('error_messagebox', 1, 'Time for answering this question has run out');
 			quest_count = response.getElementsByTagName('quest_count')[0].firstChild.data;
 			for(var n=0; n < quest_count; n++) {
@@ -1068,9 +1067,7 @@ function jq_Start_Question_TickTack(limit_time)
 				jq_jQuery('#jq_penalty_memory_point').remove();
 			}
 			return;
-		}
-	
-		if (quest_timer_sec > 0) {
+		} else {
 			var quest_timer_sec_tmp = quest_timer_sec;
 			var quest_timer_min = parseInt(quest_timer_sec_tmp/60);
 			var plus_sec = quest_timer_sec_tmp - (quest_timer_min*60);
@@ -1609,10 +1606,11 @@ function setFlag(qid){
 }
 
 function jq_QuizNextFinish() { //send 'TASK = next'
-<?php if ($is_preview) { ?>
+<?php if($quiz->c_enable_skip==2){ ?>
+    <?php if ($is_preview) { ?>
 	var jq_task = 'next_preview';
 	<?php } else { ?>
-    //new code
+	//new code
     var feedback = jq_jQuery(response).find('feedback');
     if(feedback){
         var q_feedback = jq_jQuery(feedback).find('quest_feedback').text();
@@ -1625,7 +1623,7 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 
     //old code
 //    var jq_task = 'nextFinish';
-	var jq_task2 = ''
+		var jq_task2 = ''
 	<?php } ?>
 	var answer = '';
 	var url = '&ajax_task=' + jq_task + '&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id;
@@ -1633,7 +1631,7 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 0, '');
 	   // jq_QuizContinueFinish
 	}
-	
+
 	/*
 	for(var n=0; n < quest_count; n++) {
 		if (questions[n].disabled) {
@@ -1685,6 +1683,9 @@ function jq_QuizNextFinish() { //send 'TASK = next'
 		setTimeout("jq_releaseBlock()", 1000);
 	}
 	*/
+<?php }else{ ?>
+     jq_QuizNext();
+<?php } ?>
 }
 
 function jq_UpdateTaskDiv(task, skip_question) {

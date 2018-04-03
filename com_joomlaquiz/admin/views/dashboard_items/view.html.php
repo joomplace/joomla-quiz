@@ -36,18 +36,18 @@ class JoomlaquizViewDashboard_Items extends JViewLegacy
 
 	protected function addToolBar()
 	{
-		
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
 		JToolBarHelper::title(JText::_('COM_JOOMLAQUIZ').': '.JText::_('COM_JOOMLAQUIZ_MANAGER_DASHBOARD_ITEMS'), 'dashboard items');
-		
-		JToolBarHelper::addNew('dashboard_items.add');
-	
-	
-		JToolBarHelper::editList('dashboard_items.edit', 'JTOOLBAR_EDIT');
-		JToolBarHelper::divider();
-	
-	
-		JToolBarHelper::deleteList('', 'dashboard_items.delete', 'JTOOLBAR_DELETE');
-		
+
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::addNew('dashboard_items.add');
+        }
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::editList('dashboard_items.edit', 'JTOOLBAR_EDIT');
+        }
+        if ($canDo->get('core.delete')) {
+            JToolBarHelper::deleteList('', 'dashboard_items.delete', 'JTOOLBAR_DELETE');
+        }
 	}
 
 	protected function setDocument()

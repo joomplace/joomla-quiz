@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <extension type="component" version="3.0" method="upgrade">
   <name>COM_JOOMLAQUIZ</name>
-  <creationDate>May 2017</creationDate>
+  <creationDate>February 2018</creationDate>
   <author>JoomPlace Team</author>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
   <authorEmail>support@joomplace.com</authorEmail>
   <authorUrl>www.joomplace.com</authorUrl>
-  <version>3.7.0</version>
+  <version>3.7.6</version>
   <description>This component manages Quizzes and Quiz Clients</description>
   <scriptfile>script.php</scriptfile>
   <install>
@@ -50,7 +50,6 @@
     <submenu>
       <menu link="option=com_joomlaquiz&amp;view=quizzes">COM_JOOMLAQUIZ_MENU_QUIZZES</menu>
       <menu link="option=com_joomlaquiz&amp;view=questions">COM_JOOMLAQUIZ_MENU_QUESTIONS</menu>
-      <menu link="option=com_joomlaquiz&amp;view=configuration">COM_JOOMLAQUIZ_MENU_CONFIG</menu>
       <menu link="option=com_joomlaquiz&amp;view=results">COM_JOOMLAQUIZ_MENU_RESULTS</menu>
       <menu link="option=com_joomlaquiz&amp;view=quiz_statistic">COM_JOOMLAQUIZ_MENU_REALTIME_TRACK</menu>
       <menu link="option=com_joomlaquiz&amp;view=dashboard">COM_JOOMLAQUIZ_MENU_ABOUT_JOOMLAQUIZ</menu>
@@ -75,7 +74,4 @@
       <language tag="en-GB">en-GB.com_joomlaquiz.sys.ini</language>
     </languages>
   </administration>
-  <updateservers>
-    <server type="extension" priority="1" name="Joomplace Extentions Update Site">http://www.joomplace.com/updates/updates.xml</server>
-  </updateservers>
 </extension>

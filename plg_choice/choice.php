@@ -389,7 +389,8 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
-		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+		//$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+        $data['pdf']->writeHTML('<b>'.$str.'</b>', false);
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
@@ -459,17 +460,15 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 	
 	public function onGetAdminOptions($data)
 	{
-		$settings = JoomlaquizHelper::getSettings();
 		$q_om_type = 1;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
-		
+		$wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+
 		$db = JFactory::getDBO();
 		$choices = array();
 		$return = array();
 		if($data['question_id']){
 			$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '".$data['question_id']."' ORDER BY ordering";
 			$db->SetQuery( $query );
-			$choices = array();
 			$choices = $db->LoadObjectList();
 		}
 		
@@ -516,10 +515,9 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetAdminJavaScript(&$data){
-		
-		$settings = JoomlaquizHelper::getSettings();
+
 		$q_om_type = 1;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
+		$wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
 		$question_id = $data['question_id'];
 		
 		ob_start();
@@ -580,10 +578,10 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 					$new_field->c_id = intval($_POST['jq_hid_fields_ids'][$mcounter]);
 					
 					$new_field->c_question_id = $data['qid'];
-					$new_field->c_choice = stripslashes($f_row);
-					$new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);
+                    $new_field->c_choice = stripslashes($_POST['jq_hid_fields'][$mcounter]);
+                    $new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);
 					
-					$new_field->c_right = in_array(($field_order+ 1), $ans_right)?1:0;
+					$new_field->c_right = in_array(($field_order), $ans_right)?1:0;
 					$new_field->ordering = $field_order;
 					$new_field->a_point = floatval($_POST['jq_a_points'][$mcounter]);
 					$new_field->c_quiz_id	= intval($_POST['jform']['c_quiz_id']);

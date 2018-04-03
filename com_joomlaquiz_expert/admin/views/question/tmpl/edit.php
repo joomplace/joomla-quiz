@@ -41,7 +41,7 @@ $ordering_list = $this->ordering_list;
 			}
 		}
 
-		if(window.parent.tinyMCE){
+		if(window.parent && window.parent.tinyMCE){
 			if(window.parent.tinyMCE.get('jform_c_question').getContent() == '' && jQuery('#jform_c_question').val() != ''){
 				window.parent.tinyMCE.get('jform_c_question').setContent(jQuery('#jform_c_question').val());
 			}
@@ -144,7 +144,10 @@ $ordering_list = $this->ordering_list;
 				<?php if ($for=='c_qform')
 			              echo $item['label'];
 				      else {?>
-					<label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $item['label']?></label>
+                          <label class="hasPopover control-label" for="<?php echo $for; ?>"  title="<?php echo $item['label_title']; ?>"
+                                 data-content="<?php echo $item['label_description']; ?>"
+                                 id="<?php echo $for; ?>-lbl"
+                                 style="width:156px;"><?php echo $item['label'] ?></label>
 				<?php }?>
 					<div class="controls">
 						<?php echo $item['input']?>

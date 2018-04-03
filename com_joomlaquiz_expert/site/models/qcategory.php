@@ -297,7 +297,7 @@ class JoomlaquizModelQcategory extends JModelList
         $category = JTable::getInstance('Category');
         $my_acl = $user->getAuthorisedViewLevels();
         foreach ($rows as $i => $quizz) {
-            if ($quizz->paid_check || !$quizz->c_guest) {
+            if ($quizz->paid_check) {
                 // need to run checks
                 // need to check packages
                 // feature to release(after refactoring)
@@ -306,9 +306,9 @@ class JoomlaquizModelQcategory extends JModelList
             // need to check permissions anyway
             $category->load($quizz->c_category_id);
             if (!$user->authorise('core.view',
-                    'com_joomlaquiz.quiz.' . $quizz->c_id)
-                || !in_array($category->access, $my_acl)
-            ) {
+                        'com_joomlaquiz.quiz.' . $quizz->c_id)
+                    || !in_array($category->access, $my_acl)) {
+                // TODO: migrate c_guest to permissions (via SQL)
                 unset($rows[$i]);
             }
         }
@@ -321,8 +321,13 @@ class JoomlaquizModelQcategory extends JModelList
         $categories = new JCategories(array('extension'=>'com_joomlaquiz','access'=>true));
         $input = JFactory::getApplication()->input;
         $cur_cat = $categories->get($input->get( 'cat_id'));
-        $subs = $cur_cat->getChildren(true);
-        $rel_level = $cur_cat->level;
+        if($cur_cat){
+            $subs = $cur_cat->getChildren(true);
+            $rel_level = $cur_cat->level;
+        }else{
+            $subs = array();
+            $rel_level = 0;
+        }
 
         $ids = array($cur_cat->id);
         foreach($subs as $s){

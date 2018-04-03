@@ -444,7 +444,8 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
-		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+		//$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+        $data['pdf']->writeHTML('<b>'.$str.'</b>', false);
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
@@ -547,11 +548,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	
 	public function onGetAdminOptions($data)
 	{
-		$settings = JoomlaquizHelper::getSettings();
-		$q_om_type = 14;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
-		
-		$database = JFactory::getDBO();
+        $q_om_type = 14;
+        $wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+
+        $database = JFactory::getDBO();
 		
 		$row = new stdClass;
 		$row->choices = array();
@@ -574,11 +574,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetAdminJavaScript(&$data){
-		
-		$settings = JoomlaquizHelper::getSettings();
+
 		$q_om_type = 14;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
-		$question_id = $data['question_id'];
+        $wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+        $question_id = $data['question_id'];
 		
 		ob_start();
 		require_once(JPATH_SITE."/plugins/joomlaquiz/dalliclick/admin/js/dalliclick.js.php");

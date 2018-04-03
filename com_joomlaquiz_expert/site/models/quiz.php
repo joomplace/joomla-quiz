@@ -46,8 +46,33 @@ class JoomlaquizModelQuiz extends JModelList
 		$rel_id 		= $jinput->get( 'rel_id', 0, 'INT');
 		$package_id 	= $jinput->get( 'package_id', 0, 'INT');
 		$vm 			= $package_id < 1000000000;
-		
-		$quiz_params 	= array();
+
+		if ($package_id && $rel_id && !$vm) {
+			$payment_query = "SELECT user_id, id, pid"
+				. "\n FROM `#__quiz_payments`"
+				. "\n WHERE id = '" . ($package_id-1000000000) . "' AND status IN ('Confirmed')"
+			;
+
+			$db->setQuery($payment_query);
+			$payment = $db->loadObject();
+
+			if (!$payment || $user->id != $payment->user_id) {
+				$payment_id_query = "SELECT p.id"
+				. "\n FROM `#__quiz_payments` AS p"
+				. "\n INNER JOIN `#__quiz_products` AS qp ON qp.pid = p.pid"
+				. "\n WHERE p.user_id = {$user->id} AND qp.id = '{$rel_id}' AND p.status IN ('Confirmed') "
+				;
+
+				$db->setQuery($payment_id_query);
+				$payment_id = $db->loadResult();
+
+                $offset = $vm ? 0 : 1000000000;
+				if ($package_id && (int)$payment_id) {
+					$package_id = (int)$payment_id + $offset;
+				}
+			}
+		}
+
 		$quiz_params = new stdClass;
 		
 		/* видимо предпроверка на то куплен ли пакет */
@@ -154,7 +179,7 @@ class JoomlaquizModelQuiz extends JModelList
 		if ($quiz_params->one_time == 1 && $db->setQuery($query)->loadResult()) {
 			$quiz_params = new stdClass;
 			$quiz_params->error = 1;
-			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_ALEARY_PASSED').'</p>';
+			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_ALREADY_PASSED').'</p>';
 			return $quiz_params;
 		}
 
@@ -458,8 +483,14 @@ class JoomlaquizModelQuiz extends JModelList
 			
 			JPluginHelper::importPlugin('content');
 			$dispatcher = JEventDispatcher::getInstance();
-			list($processed_desc) = $dispatcher->trigger('onQuizCustomFieldsRender', array($quiz_params->c_description));
-			if($processed_desc) $quiz_params->c_description = $processed_desc;
+            $result_event = $dispatcher->trigger('onQuizCustomFieldsRender', array($quiz_params->c_description));
+            $processed_desc = '';
+            if($result_event && !empty($result_event)){
+                $processed_desc = $result_event[0];
+            }
+            if ($processed_desc) {
+                $quiz_params->c_description = $processed_desc;
+            }
 		
 			/* setting up session vars - need to check it it is used anywhere */
 			$_SESSION['quiz_lid'] = $lid;

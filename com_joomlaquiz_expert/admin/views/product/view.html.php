@@ -41,15 +41,19 @@ class JoomlaquizViewProduct extends JViewLegacy
         
     protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
-		$user		= JFactory::getUser();
-		$isNew		= ($this->item->pid == 0);
-		JToolBarHelper::apply('product.apply', 'JTOOLBAR_APPLY');
-		JToolBarHelper::save('product.save', 'JTOOLBAR_SAVE');
-		JToolBarHelper::custom('product.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-		JToolBarHelper::custom('product.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        JFactory::getApplication()->input->set('hidemainmenu', true);
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::apply('product.apply', 'JTOOLBAR_APPLY');
+            JToolBarHelper::save('product.save', 'JTOOLBAR_SAVE');
+        }
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::custom('product.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW',
+                false);
+            JToolBarHelper::custom('product.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY',
+                false);
+        }
 		JToolBarHelper::cancel('product.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::divider();
 		JToolBarHelper::help('JHELP_COMPONENTS_WEBLINKS_LINKS_EDIT');
 	}
 }

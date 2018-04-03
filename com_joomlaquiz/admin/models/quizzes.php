@@ -289,7 +289,7 @@ class JoomlaquizModelQuizzes extends JModelList
 		
 		$query = "SELECT id AS value, title AS text"
 		. "\n FROM #__categories"
-		. "\n WHERE `extension` = 'com_joomlaquiz'"
+		. "\n WHERE `extension` = 'com_joomlaquiz' AND `published` IN ('0', '1')"
 		. "\n ORDER BY lft";
 		$db->setQuery( $query );
 		
@@ -302,6 +302,25 @@ class JoomlaquizModelQuizzes extends JModelList
 		$db = JFactory::getDBO();
 		$option = "com_joomlaquiz";
 		if (count( $cid )) {
+
+			$query = "DELETE FROM #__quiz_pool" . "\n WHERE " . $db->qn('q_id') . " IN ( ". implode(', ', $cid) . ")";
+            $db->setQuery( $query );
+            $db->execute();
+
+            $query = "DELETE FROM #__quiz_feed_option" . "\n WHERE " . $db->qn('quiz_id') . " IN ( ". implode(', ', $cid) . ")";
+            $db->setQuery( $query );
+            $db->execute();
+
+			$names = "'com_joomlaquiz.quiz.".implode( "', 'com_joomlaquiz.quiz.", $cid )."'";
+            $query = "DELETE FROM #__assets"
+                . "\n WHERE ".$db->qn('name')." IN ( $names )"
+            ;
+            $db->setQuery( $query );
+            if (!$db->execute()) {
+                echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                exit();
+            }
+            
 			$cids = implode( ',', $cid );
 			$query = "DELETE FROM #__quiz_t_quiz"
 			. "\n WHERE c_id IN ( $cids )"

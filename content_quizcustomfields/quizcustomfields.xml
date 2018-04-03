@@ -2,12 +2,12 @@
 <extension version="3.0" type="plugin" group="content" method="upgrade">
 	<name>Content - Quiz Custom fields</name>
 	<author>JoomPlace Team</author>
-	<creationDate>May 2017</creationDate>
+	<creationDate>February 2018</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.0</version>
+	<version>3.7.6</version>
 	<description>Displays custom fields from formatted code</description>
 	<files>
 		<filename plugin="quizcustomfields">quizcustomfields.php</filename>

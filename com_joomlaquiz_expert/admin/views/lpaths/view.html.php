@@ -64,17 +64,21 @@ class JoomlaquizViewLpaths extends JViewLegacy
     */
 	protected function addToolBar() 
     {
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
         $bar = JToolBar::getInstance('toolbar');
-        JToolBarHelper::addNew('lpath.add');
-		JToolBarHelper::editList('lpath.edit');
-		JToolBarHelper::divider();
-		JToolBarHelper::custom('lpaths.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-		JToolBarHelper::custom('lpaths.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-		JToolBarHelper::divider();
-		JToolBarHelper::deleteList('', 'lpaths.delete');
-        JToolBarHelper::divider();
-        $bar->appendButton( 'Custom', '<div class="btn-group"><a class="btn btn-small" onclick="javascript: tb_start(this);return false;" href="index.php?option=com_joomlaquiz&amp;tmpl=component&amp;view=configuration&amp;KeepThis=true&amp;TB_iframe=true&amp;height=350&amp;width=700" href="#"><i class="icon-options"></i>'.JText::_('COM_JOOMLAQUIZ_OPTIONS').'</a></div>');
-	}
+
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::addNew('lpath.add');
+        }
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::editList('lpath.edit');
+            JToolBarHelper::custom('lpaths.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+            JToolBarHelper::custom('lpaths.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+        }
+        if ($canDo->get('core.delete')) {
+            JToolBarHelper::deleteList('', 'lpaths.delete');
+        }
+    }
 	
 	protected function getSortFields()
 	{

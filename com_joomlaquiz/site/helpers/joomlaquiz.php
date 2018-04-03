@@ -15,23 +15,6 @@ require_once(JPATH_SITE."/components/com_joomlaquiz/libraries/apps.php");
  */
 class JoomlaquizHelper
 {
-		public static function getSettings(){
-			$data = new stdClass;
-			$db = JFactory::getDBO();
-		
-			$db->setQuery("SELECT `config_var`, `config_value` FROM #__quiz_configuration");
-			$settings = $db->loadObjectList();
-		
-			if(count($settings)){
-				foreach($settings as $setting){
-					$array = (array) $setting;
-					$data->$array['config_var'] = $array['config_value'];
-				}
-			}
-		
-			return $data;
-		}
-		
 		public static function getResultsByCategories($start_id){
 			
 			$appsLib = JqAppPlugins::getInstance();
@@ -177,8 +160,7 @@ class JoomlaquizHelper
 		
 		public static function poweredByHTML(){
 			$content = '';
-			$jq_config = JoomlaquizHelper::getSettings();
-			if(isset($jq_config->jq_show_dev_info) && $jq_config->jq_show_dev_info) {		
+			if(JComponentHelper::getParams('com_joomlaquiz')->get('jq_show_dev_info', 0)) {
 				$word = 'component';
 				if (intval(md5(JPATH_SITE.'quiz')) % 2 == 0) $word = 'extension';
 				$content = '<br/><div style="text-align:center;">Powered by <span title="JoomPlace"><a target="_blank" title="JoomPlace" href="http://www.joomplace.com/">Joomla '.$word.'</a></span> JoomlaQuiz Deluxe Software.</div>';
@@ -557,10 +539,12 @@ class JoomlaquizHelper
 			
 			JPluginHelper::importPlugin('content');
 			$dispatcher = JEventDispatcher::getInstance();
-			list($cust_params) = $dispatcher->trigger('onQuizCustomFieldsFromUser');
-			if(!$cust_params) $cust_params = '{}';
-			
-			
+            $result_event = $dispatcher->trigger('onQuizCustomFieldsFromUser');
+            $cust_params = '{}';
+            if($result_event && !empty($result_event)){
+                $cust_params = $result_event[0];
+            }
+
 			//stand alone quiz	or  free learn path
 			if (!$order_id && !$rel_id) {
 				if ($quiz->c_number_times) {			

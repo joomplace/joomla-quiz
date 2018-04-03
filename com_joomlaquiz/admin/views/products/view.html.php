@@ -72,11 +72,16 @@ class JoomlaquizViewProducts extends JViewLegacy
     */
 	protected function addToolBar() 
     {
-		JToolBarHelper::addNew('product.add');
-		JToolBarHelper::editList('product.edit');
-		JToolBarHelper::deleteList('', 'products.delete');
-		
-		JToolBarHelper::divider();    
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::addNew('product.add');
+        }
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::editList('product.edit');
+        }
+        if ($canDo->get('core.delete')) {
+            JToolBarHelper::deleteList('', 'products.delete');
+        }
     }
 	
 	protected function getSortFields()

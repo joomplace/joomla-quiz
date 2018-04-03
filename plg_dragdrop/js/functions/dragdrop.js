@@ -26,6 +26,19 @@ function setDrnDnAnswers(n) {
 	}
 }
 
+function getCoords(elem) {
+    var box = elem.getBoundingClientRect();
+    coord = {
+        top: box.top + pageYOffset,
+        left: box.left + pageXOffset
+    };
+    coord.bottom = coord.top*1 + elem.clientHeight*1;
+    coord.right = coord.left*1 + elem.clientWidth*1;
+    return coord;
+}
+
+var dragLimits = [];
+
 function startDrag(e){
 	if(!e){var e=window.event};
 	var targ=e.target?e.target:e.srcElement;
@@ -65,8 +78,19 @@ function startDrag(e){
 
 	questions[n].cont_index = 0;
 
-	document.onmousemove=dragDiv;
+	if( typeof dragLimits[targ.id] === "undefined" ){
+        var parentAnswers = document.querySelector('.jq_question_answers_cont'),
+            parentAnswersCoord = getCoords(parentAnswers),
+            dragElemStartCoord = getCoords(targ);
+        dragLimits[targ.id] = {
+            top: (parentAnswersCoord.top - dragElemStartCoord.top),           // < 0
+            bottom: (parentAnswersCoord.bottom - dragElemStartCoord.bottom),
+            left:  (parentAnswersCoord.left - dragElemStartCoord.left),       // < 0
+            right:  (parentAnswersCoord.right - dragElemStartCoord.right)
+        };
+    }
 
+	document.onmousemove=dragDiv;
 }
 
 function dragDiv(e){
@@ -78,14 +102,44 @@ function dragDiv(e){
 	if (last_drag_id_drag != '') {
 		if (last_drag_id_drag != targ.id) {
 			var ddd = jq_getObj(last_drag_id_drag);
-			ddd.style.left = coordX+e.clientX-offsetX+'px';
-			ddd.style.top = coordY+e.clientY-offsetY+'px';
+
+            ddd.style.left = coordX+e.clientX-offsetX + 'px';
+            if(parseInt(ddd.style.left, 10) < dragLimits[ddd.id].left*1){
+                ddd.style.left = dragLimits[ddd.id].left + 'px';
+            }
+            if(parseInt(ddd.style.left, 10) > dragLimits[ddd.id].right*1){
+                ddd.style.left = dragLimits[ddd.id].right + 'px';
+            }
+
+            ddd.style.top = coordY+e.clientY-offsetY + 'px';
+            if(parseInt(ddd.style.top, 10) < dragLimits[ddd.id].top*1){
+                ddd.style.top = dragLimits[ddd.id].top + 'px';
+            }
+            if(parseInt(ddd.style.top, 10) > dragLimits[ddd.id].bottom*1){
+                ddd.style.top = dragLimits[ddd.id].bottom + 'px';
+            }
+
 			return;
 		}
 	}
 	if (targ.id.substring(0, 4) != 'ddiv') {return;}
-	targ.style.left	= coordX+e.clientX-offsetX+'px';
-	targ.style.top	= coordY+e.clientY-offsetY+'px';
+
+    targ.style.left = coordX+e.clientX-offsetX + 'px';
+    if(parseInt(targ.style.left, 10) < dragLimits[targ.id].left*1){
+        targ.style.left = dragLimits[targ.id].left + 'px';
+    }
+    if(parseInt(targ.style.left, 10) > dragLimits[targ.id].right*1){
+        targ.style.left = dragLimits[targ.id].right + 'px';
+    }
+
+    targ.style.top = coordY+e.clientY-offsetY + 'px';
+    if(parseInt(targ.style.top, 10) < dragLimits[targ.id].top*1){
+        targ.style.top = dragLimits[targ.id].top + 'px';
+    }
+    if(parseInt(targ.style.top, 10) > dragLimits[targ.id].bottom*1){
+        targ.style.top = dragLimits[targ.id].bottom + 'px';
+    }
+
 	var is_on_cont = false;
 	for (i=1; i<=questions[n].kol_drag_elems; i++) {
 		an_div = jq_getObj('cdiv'+questions[n].cur_quest_id+'_' + i);
@@ -124,14 +178,27 @@ function stopDrag(e){
 	var dr_obj = jq_getObj(last_drag_id);
 	var is_all_cont = 1;
 	var is_all_ids = 1;
+    var offset = 0;
 	if (dr_obj) {
 		var dr_number = parseInt(last_drag_id.substring(last_drag_id.indexOf('_')+1));
 		dr_obj.className = 'jq_draggable_div';
-		if (questions[n].cont_index) {
+
+        //Offset between two different blocks may vary depending on css
+        if (questions[n].kol_drag_elems > 1) {
+            var divId_1 = "cdiv" + questions[n].cur_quest_id + "_1";
+            var divId_2 = "cdiv" + questions[n].cur_quest_id + "_2";
+            divElem_1 = document.querySelector("#" + divId_1);
+            divElem_2 = document.querySelector("#" + divId_2);
+            offset = divElem_2.offsetTop - divElem_1.offsetTop;
+        } else {
+            offset = 1;
+        }
+
+        if (questions[n].cont_index) {
 			dr_obj.style.position = 'relative';
 			dr_obj.style.left = '-57px';
 
-			dr_obj.style.top = parseInt((questions[n].cont_index - 1)*56 - (56*(dr_number - 1)) + 7) + 'px';
+            dr_obj.style.top = parseInt((questions[n].cont_index - 1) * offset - (offset * (dr_number - 1)) + 7) + 'px';
 
 			questions[n].ids_in_cont[questions[n].cont_index - 1] = dr_number;
 

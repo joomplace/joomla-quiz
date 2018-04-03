@@ -17,7 +17,7 @@ function subfolding($r_url){
 	$r_url = '/'.trim(str_replace(JUri::root(),'',$r_url),'/');
 	$subfold = JUri::root(true);
 	if($subfold){
-		if(strpos('/'.$ditem->icon,$subfold)===false){
+        if(strpos('/' . $r_url, $subfold) === false){
 			return $subfold.$r_url;
 		}else{
 			return $r_url;
@@ -60,16 +60,6 @@ function subfolding($r_url){
                     <tr>
                         <td width="13%"  align="left">Installed version:</td>
                         <td align="left">&nbsp;<b><?php echo JoomlaquizHelper::getVersion();?></b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left">Latest version:</td>
-                        <td>
-                            <div id="jq_LatestVersion">
-                                <script type="text/javascript">
-                                    jq_CheckVersion();
-                                </script>
-                            </div>
                         </td>
                     </tr>
                     <tr>

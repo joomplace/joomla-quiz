@@ -41,7 +41,7 @@ $ordering_list = $this->ordering_list;
 			}
 		}
 
-		if(window.parent.tinyMCE){
+		if(window.parent && window.parent.tinyMCE){
 			if(window.parent.tinyMCE.get('jform_c_question').getContent() == '' && jQuery('#jform_c_question').val() != ''){
 				window.parent.tinyMCE.get('jform_c_question').setContent(jQuery('#jform_c_question').val());
 			}

@@ -156,7 +156,11 @@ object{
 
 .jq_question_answers_cont{
 	margin:20px 0;
-}	
+}
+.jq_question_answers_cont input[type="radio"]{
+	margin-right: 3px;
+}
+
 .jq_quiz_align{
 	display:inline-block;
 	*zoom:1;
@@ -597,6 +601,11 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
     background-size: 100%;
     background-repeat: no-repeat;
 }
+
+.lp-link-row:not(:last-child) .lp-link{
+	border-bottom: 2px solid #eee ;
+}
+
 /* Fix Span with "Points for the correct answer @n" */
 @media screen and (max-width: 980px) {
 	.jq_question_info_container { 

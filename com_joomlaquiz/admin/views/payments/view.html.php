@@ -69,11 +69,17 @@ class JoomlaquizViewPayments extends JViewLegacy
     */
 	protected function addToolBar() 
     {
-        JToolBarHelper::addNew('payment.add');
-		JToolBarHelper::editList('payment.edit');
-		JToolBarHelper::deleteList('', 'payments.delete');
-        	
-		JToolBarHelper::divider();    
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::addNew('payment.add');
+        }
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::editList('payment.edit');
+        }
+        if ($canDo->get('core.delete')) {
+            JToolBarHelper::deleteList('', 'payments.delete');
+        }
     }
 	
 	protected function getSortFields()

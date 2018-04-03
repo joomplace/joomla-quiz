@@ -404,8 +404,8 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
 		$str = "  ".JText::_('COM_QUIZ_PDF_ANSWER');
-		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-
+		//$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+        $data['pdf']->writeHTML('<b>'.$str.'</b>', false);
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$data['pdf']->Ln();
@@ -501,17 +501,15 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 	
 	public function onGetAdminOptions($data)
 	{
-		$settings = JoomlaquizHelper::getSettings();
 		$q_om_type = 10;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
-		
+		$wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+
 		$db = JFactory::getDBO();
 		$choices = array();
 		$return = array();
 		if($data['question_id']){
 			$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '".$data['question_id']."' ORDER BY ordering";
 			$db->SetQuery( $query );
-			$choices = array();
 			$choices = $db->LoadObjectList();
 		}
 		
@@ -566,11 +564,10 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 	}
 	
 	public function onGetAdminJavaScript(&$data){
-		
-		$settings = JoomlaquizHelper::getSettings();
+
 		$q_om_type = 10;
-		$wysiwyg = (isset($settings->wysiwyg_options)) ? $settings->wysiwyg_options : 0;
-		
+		$wysiwyg = JComponentHelper::getParams('com_joomlaquiz')->get('wysiwyg_options', true);
+
 		ob_start();
 		require_once(JPATH_SITE."/plugins/joomlaquiz/mquestion/admin/js/mquestion.js.php");
 		$script = ob_get_contents();
@@ -596,7 +593,8 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
+
+        $task = JFactory::getApplication()->input->getCmd('task', '');
 		$database = JFactory::getDBO();
 		
 		$database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '".$_POST['jform']['c_qform']."', `c_partial` = '".$_POST['jform']['c_partial']."', `c_random` = '".$_POST['jform']['c_random']."', `c_title_true` = '".$_POST['c_title_true']."', `c_title_false` = '".$_POST['c_title_false']."' WHERE c_id = '".$data['qid']."'");
@@ -618,9 +616,9 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			foreach ($_POST['jq_hid_fields'] as $f_row) {
 					
 					$new_field = new stdClass;
-					if(intval($_POST['jq_hid_fields_ids'][$mcounter]))
-						$new_field->c_id = intval($_POST['jq_hid_fields_ids'][$mcounter]);
-						
+					if(intval($_POST['jq_hid_fields_ids'][$mcounter])) {
+                        $new_field->c_id = ($task == 'save2copy') ? 0 : intval($_POST['jq_hid_fields_ids'][$mcounter]);
+                    }
 					$new_field->c_question_id = $data['qid'];
 					$new_field->c_choice = stripslashes($f_row);
 					$new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);

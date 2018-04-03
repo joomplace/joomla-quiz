@@ -28,7 +28,7 @@ class JoomlaquizModelPrintcert extends JModelList
 		$user_unique_id = JFactory::getApplication()->input->get('user_unique_id', '', 'STRING');
 		$unique_pass_id = JFactory::getApplication()->input->get('unique_pass_id', '', 'STRING');
 		
-		$query = "SELECT SUM(squ.c_score) as user_score, ch.q_chain, sq.params, sq.user_name, sq.user_email, sq.user_surname, sq.c_passed, sq.c_student_id, sq.c_total_score, sq.c_date_time, sq.c_total_time, sq.unique_id, sq.unique_pass_id, qtq.c_full_score, qtq.c_title, qtq.c_certificate, qtq.c_id"
+		$query = "SELECT SUM(squ.c_score) as user_score, ch.q_chain, sq.params, sq.user_name, sq.user_email, sq.user_surname, sq.c_passed, sq.c_student_id, sq.c_total_score, sq.c_date_time, sq.c_total_time, sq.unique_id, sq.unique_pass_id, sq.c_max_score as c_full_score, qtq.c_title, qtq.c_certificate, qtq.c_id"
 		. "\n FROM #__quiz_r_student_quiz AS sq"
 		. "\n LEFT JOIN #__quiz_t_quiz as qtq ON qtq.c_id = sq.c_quiz_id"
 		. "\n LEFT JOIN #__quiz_r_student_question as squ ON sq.c_id = squ.c_stu_quiz_id"
@@ -40,7 +40,7 @@ class JoomlaquizModelPrintcert extends JModelList
 		
 		if (count($stu_quiz)) {
 			$stu_quiz = $stu_quiz[0];
-			if ( (($my->id == $stu_quiz->c_student_id || $unique_pass_id == $stu_quiz->unique_pass_id) || $my->authorise('core.manage','com_joomlaquiz')) && ($user_unique_id == $stu_quiz->unique_id) ) {
+            if ( (($my->id == $stu_quiz->c_student_id || $unique_pass_id == $stu_quiz->unique_pass_id) || $my->authorise('core.managefe','com_joomlaquiz')) && ($user_unique_id == $stu_quiz->unique_id) ) {
 				if ($stu_quiz->c_passed != 1) {
 					echo JText::_('COM_QUIZ_MES_NOTPASSED'); die();
 				}
@@ -125,10 +125,10 @@ class JoomlaquizModelPrintcert extends JModelList
 					$u_email = $stu_quiz->user_email;
 				}
 				
-				$full_score = 0;
+				/*$full_score = 0;
 				$qids = str_replace('*', ",", $stu_quiz->q_chain);
 				$full_score = JoomlaquizHelper::getTotalScore($qids, $stu_quiz->c_id);
-				$stu_quiz->c_full_score = ($full_score) ? $full_score : $stu_quiz->c_full_score;
+				$stu_quiz->c_full_score = ($full_score) ? $full_score : $stu_quiz->c_full_score;*/
 
 				$sc_procent = ($stu_quiz->c_full_score != 0) ? number_format(($stu_quiz->user_score * 100) / $stu_quiz->c_full_score, 2, '.', ' ') : 0;
 				$font_text = $certif->crtf_text;

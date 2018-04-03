@@ -54,7 +54,27 @@ class JoomlaquizModelResults extends JModelList
 		
 		$passed = $this->getUserStateFromRequest('results.filter.passed', 'filter_passed');
 		$this->setState('filter.passed', $passed);
-		if(JFactory::getApplication()->input->get('layout')=='stu_report' && 1==1){					$start = JFactory::getApplication()->input->get('stu_limitstart', '', $this->setState('list.start', $limit));			JFactory::getApplication()->input->set('limitstart',$start);			$this->setState('list.start', $start);						$limit = JFactory::getApplication()->input->get('stu_limit', '', $this->setState('list.limit', $limit));						JFactory::getApplication()->input->set('limit',$limit);			$this->setState('list.limit', $limit);						$direction = JFactory::getApplication()->input->get('stu_direction', '', $this->setState('list.direction', $limit));			JFactory::getApplication()->input->set('direction',$direction);			$this->setState('list.direction', $direction);						$ordering = JFactory::getApplication()->input->get('stu_ordering', '', $this->setState('list.ordering', $limit));			JFactory::getApplication()->input->set('ordering',$ordering);			$this->setState('list.ordering', $ordering);				}
+
+		if(JFactory::getApplication()->input->get('layout')=='stu_report' && 1==1){
+
+            $limit = JFactory::getApplication()->input->getInt('stu_limit', 0);
+            $this->setState('list.limit', $limit);
+
+            $start = JFactory::getApplication()->input->getInt('stu_limitstart', 0);
+            $this->setState('list.start', $start);
+
+            $direction = JFactory::getApplication()->input->get('stu_direction', 'ASC');
+            $this->setState('list.direction', $direction);
+
+            $ordering = JFactory::getApplication()->input->get('stu_ordering', 'sq.c_date_time');
+            $this->setState('list.ordering', $ordering);
+
+            JFactory::getApplication()->input->set('limit', $limit);
+            JFactory::getApplication()->input->set('limitstart', $start);
+            JFactory::getApplication()->input->set('direction', $direction);
+            JFactory::getApplication()->input->set('ordering', $ordering);
+		}
+
 		// List state information.
 		parent::populateState('sq.c_id', 'asc');
 	}
@@ -238,8 +258,10 @@ class JoomlaquizModelResults extends JModelList
 		$items = parent::getItems();
 
 		foreach ($items as $item) {
-			$item->c_question = html_entity_decode(strip_tags($item->c_question), ENT_COMPAT, 'UTF-8');
-		}
+            if(isset($item->c_question) && $item->c_question) {
+                $item->c_question = html_entity_decode(strip_tags($item->c_question), ENT_COMPAT, 'UTF-8');
+            }
+        }
 
 		return $items;
 	}
@@ -409,7 +431,7 @@ class JoomlaquizModelResults extends JModelList
 		$passed = $app->getUserStateFromRequest('results.filter.passed', 'filter_passed');
 		
 		$query = "SELECT sq.c_id, sq.c_passed, sq.params , sq.c_total_score, sq.c_total_time, sq.c_date_time, sq.c_passed, sq.user_email, sq.user_name,"
-		. "\n q.c_title, q.c_author, q.c_passing_score,sq.c_student_id, u.username, u.name, u.email, q.c_full_score, q.c_pool, ch.q_chain "
+        . "\n q.c_title, q.c_author, q.c_passing_score,sq.c_student_id, u.username, u.name, u.email, sq.c_max_score as c_full_score, q.c_pool, ch.q_chain "
 		. "\n FROM #__quiz_r_student_quiz as sq"
 		. "\n LEFT JOIN #__users as u ON sq.c_student_id = u.id"
 		. "\n LEFT JOIN `#__quiz_q_chain` AS ch ON ch.s_unique_id = sq.unique_id "

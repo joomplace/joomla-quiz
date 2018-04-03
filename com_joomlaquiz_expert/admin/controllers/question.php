@@ -9,6 +9,7 @@
 defined('_JEXEC') or die('Restricted access');
  
 jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.helper');
  
 /**
  * Question Controller
@@ -37,14 +38,21 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		return $db->loadResult();
 	}
 	
-	static public function JQ_editorArea($name, $content, $hiddenField, $width, $height, $col, $row)
+	static public function JQ_editorArea($name=null, $content, $hiddenField, $width, $height, $col, $row)
 	{
-		$editor = JFactory::getEditor();
+		if(!$name){
+            $name = JFactory::getConfig()->get('editor', 'none');
+        }
+        $editor = JEditor::getInstance($name);
 		$id = JFactory::getApplication()->input->get('id',0,'INT');
 		if(!$content){
-			$content = self::getContentEditor($id);
+			$content = @self::getContentEditor($id);
 		}
-		echo $editor->display($hiddenField, $content, $width, $height, $col, $row, array('pagebreak', 'readmore'));
+		if($name == 'none'){
+            echo $editor->display($hiddenField, $content, $width, $height, $col, $row, false);
+        } else {
+            echo $editor->display($hiddenField, $content, $width, $height, $col, $row, true);
+        }
 	}
 	
 	public function edit_field(){
@@ -53,10 +61,22 @@ class JoomlaquizControllerQuestion extends JControllerForm
 		$view->display();
 	}
 
-		public function save(){
+		public function save($key = NULL, $urlVar = NULL){
 		$data = JFactory::getApplication()->input->get('jform',array(),'array');
 		$task = JFactory::getApplication()->input->get('task');
-	
+
+        $is_set_default = JComponentHelper::getParams('com_joomlaquiz')->get('is_set_default');
+
+        if ($data["c_id"] == 0 && $is_set_default) {
+            $session = JFactory::getSession();
+            $session->set('jform_c_point_d', $data["c_point"]);
+            $session->set('jform_c_attempts_d', $data["c_attempts"]);
+            $session->set('jform_c_feedback_d', $data["c_feedback"]);
+            $session->set('jform_c_right_message_d', $data["c_right_message"]);
+            $session->set('jform_c_wrong_message_d', $data["c_wrong_message"]);
+            $session->set('jform_c_detailed_feedback_d', $data["c_detailed_feedback"]);
+        }
+
 		switch($task){
 			case 'save2copy':
 				parent::save();
@@ -80,7 +100,7 @@ class JoomlaquizControllerQuestion extends JControllerForm
 
 	}
 
-	public function cancel(){
+	public function cancel($key = NULL){
 		parent::cancel();
 		$data = JFactory::getApplication()->input->get('jform',array(),'array');
 		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=questions&quiz_id='.$data['c_quiz_id'] );

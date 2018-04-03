@@ -134,7 +134,22 @@ class jq_pdf {
 		$this->_engine->setHeaderData('', 0, $config->sitename, $config->live_site." . "._PDF_GENERATED .' '. JHtml::_('date', time() , 'j F, Y, H:i' ) );	
 		
 		// Set PDF Header and Footer fonts
-		$font = 'dejavusans';
+        $lang = \JFactory::getLanguage()->getTag();
+        $alt_lang = array(
+            'ar-AA', //Arabic (Unitag)
+            'ar-SA', //Arabic (Saudi Arabia)
+            'he-IL', //Hebrew (Israel)
+            'ja-JP', //Japanese (Japan)
+            'zh-CN', //Chinese (China)
+            'zh-HK', //Chinese (Hong Kong)
+            'zh-TW'  //Chinese (Taiwan)
+        );
+
+        if(in_array($lang, $alt_lang)){
+            $font = 'javiergb';
+        } else {
+            $font = 'dejavusans';
+        }
 
 		$this->_engine->setHeaderFont(array($font, '', 7));
 		$this->_engine->setFooterFont(array($font, '', 7));

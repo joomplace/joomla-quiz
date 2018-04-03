@@ -35,7 +35,7 @@ class JoomlaquizTableQuiz extends JTable
 			{
 				$query = "SELECT COUNT(*) "
 				. "\n FROM #__quiz_t_quiz"
-				. "\n WHERE  c_title = '".$_POST['jform']['c_title']."'";
+                . "\n WHERE  c_title = ".$database->q($_POST['jform']['c_title'])."";
 				
 				$database->setQuery( $query );
 				$rows_dubl = $database->loadResult();

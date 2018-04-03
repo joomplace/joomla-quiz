@@ -27,6 +27,9 @@ class JoomlaquizViewJoomlaquiz extends JViewLegacy
         }
         
         protected function addToolbar(){
-            JToolbarHelper::preferences('com_joomlaquiz');
+            $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+            if ($canDo->get('core.create')) {
+                JToolbarHelper::preferences('com_joomlaquiz');
+            }
         }
 }

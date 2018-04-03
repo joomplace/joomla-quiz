@@ -42,9 +42,12 @@ class JoomlaquizViewReactivate extends JViewLegacy
         
     protected function addToolbar()
 	{
-		JToolBarHelper::custom('reactivate.apply_reactivate', 'save-new.png', 'save-new_f2.png', 'COM_JOOMLAQUIZ_REACTIVATE', false);
+        $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::custom('reactivate.apply_reactivate', 'save-new.png', 'save-new_f2.png',
+                'COM_JOOMLAQUIZ_REACTIVATE', false);
+        }
 		JToolBarHelper::cancel('reactivate.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::divider();
 		JToolBarHelper::help('JHELP_COMPONENTS_WEBLINKS_LINKS_EDIT');
 	}
 }

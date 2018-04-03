@@ -122,13 +122,20 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="nowrap has-context">
                         <div class="pull-left">
-                            <?php if($item->order_status == 'C' || $item->order_status_name == 'Confirmed'): ?>
-								<a href="<?php echo $link; ?>">
-							<?php endif; ?>
-							<?php  if ($item->vm) printf("%08d", $item->order_id); else echo 'Payment #'.$item->order_id; ?>	
-							<?php if($item->order_status == 'C' || $item->order_status_name == 'Confirmed'): ?>
-								</a>
-							<?php endif; ?>
+                            <?php
+                            $vm_confirmed_statuses = array('C','U');
+                            if(in_array($this->escape($item->order_status), $vm_confirmed_statuses)){
+                                echo '<a href="'.$link.'">';
+                            }
+                            if ($item->vm){
+                                printf("%08d", (int)$item->order_id);
+                            } else {
+                                echo 'Payment #'.(int)$item->order_id;
+                            }
+                            if(in_array($this->escape($item->order_status), $vm_confirmed_statuses)){
+                                echo '</a>';
+                            }
+                            ?>
                         </div>
 					</td>
 					<td class="has-context">
@@ -141,11 +148,14 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="has-context">
                         <div class="pull-left">
-                        	<?php if($item->order_status_name){
-                        		$item->order_status_name = str_replace("COM_VIRTUEMART_ORDER_STATUS_CONFIRMED", 'Confirmed', $item->order_status_name);
-                        		$item->order_status_name = str_replace("COM_VIRTUEMART_ORDER_STATUS_SHIPPED", 'Shipped', $item->order_status_name);
-                        	}?>
-                            <?php echo ($item->order_status_name ? $item->order_status_name : $item->order_status); ?>
+                            <?php
+                            $vm_statuses = array(
+                                'C' => 'Confirmed', 'U' => 'Confirmed by shopper', 'S' => 'Shipped', 'X' => 'Cancelled',
+                                'R' => 'Refunded', 'F' => 'Completed', 'D' => 'Denied', 'P' => 'Pending'
+                            );
+                            $item->order_status_name = (isset($item->order_status) && $item->order_status) ? $vm_statuses[$item->order_status] : '';
+                            echo ($item->order_status_name ? $item->order_status_name : '');
+                            ?>
                         </div>
 					</td>
 					<td class="has-context">

@@ -33,7 +33,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		
 		if (count($st_quiz_data)) {
 			$st_quiz_data = $st_quiz_data[0];
-			if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id || $unique_pass_id == $st_quiz_data->unique_pass_id))  ||  $my->authorise('core.manage','com_joomlaquiz')) {		
+            if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id || $unique_pass_id == $st_quiz_data->unique_pass_id))  ||  $my->authorise('core.managefe','com_joomlaquiz')) {
 				$this->JQ_PrintPDF($stu_quiz_id);
 				die();
 			}
@@ -201,24 +201,38 @@ class JoomlaquizModelPrintresult extends JModelList
 		);
 		$quiz_id = $info['c_quiz_id'];
 
-		$query = "SELECT q_chain FROM #__quiz_q_chain "
+		/*$query = "SELECT q_chain FROM #__quiz_q_chain "
 			. "\n WHERE s_unique_id = '" . $info['unique_id'] . "'";
 		$database->SetQuery($query);
 		$qch_ids = $database->LoadResult();
 		$qch_ids = str_replace('*', ',', $qch_ids);
-
 		$total = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
+		*/
+        $total = $info['c_max_score'];
+
+        $lang = \JFactory::getLanguage()->getTag();
+        $alt_lang = array(
+            'ar-AA', //Arabic (Unitag)
+            'ar-SA', //Arabic (Saudi Arabia)
+            'he-IL', //Hebrew (Israel)
+            'ja-JP', //Japanese (Japan)
+            'zh-CN', //Chinese (China)
+            'zh-HK', //Chinese (Hong Kong)
+            'zh-TW'  //Chinese (Taiwan)
+        );
 
 		chdir(JPATH_SITE);
-
-		require_once(JPATH_SITE
-			. '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
+		require_once(JPATH_SITE . '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
 
 		$pdf_doc = new jq_pdf();
-
 		$pdf = &$pdf_doc->_engine;
 
-		$pdf->SetFont('dejavusans');
+        if(in_array($lang, $alt_lang)){
+            $pdf->SetFont('javiergb');
+        } else {
+            $pdf->SetFont('dejavusans');
+        }
+
 		$fontFamily = $pdf->getFontFamily();
 
 		$pdf->getAliasNbPages();

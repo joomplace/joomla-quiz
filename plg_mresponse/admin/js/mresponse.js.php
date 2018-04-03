@@ -9,12 +9,12 @@
 
 defined('_JEXEC') or die;
 
-if ($wysiwyg) { ?>
+if ($wysiwyg) {?>
 		<link rel="stylesheet" href="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/css/thickbox/thickbox.css" type="text/css" />
 		<script language="javascript" type="text/javascript" src="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/js/thickbox/thickbox.js" ></script>
-<?php }?>
+<?php } ?>
 <script language="javascript" type="text/javascript">
-<!--
+
 		var quest_type = <?php echo $q_om_type; ?>;
 			
 		function ReAnalize_tbl_Rows( start_index, tbl_id ) {
@@ -528,6 +528,5 @@ if ($wysiwyg) { ?>
 		function jq_SetHidden(random_number, value) {
 			document.getElementById(random_number).value = value;
 		}
-		
-//-->
+
 </script>

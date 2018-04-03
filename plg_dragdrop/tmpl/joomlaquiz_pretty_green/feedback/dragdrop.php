@@ -26,8 +26,7 @@ class JoomlaquizViewFeedbackDragdrop
 							<tr class="jq_feedback_question_content_header">
 								<td class="jq_feedback_question_content_col_wide">'.JText::_('COM_JQ_POSSIBLE_ANSWERS').'</td>
 								<td class="jq_feedback_question_content_col_narrow">'.JText::_('COM_QUIZ_CORRECT').'</td>
-								<td class="jq_feedback_question_content_col_narrow">'.JText::_('COM_JQ_YOUR_CHOICE').'</td>
-								<td class="jq_feedback_question_content_col_narrow">'.JText::_('COM_JQ_PEOPLE_STATISTIC').'</td>';
+								<td class="jq_feedback_question_content_col_narrow">'.JText::_('COM_JQ_YOUR_CHOICE').'</td>';
 		$k = 2;
 		if(is_array($feedback_data['qdata']))
 		foreach($feedback_data['qdata'] as $t) {
@@ -35,8 +34,7 @@ class JoomlaquizViewFeedbackDragdrop
 								'<td class="jq_feedback_question_content_col_wide">'. stripslashes($t['c_left_text']). '</td>'.
 								'<td class="jq_feedback_question_content_col_narrow">'. stripslashes($t['c_right_text']). '</td>'.
 								'<td class="jq_feedback_question_content_col_narrow">'. stripslashes($t['c_sel_text']). '</td>'.
-								'<td></td>
-							</tr>';
+							'</tr>';
 			$k = 3 - $k;
 		}
 

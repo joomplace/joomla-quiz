@@ -159,13 +159,17 @@ jQuery(function($) {
 
     $(catFields).each(function(){
         $(this).on('focus', function(){
-            if( !$.trim($('#jform_c_prob_total_q').val()) || $.trim($('#jform_c_prob_total_q').val()) == 0 ){
-                $(this).prop('disabled', true);
-                alert('Please fill out first the field "Total number of questions (for probability questions)"');
-                $(this).prop('disabled', false);
+            if( probabilitySelected ) {    //By Probability
+                if (!$.trim($('#jform_c_prob_total_q').val()) || $.trim($('#jform_c_prob_total_q').val()) == 0) {
+                    $(this).prop('disabled', true);
+                    alert('Please fill out first the field "Total number of questions (for probability questions)"');
+                    $(this).prop('disabled', false);
+                }
             }
         }).on('blur', function(){
-            $('#probability_total_percents').text( getProbabilityTotalPercents() + '%' );
+            if( probabilitySelected ) {    //By Probability
+                $('#probability_total_percents').text(getProbabilityTotalPercents() + '%');
+            }
         });
     });
 

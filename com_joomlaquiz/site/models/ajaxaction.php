@@ -418,6 +418,8 @@ class JoomlaquizModelAjaxaction extends JModelList
                         }
                     }
 
+                    shuffle($q_data);
+
                     break;
 				
 				default:	break;

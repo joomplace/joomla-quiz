@@ -18,7 +18,7 @@ jimport('joomla.database.table');
 class JoomlaquizTableQuestion extends JTable
 {
     public static $_ucm = false;
-    public $type = 'com_joomlaquiz.question';
+    public $_type = 'com_joomlaquiz.question';
 
     /**
      * Constructor
@@ -28,7 +28,7 @@ class JoomlaquizTableQuestion extends JTable
     function __construct(&$db)
     {
         parent::__construct('#__quiz_t_question', 'c_id', $db);
-        JTableObserverTags::createObserver($this, array('typeAlias' => $this->type));
+        JTableObserverTags::createObserver($this, array('typeAlias' => $this->_type));
         $this->checkUCM();
 
     }
@@ -87,6 +87,7 @@ class JoomlaquizTableQuestion extends JTable
             /*
              * Somehow this is not binded!!!
              */
+
             $this->bind($data);
 
 			require_once(JPATH_SITE."/components/com_joomlaquiz/libraries/apps.php");
@@ -126,6 +127,7 @@ class JoomlaquizTableQuestion extends JTable
 			    $this->params = new Joomla\Registry\Registry($this->params);
 			    $this->params = $this->params->toString();
             }
+
 			$res = parent::store($updateNulls);
 			
 			$data = array();

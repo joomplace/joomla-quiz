@@ -481,6 +481,7 @@ ALTER TABLE `#__quiz_t_question` ADD COLUMN `c_sec_penalty` INT(11) NOT NULL DEF
 ALTER TABLE `#__quiz_t_question` ADD COLUMN `c_detailed_feedback` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_sec_penalty`;
 ALTER TABLE `#__quiz_t_question` ADD COLUMN `c_time_limit` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `c_detailed_feedback`;
 ALTER TABLE `#__quiz_t_question` ADD COLUMN `c_show_timer` TINYINT(4) NOT NULL DEFAULT '0' AFTER `c_time_limit`;
+ALTER TABLE `#__quiz_t_question` ADD COLUMN `params` varchar(1024) NOT NULL DEFAULT '{}';
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
 `c_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,

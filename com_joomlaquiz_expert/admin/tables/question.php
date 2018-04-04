@@ -39,11 +39,11 @@ class JoomlaquizTableQuestion extends JTable
             $query = $db->getQuery(true);
             $query->select($db->qn('type_id'))
                 ->from($db->qn('#__content_types'))
-                ->where($db->qn('type_alias').'='.$db->q($this->type));
+                ->where($db->qn('type_alias').'='.$db->q($this->_type));
             if(!$db->setQuery($query,0,1)->loadResult()){
                 $content_type = new stdClass();
                 $content_type->type_title = 'Quiz Questions';
-                $content_type->type_alias = $this->type;
+                $content_type->type_alias = $this->_type;
                 $content_type->router = 'QuizHelperRoute::routeQuestionTag';
                 $content_type->table = '{"special":{"dbtable":"#__quiz_t_question","key":"c_id","type":"Question","prefix":"JoomlaquizTable"}}';
                 $content_type->field_mappings = '{"common": {"core_content_item_id": "c_id","core_title": "c_id","core_state": "published","core_params": "params","core_ordering": "ordering","core_catid": "c_quest_cat"}}';

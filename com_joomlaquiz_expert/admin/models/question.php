@@ -29,7 +29,7 @@ class JoomlaquizModelQuestion extends JModelAdmin
         if (!empty($result->c_id))
         {
             $result->tags = new JHelperTags;
-            $result->tags->getTagIds($result->c_id, $this->getTable()->type);
+            $result->tags->getTagIds($result->c_id, $this->getTable()->_type);
         }
         $is_set_default = JComponentHelper::getParams('com_joomlaquiz')->get('is_set_default');
 

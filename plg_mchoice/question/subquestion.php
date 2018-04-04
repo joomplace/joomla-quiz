@@ -23,9 +23,16 @@ if($data->get('shuffle')){
 
 $session = JFactory::getSession();
 $answer_session = $session->get('quiz.'.$input->get('stu_quiz_id',0).'.question.'.$data->get('parent_id',0));
-$answers = json_decode($answer_session, true)[$data->get('id')];
-$disabled = json_decode($answer_session, true)[$data->get('id').'_attempted'] >= $data->get('attempts',1000);
-$options = array_map(function($option) use ($type, $review, $answers, $disabled){
+$answers = array();
+$disabled = false;
+if($answer_session) {
+    $answers_arr = json_decode($answer_session, true);
+    $answers = isset($answers_arr[$data->get('id')]) ? $answers_arr[$data->get('id')] : array();
+    $disabled_arr = json_decode($answer_session, true);
+    $disabled = isset($disabled_arr[$data->get('id') . '_attempted']) ?
+        $disabled_arr[$data->get('id') . '_attempted'] >= $data->get('attempts', 1000) : false;
+}
+$options = array_map(function($option) use ($type, /*$review,*/ $answers, $disabled){
     $option = new \Joomla\Registry\Registry($option);
     $option->set('type',$type);
     $option->set('picked',in_array($option->get('id'),$answers));

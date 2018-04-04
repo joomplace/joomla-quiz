@@ -386,6 +386,7 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
             $quest_row->c_feedback  = $question->get('feedback');
             $quest_row->c_right_message  = $question->get('feedback_correct');
             $quest_row->c_wrong_message  = $question->get('feedback_incorrect');
+            $quest_row->c_detailed_feedback  = $question->get('feedback_detailed');
             $quest_row->c_partially_message  = $question->get('feedback_partial');
             if ($quest_row->c_id) {
                 $db->updateObject('#__quiz_t_question', $quest_row, 'c_id');
@@ -522,15 +523,19 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
 //            die();
             $data = array();
             foreach ($question_data as $question){
-                if($question->feedback){
+                if(isset($question->feedback) && $question->feedback && isset($question->feedback_type)){
+                    if($question->feedback_type == 'incorrect' && (isset($question->again) && $question->again == null)){
+                        $question->feedback_type = 'detailed';
+                    }
                     JFactory::getApplication()->enqueueMessage(JLayoutHelper::render('question.feedback.'.$question->feedback_type, $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/'),$question->id);
                 }
                 $data[] = array(
-                    'id'=> $question->id,
-                    'again'=> $question->again,
-                    'html'=> ($question->again===null?JLayoutHelper::render('question.subquestion', $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/'):'')
+                    'id'=> $question->id
                 );
-                if($question->again){
+                $again = isset($question->again) ? $question->again : null;
+                $data['again'] = $again;
+                $data['html'] = ($again === null ? JLayoutHelper::render('question.subquestion', $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/') : '');
+                if($again){
                     break;
                 }
             }

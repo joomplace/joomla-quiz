@@ -18,6 +18,7 @@ if($displayData){
         ->select($db->qn('c_feedback','feedback'))
         ->select($db->qn('c_right_message','feedback_correct'))
         ->select($db->qn('c_wrong_message','feedback_incorrect'))
+        ->select($db->qn('c_detailed_feedback','feedback_detailed'))
         ->select($db->qn('c_partially_message','feedback_partial'))
         ->select($db->qn('parent_id'))
         ->from($db->qn('#__quiz_t_question', 'q'))

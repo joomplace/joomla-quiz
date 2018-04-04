@@ -39,7 +39,6 @@ case '15':
             function (response, status, xhr) {
                 question_finished = true;
                 response = JSON.parse(response);
-                console.log(response);
                 var feedbacks = response.messages;
                 if(feedbacks){
                     Object.keys(feedbacks).map(function(quest, index) {
@@ -53,7 +52,7 @@ case '15':
                     });
                 }
                 if(response.data){
-                    var html = response.data[0];
+                    var html = [].slice.call(response.data[0]);
                     html.map(function(obj, i) {
                         if(obj.again !== false){
                             if(obj.again === true){

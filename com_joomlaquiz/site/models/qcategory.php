@@ -52,7 +52,7 @@ class JoomlaquizModelQcategory extends JModelList
             $hikashop_quiz_products = array();
 
             if (!$no_virtuemart) {
-                $query = "SELECT DISTINCT qp.*, vm_o.virtuemart_order_id"
+                $query = "SELECT DISTINCT qp.*, vm_o.virtuemart_order_id as order_id"
                     . "\n FROM #__virtuemart_orders AS vm_o"
                     . "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
                     . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
@@ -160,8 +160,9 @@ class JoomlaquizModelQcategory extends JModelList
                 ) {
                     continue;
                 }
+                $data->suffix = '';
                 if ($data->xdays > 0) {
-                    $data->suffix = sprintf(JText::_('COM_QUIZ_XDAYS'), $data->xdays);
+                    $data->suffix .= sprintf(JText::_('COM_QUIZ_XDAYS'), $data->xdays);
                 } else {
                     if (($data->period_start && $data->period_start != '0000-00-00')
                         || ($data->period_end && $data->period_end != '0000-00-00')
@@ -179,12 +180,12 @@ class JoomlaquizModelQcategory extends JModelList
                             $period[] = sprintf(JText::_('COM_QUIZ_LPATH_PERIOD_TO'),
                                 date(JText::_('COM_QUIZ_LPATH_PERIOD_FORMAT'), strtotime($data->period_end)));
                         }
-                        $data->suffix = sprintf(JText::_('COM_QUIZ_PERIOD'), implode(' ', $period));
+                        $data->suffix .= sprintf(JText::_('COM_QUIZ_PERIOD'), implode(' ', $period));
                     }
                 }
 
                 if ($data->attempts > 0 && $data->xdays > 0) {
-                    $data->suffix = sprintf(JText::_('COM_QUIZ_XDAYS_ATTEMPTS'), $data->attempts, $data->xdays);
+                    $data->suffix .= sprintf(JText::_('COM_QUIZ_XDAYS_ATTEMPTS'), $data->attempts, $data->xdays);
                 } else {
                     $data->suffix .= ($data->suffix ? ' ' : '') . sprintf(JText::_('COM_QUIZ_ATTEMPTS'), $data->attempts);
                 }
@@ -205,10 +206,11 @@ class JoomlaquizModelQcategory extends JModelList
                         if (empty($lpath[$data->rel_id])) {
                             continue;
                         }
+                        $data->suffix = '';
                         $data->title = $lpath[$data->rel_id]->title;
                         $data->short_descr = $lpath[$data->rel_id]->short_descr;
                         if ($data->xdays > 0) {
-                            $data->suffix = sprintf(JText::_('COM_LPATH_XDAYS'), $data->xdays);
+                            $data->suffix .= sprintf(JText::_('COM_LPATH_XDAYS'), $data->xdays);
                         } else {
                             if (($data->period_start && $data->period_start != '0000-00-00')
                                 || ($data->period_end && $data->period_end != '0000-00-00')
@@ -227,7 +229,7 @@ class JoomlaquizModelQcategory extends JModelList
                                     $period[] = sprintf(JText::_('COM_QUIZ_LPATH_PERIOD_TO'),
                                         date(JText::_('COM_QUIZ_LPATH_PERIOD_FORMAT'), strtotime($data->period_end)));
                                 }
-                                $data->suffix = sprintf(JText::_('COM_LPATH_PERIOD'), implode(' ', $period));
+                                $data->suffix .= sprintf(JText::_('COM_LPATH_PERIOD'), implode(' ', $period));
                             }
                         }
                         if ($data->attempts > 0) {
@@ -263,7 +265,7 @@ class JoomlaquizModelQcategory extends JModelList
 
     public function getCategories(){
         jimport('joomla.application.categories');
-        $categories = new JCategories(array('extension'=>'com_joomlaquiz','access'=>true));
+        $categories = new JCategories(array('extension'=>'com_joomlaquiz', 'access'=>true, 'table'=>'categories'));
         $jinput = JFactory::getApplication()->input;
         $cur_cat = $categories->get($jinput->getInt('cat_id', 0), 0);
         if($cur_cat){

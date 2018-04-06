@@ -418,7 +418,9 @@ class JoomlaquizModelAjaxaction extends JModelList
                         }
                     }
 
-                    shuffle($q_data);
+                    if((int)$quiz->c_random) {
+                        shuffle($q_data);
+                    }
 
                     break;
 				

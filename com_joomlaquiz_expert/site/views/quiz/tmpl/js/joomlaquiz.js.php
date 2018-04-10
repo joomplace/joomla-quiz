@@ -1534,8 +1534,7 @@ function jq_QuizContinue() {
 }
 
 function jq_QuizContinueFinish() {
-	var query = window.location.search;
-	var plugin = (query.indexOf('view=article') != -1) ? '&plug='+ encodeURIComponent(query) : '';
+	var plugin = '&plug='+ encodeURIComponent(window.location.pathname + window.location.search);
 	jq_MakeRequest('&ajax_task=finish_stop&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id + plugin, 1);
 }
 

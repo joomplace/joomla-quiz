@@ -108,8 +108,10 @@ class JoomlaquizModelPackages extends JModelList
                             . "\n `hos`.`orderstatus_id` as `order_status_id`, `hos`.`orderstatus_name` AS `order_status_name`,"
                             . "\n `hh`.`history_new_status` as `order_status_code`"
                             . "\n FROM `#__hikashop_history` AS `hh`"
+                            . "\n LEFT JOIN `#__hikashop_order` AS `ho` ON `ho`.`order_id` = `hh`.`history_order_id`"
                             . "\n LEFT JOIN `#__hikashop_orderstatus` AS `hos` ON `hos`.`orderstatus_namekey` = `hh`.`history_new_status`"
-                            . "\n WHERE `hh`.`history_order_id` = '". (int)$order->order_id ."'"
+                            . "\n WHERE `ho`.`order_id` = '". (int)$order->order_id ."'"
+                            . "\n AND `hh`.`history_new_status` = `ho`.`order_status`"
                             . "\n ORDER BY `hh`.`history_id` DESC, `hh`.`history_created` DESC";
                     }
                 }

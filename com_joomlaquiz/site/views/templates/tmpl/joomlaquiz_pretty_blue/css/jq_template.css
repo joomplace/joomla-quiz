@@ -1057,15 +1057,6 @@ div.correct_answer
 	color:#5F98D0 !important;
 }
 
-.jq_result_key
-{
-	float:left;
-}
-
-.jq_result_value
-{
-	float:right;
-}
 
 .jq_results_score_holder
 {

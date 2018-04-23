@@ -529,12 +529,13 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
                     }
                     JFactory::getApplication()->enqueueMessage(JLayoutHelper::render('question.feedback.'.$question->feedback_type, $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/'),$question->id);
                 }
-                $data[] = array(
-                    'id'=> $question->id
-                );
                 $again = isset($question->again) ? $question->again : null;
-                $data['again'] = $again;
-                $data['html'] = ($again === null ? JLayoutHelper::render('question.subquestion', $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/') : '');
+                $html = $again === null ? JLayoutHelper::render('question.subquestion', $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/') : '';
+                $data[] = array(
+                    'id'=> $question->id,
+                    'again' => $again,
+                    'html' => $html
+                );
                 if($again){
                     break;
                 }

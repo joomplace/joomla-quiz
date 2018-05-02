@@ -3484,7 +3484,8 @@ class JoomlaquizModelAjaxaction extends JModelList
             if($qtype == 1)
             {
                 //$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', (($is_correct)?(($questtype1_answer_incorrect)?$questtype1_answer_incorrect:$jq_language['COM_QUIZ_ANSWER_CORRECT']):(($questtype1_answer_incorrect)?($questtype1_answer_incorrect):($jq_language['COM_QUIZ_ANSWER_INCORRECT']))));
-								$msg_html = ($is_correct)?$jq_language['COM_QUIZ_ANSWER_CORRECT']:$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
+				//$msg_html = ($is_correct)?$jq_language['COM_QUIZ_ANSWER_CORRECT']:$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
+                $msg_html = ($is_correct) ? $jq_language['COM_QUIZ_ANSWER_CORRECT'] : '';
 								$msg_html .= ($questtype1_answer_incorrect)?'<br/>'.$questtype1_answer_incorrect:'';
 								
 								$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', $msg_html );
@@ -3508,12 +3509,15 @@ class JoomlaquizModelAjaxaction extends JModelList
         }
 
         $c_detailed_feedback = '';
-        if(!$is_correct && (($c_quest_cur_attempt + 1) == $c_all_attempts)){
+        if(!$is_correct && (($c_quest_cur_attempt + 1) >= $c_all_attempts)){
             /* may be need to be moved */
             $query = "SELECT c_detailed_feedback from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";
             $database->SetQuery( $query );
             $c_detailed_feedback = $database->loadResult();
             $c_detailed_feedback = ($c_detailed_feedback == '') ? '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'] : '</br>'.$c_detailed_feedback;
+        }
+        else if(!$is_correct && (($c_quest_cur_attempt + 1) < $c_all_attempts)){
+            $c_detailed_feedback = '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
         }
 
         $ret_str .= "\t" . '<quiz_prev_correct>'.$is_correct.'</quiz_prev_correct>' . "\n";

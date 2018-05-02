@@ -482,6 +482,12 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
             }
             $session_answers->set($quest.'_attempted',$session_answers->get($quest.'_attempted',0)+1);
 
+            if($question_data[$quest]->attempts == 0 || $question_data[$quest]->attempts > $session_answers->get($quest.'_attempted',0)){
+                $question_data[$quest]->show_feedback_detailed = false;
+            }else{
+                $question_data[$quest]->show_feedback_detailed = true;
+            }
+
             $question_data[$quest]->again = false;
 
             if($question_data[$quest]->attempts == 0 || $question_data[$quest]->attempts > $session_answers->get($quest.'_attempted',0)){
@@ -524,7 +530,7 @@ class plgJoomlaquizMchoice extends plgJoomlaquizQuestion
             $data = array();
             foreach ($question_data as $question){
                 if(isset($question->feedback) && $question->feedback && isset($question->feedback_type)){
-                    if($question->feedback_type == 'incorrect' && (isset($question->again) && $question->again == null)){
+                    if($question->feedback_type == 'incorrect' && $question->show_feedback_detailed){
                         $question->feedback_type = 'detailed';
                     }
                     JFactory::getApplication()->enqueueMessage(JLayoutHelper::render('question.feedback.'.$question->feedback_type, $question, JPATH_SITE.'/plugins/joomlaquiz/mchoice/'),$question->id);

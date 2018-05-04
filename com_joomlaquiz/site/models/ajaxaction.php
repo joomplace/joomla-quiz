@@ -3498,6 +3498,7 @@ class JoomlaquizModelAjaxaction extends JModelList
             $is_correct = 0;
         }
 
+        $c_detailed_feedback = '';
         if(!$is_correct){
             /* may be need to be moved */
             $query = "SELECT c_detailed_feedback from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";

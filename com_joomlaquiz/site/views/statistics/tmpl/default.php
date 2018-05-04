@@ -105,7 +105,7 @@ if(isset($quizzes[0]) && isset($quizzes[0]->available) && $quizzes[0]->available
 								$data['quest_type'] = $type;
 								$data['question'] = $question;
 								
-								echo $appsLib->triggerEvent( 'onStatisticContent' , $data );
+								$appsLib->triggerEvent( 'onStatisticContent' , $data );
 															
 							?>
 							</table>

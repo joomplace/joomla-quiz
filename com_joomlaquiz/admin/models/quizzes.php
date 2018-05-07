@@ -290,7 +290,7 @@ class JoomlaquizModelQuizzes extends JModelList
 		$query = "SELECT id AS value, title AS text"
 		. "\n FROM #__categories"
 		. "\n WHERE `extension` = 'com_joomlaquiz' AND `published` IN ('0', '1')"
-		. "\n ORDER BY lft";
+		. "\n ORDER BY `title`, `lft`";
 		$db->setQuery( $query );
 		
 		$categories = $db->loadObjectList();

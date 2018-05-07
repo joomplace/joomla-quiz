@@ -373,7 +373,7 @@ class JoomlaquizModelQuestions extends JModelList
 		
 		$query = "SELECT c_id AS value, c_qtype AS text"
 		. "\n FROM #__quiz_t_qtypes"
-		. "\n ORDER BY c_id"
+		. "\n ORDER BY `c_qtype`, `c_id`"
 		;
 		$db->setQuery( $query );
 		$qtypes = $db->loadObjectList();
@@ -384,7 +384,7 @@ class JoomlaquizModelQuestions extends JModelList
 	public function getQuestionCategories(){
 		$db = JFactory::getDBO();
 		
-		$query = "SELECT id AS value, title as text FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `published` = 1 order by lft";
+		$query = "SELECT id AS value, title as text FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `published` = 1 order by `title`, `lft`";
 		$db->setQuery( $query );
 		$jq_qcat = $db->loadObjectList();
 		

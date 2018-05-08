@@ -59,15 +59,22 @@ class JoomlaquizViewCreateHotspot
 		wOrigin = {$w};
 		hOrigin = {$h};
 
+        jq_jQuery('#foo').attr('style', 'width: 100% !important');
 		var w = jq_jQuery('#foo').width();
+		
+		var viewport_width = jq_jQuery(document.body).width();
+		if(viewport_width < w){
+		    w = viewport_width - 50;
+		}
+		
 		if(koef > 1){
 			var h = w / koef;
 		} else {
 			var h = w * koef;
 		}
 
-		globalWidth.push(w);
-		globalHeight.push(h);
+		//globalWidth.push(w);
+		//globalHeight.push(h);
 
 		var l = getPosition_x('#foo');
 		var t = getPosition_y('#foo');

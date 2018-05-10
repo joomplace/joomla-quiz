@@ -601,6 +601,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_feedback_pdf` int(2) NOT NULL DEFAULT '0',
   `c_pool` int(11) NOT NULL DEFAULT '0',
   `c_resbycat` char(1) NOT NULL DEFAULT '0',
+  `c_resbytags` int(3) NOT NULL DEFAULT '0',
   `c_feed_option` char(1) NOT NULL DEFAULT '0',
   `c_show_quest_pos` tinyint(4) NOT NULL DEFAULT '1',
   `c_show_quest_points` tinyint(4) NOT NULL DEFAULT '1',

@@ -69,7 +69,70 @@ class JoomlaquizHelper
 			
 			return $q_cate;
 		}
-		
+
+    public static function getResultsByTags($start_id){
+
+        $appsLib = JqAppPlugins::getInstance();
+        $db = JFactory::getDBO();
+
+        $query = "SELECT qtq.c_id, qtq.c_type, qtq.c_ques_cat as q_cat, qtq.c_point as fuly_score, qrs.c_score as us_score FROM #__quiz_r_student_question as qrs, #__quiz_t_question as qtq WHERE qrs.c_question_id = qtq.c_id AND qrs.c_stu_quiz_id = '".$start_id."' AND qtq.published = 1";
+        $db->SetQuery( $query );
+        $score_data = $db->LoadObjectList();
+
+        $quest_ids = array();
+        foreach($score_data as $data){
+            $quest_ids[] = $db->q((int)$data->c_id);
+        }
+        $quest_ids_str = implode(',', $quest_ids);
+
+        $query = $db->getQuery(true);
+        $query->select($db->qn(array('id', 'title', 'content_item_id')))
+            ->from($db->qn('#__tags', 't'))
+            ->leftJoin($db->qn('#__contentitem_tag_map', 'map') .' ON '. $db->qn('map.tag_id') .'='. $db->qn('t.id'))
+            ->where($db->qn('map.type_alias') .'='. $db->q('com_joomlaquiz.question'))
+            ->where($db->qn('map.content_item_id') . ' IN ('. $quest_ids_str .')')
+            ->order($db->qn('t.title') . ' ASC');
+        $db->setQuery($query);
+        $tags = $db->loadObjectList();
+
+        $q_tags_info = array();
+
+        for($i=0; $i<count($score_data); $i++)
+        {
+            $points = $score_data[$i]->fuly_score;
+            $type = JoomlaquizHelper::getQuestionType($score_data[$i]->c_type);
+
+            $data = array();
+            $data['quest_type'] = $type;
+            $data['score_bycat'] = $score_data[$i];     //is used 'onScoreByCategory'
+            $data['score'] = 0;
+
+            $db->setQuery("SELECT `enabled` FROM `#__extensions` WHERE folder = 'joomlaquiz' AND type = 'plugin' AND element = '".$type."'");
+            $enabled = $db->loadResult();
+
+            if($enabled){
+                $appsLib->triggerEvent( 'onScoreByCategory' , $data );
+                $full_score = $data['score'] + $points;
+            }
+
+            foreach($tags as $tag){
+                if(!isset($q_tags_info[$tag->title])){
+                    $q_tags_info[$tag->title] = array(
+                        'us_score' => 0,
+                        'full_score' => 0
+                    );
+                }
+
+                if((int)$tag->content_item_id == (int)$score_data[$i]->c_id){
+                    $q_tags_info[$tag->title]['us_score'] += (int)$score_data[$i]->us_score;
+                    $q_tags_info[$tag->title]['full_score'] += (int)$full_score;
+                }
+            }
+        }
+
+        return $q_tags_info;
+    }
+
 		public static function isJoomfish()
 		{
 			if (!defined('_JQ_JF_LANG')) {

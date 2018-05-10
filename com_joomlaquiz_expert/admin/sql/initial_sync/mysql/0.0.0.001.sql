@@ -518,7 +518,8 @@ ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_certificate` INT(11) NOT NULL DEFAULT
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_feedback` INT(11) NOT NULL DEFAULT '0' AFTER `c_certificate`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_pool` INT(11) NOT NULL DEFAULT '0' AFTER `c_feedback`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_resbycat` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' AFTER `c_pool`;
-ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_feed_option` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' AFTER `c_resbycat`;
+ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_resbytags` INT(3) NOT NULL DEFAULT '0' AFTER `c_resbycat`;
+ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_feed_option` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' AFTER `c_resbytags`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_show_quest_pos` TINYINT(4) NOT NULL DEFAULT '1' AFTER `c_feed_option`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_show_quest_points` TINYINT(4) NOT NULL DEFAULT '1' AFTER `c_show_quest_pos`;
 ALTER TABLE `#__quiz_t_quiz` ADD COLUMN `c_show_author` TINYINT(1) NOT NULL AFTER `c_show_quest_points`;

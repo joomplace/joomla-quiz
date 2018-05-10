@@ -34,7 +34,7 @@ class JoomlaquizViewNewquestion extends JViewLegacy
 	public function getAllquestions(){
 		$db = JFactory::getDBO();
 		
-		$db->setQuery("SELECT b.* FROM `#__quiz_t_qtypes` as `b` LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1");
+		$db->setQuery("SELECT b.* FROM `#__quiz_t_qtypes` as `b` LEFT JOIN `#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = b.c_type WHERE e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1");
 		$questions = $db->loadObjectList();
 		
 		return $questions;

@@ -286,6 +286,13 @@ EOFTMPL;
 			</tr>
 			<!-- SCORE BY CATEGORIES END -->
 			
+			<!-- SCORE BY TAGS BEGIN -->
+			<tr class="sectiontableentry1">
+				<td class="jq_result_key" valign="top">'.JText::_('COM_QUIZ_RES_TAG_SCORE').'</td>
+				<td class="jq_result_value"><!-- SCORE BY TAGS --></td>
+			</tr>
+			<!-- SCORE BY TAGS END -->
+			
 			<tr class="sectiontableentry2">
 				<td class="jq_result_key" valign="top">'.JText::_('COM_QUIZ_RES_MES_PAS_SCORE').'</td>
 				<td class="jq_result_value"><!-- PASSING SCORE --></td>

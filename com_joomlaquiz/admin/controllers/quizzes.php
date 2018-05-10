@@ -459,6 +459,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $quiz_xml .= "\n\t\t\t\t<quiz_pool><![CDATA[".$quiz->c_pool."]]></quiz_pool>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_auto_breaks>".$quiz->c_auto_breaks."</quiz_auto_breaks>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_resbycat>".$quiz->c_resbycat."</quiz_resbycat>";
+                $quiz_xml .= "\n\t\t\t\t<quiz_resbycat>".$quiz->c_resbytags."</quiz_resbycat>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_feed_option>".$quiz->c_feed_option."</quiz_feed_option>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_paid_check>".$quiz->paid_check."</quiz_paid_check>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_pagination>".$quiz->c_pagination."</quiz_pagination>";
@@ -938,7 +939,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
-								c_resbycat,	c_feed_option, paid_check, c_pagination)  ";
+								c_resbycat, c_resbytags, c_feed_option, paid_check, c_pagination)  ";
                         $query .= "VALUES(".
                             $db->quote($free_id). ",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_show_author).",".$db->quote($qcat->quiz_autostart).",".$db->quote($qcat->quiz_timer_style).",".$db->quote($qcat->quiz_one_time).",
@@ -956,7 +957,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
 								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
-								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote(@$qcat->quiz_resbycat).",
+								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote(@$qcat->quiz_resbycat).",".$db->quote(@$qcat->c_resbytags).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
                         $database->setQuery($query);
                         if(!$database->execute()){
@@ -1179,7 +1180,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
-								c_resbycat, c_feed_option, paid_check, c_pagination)  ";
+								c_resbycat, c_resbytags, c_feed_option, paid_check, c_pagination)  ";
                     $query .= "VALUES(
 								".$db->quote($free_id).",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_show_author).",".$db->quote($qcat->quiz_autostart).",".$db->quote($qcat->quiz_timer_style).",".$db->quote($qcat->quiz_one_time).",
@@ -1197,7 +1198,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
 								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
-								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote($qcat->quiz_resbycat).",
+								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote($qcat->quiz_resbycat).",".$db->quote($qcat->c_resbytags).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
                     $database->setQuery($query);
                     if(!$database->execute())

@@ -302,7 +302,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$old_quiz = true;
 			}
 			
-			$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '".$quiz_id."' AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
+			$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = b.c_type WHERE q.c_quiz_id = '".$quiz_id."' AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 			$database->SetQuery($query);
 			$q_data = $database->LoadObjectList();
 
@@ -316,7 +316,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$pool_rand = $database->LoadResult();
 							if( $pool_rand )
 							{
-								$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = 0 AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
+								$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = b.c_type WHERE q.c_quiz_id = 0 AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
 								$database->SetQuery($query);
 								$pool_data = $database->LoadObjectList();
 								for($i=0;$i<$pool_rand;$i++)
@@ -337,7 +337,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 								{
 									if( $dapool->q_count )
 										{
-											$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '0' AND q.published = 1 AND q.c_ques_cat = '".$dapool->q_cat."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
+											$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = b.c_type WHERE q.c_quiz_id = '0' AND q.published = 1 AND q.c_ques_cat = '".$dapool->q_cat."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY rand()";
 											$database->SetQuery($query);
 											$pool_data = $database->LoadObjectList();
 											for($i=0;$i<($dapool->q_count);$i++)
@@ -403,7 +403,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$last_id = $qchids[0];
 				}
 
-				$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_id IN ('".implode("','", $qchids)."') AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
+				$query = "SELECT q.* FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = b.c_type WHERE q.c_id IN ('".implode("','", $qchids)."') AND q.published = 1 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1 ORDER BY q.ordering, q.c_id";
 				$database->SetQuery($query);
 				$q_data = $database->LoadObjectList();
 
@@ -1202,7 +1202,19 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$i++;
 						}
 					}
-					
+
+                    $c_resbytags = '';
+                    if((int)$quiz_info->c_resbytags == 1)
+                    {
+                        $q_tags = JoomlaquizHelper::getResultsByTags($stu_quiz_id);
+                        foreach($q_tags as $tag_name => $tag_score)
+                        {
+                            $percent_tag = ($tag_score['full_score']) ? number_format(($tag_score['us_score']/$tag_score['full_score']) * 100, 0, '.', ',') : 0;
+                            $c_resbytags .= "<div class='jq_cat_score'>".$tag_name.': '.sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $tag_score['us_score'], $tag_score['full_score'], $percent_tag)."</div><br />";
+
+                        }
+                    }
+
 					$tot_min = floor($user_time / 60);
 					$tot_sec = $user_time - $tot_min*60;
 					$tot_time = str_pad($tot_min,2, "0", STR_PAD_LEFT).":".str_pad($tot_sec,2, "0", STR_PAD_LEFT);
@@ -1234,7 +1246,15 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$p2 = JoomlaquizHelper::jq_strpos($results_txt, '<!-- SCORE BY CATEGORIES END -->');
 						$results_txt = JoomlaquizHelper::jq_substr($results_txt, 0, $p1).JoomlaquizHelper::jq_substr($results_txt, $p2+32);
 					}
-					
+
+                    if ($c_resbytags) {
+                        $results_txt = str_replace('<!-- SCORE BY TAGS -->', $c_resbytags, $results_txt);
+                    } else {
+                        $p1 = JoomlaquizHelper::jq_strpos($results_txt, '<!-- SCORE BY TAGS BEGIN -->');
+                        $p2 = JoomlaquizHelper::jq_strpos($results_txt, '<!-- SCORE BY TAGS END -->');
+                        $results_txt = JoomlaquizHelper::jq_substr($results_txt, 0, $p1).JoomlaquizHelper::jq_substr($results_txt, $p2+26);
+                    }
+
 					if ($c_manual || !$quiz_info->c_show_result) {
 						$p1 = JoomlaquizHelper::jq_strpos($results_txt, '<!-- MAIN RESULT PART BEGIN -->');
 						$p2 = JoomlaquizHelper::jq_strpos($results_txt, '<!-- MAIN RESULT PART END -->');

@@ -380,6 +380,7 @@ window.onload = function (){
 					<?php echo $this->form->getInput('c_resbycat'); ?>
 				</div>
 			</div>
+            <?php echo $this->form->renderField('c_resbytags'); ?>
 			<div class="control-group">
 				<div class="control-label"">
                     <?php echo $this->form->getLabel('c_show_quest_pos'); ?>

@@ -294,7 +294,7 @@ class JoomlaquizModelQuestions extends JModelList
 		}
 		
 		$query->select("e.enabled");
-		$join = $query->join('LEFT', '`#__extensions` as `e` ON e.element = b.c_type');
+        $query->join('LEFT', '`#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = b.c_type');
 		$query->where('e.folder = "joomlaquiz" AND e.type = "plugin"');
 		/*
 		if ($enabled == '')

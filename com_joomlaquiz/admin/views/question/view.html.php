@@ -106,11 +106,11 @@ class JoomlaquizViewQuestion extends JViewLegacy
 			return false;
 		}
 				
-		$this->addToolbar();
+		$this->addToolbar($this->item);
 		parent::display($tpl);
     }
         
-    protected function addToolbar()
+    protected function addToolbar($item)
 	{
         $canDo = JHelperContent::getActions('com_joomlaquiz', 'component');
         JFactory::getApplication()->input->set('hidemainmenu', true);
@@ -125,7 +125,9 @@ class JoomlaquizViewQuestion extends JViewLegacy
                 false);
         }
 		JToolBarHelper::cancel('question.cancel', 'JTOOLBAR_CANCEL');
-		JToolBarHelper::custom('question.preview_quest', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_QUEST_PREVIEW', false);
+        if((int)$item->c_quiz_id) {
+            JToolBarHelper::custom('question.preview_quest', 'featured.png', 'featured_f2.png', 'COM_JOOMLAQUIZ_QUEST_PREVIEW', false);
+        }
 		JToolBarHelper::help('JHELP_COMPONENTS_WEBLINKS_LINKS_EDIT');
 	}
 }

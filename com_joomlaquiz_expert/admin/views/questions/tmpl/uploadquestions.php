@@ -69,7 +69,7 @@ Joomla.submitbutton = function(task)
 						<td><?php echo 'points';?></td>
 						<td><?php echo 'attempts';?></td>
 						<td><?php echo 'random';?></td>
-						<td><?php echo 'feedback';?></td>
+						<td><?php echo 'is feedback';?></td>
 						<td><?php echo 'correct feedback text';?></td>
 						<td><?php echo 'incorrect feedback text';?></td>						
 					</tr>

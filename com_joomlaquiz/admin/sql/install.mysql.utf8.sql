@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_pool` (
   `q_id` int(11) NOT NULL DEFAULT '0',
   `q_cat` int(11) NOT NULL DEFAULT '0',
   `q_count` int(11) NOT NULL DEFAULT '0',
+  `tags` text NOT NULL,
   PRIMARY KEY (`q_id`,`q_cat`,`q_count`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

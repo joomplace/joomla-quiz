@@ -131,6 +131,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_pool` (
 
 ALTER TABLE `#__quiz_pool` ADD COLUMN `q_cat` INT(11) NOT NULL DEFAULT '0' AFTER `q_id`;
 ALTER TABLE `#__quiz_pool` ADD COLUMN `q_count` INT(11) NOT NULL DEFAULT '0' AFTER `q_cat`;
+ALTER TABLE `#__quiz_pool` ADD COLUMN `tags` text NOT NULL AFTER `q_count`;
 
 ALTER TABLE `#__quiz_pool`
   ADD PRIMARY KEY (`q_id`,`q_cat`,`q_count`);

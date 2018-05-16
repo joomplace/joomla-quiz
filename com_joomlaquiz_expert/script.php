@@ -125,7 +125,10 @@ class com_joomlaquizInstallerScript
 			),
 			'certificates' => array(
 				'text_font' => 'VARCHAR(255) NOT NULL'
-			)
+			),
+            'pool' => array(
+                'tags' => 'TEXT NOT NULL'
+            )
 		);
 
 		$db = JFactory::getDbo();

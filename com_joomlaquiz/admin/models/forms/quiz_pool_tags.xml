@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset>
+        <field
+            name="tag"
+            type="tag"
+            mode="ajax"
+            label="JTAG"
+            description="JTAG_DESC"
+            multiple="false" />
+        <field
+            name="qty"
+            type="number"
+            default="0"
+            label="COM_JOOMLAQUIZ_QUIZ_POOL_BY_TAGS_OPTIONS_QTY_LABEL"
+            description="COM_JOOMLAQUIZ_QUIZ_POOL_BY_TAGS_OPTIONS_QTY_DESC"
+            min="0"
+            step="1" />
+    </fieldset>
+</form>

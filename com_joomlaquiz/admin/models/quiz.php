@@ -50,7 +50,18 @@ class JoomlaquizModelQuiz extends JModelAdmin
 				if ($id) $data->set('c_id', JFactory::getApplication()->input->getInt('c_id', $id));
 			}
 		}
-		
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select($db->qn('tags'))
+            ->from('#__quiz_pool')
+            ->where($db->qn('q_id') .'='. $db->q((int)$data->c_id));
+        $db->setQuery($query);
+        $tags = $db->loadResult();
+        if($tags){
+            $data->by_tags = $tags;
+        }
+
 		return $data;
 	}
 	

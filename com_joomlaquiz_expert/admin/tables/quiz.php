@@ -149,6 +149,22 @@ class JoomlaquizTableQuiz extends JTable
 							}
 						}
 					}
+                    break;
+                case 3:
+                    if(isset($jform['by_tags'])){
+                        $db = \JFactory::getDbo();
+                        $query = $db->getQuery(true);
+                        $columns = array('q_id', 'q_cat', 'q_count', 'tags');
+                        $values = array($db->q((int)$this->c_id), '0', '1', $db->q(json_encode($jform['by_tags'])));
+                        $query->insert($db->qn('#__quiz_pool'))
+                            ->columns($db->qn($columns))
+                            ->values(implode(',', $values));
+                        $db->setQuery($query);
+                        if(!$db->execute()){
+                            $this->setError($db->getErrorMsg());
+                        }
+                    }
+                    break;
 				default : break;
 				
 			}	

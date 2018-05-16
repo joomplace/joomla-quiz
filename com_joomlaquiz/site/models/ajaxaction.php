@@ -348,7 +348,64 @@ class JoomlaquizModelAjaxaction extends JModelList
 										}
 								}
 							}
-				break;
+				            break;
+
+                case '3':
+                    $db = JFactory::getDbo();
+                    $query = $db->getQuery(true);
+                    $subquery = $db->getQuery(true);
+                    $query->select($db->qn('tags'))
+                        ->from('#__quiz_pool')
+                        ->where($db->qn('q_id') .'='. $db->q((int)$quiz_id));
+                    $db->setQuery($query);
+                    $tags = $db->loadResult();
+                    if(!$tags){
+                        break;
+                    }
+                    $tags = json_decode($tags, true);
+
+                    foreach($tags as $tag){
+                        if((int)$tag['tag'] && (int)$tag['qty']){
+                            $query->clear();
+                            $subquery->clear();
+
+                            $subquery->select($db->qn('content_item_id'))
+                                ->from($db->qn('#__contentitem_tag_map'))
+                                ->where($db->qn('tag_id') .'='. $db->q((int)$tag['tag']))
+                                ->where($db->qn('type_alias') .'='. $db->q('com_joomlaquiz.question'))
+                                ->group('content_item_id');
+                            $db->setQuery($subquery);
+                            $content_item_ids = $db->loadObjectList();
+                            $questions_tag_ids = array();
+                            foreach($content_item_ids as $content_item_id){
+                                $questions_tag_ids[] = $db->q($content_item_id->content_item_id);
+                            }
+
+                            $query->select('q.*')
+                                ->from($db->qn('#__quiz_t_question', 'q'))
+                                ->leftJoin($db->qn('#__quiz_t_qtypes', 'b') .' ON '. $db->qn('b.c_id') .'='. $db->qn('q.c_type'))
+                                ->leftJoin($db->qn('#__extensions', 'e') .' ON (CONVERT (`e`.`element` USING utf8) COLLATE utf8_unicode_ci) ='. $db->qn('b.c_type'))
+                                ->where($db->qn('q.c_quiz_id') .'='. $db->q(0))
+                                ->where($db->qn('q.published') .'='. $db->q(1))
+                                ->where($db->qn('e.folder') .'='. $db->q('joomlaquiz'))
+                                ->where($db->qn('e.type') .'='. $db->q('plugin'))
+                                ->where($db->qn('e.enabled') .'='. $db->q(1))
+                                ->where($db->qn('q.c_id') .' IN ('. implode(',', $questions_tag_ids) .')')
+                                ->order('RAND()')
+                                ->setLimit((int)$tag['qty']);
+                            $db->setQuery($query);
+                            $pool_data = $db->loadObjectList();
+                            for($i=0; $i<count($pool_data); $i++){
+                                $q_data[count($q_data)] = $pool_data[$i];
+                            }
+                        }
+                    }
+
+                    if(is_array($q_data) && (int)$quiz->c_random){
+                        shuffle($q_data);
+                    }
+
+                    break;
 				
 				default:	break;
 			}
@@ -1723,7 +1780,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				if ($start_quiz != $quiz_id) { return '';}
 				if (!$st_quiz_data[0]->allow_review) { return ''; }
 
-				if ($quiz->c_random) {
+				if ($quiz->c_random || (int)$quiz->c_pool == 3) {
 					
 					// -- my chain ==//
 					$query = "SELECT q_chain FROM #__quiz_q_chain "

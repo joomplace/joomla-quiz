@@ -425,6 +425,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t\t<quiz_pool_option>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<quiz_q_cat><![CDATA[".$pool_option->q_cat."]]></quiz_q_cat>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<quiz_q_count><![CDATA[".$pool_option->q_count."]]></quiz_q_count>";
+                    $quiz_xml .= "\n\t\t\t\t\t\t<quiz_tags><![CDATA[".$pool_option->tags."]]></quiz_tags>";
                     $quiz_xml .= "\n\t\t\t\t\t</quiz_pool_option>";
                 }
                 $quiz_xml .= "\n\t\t\t\t</quiz_pool_options>";
@@ -912,8 +913,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         }
 
                         foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
-                            $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count)
-                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
+                            $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count, tags)
+                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) . "," . $db->quote($quiz_pool_option->quiz_tags) .")";
                             $database->setQuery($query);
                             $database->execute();
                         }
@@ -1153,8 +1154,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     }
 
                     foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
-                        $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count)
-                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
+                        $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count, tags)
+                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) . "," . $db->quote($quiz_pool_option->quiz_tags) .")";
                         $database->setQuery($query);
                         $database->execute();
                     }

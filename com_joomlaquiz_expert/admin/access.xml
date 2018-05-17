@@ -6,6 +6,7 @@
 		<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
 		
+                <action name="core.edit.state" title="COM_JOOMLAQUIZ_BE_JACTION_EDITSTATE" description="COM_JOOMLAQUIZ_BE_JACTION_EDITSTATE_DESC" />
 		<action name="core.view" title="COM_JOOMLAQUIZ_BE_JACTION_VIEW" description="COM_JOOMLAQUIZ_BE_JACTION_VIEW_DESC" />
 		<action name="core.result" title="COM_JOOMLAQUIZ_BE_JACTION_RESULT" description="COM_JOOMLAQUIZ_BE_JACTION_RESULT_DESC" />
         <action name="core.certificate" title="COM_JOOMLAQUIZ_BE_JACTION_CERTIFICATE" description="COM_JOOMLAQUIZ_BE_JACTION_CERTIFICATE" />

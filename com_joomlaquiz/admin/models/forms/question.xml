@@ -80,15 +80,15 @@
 		</field>
 		<field name="c_right_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
-			filter="safehtml"
+			filter="raw"
 			label="COM_JOOMLAQUIZ_WHEN_ANSWER_CORRECT" required="false" />
 		<field name="c_wrong_message" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
-			filter="safehtml"
+			filter="raw"
 			label="COM_JOOMLAQUIZ_WHEN_ANSWER_INCORRECT" required="false" />
 		<field name="c_detailed_feedback" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
-			filter="safehtml"
+			filter="raw"
 			label="COM_JOOMLAQUIZ_DETAILED_FEEDBACK" required="false" />
 	</fieldset>
 	<fieldset name="question_options">

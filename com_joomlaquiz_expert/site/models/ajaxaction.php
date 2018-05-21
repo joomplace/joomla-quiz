@@ -1057,7 +1057,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$share_id = $database->loadResult();
 					}
 
-					$share_link = urlencode(JURI::root().'index.php?option=com_joomlaquiz&task=results.sturesult&id='.$stu_quiz_id.'&share_id='.$share_id.JoomlaquizHelper::JQ_GetItemId());
+					$share_link = urlencode(JURI::root().'index.php?option=com_joomlaquiz&view=quiz&id='.$quiz_id.JoomlaquizHelper::JQ_GetItemId());
 				}
 			}
 

@@ -207,7 +207,7 @@ class JoomlaquizModelQuizzes extends JModelList
 				$new_quest->c_id = 0; $new_quest->ordering = $new_order; $new_quest->c_quiz_id = $quizMove;
 				if ($run_from_quiz_copy) { $new_order++; }
 				if (!$new_quest->check()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-				if (!$new_quest->storeCopy()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+				if (!$new_quest->store()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 				$new_quest_id = $new_quest->c_id;
 				if ( ($quest2copy['c_type'] == 1) || ($quest2copy['c_type'] == 2) /*|| ($quest2copy['c_type'] == 3)*/ || ($quest2copy['c_type'] == 10) ) {
 					$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '".$old_quest_id."'";

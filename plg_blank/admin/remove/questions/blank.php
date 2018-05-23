@@ -21,11 +21,18 @@ function removeQuestionsBlank($cids){
 	$blank_cid = $database->loadColumn();
 	if (is_array( $blank_cid ) && (count($blank_cid) > 0)) {
 		$blank_cids = implode( ',', $blank_cid );
+
 		$query = "DELETE FROM #__quiz_t_text"
 		. "\n WHERE c_blank_id IN ( $blank_cids )"
 		;
 		$database->setQuery( $query );
 		$database->execute();
+
+        $query = "DELETE FROM `#__quiz_t_blank`"
+            . "\n WHERE `c_id` IN ( $blank_cids )"
+        ;
+        $database->setQuery( $query );
+        $database->execute();
 	}
 	
 	return true;

@@ -233,12 +233,18 @@ class JoomlaquizModelQuestions extends JModelList
 				if (count($blanks_to_copy) > 0) {
 					foreach($blanks_to_copy as $blank_to_copy) {
 						$old_blank_id = $blank_to_copy->c_id;
+
 						$query = "SELECT * FROM #__quiz_t_text WHERE c_blank_id = '".$old_blank_id."'";
 						$database->setQuery( $query );
 						$fields_to_copy = $database->loadAssocList();
-						$query = "INSERT INTO #__quiz_t_blank (c_question_id) VALUES('".$new_quest_id."')";
+
+                        $query = "SELECT `c_text` FROM `#__quiz_t_faketext` WHERE `c_quest_id` = ".(int)$old_quest_id;
+                        $database->SetQuery($query);
+                        $faketext_to_copy = $database->loadObjectList();
+
+						$query = "INSERT INTO #__quiz_t_blank (`c_question_id`, `ordering`, `points`, `css_class`, `c_quiz_id`, `gtype`) VALUES('".(int)$new_quest_id."', '".(int)$blank_to_copy->ordering."', '".$blank_to_copy->points."', '".$blank_to_copy->css_class."', '".(int)$blank_to_copy->c_quiz_id."', '".$blank_to_copy->gtype."')";
 						$database->SetQuery( $query );
-						$database->query();
+                        $database->execute();
 						$new_blank_id = $database->insertid();
 						foreach ($fields_to_copy as $field2copy) {
 							$new_field = $this->getTable("Blanktext");
@@ -249,6 +255,13 @@ class JoomlaquizModelQuestions extends JModelList
 							if (!$new_field->check()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 							if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 						}
+                        foreach($faketext_to_copy as $faketext) {
+                            $query = "INSERT INTO `#__quiz_t_faketext` (`c_id`, `c_quest_id`, `c_text`) VALUES('','".(int)$new_quest_id."','".$faketext->c_text."')";
+                            $database->setQuery($query);
+                            if(!$database->execute()){
+                                echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                            }
+                        }
 					}
 				}
 			}

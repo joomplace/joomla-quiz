@@ -277,13 +277,36 @@ class JoomlaquizModelQuizzes extends JModelList
 						if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 					}
 				}
+				$this->copyPagePreak($old_quest_id, $new_quest_id, $quizMove);
 			}
 		}
 		if (!$run_from_quiz_copy) {
 			JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($quizMove);
 		}
 	}
-	
+
+    public function copyPagePreak($old_quest_id, $new_quest_id, $new_quiz_id){
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('1')
+            ->from($db->qn('#__quiz_t_pbreaks'))
+            ->where($db->qn('c_question_id') .'='. $db->q((int)$old_quest_id));
+        $db->setQuery($query);
+        $result = $db->loadResult();
+
+        if($result){
+            $query->clear();
+            $columns = array('c_quiz_id', 'c_question_id');
+            $values = array($db->q((int)$new_quiz_id), $db->q((int)$new_quest_id));
+            $query->insert($db->qn('#__quiz_t_pbreaks'))
+                ->columns($db->qn($columns))
+                ->values(implode(',', $values));
+            $db->setQuery($query)->execute();
+        }
+
+        return true;
+    }
+
 	public function getCategories(){
 		$db = JFactory::getDBO();
 		
@@ -380,6 +403,9 @@ class JoomlaquizModelQuizzes extends JModelList
 					$db->setQuery( $query );
 					$db->execute();
 				}
+                $query = "DELETE FROM `#__quiz_t_pbreaks` WHERE `c_question_id` IN ( $cids )";
+                $db->setQuery( $query );
+                $db->execute();
 			}
 			//recalculate quizzes TotalScore
 			if (count($ch_quizzes)) {

@@ -3514,7 +3514,7 @@ class JoomlaquizModelAjaxaction extends JModelList
             $query = "SELECT c_detailed_feedback from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";
             $database->SetQuery( $query );
             $c_detailed_feedback = $database->loadResult();
-            $c_detailed_feedback = ($c_detailed_feedback == '') ? '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'] : '</br>'.$c_detailed_feedback;
+            $c_detailed_feedback = ($c_detailed_feedback == '') ? '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'] : '</br>'.strip_tags(stripslashes($c_detailed_feedback));
         }
         else if(!$is_correct && (($c_quest_cur_attempt + 1) < $c_all_attempts)){
             $c_detailed_feedback = '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'];

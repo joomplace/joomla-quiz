@@ -3521,7 +3521,7 @@ class JoomlaquizModelAjaxaction extends JModelList
         }
 
         $ret_str .= "\t" . '<quiz_prev_correct>'.$is_correct.'</quiz_prev_correct>' . "\n";
-        $ret_str .= "\t" . '<quiz_message_box><![CDATA['.$msg_html.$c_detailed_feedback.']]></quiz_message_box>' . "\n";
+        $ret_str .= "\t" . '<quiz_message_box><![CDATA['/*.$msg_html*/.$c_detailed_feedback.']]></quiz_message_box>' . "\n";
         $ret_str .= "\t" . '<quiz_allow_attempt>'.$is_avail.'</quiz_allow_attempt>' . "\n";
         $ret_str .= "\t" . '<feedback_quest_id>'.$quest_id.'</feedback_quest_id>' . "\n";
         $ret_str .= "\t" . '<feedback_quest_type>'.$qtype.'</feedback_quest_type>' . "\n";

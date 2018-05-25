@@ -3509,17 +3509,19 @@ class JoomlaquizModelAjaxaction extends JModelList
         }
 
         $c_detailed_feedback = '';
-        if(!$is_correct && (($c_quest_cur_attempt + 1) >= $c_all_attempts)){
+        if(!$is_correct /*&& (($c_quest_cur_attempt + 1) >= $c_all_attempts)*/){
             /* may be need to be moved */
             $query = "SELECT c_detailed_feedback from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";
             $database->SetQuery( $query );
             $c_detailed_feedback = $database->loadResult();
             //$c_detailed_feedback = ($c_detailed_feedback == '') ? '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'] : '</br>'.strip_tags(stripslashes($c_detailed_feedback));
-            $c_detailed_feedback = ($c_detailed_feedback == '') ? $jq_language['COM_QUIZ_ANSWER_INCORRECT'] : strip_tags(html_entity_decode($c_detailed_feedback, ENT_QUOTES, 'UTF-8'));
+            $c_detailed_feedback = ($c_detailed_feedback == '') ?
+                strip_tags(html_entity_decode($jq_language['COM_QUIZ_ANSWER_INCORRECT'], ENT_QUOTES, 'UTF-8')) :
+                strip_tags(html_entity_decode($c_detailed_feedback, ENT_QUOTES, 'UTF-8'));
         }
-        else if(!$is_correct && (($c_quest_cur_attempt + 1) < $c_all_attempts)){
-            $c_detailed_feedback = '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
-        }
+        //else if(!$is_correct && (($c_quest_cur_attempt + 1) < $c_all_attempts)){
+        //    $c_detailed_feedback = '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'];
+        //}
 
         $ret_str .= "\t" . '<quiz_prev_correct>'.$is_correct.'</quiz_prev_correct>' . "\n";
         $ret_str .= "\t" . '<quiz_message_box><![CDATA['/*.$msg_html*/.$c_detailed_feedback.']]></quiz_message_box>' . "\n";

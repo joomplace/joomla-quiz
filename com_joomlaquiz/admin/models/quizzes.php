@@ -277,7 +277,7 @@ class JoomlaquizModelQuizzes extends JModelList
 						if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 					}
 				}
-				$this->copyPagePreak($old_quest_id, $new_quest_id, $quizMove);
+				$this->copyPageBreak($old_quest_id, $new_quest_id, $quizMove);
 			}
 		}
 		if (!$run_from_quiz_copy) {
@@ -285,7 +285,7 @@ class JoomlaquizModelQuizzes extends JModelList
 		}
 	}
 
-    public function copyPagePreak($old_quest_id, $new_quest_id, $new_quiz_id){
+    public function copyPageBreak($old_quest_id, $new_quest_id, $new_quiz_id){
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('1')

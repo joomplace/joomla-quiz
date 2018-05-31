@@ -424,129 +424,171 @@ class JoomlaquizModelQuestions extends JModelList
 	}
 	
 	public function uploadQuestions(){
-			$database = JFactory::getDBO();
-			@set_time_limit(0);
-			
-			$userfile			= JRequest::getVar('importme', '', 'files', 'array');
-			if(!count($userfile)){
-				$this->setRedirect( "index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions", JText::_('COM_JOOMLAQUIZ_NO_FILE_SELECTED') );
-			}
-			$userfileTempName	= (count($userfile) > 0? $userfile['tmp_name']: '');
-			$userfileName 		= (count($userfile) > 0? $userfile['name']: '');
-			
-			$quiz_id			= JFactory::getApplication()->input->get('filter_quiz_id', 0);
-			
-			JLoader::register('JoomlaquizControllerQuizzes', JPATH_COMPONENT_ADMINISTRATOR.'/controllers/quizzes.php');
-			$quiz_controller = new JoomlaquizControllerQuizzes();
-			
-			$ii = 0;
-			$qcat_id = 0;
-			$quest_id = 0;
-			$opt_ordering = 0;
 
-			if (!$userfileTempName) {
+        $app = JFactory::getApplication();
+        $jinput = $app->input;
 
-				$app = JFactory::getApplication();
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
 
-				$app->enqueueMessage('File is not selected.', 'Warning');
+		@set_time_limit(0);
 
-				JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions');
-			}
+        $quiz_id = $jinput->getInt('filter_quiz_id', 0);
+		$userfile = $jinput->files->get('importme', array(), 'array');
+		if(!$userfile['tmp_name']){
+            $app->enqueueMessage(JText::_('COM_JOOMLAQUIZ_NO_FILE_SELECTED'), 'error');
+            $app->setRedirect(JRoute::_('index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions', false));
+		}
 
-			/*******************PARSE CSV FILE***********************/
+		JLoader::register('JoomlaquizControllerQuizzes', JPATH_COMPONENT_ADMINISTRATOR.'/controllers/quizzes.php');
+		$quiz_controller = new JoomlaquizControllerQuizzes();
 
-			$csv = file_get_contents($userfileTempName);
-			$rows = explode("\r",str_replace("\n","\r",$csv));
-			$rows = array_filter($rows);
+		$ii = 0;
+		$opt_ordering = 0;
 
-			$rowsAssoc = array();
-			$keys = array();
+		/*******************PARSE CSV FILE***********************/
+		$csv = file_get_contents($userfile['tmp_name']);
+		$rows = explode("\r",str_replace("\n","\r",$csv));
+		$rows = array_filter($rows);
+        if(!$rows){
+            $app->enqueueMessage(JText::_('COM_JOOMLAQUIZ_UPLOAD_FAILED'), 'error');
+            $app->setRedirect(JRoute::_('index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions', false));
+        }
 
-			$i = 0;
+		$rowsAssoc = array();
+		$keys = array();
+		$i = 0;
 
-			if(!$rows) {
-				$msg = JText::_('COM_JOOMLAQUIZ_UPLOAD_FAILED');
-				echo "<script> alert('".$msg."'); window.history.go(-1); </script>\n"; exit();
-			}
-
-			foreach ($rows as $row){
-				$row = str_getcsv($row);
-				if ($i === 0) $keys = $row;
-				else {
-					$rowAssoc = array();
-					for ($i = 0; $i < count($row); $i++) {
-						$rowAssoc[$keys[$i]] = $row[$i];
-					}
-					array_push($rowsAssoc, $rowAssoc);
+		foreach($rows as $row){
+		    $row = str_getcsv($row);
+			if ($i === 0){
+                $keys = $row;
+            }
+			else {
+				$rowAssoc = array();
+				for ($i = 0; $i < count($row); $i++) {
+					$rowAssoc[$keys[$i]] = $row[$i];
 				}
-				$i++;
+				array_push($rowsAssoc, $rowAssoc);
 			}
+			$i++;
+		}
 
-			$rows = $rowsAssoc;
-			/*********************************************************/
+		$rows = $rowsAssoc;
+		/*********************************************************/
 
-			foreach($rows as $values) {
-				if (!$values['question/answer text']) continue;
+		foreach($rows as $values) {
+            $quest_id = 0;
+			if (!$values['question/answer text']){
+                continue;
+            }
 			
-				if ($values['question category']) {
-					$query = $database->getQuery(true);
-					$query->select('*')
-						->from('`#__categories`')
-						->where('`extension` = "com_joomlaquiz.questions"')
-						->where('`title` = "'.$values['question category'].'"');
-					$category = $database->setQuery($query)->loadObject();
+			if ($values['question category']){
+                $query->clear();
+				$query->select('*')
+					->from($db->qn('#__categories'))
+					->where($db->qn('extension') .'='. $db->q('com_joomlaquiz.questions'))
+					->where($db->qn('title') .'='. $db->q($values['question category']));
+				$category = $db->setQuery($query)->loadObject();
 
-					if(!$category->id){				
-						$extension = 'com_joomlaquiz.questions';
-						$title     = $values['question category'];
-						$desc      = '';
-						$parent_id = 1;
-						$category = $quiz_controller->createCategory($extension, $title, $desc, $parent_id, 'upload '.$values['question category']);
-					}
+				if(!$category || !$category->id){
+					$extension = 'com_joomlaquiz.questions';
+					$title = $values['question category'];
+					$desc = '';
+					$parent_id = 1;
+					$category = $quiz_controller->createCategory($extension, $title, $desc, $parent_id, 'upload '.$values['question category']);
 				}
+			}
 				
-				if ($values['question category'] && !$values['is correct'] && $values['question/answer text']) {
-					$question = $this->getTable('questions');
-					$question->c_question = $values['question/answer text'];
-					$question->c_type = ($values['question type'] == 'mchoice'? 1: 2);
-					$question->c_ques_cat = $category->id;
-					$question->c_quiz_id = $quiz_id;
-					$question->c_point = isset($values['points'])? $values['points']: 0;
-					$question->c_attempts = isset($values['attempts'])? $values['attempts']: 0;
-					$question->c_random = isset($values['random'])? $values['random']: 0;
+			if ($values['question category'] && !$values['is correct']){
+                $question = $this->getTable('question');
+				$question->c_question = $values['question/answer text'];
+				$question->c_type = $values['question type'] == 'mchoice' ? 1 : 2;
+				$question->c_ques_cat = $category->id;
+				$question->c_quiz_id = $quiz_id;
+				$question->c_point = isset($values['points']) ? $values['points'] : 0;
+				$question->c_attempts = isset($values['attempts']) ? $values['attempts'] : 0;
+				$question->c_random = isset($values['random']) ? $values['random'] : 0;
+				$question->c_feedback = isset($values['is feedback']) ? (strpos(strtolower($values['is feedback']), 'true') !== false ? 1 : 0) : 0;
+				$question->c_right_message = isset($values['correct feedback text']) ? $values['correct feedback text'] : '';
+				$question->c_wrong_message = isset($values['incorrect feedback text']) ? $values['incorrect feedback text'] : '';
+
+                //add tags
+                $question->tags = array();     //existing tags
+                $question->newTags = array();  //new tags
+                if ($values['question tags']){
+                    $question_tags = explode('|', $values['question tags']);
+                    foreach($question_tags as $question_tag){
+                        $query->clear();
+                        $query->select($db->qn('id'))
+                            ->from($db->qn('#__tags'))
+                            ->where($db->qn('title') .'='. $db->q($question_tag));
+                        $tag_id = $db->setQuery($query)->loadResult();
+
+                        if((int)$tag_id){
+                            $question->tags[] = (int)$tag_id;
+                        } else {
+                            $question->newTags[] = '#new#' . $question_tag;
+                        }
+                    }
+                }
 					
-					$question->c_feedback = isset($values['is feedback'])? (strpos(strtolower($values['is feedback']), 'true') !== false? 1: 0): 0;
-					$question->c_right_message =  isset($values['correct feedback text'])? $values['correct feedback text']: '';
-					$question->c_wrong_message =  isset($values['incorrect feedback text'])? $values['incorrect feedback text']: '';
-					
-					if (!$question->store()) {
-						$quest_id = 0;
-						continue;
-					}
-					
-					$quest_id = $question->c_id;
-					$opt_ordering = 0;
-					$ii++;
+				if (!$question->store()) {
+					$quest_id = 0;
+					continue;
 				}
-				
-				if ($quest_id && !$values['question category'] && !$values['question type'] && $values['is correct'] && $values['question/answer text']) {
-					$opt_ordering++;
-					$choice = $this->getTable('choice');
-					$choice->c_choice	 		= $values['question/answer text'];
-					$choice->c_quiz_id			= $quiz_id;
-					$choice->c_right			= strtolower($values['is correct']) == 'true'? 1: 0;
-					$choice->c_question_id		= $quest_id;
-					$choice->ordering			= $opt_ordering;
-					$choice->a_point			= isset($values['points'])? $values['points']: 0;
-					$choice->c_incorrect_feed 	= isset($values['correct feedback text'])? $values['correct feedback text']: '';
 					
-					$choice->store();
-				}
+				$quest_id = $question->c_id;
+				$opt_ordering = 0;
+				$ii++;
+
+				//existing tags: add tag rows to mapping table
+                if((int)$question->c_id){
+                    $query->clear();
+                    $query->select($db->qn('type_id'))
+                        ->from($db->qn('#__content_types'))
+                        ->where($db->qn('type_alias') .'='. $db->q('com_joomlaquiz.question'));
+                    $type_id = $db->setQuery($query)->loadResult();
+
+                    $tags = array_unique($question->tags);
+                    foreach($tags as $tag)
+                    {
+                        $query->clear();
+                        $columns = array('type_alias', 'core_content_id', 'content_item_id', 'tag_id', 'tag_date', 'type_id');
+                        $values = array(
+                            $db->q('com_joomlaquiz.question')
+                            . ', ' . (int)$question->c_id
+                            . ', ' . (int)$question->c_id
+                            . ', ' . $db->q($tag)
+                            . ', ' . $query->currentTimestamp()
+                            . ', ' . (int)$type_id
+                        );
+                        $query->insert('#__contentitem_tag_map')
+                            ->columns($db->qn($columns))
+                            ->values(implode(',', $values));
+                        $db->setQuery($query)->execute();
+                    }
+                }
+
 			}
+
+			if ($quest_id && !$values['question category'] && !$values['question type'] && $values['is correct']){
+				$opt_ordering++;
+				$choice = $this->getTable('choice');
+				$choice->c_choice	 		= $values['question/answer text'];
+				$choice->c_quiz_id			= $quiz_id;
+				$choice->c_right			= strtolower($values['is correct']) == 'true'? 1: 0;
+				$choice->c_question_id		= $quest_id;
+				$choice->ordering			= $opt_ordering;
+				$choice->a_point			= isset($values['points'])? $values['points']: 0;
+				$choice->c_incorrect_feed 	= isset($values['correct feedback text'])? $values['correct feedback text']: '';
+				$choice->store();
+			}
+		}
 
 		return $ii;
 	}
-	
+
 	public function getTable($type = 'Questions', $prefix = 'JoomlaquizTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);

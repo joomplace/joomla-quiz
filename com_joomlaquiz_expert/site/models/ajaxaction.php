@@ -364,6 +364,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                     }
                     $tags = json_decode($tags, true);
 
+                    $q_data_ids = array();
                     foreach($tags as $tag){
                         if((int)$tag['tag'] && (int)$tag['qty']){
                             $query->clear();
@@ -376,6 +377,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                                 ->group('content_item_id');
                             $db->setQuery($subquery);
                             $content_item_ids = $db->loadObjectList();
+
                             $questions_tag_ids = array();
                             foreach($content_item_ids as $content_item_id){
                                 $questions_tag_ids[] = $db->q($content_item_id->content_item_id);
@@ -395,8 +397,12 @@ class JoomlaquizModelAjaxaction extends JModelList
                                 ->setLimit((int)$tag['qty']);
                             $db->setQuery($query);
                             $pool_data = $db->loadObjectList();
+
                             for($i=0; $i<count($pool_data); $i++){
-                                $q_data[count($q_data)] = $pool_data[$i];
+                                if(!in_array($pool_data[$i]->c_id, $q_data_ids)){
+                                    $q_data[count($q_data)] = $pool_data[$i];
+                                    $q_data_ids[] = $pool_data[$i]->c_id;
+                                }
                             }
                         }
                     }

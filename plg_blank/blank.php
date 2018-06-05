@@ -40,36 +40,46 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$blank_fbd_count = 0;
 		
 		$answer =  rawurldecode(stripslashes($data['answer']));
-
 		$ans_array = explode('```',$answer);
+
 		$is_correct_q = 0;
 		$query = "SELECT c_id FROM #__quiz_t_blank  WHERE c_question_id = '".$data['quest_id']."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$blnk_cid = $database->loadColumn();
+
 		foreach($ans_array as &$ans){
 			$ans = (object) array('text'=>$ans,'result'=>0);
 		}
-		
+
 		for($z = 0; $z<count($blnk_cid); $z++){
-			$query = "SELECT c.c_id, c.c_text, c.regexp, b.points AS a_points, b.gtype FROM #__quiz_t_question as a, #__quiz_t_blank as b, #__quiz_t_text as c WHERE a.c_id = '".$data['quest_id']."' AND a.published = 1 and b.c_question_id = a.c_id and c.c_blank_id = b.c_id and b.c_id = '".$blnk_cid[$z]."'";
-			$database->SetQuery( $query );
-			$ddd2 = $database->LoadObjectList();							
+
+		    $query = "SELECT c.c_id, c.c_text, c.regexp, b.points AS a_points, b.gtype FROM #__quiz_t_question as a, #__quiz_t_blank as b, #__quiz_t_text as c WHERE a.c_id = '".$data['quest_id']."' AND a.published = 1 and b.c_question_id = a.c_id and c.c_blank_id = b.c_id and b.c_id = '".$blnk_cid[$z]."'";
+			$database->SetQuery($query);
+			$ddd2 = $database->LoadObjectList();
+
 			if (count($ddd2) && count($ddd)) {
 				$is_correct_b = $is_correct_q;
 				$is_correct_t = 0;
 
-				foreach ($ddd2 as $right_row) {
-					JoomlaquizHelper::JQ_GetJoomFish($right_row->c_text, 'quiz_t_text', 'c_text', $right_row->c_id);
+				//Acceptable answers can be duplicated
+                $right_row_text_check = array();
 
-					if ($right_row->gtype && @$ddd[0]->c_qform == 0) {
+				foreach ($ddd2 as $right_row) {
+
+				    if(in_array((string)$right_row->c_text, $right_row_text_check)){
+				        continue;
+                    }
+                    $right_row_text_check[] = (string)$right_row->c_text;
+
+				    if ($right_row->gtype && @$ddd[0]->c_qform == 0) {
 						if ($right_row->regexp) {
-							if (isset($ans_array[$z]->text) && preg_match($right_row->c_text, $ans_array[$z]->text)) { //utf8: ubral strlower								
+							if (isset($ans_array[$z]->text) && preg_match((string)$right_row->c_text, (string)$ans_array[$z]->text)) {
 								$is_correct_t++;
 								$c_quest_score += $right_row->a_points;
 								$ans_array[$z]->result = 1;
 							}
 						} else {											
-							if (isset($ans_array[$z]->text) && strpos($ans_array[$z]->text, $right_row->c_text) !== false) {
+							if (isset($ans_array[$z]->text) && strpos((string)$ans_array[$z]->text, (string)$right_row->c_text) !== false) {
 								$is_correct_t++;
 								$c_quest_score += $right_row->a_points;
 								$ans_array[$z]->result = 1;
@@ -84,13 +94,13 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 							}
 						} else { 
 							if ($right_row->regexp) {	
-								if (isset($ans_array[$z]->text) && preg_match ($right_row->c_text, $ans_array[$z]->text)) { //utf8: ubral strlower								
+								if (isset($ans_array[$z]->text) && preg_match((string)$right_row->c_text, (string)$ans_array[$z]->text)) {
 									$is_correct_q++;
 									$c_quest_score += $right_row->a_points;
 									$ans_array[$z]->result = 1;
 								}
 							} else {
-								if (isset($ans_array[$z]->text) && ($right_row->c_text) == ($ans_array[$z]->text)) { //utf8: ubral strlower								
+								if (isset($ans_array[$z]->text) && ((string)$right_row->c_text === (string)$ans_array[$z]->text)) {
 									$is_correct_q++;
 									$c_quest_score += $right_row->a_points;
 									$ans_array[$z]->result = 1;

@@ -29,7 +29,8 @@ class JoomlaquizViewCreateHotspot
 		} else {
 			$circle = "circle = null;";
 		}
-		
+
+        $path_str = '';
 		if(count($data['hs_data_array'])){
 			foreach($data['hs_data_array'] as $path){
 				$path_str .= "paths.push('".$path."')"."\n\t\t\t\t";
@@ -85,10 +86,11 @@ class JoomlaquizViewCreateHotspot
 		paper = Raphael('foo', w, h);
 		var img = paper.image('{$live_site}images/joomlaquiz/images/{$data['q_data']->c_image}', 0, 0, w, h);
 		
+		path_elems.length=0;
 
 		drawPolygons = function(){
 			var paths = new Array();
-			path_elems = new Array();
+			//path_elems = new Array();
 			{$path_str}
 			if(paths.length){
 				for(var p = 0;p < paths.length;p++){
@@ -174,8 +176,10 @@ HTMLEND;
 			return top;
 		}
 		
+		path_elems.length=0;
+		
 		getNewPath = function(paths, scaleX, scaleY){
-			path_elems = new Array();
+			//path_elems = new Array();
 			if(paths.length){
 				for(var p = 0;p < paths.length;p++){
 					

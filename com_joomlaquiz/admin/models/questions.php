@@ -461,8 +461,9 @@ class JoomlaquizModelQuestions extends JModelList
 		$rows = $rowsAssoc;
 		/*********************************************************/
 
+        $quest_id = 0;
 		foreach($rows as $values) {
-            $quest_id = 0;
+
 			if (!$values['question/answer text']){
                 continue;
             }
@@ -484,10 +485,10 @@ class JoomlaquizModelQuestions extends JModelList
 				}
 			}
 				
-			if ($values['question category'] && !$values['is correct']){
+			if ($values['question category'] && !$values['is correct'] && $values['question/answer text']){
                 $question = $this->getTable('question');
 				$question->c_question = $values['question/answer text'];
-				$question->c_type = $values['question type'] == 'mchoice' ? 1 : 2;
+                $question->c_type = ($values['question type'] == 'mchoice'? 1: 2);
 				$question->c_ques_cat = $category->id;
 				$question->c_quiz_id = $quiz_id;
 				$question->c_point = isset($values['points']) ? $values['points'] : 0;
@@ -556,16 +557,16 @@ class JoomlaquizModelQuestions extends JModelList
 
 			}
 
-			if ($quest_id && !$values['question category'] && !$values['question type'] && $values['is correct']){
-				$opt_ordering++;
-				$choice = $this->getTable('choice');
+			if ($quest_id && !$values['question category'] && !$values['question type'] && $values['is correct'] && $values['question/answer text']){
+			    $opt_ordering++;
+				$choice = $this->getTable('Choice');
 				$choice->c_choice	 		= $values['question/answer text'];
 				$choice->c_quiz_id			= $quiz_id;
-				$choice->c_right			= strtolower($values['is correct']) == 'true'? 1: 0;
+				$choice->c_right			= strtolower($values['is correct']) == 'true' ? 1 : 0;
 				$choice->c_question_id		= $quest_id;
 				$choice->ordering			= $opt_ordering;
-				$choice->a_point			= isset($values['points'])? $values['points']: 0;
-				$choice->c_incorrect_feed 	= isset($values['correct feedback text'])? $values['correct feedback text']: '';
+				$choice->a_point			= isset($values['points'])? $values['points'] : 0;
+				$choice->c_incorrect_feed 	= isset($values['correct feedback text']) ? $values['correct feedback text'] : '';
 				$choice->store();
 			}
 		}

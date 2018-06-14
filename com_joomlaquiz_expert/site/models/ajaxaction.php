@@ -3228,8 +3228,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$plugins = $appsLib->loadApplications();
 		$database = JFactory::getDBO();
 
-		$database->SetQuery("SELECT a.template_name FROM #__quiz_templates as a, #__quiz_t_quiz as b WHERE b.c_id = '".$i_quiz_id."' and b.c_skin = a.id");
-		$cur_template = $database->LoadResult();
+		$database->SetQuery("SELECT a.template_name, b.c_right_message, b.c_wrong_message FROM #__quiz_templates as a, #__quiz_t_quiz as b WHERE b.c_id = '".$i_quiz_id."' and b.c_skin = a.id");
+        $quiz = $database->loadObject();
+		$cur_template = $quiz->template_name;
 		if ($cur_template) {
 			JoomlaquizHelper::JQ_load_template($cur_template);
 			JoomlaquizHelper::JQ_GetJoomFish($q_data->c_question, 'quiz_t_question', 'c_question', $q_data->c_id);
@@ -3298,8 +3299,21 @@ class JoomlaquizModelAjaxaction extends JModelList
 			if($c_show_qfeedback){
 				if($q_data->c_feedback)
 				{
-					$c_right_message = ($q_data->c_right_message) ? $q_data->c_right_message : JText::_('COM_QUIZ_CORRECT');
-					$c_wrong_message = ($q_data->c_wrong_message) ? $q_data->c_wrong_message : JText::_('COM_QUIZ_INCORRECT');
+                    if($q_data->c_right_message) {
+                        $c_right_message = $q_data->c_right_message;
+                    } elseif($quiz->c_right_message) {
+                        $c_right_message = $quiz->c_right_message;
+                    } else {
+                        $c_right_message = JText::_('COM_QUIZ_CORRECT');
+                    }
+                    
+                    if($q_data->c_wrong_message) {
+                        $c_right_message = $q_data->c_wrong_message;
+                    } elseif($quiz->c_wrong_message) {
+                        $c_right_message = $quiz->c_wrong_message;
+                    } else {
+                        $c_right_message = JText::_('COM_QUIZ_INCORRECT');
+                    }
 					
 					$begin_center = ($q_data->c_type == 7) ? '<center>' : '';
 					$end_center = ($q_data->c_type == 7) ? '</center>' : '';

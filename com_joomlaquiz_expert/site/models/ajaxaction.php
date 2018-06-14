@@ -3308,11 +3308,11 @@ class JoomlaquizModelAjaxaction extends JModelList
                     }
                     
                     if($q_data->c_wrong_message) {
-                        $c_right_message = $q_data->c_wrong_message;
+                        $c_wrong_message = $q_data->c_wrong_message;
                     } elseif($quiz->c_wrong_message) {
-                        $c_right_message = $quiz->c_wrong_message;
+                        $c_wrong_message = $quiz->c_wrong_message;
                     } else {
-                        $c_right_message = JText::_('COM_QUIZ_INCORRECT');
+                        $c_wrong_message = JText::_('COM_QUIZ_INCORRECT');
                     }
 					
 					$begin_center = ($q_data->c_type == 7) ? '<center>' : '';

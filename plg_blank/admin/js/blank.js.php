@@ -173,7 +173,7 @@ defined('_JEXEC') or die;
 			input_check.name = "jq_hid_regexp_chk_"+row_tbl_cn+"[]";
 			input_check.value = "1";
 			input_check.checked = new_element_regexp;
-			input_check.onchange =  new Function('jq_changeCheckbox(this, '+jq_num+')');;
+            input_check.onchange =  new Function('jq_changeCheckbox(this, '+jq_num+')');
 			jq_num++;
 			
 			cell1.align = 'center';
@@ -207,55 +207,91 @@ defined('_JEXEC') or die;
 			var rem_tbl = document.createElement("table");
 			rem_tbl.setAttribute("cellpadding", "10");
 			rem_tbl.setAttribute("cellspacing", "10");
-			rem_tbl.style.marginTop = "10px";
+			rem_tbl.style.marginTop = "15px";
 			var rem_row = rem_tbl.insertRow(0);
 			var rem_th1 = document.createElement("td");
 			var rem_th2 = document.createElement("td");
-			rem_th1.innerHTML = 'Blank <span id="blnk_num_'+tbl_count+'">' + tbl_count + '</span>, code for question text: {blank'+tbl_count+'}';
-			rem_th2.innerHTML ='<'+'a href="javascript: void(0);" onclick="javascript:Delete_blnk_row(this); return false;" title="Delete"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a>';	
-			rem_row.appendChild(rem_th1);
+            rem_th1.innerHTML = '<strong>Blank <span id="blnk_num_'+(tbl_count-1)+'">' + tbl_count + '</span></strong>, code for question text: {blank'+tbl_count+'}<br />\'All answers of the block (Acceptable & ' + 'Distractors)\' - code for question text: {answers'+tbl_count+'}';
+            rem_th2.innerHTML ='<'+'a href="javascript: void(0);" onclick="javascript:Delete_blnk_row(this); return false;" title="Delete"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/publish_x.png" border="0" alt="Delete"></a>';
+            rem_row.appendChild(rem_th1);
 			rem_row.appendChild(rem_th2);
-			
-			var tbl_new = document.createElement("table");
+
+            var points_label = document.createElement("span");
+            points_label.innerHTML = '&nbsp;&nbsp;Points:&nbsp;';
+            var input_hidden_p = document.createElement("input");
+            input_hidden_p.type = "text";
+            input_hidden_p.name = "jq_hid_points_"+(tbl_count-1);
+            input_hidden_p.id = "new_points_"+(tbl_count-1);
+            input_hidden_p.className = "text_area";
+            input_hidden_p.size = "5";
+
+            var css_label = document.createElement("span");
+            css_label.innerHTML = '&nbsp;&nbsp;Custom CSS class:&nbsp;';
+            var input_hidden_css = document.createElement("input");
+            input_hidden_css.type = "text";
+            input_hidden_css.name = "jq_hid_css_"+(tbl_count-1);
+            input_hidden_css.id = "new_css_"+(tbl_count-1);
+            input_hidden_css.className = "text_area";
+            input_hidden_css.size = "20";
+
+            var input_check2 = document.createElement("input");
+            input_check2.type = "checkbox";
+            input_check2.name = "jq_hid_gtype_chk_"+(tbl_count-1)+"[]";
+            input_check2.value = "1";
+            input_check2.checked = false;
+            input_check2.onchange =  new Function('jq_changeCheckbox2(this, '+jq_num+')');;
+            jq_num++;
+            input_check2.style.marginLeft = "10px";
+
+            var label2 = document.createElement("label");
+            label2.style.display = "inline";
+            label2.innerHTML = '&nbsp;Points for each answer';
+
+            var input_hidden_check2 = document.createElement("input");
+            input_hidden_check2.type = "hidden";
+            input_hidden_check2.name = "jq_hid_gtype_"+(tbl_count-1)+"[]";
+            input_hidden_check2.id = "jq_hid_gtype_"+jq_num;
+            input_hidden_check2.value = "0";
+
+            var tbl_new = document.createElement("table");
 			tbl_new.className = 'adminlist';
-			tbl_new.id = 'qfld_tbl_' + tbl_count;
-			tbl_new.setAttribute("cellpadding", "10");
+            tbl_new.id = 'qfld_tbl_' + (tbl_count-1);
+            tbl_new.className = "table table-striped";
+            tbl_new.setAttribute("cellpadding", "10");
 			tbl_new.setAttribute("cellspacing", "10");
 			tbl_new.style.marginTop = "10px";
 
 			var row = tbl_new.insertRow(tbl_new.rows.length);
 			var th1 = document.createElement("th");
-			var th2 = document.createElement("th");
-			var th3 = document.createElement("th");
-			var th4 = document.createElement("th");
-			var th5 = document.createElement("th");
-			var th6 = document.createElement("th");
-			th1.innerHTML = '#';
-			th1.setAttribute("width","20px");
-			th1.setAttribute("align","center");
-			th2.innerHTML = 'Acceptable answers';
-			th2.setAttribute("width","200px");
-			th2.className = "title";
-			th3.innerHTML = '';
-			th3.setAttribute("width","20px");
-			th3.setAttribute("align","center");
-			th3.className = "title";
-			th4.innerHTML = '';
-			th4.setAttribute("width","20px");
-			th4.setAttribute("align","center");
-			th4.className = "title";
-			th5.innerHTML = '';
-			th5.setAttribute("width","20px");
-			th5.setAttribute("align","center");
-			th5.className = "title";
-			var input_hidden_id = document.createElement("input");
-			input_hidden_id.type = "hidden";
-			input_hidden_id.name = "blnk_tbl[]";
-			input_hidden_id.setAttribute("name","blnk_tbl[]");
-			input_hidden_id.value = tbl_count;
-			th6.appendChild(input_hidden_id);
-			th6.setAttribute("width","auto");
-			row.appendChild(th1);
+            th1.innerHTML = '#';
+            th1.setAttribute("width","20px");
+            th1.setAttribute("align","center");
+            var th2 = document.createElement("th");
+            th2.innerHTML = 'Acceptable answers';
+            th2.setAttribute("width","auto");
+            th2.setAttribute("align","center");
+            th2.className = "title";
+            var th3 = document.createElement("th");
+            th3.innerHTML = 'Delete';
+            th3.setAttribute("width","20px");
+            th3.setAttribute("align","center");
+            th3.className = "title";
+            var th4 = document.createElement("th");
+            th4.innerHTML = 'Move up';
+            th4.setAttribute("width","20px");
+            th4.setAttribute("align","center");
+            th4.className = "title";
+            var th5 = document.createElement("th");
+            th5.innerHTML = 'Move down';
+            th5.setAttribute("width","20px");
+            th5.setAttribute("align","center");
+            th5.className = "title";
+            var th6 = document.createElement("th");
+            th6.innerHTML = 'Is regular expression';
+            th6.setAttribute("width","200px");
+            th6.setAttribute("align","center");
+            th6.className = "title";
+            row.appendChild(th1);
 			row.appendChild(th2);
 			row.appendChild(th3);
 			row.appendChild(th4);
@@ -267,59 +303,14 @@ defined('_JEXEC') or die;
 			var row_add = tbl_add.insertRow(0);
 			var td1 = document.createElement("td");
 			var div_add = document.createElement("div");
-			div_add.style.paddingLeft = "30px";
-			div_add.setAttribute("align","left");
 		
 			var input_hidden_ad = document.createElement("input");
 			input_hidden_ad.type = "text";
-			input_hidden_ad.name = "new_field_"+tbl_count;
-			input_hidden_ad.id = "new_field_"+tbl_count;
-			input_hidden_ad.setAttribute("name","new_field_"+tbl_count);
-			input_hidden_ad.setAttribute("id","new_field_"+tbl_count);
-			input_hidden_ad.className = "text_area";
-			
-			input_hidden_ad.style.width = "205px";
-			
-			var input_hidden_p = document.createElement("input");
-			input_hidden_p.type = "text";
-			input_hidden_p.name = "new_points_"+tbl_count;
-			input_hidden_p.id = "new_points_"+tbl_count;
-			input_hidden_p.setAttribute("name","jq_hid_points_"+tbl_count);
-			input_hidden_p.setAttribute("id","new_points_"+tbl_count);
-			input_hidden_p.className = "text_area";			
-			input_hidden_p.size = "5";
-			var points_label = document.createElement("span");
-			points_label.innerHTML = '&nbsp;&nbsp;Points:&nbsp;';
-			
-			var input_hidden_css = document.createElement("input");
-			input_hidden_css.type = "text";
-			input_hidden_css.name = "new_css_"+tbl_count;
-			input_hidden_css.id = "new_css_"+tbl_count;
-			input_hidden_css.setAttribute("name","jq_hid_css_"+tbl_count);
-			input_hidden_css.setAttribute("id","new_css_"+tbl_count);
-			input_hidden_css.className = "text_area";			
-			input_hidden_css.size = "20";
-			var css_label = document.createElement("span");
-			css_label.innerHTML = '&nbsp;&nbsp;Custom CSS class:&nbsp;';
-			
-			var label2 = document.createElement("label");
-			label2.style.display = "inline";
-			label2.innerHTML = '&nbsp;Points for each answer';
-
-			var input_hidden_check2 = document.createElement("input");
-			input_hidden_check2.type = "hidden";
-			input_hidden_check2.name = "jq_hid_gtype_"+tbl_count+"[]";
-			input_hidden_check2.id = "jq_hid_gtype_"+jq_num;
-			input_hidden_check2.value = "0";
-
-			var input_check2 = document.createElement("input");
-			input_check2.type = "checkbox";
-			input_check2.name = "jq_hid_gtype_chk_"+tbl_count+"[]";
-			input_check2.value = "1";
-			input_check2.checked = false;
-			input_check2.onchange =  new Function('jq_changeCheckbox2(this, '+jq_num+')');;
-			jq_num++;
-			input_check2.style.marginLeft = "10px";
+            input_hidden_ad.name = "new_field_"+(tbl_count-1);
+            input_hidden_ad.id = "new_field_"+(tbl_count-1);
+            input_hidden_ad.className = "text_area";
+            input_hidden_ad.style.width = "205px";
+            input_hidden_ad.style.marginLeft = "50px";
 
 			var label = document.createElement("label");
 			label.style.display = "inline";
@@ -328,41 +319,37 @@ defined('_JEXEC') or die;
 			
 			var input_check = document.createElement("input");
 			input_check.type = "checkbox";
-			input_check.name = "new_regexp_"+tbl_count;
-			input_check.id = "new_regexp_"+tbl_count;
-			input_check.value = "1";
+            input_check.name = "new_regexp_"+(tbl_count-1);
+            input_check.id = "new_regexp_"+(tbl_count-1);
+            input_check.value = "1";
 			input_check.checked = false;
 			input_check.style.marginLeft = "10px";
 			
 			var input_hidden_btn = document.createElement("input");
 			input_hidden_btn.type = "button";
 			input_hidden_btn.name = "add_new_field[]";
-			input_hidden_btn.setAttribute("name","add_new_field[]");
 			input_hidden_btn.className = "modal-button btn";
 			input_hidden_btn.value = "Add";
 			input_hidden_btn.style.width = "70px";
-			input_hidden_btn.onclick = new Function('Add_new_tbl_field("new_field_'+tbl_count+'", "new_regexp_'+tbl_count+'", "qfld_tbl_'+tbl_count+'", "jq_hid_fields_'+tbl_count+'[]", '+tbl_count+')');
-			
+            input_hidden_btn.onclick = new Function('Add_new_tbl_field("new_field_'+(tbl_count-1)+'", "new_regexp_'+(tbl_count-1)+'", "qfld_tbl_'+(tbl_count-1)+'", "jq_hid_fields_'+(tbl_count-1)+'[]", '+(tbl_count-1)+')');
+
 			var btn_label = document.createElement("span");
 			btn_label.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
 			
 			var input_h_count = document.createElement("input");
 			input_h_count.type = "hidden";
 			input_h_count.name = "blnk_arr[]";
-			input_h_count.setAttribute("name","blnk_arr[]");
-			input_h_count.value = tbl_count;
+            input_h_count.value = (tbl_count-1);
 			
 			var input_h_ids = document.createElement("input");
 			input_h_ids.type = "hidden";
 			input_h_ids.name = "blnk_arr_id[]";
-			input_h_ids.setAttribute("name","blnk_arr_id[]");
 			input_h_ids.value = 0;
 			
 			div_add.appendChild(input_h_ids);
 			div_add.appendChild(input_h_count);
 			div_add.appendChild(input_hidden_ad);	
-		
-			
+
 			div_add.appendChild(input_check);
 			div_add.appendChild(label);
 			
@@ -371,36 +358,117 @@ defined('_JEXEC') or die;
 			
 			row_add.appendChild(td1);
 			td1.appendChild(div_add);
-			
-			var id_before = document.getElementById('id_before');
-			var td_insert = id_before.parentNode;
-			td_insert.insertBefore(rem_tbl, id_before);
-				
-			td_insert.insertBefore(points_label, id_before);
-			td_insert.insertBefore(input_hidden_p, id_before);
-			td_insert.insertBefore(css_label, id_before);
-			td_insert.insertBefore(input_hidden_css, id_before);
-			
-			td_insert.insertBefore(input_check2, id_before);
-			td_insert.insertBefore(label2, id_before);
-			td_insert.insertBefore(input_hidden_check2, id_before);
-			
-			td_insert.insertBefore(tbl_new, id_before);
-			td_insert.insertBefore(tbl_add, id_before);
-			re_number_blnk();
-		}
-		
-		function Add_new_tbl_field2() {
-			var new_element_txt = document.getElementById('new_field_fake').value;
 
-			if (TRIM_str(new_element_txt) == '') {
+            var distractors_add = document.createElement("div");
+            distractors_add.className = "adminform";
+            distractors_add.style.marginTop = "30px";
+
+            var distractors_add_div1 = document.createElement("div");
+            distractors_add_div1.style.marginLeft = "10px";
+            var distractors_add_div1_span = document.createElement("span");
+            distractors_add_div1_span.className = "distractors-title";
+            distractors_add_div1_span.style.fontWeight = "bold";
+            var distractors_add_div1_span_span = document.createElement("span");
+            distractors_add_div1_span_span.innerHTML = tbl_count;
+            distractors_add_div1_span.innerHTML = "Distractors ";
+            distractors_add_div1_span.appendChild(distractors_add_div1_span_span);
+            distractors_add_div1.appendChild(distractors_add_div1_span);
+
+            var distractors_add_table1 = document.createElement("table");
+            distractors_add_table1.className = 'adminlist';
+            distractors_add_table1.id = 'qfld_tbl_fake' + tbl_count;
+            distractors_add_table1.setAttribute("cellpadding", "7");
+            var d_row = distractors_add_table1.insertRow(distractors_add_table1.rows.length);
+            var d_th1 = document.createElement("th");
+            d_th1.innerHTML = '#';
+            d_th1.setAttribute("width","20px");
+            d_th1.setAttribute("align","center");
+            var d_th2 = document.createElement("th");
+            d_th2.innerHTML = 'Distractor';
+            d_th2.setAttribute("width","200px");
+            d_th2.setAttribute("align","center");
+            d_th2.className = "title";
+            var d_th3 = document.createElement("th");
+            d_th3.innerHTML = '';
+            d_th3.setAttribute("width","20px");
+            d_th3.setAttribute("align","center");
+            var d_th4 = document.createElement("th");
+            d_th4.innerHTML = '';
+            d_th4.setAttribute("width","20px");
+            d_th4.setAttribute("align","left");
+            d_row.appendChild(d_th1);
+            d_row.appendChild(d_th2);
+            d_row.appendChild(d_th3);
+            d_row.appendChild(d_th4);
+
+            var distractors_add_table2 = document.createElement("table");
+            distractors_add_table2.className = 'adminlist';
+            distractors_add_table2.style.width = "100%";
+            var distractors_add_table2_row1 = distractors_add_table2.insertRow(0);
+            var distractors_add_table2_row1_th = document.createElement("th");
+            distractors_add_table2_row1_th.style.textAlign = "left";
+            distractors_add_table2_row1_th.className = "title";
+            distractors_add_table2_row1_th.innerHTML = "Add new distractor";
+            distractors_add_table2_row1.appendChild(distractors_add_table2_row1_th);
+            distractors_add_table2.appendChild(distractors_add_table2_row1);
+
+            var distractors_add_table2_row2 = distractors_add_table2.insertRow(1);
+            var distractors_add_table2_row2_td = document.createElement("td");
+            var distractors_add_table2_row2_td_div = document.createElement("div");
+            var distractors_add_table2_row2_td_div_input1 = document.createElement("input");
+            distractors_add_table2_row2_td_div_input1.type = "text";
+            distractors_add_table2_row2_td_div_input1.name = "new_field_fake";
+            distractors_add_table2_row2_td_div_input1.id = "new_field_fake_" + (tbl_count-1);
+            distractors_add_table2_row2_td_div_input1.className = "text_area";
+            distractors_add_table2_row2_td_div_input1.style.width = "205px";
+            var distractors_add_table2_row2_td_div_input2 = document.createElement("input");
+            distractors_add_table2_row2_td_div_input2.type = "button";
+            distractors_add_table2_row2_td_div_input2.name = "add_new_field";
+            distractors_add_table2_row2_td_div_input2.className = "modal-button btn";
+            distractors_add_table2_row2_td_div_input2.value = "Add";
+            distractors_add_table2_row2_td_div_input2.onclick = new Function('Add_new_tbl_field2('+(tbl_count-1)+')');
+            distractors_add_table2_row2_td_div.appendChild(distractors_add_table2_row2_td_div_input1);
+            distractors_add_table2_row2_td_div.appendChild(distractors_add_table2_row2_td_div_input2);
+            distractors_add_table2_row2_td.appendChild(distractors_add_table2_row2_td_div);
+            distractors_add_table2_row2.appendChild(distractors_add_table2_row2_td);
+
+            distractors_add.appendChild(distractors_add_div1);
+            distractors_add.appendChild(distractors_add_table1);
+            distractors_add.appendChild(distractors_add_table2);
+
+            var hr_add = document.createElement("hr");
+            var wrapper = document.createElement("div");
+            wrapper.className = "option-row";
+
+            var id_before = document.getElementById('id_before');
+			var td_insert = id_before.parentNode;
+            wrapper.appendChild(rem_tbl);
+            wrapper.appendChild(points_label);
+            wrapper.appendChild(input_hidden_p);
+            wrapper.appendChild(css_label);
+            wrapper.appendChild(input_hidden_css);
+            wrapper.appendChild(input_check2);
+            wrapper.appendChild(label2);
+            wrapper.appendChild(input_hidden_check2);
+            wrapper.appendChild(tbl_new);
+            wrapper.appendChild(tbl_add);
+            wrapper.appendChild(distractors_add);
+            wrapper.appendChild(hr_add);
+            td_insert.insertBefore(wrapper, id_before);
+            re_number_blnk();
+		}
+
+    function Add_new_tbl_field2(n) {
+        var new_element_txt = document.getElementById('new_field_fake_' + n).value;
+
+        if (TRIM_str(new_element_txt) == '') {
 				alert("<?php echo JText::_('COM_JOOMLAQUIZ_PLEASE_ENTER_TEXT');?>");
-				document.getElementById('new_field_fake').focus();
+                document.getElementById('new_field_fake_' + n).focus();
 				return;
 			}
-			document.getElementById('new_field_fake').value = '';
+            document.getElementById('new_field_fake_' + n).value = '';
 
-			var tbl_elem = document.getElementById('qfld_tbl_fake');
+            var tbl_elem = document.getElementById('qfld_tbl_fake' + (n+1));
 			
 			var row = tbl_elem.insertRow(tbl_elem.rows.length);
 			var cell1 = document.createElement("td");
@@ -410,15 +478,15 @@ defined('_JEXEC') or die;
 
 			var input_hidden = document.createElement("input");
 			input_hidden.type = "hidden";
-			input_hidden.name = 'jq_hid_fake[]';
+            input_hidden.name = 'jq_hid_fake_'+ n +'[]';
 			input_hidden.value = new_element_txt;
 						
 			cell1.align = 'center';
 			cell1.innerHTML = '&nbsp;';
 			cell2.innerHTML = new_element_txt;
 			cell2.appendChild(input_hidden);
-			cell3.innerHTML = '<a href="javascript: void(0);" onclick="javascript:Delete_tbl_row2(this); return false;" title="Delete"><img src="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a>';
-			cell4.innerHTML = '&nbsp;';
+            cell3.innerHTML = '<a href="javascript: void(0);" onclick="javascript:Delete_tbl_row2(this); return false;" title="Delete"><img src="<?php echo JURI::root();?>administrator/components/com_joomlaquiz/assets/images/publish_x.png" border="0" alt="Delete"></a>';
+    		cell4.innerHTML = '&nbsp;';
 			
 			row.appendChild(cell1);
 			row.appendChild(cell2);
@@ -434,19 +502,7 @@ defined('_JEXEC') or die;
 		}
 		
 		function Delete_blnk_row(element){
-			var table = element.parentNode.parentNode.parentNode.parentNode;
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).remove();
+            jQuery(element).closest('.option-row').remove();
 			re_number_blnk();
 		}
 		
@@ -454,16 +510,24 @@ defined('_JEXEC') or die;
 			var blnk_arr = eval("document.adminForm['blnk_arr\[\]']");
 			if(blnk_arr.length){
 				for(var i=0; i<blnk_arr.length; i++){
-					document.getElementById("blnk_num_"+blnk_arr[i].value).innerHTML = i+1;
 					var blnk_num = document.getElementById("blnk_num_"+blnk_arr[i].value);
-					var textNode = jQuery(blnk_num).parent().html();
-					textNode = textNode.replace(/\{blank[0-9]*\}/, '{blank' + (i+1) + '}');
-					jQuery(blnk_num).parent().html(textNode);
-				}
+                    jQuery(blnk_num).closest('.option-row').find('.distractors-title span').html((i+1));
+                    blnk_num.innerHTML = i+1;
+                    var textNode = jQuery(blnk_num).closest('td').html();
+                    textNode = textNode.replace(/\{blank[0-9]*\}/, '{blank' + (i+1) + '}');
+                    textNode = textNode.replace(/\{answers[0-9]*\}/, '{answers' + (i+1) + '}');
+                    jQuery(blnk_num).closest('td').html(textNode);
+                }
 			}else{
 				if(blnk_arr.value){
-					document.getElementById("blnk_num_"+blnk_arr.value).innerHTML = 1;
-				}
+                    var blnk_num = document.getElementById("blnk_num_"+blnk_arr.value);
+                    jQuery(blnk_num).closest('.option-row').find('.distractors-title span').html('1');
+                    blnk_num.innerHTML = 1;
+                    var textNode = jQuery(blnk_num).closest('td').html();
+                    textNode = textNode.replace(/\{blank[0-9]*\}/, '{blank1}');
+                    textNode = textNode.replace(/\{answers[0-9]*\}/, '{answers1}');
+                    jQuery(blnk_num).closest('td').html(textNode);
+                }
 			}
 		}
 		

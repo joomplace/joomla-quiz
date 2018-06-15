@@ -1,10 +1,11 @@
 DELETE FROM `#__quiz_t_qtypes` WHERE c_id = '6';
-INSERT INTO #__quiz_t_qtypes (c_id, c_qtype, c_type) VALUES (6, 'Fill in the blank', 'blank');
+INSERT INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES (6, 'Fill in the blank', 'blank');
 
 CREATE TABLE IF NOT EXISTS `#__quiz_t_faketext` (
 		`c_id` int(10) unsigned NOT NULL auto_increment,
 		`c_quest_id` int(10) unsigned NOT NULL default '0',
 		`c_text` varchar(255) NOT NULL default '',
+	  `c_blank_id` int(11) NOT NULL DEFAULT '0',
 		PRIMARY KEY  (`c_id`),
 		KEY `c_quest_id` (`c_quest_id`) ) DEFAULT CHARSET=utf8;
 

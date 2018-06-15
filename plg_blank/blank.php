@@ -10,17 +10,19 @@
 */
 
 // no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 
 class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 {
-	var $name		= 'Blank';
-	var $_name		= 'blank';
-	
-	public function onCreateQuestion(&$data) {
-		
-		if ($data['q_data']->c_immediate)  $data['im_check'] = 1;
-		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div id="div_qoption'.$data['q_data']->c_id.'"><!-- x --></div>]]></quest_data_user>' . "\n";
+    public $name = 'Blank';
+    public $_name = 'blank';
+
+    public function onCreateQuestion(&$data) {
+
+        if ($data['q_data']->c_immediate){
+            $data['im_check'] = 1;
+        }
+        $data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div id="div_qoption'.$data['q_data']->c_id.'"><!-- x --></div>]]></quest_data_user>' . "\n";
 		
 		return $data;
 	}
@@ -440,15 +442,22 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$db = JFactory::getDBO();
 		$query = "SELECT * FROM #__quiz_t_blank  WHERE c_question_id = '".$data['question_id']."' ORDER BY ordering";
 		$db->SetQuery( $query );
-		$blank_data = array();
 		$blank_data = $db->LoadObjectList();
 			
 		$query = "SELECT * FROM #__quiz_t_faketext  WHERE c_quest_id = '".$data['question_id']."' ORDER BY c_id";
 		$db->SetQuery( $query );
-		$fake_data = array();
-		$fake_data = $db->LoadObjectList();
-				
-		ob_start();
+        $fake_all_data = $db->LoadObjectList();
+        $fake_data = array();
+        if($fake_all_data){
+            foreach ($fake_all_data as $fake){
+                if(!isset($fake_data[$fake->c_blank_id])){
+                    $fake_data[$fake->c_blank_id] = array();
+                }
+                $fake_data[$fake->c_blank_id][] = $fake;
+            }
+        }
+
+        ob_start();
 		require_once(JPATH_SITE."/plugins/joomlaquiz/blank/admin/options/blank.php");
 		$options = ob_get_contents();
 		ob_get_clean();
@@ -461,7 +470,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$db = JFactory::getDBO();
 		$c_id = JFactory::getApplication()->input->get('c_id');
 		
-		$db->setQuery("SELECT `c_qform`, `c_image` FROM #__quiz_t_question WHERE `c_id` = '".$c_id."'");
+		$db->setQuery("SELECT `c_qform`, `c_image`, `c_random` FROM #__quiz_t_question WHERE `c_id` = '".$c_id."'");
 		$row = $db->loadObject();
 		
 		$lists = array();
@@ -471,8 +480,15 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$c_qform = JHTML::_('select.genericlist', $c_qform, 'c_qform', 'class="text_area" size="1" ', 'value', 'text', (isset($row->c_qform)) ? intval( $row->c_qform ) : 0);
 		$lists['c_qform']['input'] = $c_qform;
 		$lists['c_qform']['label'] = JText::_('COM_JOOMLAQUIZ_DISPLAY_STYLE');
-		
-		$c_image = (isset($row->c_image)) ? $row->c_image : '';
+
+        $c_random = array();
+        $c_random[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_NO'));
+        $c_random[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_YES'));
+        $c_random = JHTML::_('select.genericlist', $c_random, 'jform[c_random]', 'class="text_area" size="1" ', 'value', 'text', (isset($row->c_random) ? (int)$row->c_random : 0));
+        $lists['c_random']['input'] = $c_random;
+        $lists['c_random']['label'] = JText::_('COM_JOOMLAQUIZ_RANDOMIZE_ANSWERS');
+
+        $c_image = (isset($row->c_image)) ? $row->c_image : '';
 		$lists['c_image']['input'] = "<input type='text' size='30' name='c_image' value='".$c_image."' />";
 		$lists['c_image']['label'] = JText::_('COM_JOOMLAQUIZ_CUSTOMCSS_CLASS');
 		
@@ -534,9 +550,8 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 	public function onAdminSaveOptions(&$data){
 		
 		$database = JFactory::getDBO();
-		
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_immediate` = '".$_POST['jform']['c_immediate']."', `c_qform` = '".$_POST['c_qform']."', `c_image` = '".$_POST['c_image']."' WHERE c_id = '".$data['qid']."'");
-		$database->execute();
+        $database->setQuery("UPDATE #__quiz_t_question SET `c_immediate` = '".$_POST['jform']['c_immediate']."', `c_qform` = '".$_POST['c_qform']."', `c_image` = '".$_POST['c_image']."', `c_random` = '".$_POST['jform']['c_random']."' WHERE c_id = '".$data['qid']."'");
+        $database->execute();
 		
 		if(isset($_POST['blnk_arr']))
 		{
@@ -622,18 +637,25 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 				$database->setQuery( $query );
 				$database->execute();
 			}
-			
+
+            //distractors
 			$query = "DELETE FROM #__quiz_t_faketext WHERE c_quest_id = '".$data['qid']."'";
 			$database->setQuery( $query );
 			$database->execute();
-			
-			$jq_hid_fakes = JFactory::getApplication()->input->get('jq_hid_fake', '', array());
-			foreach($jq_hid_fakes as $jq_hid_fake){
-				$query = "INSERT INTO #__quiz_t_faketext SET c_quest_id = '".$data['qid']."', c_text = ".$database->Quote($jq_hid_fake);
-				$database->setQuery( $query );
-				$database->execute();
-			}
-		}
+
+            $j = 0;
+            foreach ($_POST['blnk_arr'] as $blnk_n) {
+                $jq_hid_fakes = JFactory::getApplication()->input->get('jq_hid_fake_'.$blnk_n, '', array());
+                if(!empty($jq_hid_fakes)) {
+                    foreach ($jq_hid_fakes as $jq_hid_fake) {
+                        $query = "INSERT INTO `#__quiz_t_faketext` SET `c_quest_id` = '" . $data['qid'] . "', `c_blank_id` = '" . $blank_arr[$j] . "', `c_text` = " . $database->Quote($jq_hid_fake);
+                        $database->setQuery($query);
+                        $database->execute();
+                    }
+                }
+                $j++;
+            }
+        }
 	}
 	
 	public function onGetAdminAddLists(&$data){

@@ -136,7 +136,17 @@ class JoomlaquizViewQuestions extends JViewLegacy
 					'filter_ques_cat',
 					$qcategoriesFields
 				);
-				
+
+				$questionTags = $this->get("QuestionTags");
+				if(!empty($questionTags)){
+                    $questionTagsOptions = JHTML::_('select.options', $questionTags, 'id', 'title', $app->getUserStateFromRequest('quizzes.filter.ques_tag', 'filter_ques_tag'));
+                    JHtmlSidebar::addFilter(
+                        JText::_('COM_JOOMLAQUIZ_NO_TAG'),
+                        'filter_ques_tag',
+                        $questionTagsOptions
+                    );
+                }
+
 				$this->pbreaks = $this->get("PageBreaks");
 			}
 		

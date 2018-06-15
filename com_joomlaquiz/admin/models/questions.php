@@ -53,7 +53,10 @@ class JoomlaquizModelQuestions extends JModelList
 		
 		$ques_cat = $this->getUserStateFromRequest('questions.filter.ques_cat', 'filter_ques_cat');
 		$this->setState('filter.ques_cat', $ques_cat);
-		
+
+        $ques_tag = $this->getUserStateFromRequest('questions.filter.ques_tag', 'filter_ques_tag');
+        $this->setState('filter.ques_tag', $ques_tag);
+
 		$enabled = $this->getUserStateFromRequest('questions.filter.enabled', 'filter_enabled');
 		$this->setState('filter.enabled', $enabled);
 		
@@ -347,7 +350,14 @@ class JoomlaquizModelQuestions extends JModelList
 		{
 			$query->where("a.c_ques_cat = $ques_cat");
 		}
-		
+
+        $ques_tag = $this->getState('filter.ques_tag');
+        if ($ques_tag)
+        {
+            $query->leftJoin($db->qn('#__contentitem_tag_map', 'tmap') .' ON '. $db->qn('tmap.core_content_id') .'='. $db->qn('a.c_id') )
+                ->where($db->qn('tmap.tag_id') .'='. $db->q((int)$ques_tag));
+        }
+
         $orderCol	= $this->state->get('list.ordering', 'a.c_question, a.c_id');	
 		$orderDirn	= $this->state->get('list.direction', 'ASC');
         $query->order($db->escape($orderCol.' '.$orderDirn));
@@ -383,14 +393,26 @@ class JoomlaquizModelQuestions extends JModelList
 	
 	public function getQuestionCategories(){
 		$db = JFactory::getDBO();
-		
 		$query = "SELECT id AS value, title as text FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `published` = 1 order by lft";
 		$db->setQuery( $query );
 		$jq_qcat = $db->loadObjectList();
-		
 		return $jq_qcat;
 	}
-	
+
+    public function getQuestionTags(){
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select($db->qn(array('t.id', 't.title')))
+            ->from($db->qn('#__tags', 't'))
+            ->leftJoin($db->qn('#__contentitem_tag_map', 'tmap') .' ON '. $db->qn('tmap.tag_id') .'='. $db->qn('t.id'))
+            ->where($db->qn('tmap.type_alias') .'='. $db->q('com_joomlaquiz.question'))
+            ->group('t.id')
+            ->order('t.title');
+        $db->setQuery($query);
+        $result = $db->loadObjectList();
+        return $result ? $result : array();
+    }
+
 	public function getPageBreaks(){
 		
 		$db = JFactory::getDBO();

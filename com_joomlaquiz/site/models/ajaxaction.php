@@ -3518,8 +3518,8 @@ class JoomlaquizModelAjaxaction extends JModelList
                 $c_detailed_feedback = $database->loadResult();
                 //$c_detailed_feedback = ($c_detailed_feedback == '') ? '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'] : '</br>'.strip_tags(stripslashes($c_detailed_feedback));
                 $c_detailed_feedback = ($c_detailed_feedback == '') ?
-                    strip_tags(html_entity_decode($jq_language['COM_QUIZ_ANSWER_INCORRECT'], ENT_QUOTES, 'UTF-8')) :
-                    strip_tags(html_entity_decode($c_detailed_feedback, ENT_QUOTES, 'UTF-8'));
+                    strip_tags(html_entity_decode($jq_language['COM_QUIZ_ANSWER_INCORRECT'], ENT_QUOTES, 'UTF-8'), '<img>') :
+                    strip_tags(html_entity_decode($c_detailed_feedback, ENT_QUOTES, 'UTF-8'), '<img>');
             }
         }
         //else if(!$is_correct && (($c_quest_cur_attempt + 1) < $c_all_attempts)){

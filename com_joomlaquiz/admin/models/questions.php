@@ -354,8 +354,9 @@ class JoomlaquizModelQuestions extends JModelList
         $ques_tag = $this->getState('filter.ques_tag');
         if ($ques_tag)
         {
-            $query->leftJoin($db->qn('#__contentitem_tag_map', 'tmap') .' ON '. $db->qn('tmap.core_content_id') .'='. $db->qn('a.c_id') )
-                ->where($db->qn('tmap.tag_id') .'='. $db->q((int)$ques_tag));
+            $query->leftJoin($db->qn('#__contentitem_tag_map', 'tmap') .' ON '. $db->qn('tmap.content_item_id') .'='. $db->qn('a.c_id') )
+                ->where($db->qn('tmap.tag_id') .'='. $db->q((int)$ques_tag))
+                ->where($db->qn('tmap.type_alias') .'='. $db->q('com_joomlaquiz.question'));
         }
 
         $orderCol	= $this->state->get('list.ordering', 'a.c_question, a.c_id');	

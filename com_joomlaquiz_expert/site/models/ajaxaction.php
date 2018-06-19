@@ -1592,8 +1592,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 	                            include_once __DIR__ . '/printresult.php';
 	                            $results_model = new JoomlaquizModelPrintresult();
 	                            $pdf = $results_model->generatePDF($stu_quiz_id);
-	                            $pdf = $pdf->Output('results.pdf', 'S');
-	                            $jmail->AddStringAttachment($pdf,'results.pdf');
+
+	                            //$pdf = $pdf->Output('results.pdf', 'S');
+	                            //$jmail->AddStringAttachment($pdf,'results.pdf');
+
+                                $pdf_user_passed = (int)$user_passed ? 'passed' : 'fails';
+                                $pdf_user_name = preg_replace('/[^a-zA-Z]/', '_', $my->name);
+                                $results_pdf_name = 'results-'.$pdf_user_name.'-'.$pdf_user_passed.'.pdf';
+                                $pdf = $pdf->Output($results_pdf_name, 'S');
+                                $jmail->AddStringAttachment($pdf, $results_pdf_name);
+
 								foreach($emails as $email){
 									$jmail->clearAllRecipients();
 								    $jmail->sendMail( $mailfrom, $sitename, trim($email), $subject, $message, 1, NULL, NULL, NULL, NULL, NULL);

@@ -171,7 +171,7 @@ $sortFields = $this->getSortFields();
 				$canEdit	= $user->authorise('core.edit',	$extension.'.results.'.$item->c_id);
                 $canCheckin	= $user->authorise('core.admin', 'com_checkin');
                 $canChange	= $user->authorise('core.edit.state', $extension.'.results.'.$item->c_id) && $canCheckin;
-				$dateReport = JHTML::_('date', $item->c_date_time, 'd-m-Y H:i:s', true);
+				$dateReport = JHTML::_('date', $item->c_date_time, 'd-m-Y H:i:s', null);
 			?>
 				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="1">
 					<td class="order nowrap center">

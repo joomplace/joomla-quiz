@@ -3521,6 +3521,8 @@ class JoomlaquizModelAjaxaction extends JModelList
                     strip_tags(html_entity_decode($jq_language['COM_QUIZ_ANSWER_INCORRECT'], ENT_QUOTES, 'UTF-8'), '<img>') :
                     strip_tags(html_entity_decode($c_detailed_feedback, ENT_QUOTES, 'UTF-8'), '<img>');
             }
+        } else {
+            $c_detailed_feedback = $msg_html;
         }
         //else if(!$is_correct && (($c_quest_cur_attempt + 1) < $c_all_attempts)){
         //    $c_detailed_feedback = '</br>'.$jq_language['COM_QUIZ_ANSWER_INCORRECT'];

@@ -8,7 +8,7 @@
 
 
 $editor = JEditor::getInstance('tinymce');
-$editor->display();
+$editor->display('','','500','170','20','10');
 
 JFactory::getDocument()->addScript('https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js');
 JFactory::getDocument()->addScript('https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-sanitize.min.js');

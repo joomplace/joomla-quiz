@@ -242,7 +242,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						} else {
 							return '';
 						}
-
+                        /*
 						$query = "DELETE FROM `#__quiz_lpath_stage`"
 						. "\n WHERE uid = {$my->id} AND rel_id = {$rel_id}  AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$quiz_id} AND oid = '{$package_id}'"
 						;
@@ -254,7 +254,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 						;
 						$database->SetQuery( $query );
 						$database->execute();
-					} 
+						*/
+                        $query = "UPDATE `#__quiz_lpath_stage` SET `stage` = 0"
+                            . "\n WHERE uid = {$my->id} AND rel_id = {$rel_id}  AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$quiz_id} AND oid = '{$package_id}'"
+                        ;
+                        $database->SetQuery( $query );
+                        $database->execute();
+					}
 					
 					$query = "SELECT `id` FROM #__quiz_products_stat WHERE `uid` = $my->id AND `qp_id` = $rel_id AND oid = '{$package_id}'";
 					$database->SetQuery( $query );
@@ -281,7 +287,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					} else {
 						return '';
 					}
-					
+					/*
 					$query = "DELETE FROM `#__quiz_lpath_stage`"
 						. "\n WHERE uid = {$my->id} AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$quiz_id} AND oid = 0 AND rel_id = 0 "
 						;
@@ -292,7 +298,13 @@ class JoomlaquizModelAjaxaction extends JModelList
 						. "\n SET uid = {$my->id}, lpid = {$lpath->id}, `type` = 'q', qid = {$quiz_id}, stage = 0, oid = 0, rel_id = 0 "
 						;
 					$database->SetQuery( $query );
-					$database->execute();		
+					$database->execute();
+                    */
+                    $query = "UPDATE `#__quiz_lpath_stage` SET `stage` = 0"
+                        . "\n WHERE uid = {$my->id} AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$quiz_id} AND oid = 0 AND rel_id = 0 "
+                    ;
+                    $database->SetQuery( $query );
+                    $database->execute();
 				}			
 			} else { 
 				$query = "SELECT unique_id  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
@@ -939,13 +951,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if (count($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
-		
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_title, 'quiz_t_quiz', 'c_title', $quiz->c_id);
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_right_message, 'quiz_t_quiz', 'c_right_message', $quiz->c_id);
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_wrong_message, 'quiz_t_quiz', 'c_wrong_message', $quiz->c_id);
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_pass_message, 'quiz_t_quiz', 'c_pass_message', $quiz->c_id);
-		JoomlaquizHelper::JQ_GetJoomFish($quiz->c_unpass_message, 'quiz_t_quiz', 'c_unpass_message', $quiz->c_id);
-		
+
 		$share_id = intval(empty($_SESSION['share_id']) ? 0 : $_SESSION['share_id']);
 		$is_share = false;
 
@@ -1030,12 +1036,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$quiz_info = $database->LoadObjectList();
 				if (count($quiz_info)) { $quiz_info = $quiz_info[0]; }
 				else { return ''; }
-				
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_title, 'quiz_t_quiz', 'c_title', $quiz_info->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_right_message, 'quiz_t_quiz', 'c_right_message', $quiz_info->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_wrong_message, 'quiz_t_quiz', 'c_wrong_message', $quiz_info->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_pass_message, 'quiz_t_quiz', 'c_pass_message', $quiz_info->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_info->c_unpass_message, 'quiz_t_quiz', 'c_unpass_message', $quiz_info->c_id);
 		
 				$query = "SELECT SUM(c_score) FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
 				$database->SetQuery( $query );

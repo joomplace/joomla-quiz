@@ -512,8 +512,13 @@ class JoomlaquizModelQuiz extends JModelList
 			$quiz_params->force = $jinput->get('force', 0, 'INT');
 			
 			/* if no attempts don`t allow force */
-			if (!$is_attempts) 
-				$quiz_params->force = 0;
+			if (!$is_attempts) {
+                $quiz_params->force = 0;
+            } else {
+			    if(isset($quiz_params->product_data) && $quiz_params->product_data->type == 'l'){
+                    $quiz_params->force = 1;
+                }
+            }
 			
 			return $quiz_params;
 			

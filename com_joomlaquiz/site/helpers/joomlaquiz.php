@@ -619,7 +619,26 @@ class JoomlaquizHelper
 					return true;
 				
 				if($rel_check[0]->type == 'l') {
-					$query = "SELECT attempts FROM #__quiz_lpath_stage WHERE uid = '{$my->id}' AND oid = '{$order_id}' AND rel_id = '{$rel_id}' AND lpid = '{$rel_check[0]->rel_id}' AND qid = '{$quiz_id}'";
+                    // custom START
+                    // issue 483
+                    // Limit attempts only for the last quiz in the learning path included in the paid product
+                    $database->SetQuery("SELECT `qid` FROM `#__quiz_lpath_quiz` WHERE `lid`=".(int)$rel_check[0]->rel_id." AND `type`='q' ORDER BY `order` DESC LIMIT 1");
+                    $last_quiz = (int)$database->loadResult();
+                    if((int)$quiz_id != $last_quiz){
+                        return true;
+                    }
+                    $db = \JFactory::getDbo();
+                    $query = $db->getQuery(true);
+                    $query->select($db->qn('attempts'))
+                        ->from($db->qn('#__quiz_lpath_stage'))
+                        ->where($db->qn('qid') .'='. $db->q((int)$quiz_id))
+                        ->where($db->qn('uid') .'='. $db->q((int)$my->id))
+                        ->where($db->qn('rel_id') .'='. $db->q((int)$rel_id))
+                        ->where($db->qn('lpid') .'='. $db->q((int)$rel_check[0]->rel_id))
+                        ->where($db->qn('type') .'='. $db->q('q'))
+                        ->where($db->qn('oid') .'='. $db->q((int)$order_id));
+                    //$query = "SELECT attempts FROM #__quiz_lpath_stage WHERE uid = '{$my->id}' AND oid = '{$order_id}' AND rel_id = '{$rel_id}' AND lpid = '{$rel_check[0]->rel_id}' AND qid = '{$quiz_id}'";
+                    // CUSTOM END
 				} else {
 					$query = "SELECT attempts FROM #__quiz_products_stat WHERE uid = '{$my->id}' AND oid = '{$order_id}' AND qp_id = '{$rel_id}' ";
 				}
@@ -769,11 +788,30 @@ class JoomlaquizHelper
                 }
             }
             else if($product_data->type == 'l'){
-                $query = "SELECT * FROM `#__quiz_lpath_stage` 
-                          WHERE `uid` = {$my->id} AND `rel_id` = {$rel_id}  AND `lpid` = {$rel_check[0]->rel_id} 
+                // custom START
+                // issue 483
+                // Limit attempts only for the last quiz in the learning path included in the paid product
+                $db = \JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $subQuery = "(SELECT `qid` FROM `#__quiz_lpath_quiz` WHERE `lid`=".(int)$rel_check[0]->rel_id." AND `type`='q' ORDER BY `order` DESC LIMIT 1)";
+                $query->select('*')
+                    ->from($db->qn('#__quiz_lpath_stage'))
+                    ->where($db->qn('qid') .'='. $subQuery)
+                    ->where($db->qn('uid') .'='. $db->q((int)$my->id))
+                    ->where($db->qn('rel_id') .'='. $db->q((int)$rel_id))
+                    ->where($db->qn('lpid') .'='. $db->q((int)$rel_check[0]->rel_id))
+                    ->where($db->qn('type') .'='. $db->q('q'))
+                    ->where($db->qn('oid') .'='. $db->q((int)$package_id));
+                $db->setQuery($query);
+                $quiz_lpath_stage = $database->loadObjectList();
+                /*
+			    $query = "SELECT * FROM `#__quiz_lpath_stage`
+                          WHERE `uid` = {$my->id} AND `rel_id` = {$rel_id}  AND `lpid` = {$rel_check[0]->rel_id}
                           AND `type` = 'q' AND oid = '{$package_id}' ";
                 $database->SetQuery( $query );
                 $quiz_lpath_stage = $database->loadObjectList();
+                */
+                // CUSTOM END
                 $yet_attempts = false;
                 if($quiz_lpath_stage && is_array($quiz_lpath_stage) && !empty($quiz_lpath_stage)){
                     for($i=0; $i<count($quiz_lpath_stage); $i++){

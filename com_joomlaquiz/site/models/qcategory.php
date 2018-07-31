@@ -239,6 +239,7 @@ class JoomlaquizModelQcategory extends JModelList
                         if (empty($lpath[$data->rel_id])) {
                             continue;
                         }
+                        $data->suffix = '';
                         $data->title       = $lpath[$data->rel_id]->title;
                         $data->short_descr = $lpath[$data->rel_id]->short_descr;
                         if ($data->xdays > 0) {
@@ -317,9 +318,10 @@ class JoomlaquizModelQcategory extends JModelList
 
     public function getCategories(){
         jimport('joomla.application.categories');
-        $categories = new JCategories(array('extension'=>'com_joomlaquiz','access'=>true));
         $input = JFactory::getApplication()->input;
-        $cur_cat = $categories->get($input->get( 'cat_id'));
+        $categories = new JCategories(array('extension'=>'com_joomlaquiz', 'table'=>'#__categories', 'access'=>true));
+        $cur_cat = $categories->get($input->getInt( 'cat_id', 0));
+
         if($cur_cat){
             $subs = $cur_cat->getChildren(true);
             $rel_level = $cur_cat->level;
@@ -333,11 +335,8 @@ class JoomlaquizModelQcategory extends JModelList
             $ids[] = $s->id;
         }
         $return_data = array();
-        foreach($ids as $cat_id){
-            $database = JFactory::getDBO();
-            $mainframe = JFactory::getApplication();
-            $my = JFactory::getUser();
 
+        foreach($ids as $cat_id){
             $cat = array();
             if (!$cat_id) {
                 $cat[0] = new stdClass;
@@ -345,11 +344,6 @@ class JoomlaquizModelQcategory extends JModelList
                 $cat[0]->message = '';
                 return $cat[0];
             }
-
-            $query = "SELECT * FROM `#__quiz_t_category` WHERE `c_id` = '$cat_id'";
-            $database->SetQuery( $query );
-            $cat = $database->loadObjectList();
-            $cat = $cat[0];
 
             $cat = $categories->get($cat_id);
             $cat->level =  $cat->level - $rel_level;

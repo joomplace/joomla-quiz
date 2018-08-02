@@ -138,8 +138,9 @@ $ordering_list = $this->ordering_list;
 				<?php if ($for=='c_qform') 
 			              echo $item['label'];
 				      else {?>
-                          <label class="hasPopover control-label" for="<?php echo $for; ?>"  title="<?php echo $item['label_title']; ?>"
-                                 data-content="<?php echo $item['label_description']; ?>"
+                          <label class="hasPopover control-label" for="<?php echo $for; ?>"
+                                 title="<?php echo isset($item['label_title']) ? $item['label_title'] : $item['label']; ?>"
+                                 data-content="<?php echo isset($item['label_description']) ? $item['label_description'] : $item['label']; ?>"
                                  id="<?php echo $for; ?>-lbl"
                                  style="width:156px;"><?php echo $item['label'] ?></label>
 				<?php }?>

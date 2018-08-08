@@ -405,7 +405,7 @@ class JoomlaquizModelQuiz extends JModelList
                         'com_joomlaquiz.quiz.' . $quiz_params->c_id)
                     || !in_array($category->access, $my_acl))
                 /* c_guest must be excluded (legacy purpose @deprecated 3.8) */
-                && (!JFactory::getUser()->id && !$quiz_params->c_guest)
+                && (!JFactory::getUser()->id)
             ) {
                 $quiz_params->error   = 1;
                 $quiz_params->message = '<p align="left">'

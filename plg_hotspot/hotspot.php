@@ -224,7 +224,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 	public function onGetResult(&$data){
 		
 		$database = JFactory::getDBO();
-		$query = "SELECT * FROM #__quiz_t_question AS q, #__quiz_t_hotspot AS h"
+		$query = "SELECT * FROM `#__quiz_t_question` AS `q`, `#__quiz_t_ext_hotspot` AS `h`"
 		. "\n WHERE q.c_id = '".$data['qid']."' AND q.c_id = h.c_question_id AND q.published = 1";
 		$database->SetQuery( $query );
 		$data['info']['c_hotspot'] = $database->LoadRow();
@@ -387,7 +387,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$lists['answer'] = $answer;
 		$lists['id'] = $data['id'];
 		
-		$query = "SELECT * FROM #__quiz_t_hotspot WHERE c_question_id = '".$data['q_id']."'";
+		$query = "SELECT * FROM `#__quiz_t_ext_hotspot` WHERE `c_question_id` = '".$data['q_id']."'";
 		$database->SetQuery( $query );
 		$hotspot = $database->LoadObjectList();
 		if (!count($hotspot)) { $hotspot = array(); $hotspot[0]->c_start_x = 0; $hotspot[0]->c_start_y = 0; $hotspot[0]->c_width = 0; $hotspot[0]->c_height = 0; }

@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 function removeQuestionsHotspot($cids){
 	
 	$database = JFactory::getDBO();
-	$query = "DELETE FROM #__quiz_t_hotspot WHERE c_question_id IN ( $cids )";
+	$query = "DELETE FROM `#__quiz_t_ext_hotspot` WHERE `c_question_id` IN ( $cids )";
 	$database->setQuery( $query );
 	$database->execute();
 	

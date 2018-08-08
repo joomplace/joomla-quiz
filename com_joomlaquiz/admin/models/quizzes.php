@@ -289,7 +289,30 @@ class JoomlaquizModelQuizzes extends JModelList
 					}
 				}
 				if ( ($quest2copy['c_type'] == 7)) {
-					$query = "SELECT * FROM #__quiz_t_hotspot WHERE c_question_id = '".$old_quest_id."'";
+
+                    $db = JFactory::getDbo();
+                    $query = $db->getQuery(true);
+                    $query->select($db->qn('c_image'))
+                        ->from($db->qn('#__quiz_t_question'))
+                        ->where($db->qn('c_id') .'='. $db->q((int)$old_quest_id));
+                    $db->setQuery($query);
+                    $image = $db->loadResult();
+                    if($image){
+                        $query->clear();
+                        $fields = array(
+                            $db->qn('c_image') .'='. $db->q($image)
+                        );
+                        $conditions = array(
+                            $db->qn('c_id') .'='. $db->q((int)$new_quest_id)
+                        );
+                        $query->update($db->qn('#__quiz_t_question'))
+                            ->set($fields)
+                            ->where($conditions);
+                        $db->setQuery($query)
+                            ->execute();
+                    }
+
+				    $query = "SELECT * FROM `#__quiz_t_ext_hotspot` WHERE c_question_id = '".$old_quest_id."'";
 					$database->setQuery( $query );
 					$fields_to_copy = $database->loadAssocList();
 					foreach ($fields_to_copy as $field2copy) {
@@ -411,7 +434,7 @@ class JoomlaquizModelQuizzes extends JModelList
 				$query = "DELETE FROM #__quiz_t_choice WHERE c_question_id IN ( $cids )";
 				$db->setQuery( $query );
 				$db->execute();
-				$query = "DELETE FROM #__quiz_t_hotspot WHERE c_question_id IN ( $cids )";
+				$query = "DELETE FROM #__quiz_t_ext_hotspot WHERE c_question_id IN ( $cids )";
 				$db->setQuery( $query );
 				$db->execute();
 				$query = "DELETE FROM #__quiz_t_matching WHERE c_question_id IN ( $cids )";

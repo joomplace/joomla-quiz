@@ -125,7 +125,8 @@ class com_joomlaquizInstallerScript
 			),
 			'lpath' => array(
 				'asset_id' => 'INT(18) NOT NULL',
-				'lp_access_message' => 'TEXT NOT NULL'
+				'lp_access_message' => 'TEXT NOT NULL',
+                'category' => 'INT(11) NULL'
 			),
 			'certificates' => array(
 				'text_font' => 'VARCHAR(255) NOT NULL'

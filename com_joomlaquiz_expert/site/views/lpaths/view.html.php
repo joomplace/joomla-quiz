@@ -32,7 +32,7 @@ class JoomlaquizViewLpaths extends JViewLegacy
             foreach ($this->lpath_data as $k=> $lpath) {
                 $viewAccessGranted = $this->user->authorise('core.access', 'com_joomlaquiz.lp.'.$lpath->id);
                 if (!$viewAccessGranted) {
-                    unset($this->$lpath[$k]);
+                    unset($this->lpath_data[$k]);
                 }
             }
         }

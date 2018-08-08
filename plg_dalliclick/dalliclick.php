@@ -57,7 +57,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 				if($img_data[0] == $img_data[1]){
 					$w = $h = $width;
 				}
-			}
+            } else {
+                $w = $img_data[0];
+                $h = $img_data[1];
+            }
 		}					
 		$dc_img = base64_encode(JURI::root()."images/joomlaquiz/images/".$data['q_data']->c_image);
 							
@@ -303,7 +306,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 				if($img_data[0] == $img_data[1]){
 					$w = $h = $width;
 				}
-			}
+            } else {
+                $w = $img_data[0];
+                $h = $img_data[1];
+            }
 		}		
 		
 		$feedback_data = array();
@@ -379,7 +385,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 				if($img_data[0] == $img_data[1]){
 					$w = $h = $width;
 				}
-			}
+			} else {
+                $w = $img_data[0];
+                $h = $img_data[1];
+            }
 		}
 		
 		$review_data = array();

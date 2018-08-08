@@ -266,6 +266,14 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name) {
 
     if(typeof Joomla !== 'undefined'){
         new_element_txt = Joomla.editors.instances[elem_field] ? Joomla.editors.instances[elem_field].getValue() : '';
+
+        //old versions of Joomla 3 (for example, 3.6.4)
+        if(!new_element_txt){
+            if(jQuery('#' + elem_field + '_ifr').length){
+                new_element_txt = jQuery('body',jQuery('iframe#' + elem_field + '_ifr').contents()).html();
+                jQuery('body',jQuery('iframe#' + elem_field + '_ifr').contents()).html('');
+            }
+        }
     }
 
     if (!TRIM_str(new_element_txt)) {
@@ -284,6 +292,15 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name) {
     if(typeof Joomla !== 'undefined' && Joomla.editors.instances['new_incorrect_feed']){
         new_incorrect_feed = Joomla.editors.instances['new_incorrect_feed'].getValue();
     }
+
+    //old versions of Joomla 3 (for example, 3.6.4)
+    if (!TRIM_str(new_incorrect_feed)) {
+        if( jQuery('#new_incorrect_feed_ifr').length ){
+            new_incorrect_feed = jQuery('body',jQuery('iframe#new_incorrect_feed_ifr').contents()).html();
+            jQuery('body',jQuery('iframe#new_incorrect_feed_ifr').contents()).html('');
+        }
+    }
+
     if(document.getElementById('new_incorrect_feed') !== null && document.getElementById('new_incorrect_feed') !== undefined) {
         document.getElementById("new_incorrect_feed").value = '';
     }

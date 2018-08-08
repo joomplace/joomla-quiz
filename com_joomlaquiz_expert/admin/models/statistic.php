@@ -23,8 +23,8 @@ class JoomlaquizModelStatistic extends JModelList
 		$app = JFactory::getApplication();
 	
 		// $quiz_id	= intval( $app->getUserStateFromRequest( "filter.quiz_id", 'filter_quiz_id', -1 ) );
-		$post=JFactory::getApplication()->input->post;
-		$quiz_id = $post->get('filter_quiz_id');
+        $post = \JFactory::getApplication()->input->post;
+        $quiz_id = $post->getInt('filter_quiz_id', 0);
 		/*if ($quiz_id < 1) {
 			$query = "SELECT c_quiz_id FROM #__quiz_r_student_quiz ORDER BY c_id DESC";
 			$database->setQuery( $query );
@@ -35,6 +35,11 @@ class JoomlaquizModelStatistic extends JModelList
 		$query = "SELECT c_id AS value, c_title AS text FROM #__quiz_t_quiz ORDER BY c_title";
 		$database->setQuery( $query );
 		$quizzes = $database->loadObjectList();
+
+		if($quizzes && is_array($quizzes)){
+            array_unshift($quizzes, (object) array('value' => 0, 'text' => JText::_('JSELECT')));
+        }
+
 		$javascript = 'onchange="document.adminForm.submit();"';
 		$quizzes = JHTML::_('select.genericlist', $quizzes, 'filter_quiz_id', 'class="text_area" size="1" style="max-width: 300px;" '.$javascript, 'value', 'text', $quiz_id ); 
 		

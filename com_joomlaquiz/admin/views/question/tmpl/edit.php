@@ -119,7 +119,15 @@ $ordering_list = $this->ordering_list;
 			if(count($this->add_form)){
 				foreach($this->add_form as $for => $item){?>
 				<div class="control-group">
-					<label class=" control-label" for="<?php echo $for;?>" id="<?php echo $for;?>-lbl" style="width:156px;"><?php echo $item['label']?></label>
+				<?php if ($for=='c_qform')
+			              echo $item['label'];
+				      else {?>
+                          <label class="hasPopover control-label" for="<?php echo $for; ?>"
+                                 title="<?php echo isset($item['label_title']) ? $item['label_title'] : $item['label']; ?>"
+                                 data-content="<?php echo isset($item['label_description']) ? $item['label_description'] : $item['label']; ?>"
+                                 id="<?php echo $for; ?>-lbl"
+                                 style="width:156px;"><?php echo $item['label'] ?></label>
+				<?php }?>
 					<div class="controls">
 						<?php echo $item['input']?>
 					</div>

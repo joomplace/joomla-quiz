@@ -60,7 +60,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		$appsLib = JqAppPlugins::getInstance();
 		$database = JFactory::getDBO();
 
-        $query = "SELECT q.c_id c_id, c_question, is_correct, c_point, c_type, c_score, q.c_right_message, q.c_wrong_message, a.c_feedback_pdf
+        $query = "SELECT q.c_id c_id, c_question, is_correct, c_point, c_type, c_score, q.c_right_message, q.c_wrong_message, a.c_feedback_pdf, a.c_right_message as quiz_right_message, a.c_wrong_message as quiz_wrong_message
             FROM #__quiz_r_student_question AS sq
             LEFT JOIN #__quiz_t_question AS q ON sq.c_question_id = q.c_id
             LEFT JOIN #__quiz_t_quiz AS a ON q.c_quiz_id = a.c_id 
@@ -71,7 +71,25 @@ class JoomlaquizModelPrintresult extends JModelList
 		JoomlaquizHelper::JQ_GetJoomFish($info['c_question'], 'quiz_t_question', 'c_question', $info['c_id']);
 		$type_id = $info['c_type'];
 		$qid = $info['c_id'];
-		
+
+        if(empty($info['c_right_message']))
+        if(!empty($info['quiz_right_message'])) {
+            $info['c_right_message'] = $info['quiz_right_message'];
+        } else {
+            $info['c_right_message'] = JText::_('COM_QUIZ_CORRECT');
+        }
+        unset($info['quiz_right_message']);
+        
+        if(empty($info['c_wrong_message']))
+        if(!empty($info['quiz_wrong_message'])) {
+            $info['c_wrong_message'] = $info['quiz_wrong_message'];
+        } else {
+            $info['c_wrong_message'] = JText::_('COM_QUIZ_INCORRECT');
+        }
+        unset($info['quiz_wrong_message']);
+        
+        
+        
 		$type = JoomlaquizHelper::getQuestionType($type_id);
 		$data = array();
 		$data['quest_type'] = $type;
@@ -435,7 +453,7 @@ class JoomlaquizModelPrintresult extends JModelList
 			
 			if ($data['c_feedback_pdf']){
 				$str = $data['is_correct'] ? $data['c_right_message'] : $data['c_wrong_message'];
-				$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
+				$pdf->writeHTML($str, true, 0, true, 0);
 				$pdf->Ln();
 			}
 		}

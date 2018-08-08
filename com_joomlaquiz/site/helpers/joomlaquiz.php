@@ -335,8 +335,8 @@ class JoomlaquizHelper
 					$q_text = str_replace("{blank".($i + 1)."}", $replacement, $q_text);
 				}
 			}
-			
-			return $q_text;
+
+            return '<div style="overflow:auto;">'.$q_text.'</div>';
 		}
 		
 		public static function Blnk_replace_quest_fdb($q_id, $q_text, $stu_quiz_id){

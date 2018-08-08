@@ -416,6 +416,18 @@ blockquote span{
 	/*position: absolute;*/
 	width: 100%;
 }
+#jq_quiz_container .progress {
+	background: #fff;
+	border-radius: 0;
+	box-shadow: none;
+	height: auto;
+}
+.jq_question_info_container{
+	margin-bottom:0;
+}
+#jq_quiz_container .progress.active .bar{
+	height: 0.75rem;
+}
 	
 /*------------- progressbar ----------------*/
 .jq_progressbar{

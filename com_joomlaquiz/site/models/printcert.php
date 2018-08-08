@@ -258,7 +258,8 @@ class JoomlaquizModelPrintcert extends JModelList
 						$field->f_text = str_replace("#email#", $u_email, $field->f_text);
 						$field->f_text = str_replace("#username#",$this->revUni($u_usrname), $field->f_text);
 						$field->f_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$sc_procent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $field->f_text);
-						$field->f_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $field->f_text);
+                                                $field->f_text = str_replace("#points#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$stu_quiz->user_score." ".JText::_('COM_QUIZ_CERT_OUT_OF')." ".number_format($stu_quiz->c_full_score, 0, '.', '')." ".JText::_('COM_QUIZ_CERT_POINTS'), $field->f_text);
+                                                $field->f_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $field->f_text);
 						$field->f_text = str_replace("#course#",$this->revUni($stu_quiz->c_title), $field->f_text);
 
 						if (count($cb_fields)) {

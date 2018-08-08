@@ -447,7 +447,17 @@ class JoomlaquizModelPrintresult extends JModelList
 			$pdf = $pdf_data['pdf'];
 
 			$pdf->Ln();
-			
+
+            if($data['c_type'] == 1){       //Multiple Choice
+                foreach($data['c_choice'] as $choice){
+                    if($choice['c_choice_id'] && $choice['c_incorrect_feed']){
+                        $data['c_right_message'] = $choice['c_incorrect_feed'];
+                        $data['c_wrong_message'] = $choice['c_incorrect_feed'];
+                        break;
+                    }
+                }
+            }
+
 			if ($data['c_feedback_pdf']){
 				$str = $data['is_correct'] ? $data['c_right_message'] : $data['c_wrong_message'];
 				$pdf->writeHTML($str, true, 0, true, 0);

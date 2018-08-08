@@ -68,7 +68,6 @@ var kol_main_elems = 0;
 var main_ids_array = new Array(kol_main_elems); //for likert quest
 // *** MESSAGES ***
 var mes_complete_this_part = '<?php echo addslashes( JText::_('COM_MES_COMPLETE_THIS_PART'))?>';
-var mes_loading = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/loading1.gif" border="0" alt="" title="" />';
 var mes_failed = '<?php echo addslashes( JText::_('COM_QUIZ_FAILED'))?>';
 var mes_please_wait = '<?php echo addslashes( JText::_('COM_MES_PLEASE_WAIT'))?>';
 var mes_time_is_up = '<?php echo addslashes(JText::_('COM_QUIZ_MES_TIMEOUT'))?>';

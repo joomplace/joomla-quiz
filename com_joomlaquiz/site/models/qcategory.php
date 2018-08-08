@@ -162,11 +162,19 @@ class JoomlaquizModelQcategory extends JModelList
         $bought_quizzes = array();
         if (array_key_exists('q', $rel_quizzes) && count($rel_quizzes['q'])) {
             foreach ($rel_quizzes['q'] as $data) {
-                if (!in_array($data->rel_id, $purch_quizzes)
-                    || empty($all_quizzez[$data->rel_id])
-                ) {
+
+                $inAll = false;
+                foreach($all_quizzez as $quiz){
+                    if((int)$quiz->c_id == (int)$data->rel_id){
+                        $inAll = true;
+                        break;
+                    }
+                }
+
+                if (!in_array($data->rel_id, $purch_quizzes) || !$inAll){
                     continue;
                 }
+
                 if ($data->xdays > 0) {
                     $data->suffix = sprintf(JText::_('COM_QUIZ_XDAYS'),
                         $data->xdays);
@@ -214,7 +222,14 @@ class JoomlaquizModelQcategory extends JModelList
                         . sprintf(JText::_('COM_QUIZ_ATTEMPTS'),
                             $data->attempts);
                 }
-                $data->row        = $all_quizzez[$data->rel_id];
+
+                foreach($all_quizzez as $quiz){
+                    if((int)$quiz->c_id == (int)$data->rel_id){
+                        $data->row = $quiz;
+                        break;
+                    }
+                }
+
                 $data->pid        = $data->order_id;
                 $bought_quizzes[] = $data;
             }

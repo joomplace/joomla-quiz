@@ -202,9 +202,9 @@ class JoomlaquizModelResults extends JModelList
 		$query->select("e.enabled, sp.c_id, sp.c_score, q.c_type, q.c_point, q.c_question, qt.c_qtype, sp.c_question_id");		
 		$query->from("#__quiz_r_student_question as sp");		
 		$query->leftJoin("#__quiz_t_question as q ON sp.c_question_id = q.c_id");		
-		$query->leftJoin("#__quiz_t_qtypes as qt ON q.c_type = qt.c_id");		
-		$query->leftJoin("`#__extensions` as `e` ON e.element = qt.c_type");		
-		$query->where("sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'");	
+		$query->leftJoin("#__quiz_t_qtypes as qt ON q.c_type = qt.c_id");
+        $query->leftJoin("`#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = qt.c_type");
+		$query->where("sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'");
 		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
 			$query->where('`q`.`c_type` != 9');	
 		}	
@@ -216,8 +216,8 @@ class JoomlaquizModelResults extends JModelList
 		$app = JFactory::getApplication();		
 		$database = JFactory::getDBO();				
 		$query = "SELECT e.enabled, sp.c_id, sp.c_score, q.c_type, q.c_point, q.c_question, qt.c_qtype, sp.c_question_id"		
-		. "\n FROM #__quiz_r_student_question as sp LEFT JOIN #__quiz_t_question as q ON (sp.c_question_id = q.c_id AND q.published = 1) LEFT JOIN #__quiz_t_qtypes as qt ON q.c_type = qt.c_id LEFT JOIN `#__extensions` as `e` ON e.element = qt.c_type"		
-		. "\n WHERE sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'"		
+        . "\n FROM #__quiz_r_student_question as sp LEFT JOIN #__quiz_t_question as q ON (sp.c_question_id = q.c_id AND q.published = 1) LEFT JOIN #__quiz_t_qtypes as qt ON q.c_type = qt.c_id LEFT JOIN `#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = qt.c_type"
+        . "\n WHERE sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'"
 		. "\n ORDER BY q.ordering, q.c_id"		
 		. "\n LIMIT $pagination->limitstart, $pagination->limit";				
 		$database->SetQuery( $query );		

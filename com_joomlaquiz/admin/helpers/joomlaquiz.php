@@ -34,8 +34,8 @@ class JoomlaquizHelper
 			
 			$total_score = 0;
 			$database = JFactory::getDBO();
-			$query = "SELECT SUM(q.c_point) FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON e.element = b.c_type WHERE q.c_quiz_id = '".$qid."' AND q.published = 1 AND q.c_type != 11 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1";
-			$database->SetQuery( $query );
+            $query = "SELECT SUM(q.c_point) FROM #__quiz_t_question as q LEFT JOIN `#__quiz_t_qtypes` as `b` ON b.c_id = q.c_type LEFT JOIN `#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = b.c_type WHERE q.c_quiz_id = '".$qid."' AND q.published = 1 AND q.c_type != 11 AND e.folder = 'joomlaquiz' AND e.type = 'plugin' AND e.enabled = 1";
+            $database->SetQuery( $query );
 			$total_score = $database->LoadResult();
 			
 			jimport('joomla.filesystem.folder');

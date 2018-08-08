@@ -759,25 +759,46 @@ class JoomlaquizHelper
 				$database->SetQuery( $query );
 				$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
 			}
-			
-			$attempts = (!empty($products_stat) && array_key_exists($rel_id, $products_stat) && $products_stat[$rel_id]->attempts ? $products_stat[$rel_id]->attempts : 0);
-			if($product_data->attempts && ($product_data->attempts * $product_quantity) <= $attempts) {
-				$quiz_params[0]->error = 1;
-				$quiz_params[0]->message = '<p align="left">'.JText::_('COM_ACCESS_EXPIRED').'</p>';
-				return $quiz_params[0];
-			}
+
+			if($product_data->type == 'q') {
+                $attempts = (!empty($products_stat) && array_key_exists($rel_id, $products_stat) && $products_stat[$rel_id]->attempts ? $products_stat[$rel_id]->attempts : 0);
+                if ($product_data->attempts && ($product_data->attempts * $product_quantity) <= $attempts) {
+                    $quiz_params[0]->error = 1;
+                    $quiz_params[0]->message = '<p align="left">' . JText::_('COM_ACCESS_EXPIRED') . '</p>';
+                    return $quiz_params[0];
+                }
+            }
+            else if($product_data->type == 'l'){
+                $query = "SELECT * FROM `#__quiz_lpath_stage` 
+                          WHERE `uid` = {$my->id} AND `rel_id` = {$rel_id}  AND `lpid` = {$rel_check[0]->rel_id} 
+                          AND `type` = 'q' AND oid = '{$package_id}' ";
+                $database->SetQuery( $query );
+                $quiz_lpath_stage = $database->loadObjectList();
+                $yet_attempts = false;
+                if($quiz_lpath_stage && is_array($quiz_lpath_stage) && !empty($quiz_lpath_stage)){
+                    for($i=0; $i<count($quiz_lpath_stage); $i++){
+                        if($quiz_lpath_stage[$i]->attempts < ($product_data->attempts * $product_quantity)){
+                            $yet_attempts = true;
+                        }
+                    }
+                }
+                if(!$yet_attempts){
+                    $quiz_params[0]->error = 1;
+                    $quiz_params[0]->message = '<p align="left">' . JText::_('COM_ACCESS_EXPIRED') . '</p>';
+                    return $quiz_params[0];
+                }
+            }
 			
 			if($rel_check[0]->type == 'q') {
 				$_SESSION['quiz_check_rel_item'] = 1;
 				$_SESSION['quiz_check_rel_order_id'] = $package_id;
 				$_SESSION['quiz_check_rel_item_id'] = $rel_check[0]->rel_id;
-		
 				$mainframe->redirect(JURI::root()."index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$rel_check[0]->rel_id}&force=1");
-			} else if($rel_check[0]->type == 'l') {
-				$lpath_id = $rel_check[0]->rel_id;
 			}
-
-			return $lpath_id;
+			else if($rel_check[0]->type == 'l') {
+				$lpath_id = $rel_check[0]->rel_id;
+                return $lpath_id;
+			}
 		}
 		
 		public static function getTotalScore($qch_ids, $quiz_id){

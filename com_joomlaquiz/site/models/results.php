@@ -52,9 +52,6 @@ class JoomlaquizModelResults extends JModelList
 		if(!$quiz_ids){
 			return 'no_access';
 		}
-
-		/* seems not used */
-		$GLOBALS['quiz_access_cert'] = $quiz_access_cert;
 		
 		/* getting results list */
 		$query->clear();

@@ -2693,6 +2693,9 @@ class JoomlaquizModelAjaxaction extends JModelList
                                 $ret_str .= "\t"
                                     . '<quest_message_box><![CDATA[' . $msg_html
                                     . ']]></quest_message_box>' . "\n";
+                            } elseif($c_quest_cur_attempt > $c_all_attempts
+                                && $c_all_attempts == 0){
+                                $ret_str .= "\t" . '<quest_task>disabled</quest_task>' . "\n";
                             } else {
                                 $ret_str .= "\t" . '<quest_task>ok</quest_task>'
                                     . "\n";
@@ -2724,6 +2727,9 @@ class JoomlaquizModelAjaxaction extends JModelList
                             JText::_('COM_MES_NO_ATTEMPTS'));
                         $ret_str .= "\t" . '<quest_message_box><![CDATA['
                             . $msg_html . ']]></quest_message_box>' . "\n";
+                    } elseif($c_quest_cur_attempt > $c_all_attempts
+                        && $c_all_attempts == 0){
+                        $ret_str .= "\t" . '<quest_task>disabled</quest_task>' . "\n";
                     } else {
                         $ret_str .= "\t" . '<quest_task>ok</quest_task>' . "\n";
                     }

@@ -12,9 +12,11 @@
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-abstract class JoomlaQuizTemplateClass {
-	
-	public abstract static function JQ_getTemplateName();
+interface JoomlaQuizTemplateInterface {
+    static function JQ_getTemplateName();
+}
+
+abstract class JoomlaQuizTemplateClass implements JoomlaQuizTemplateInterface {
 	
 	public static function JQ_MainScreen($descr) {
 		

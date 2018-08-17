@@ -27,7 +27,6 @@ class JoomlaquizModelReactivates extends JModelList
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
 				'order_id',
-				'product_name',
 				'order_status_name',
 				'name',
 				);
@@ -102,8 +101,10 @@ class JoomlaquizModelReactivates extends JModelList
                 (count($where) ? " WHERE ".implode(' AND ', $where) : "").")" .
                 " UNION (".$novm_query.")";
         }
-		
-		$query .= "\n ORDER BY name, vm, order_id";
+
+        $orderCol	= $this->state->get('list.ordering', '`order_id`');
+        $orderDirn	= $this->state->get('list.direction', 'ASC');
+        $query .= "\n ORDER BY " . $orderCol.' '.$orderDirn;
 
        	return $query;
     }

@@ -544,6 +544,7 @@
 		
 		function jq_UnselectCheckbox(che) {
 			<?php if ($q_om_type == 1) { ?>
+			/*
 			f_name = che.form.name;
 			ch_name = che.name;
 						
@@ -568,6 +569,14 @@
 			}
 			if (a)
 			che.checked = true;
+			*/
+
+			var currentChecked = jQuery(che).prop('checked');
+			jQuery('input[name="jq_checked[]"], #qfld_tbl').each(function(){
+			    jQuery(this).prop('checked', false);
+			});
+			jQuery(che).prop('checked', currentChecked);
+
 		<?php } else { ?>
 			return;
 		<?php } ?>

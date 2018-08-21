@@ -578,7 +578,9 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 					$new_field->c_choice = stripslashes($f_row);
 					$new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);
 					
-					$new_field->c_right = in_array(($field_order+ 1), $ans_right)?1:0;
+					//$new_field->c_right = in_array(($field_order+ 1), $ans_right)?1:0;
+                    $new_field->c_right = in_array($field_order, $ans_right)?1:0;
+
 					$new_field->ordering = $field_order;
 					$new_field->a_point = floatval($_POST['jq_a_points'][$mcounter]);
 					$new_field->c_quiz_id	= intval($_POST['jform']['c_quiz_id']);

@@ -1914,7 +1914,44 @@ class JoomlaquizModelAjaxaction extends JModelList
 				JoomlaquizHelper::JQ_load_template($cur_tmpl);
 				if (isset($q_data[$j])) {
 					$ret_str .= "\t" . '<task>review_next</task>' . "\n";				
-					$ret_str .= $this->JQ_GetQuestData_review($q_data[$j], $quiz_id, $stu_quiz_id);
+					//$ret_str .= $this->JQ_GetQuestData_review($q_data[$j], $quiz_id, $stu_quiz_id);
+                    $str = $this->JQ_GetQuestData_review($q_data[$j], $quiz_id, $stu_quiz_id);
+                    $ret_add = $str;
+                    $img_urls = array();
+                    $pat_im = '/<img[^>]+src=([\'|\"])([^>]+)\1[^>]*>/iU';
+                    $pat_url = '/^(http|https|ftp):\/\//i';
+                    $out_arr = preg_split($pat_im, $ret_add);
+                    if(preg_match_all($pat_im, $ret_add, $quest_images, PREG_SET_ORDER))
+                    {
+                        foreach($quest_images as $img_c => $quest_image){
+                            $img_urls[$img_c] = @$quest_image[2];
+                            if(preg_match($pat_url, $img_urls[$img_c], $url_match)){
+                                $img_urls[$img_c] = '';
+                            }
+                        }
+                    }
+
+                    $out_html = "";
+                    if(count($out_arr))
+                    {
+                        foreach($out_arr as $html_c => $html_peace){
+                            if(count($out_arr) != $html_c && isset($img_urls[$html_c])){
+                                if(!$img_urls[$html_c]){
+                                    $out_html .= $html_peace.$quest_images[$html_c][0];
+                                } else {
+                                    $src_arr = explode($quest_images[$html_c][2], $quest_images[$html_c][0]);
+                                    $img_tag = implode(JURI::root().$quest_images[$html_c][2], $src_arr);
+                                    $out_html .= $html_peace.$img_tag;
+                                }
+                            } else {
+                                $out_html .= $html_peace;
+                            }
+                        }
+                    }
+
+                    $ret_add = ($out_html) ? $out_html : $ret_add;
+
+                    $ret_str .= $ret_add;
 				} else {
 					$ret_str .= "\t" . '<task>review_finish</task>' . "\n";
 				}

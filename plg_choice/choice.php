@@ -66,11 +66,15 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         if ((preg_match('/pretty_green/', $data['cur_template']) || preg_match('/pretty_blue/', $data['cur_template'])) && $data['q_data']->c_qform) {
             $data['ret_add_script'] = "jq_jQuery(function() {jq_jQuery('.chzn-select').chosen()});";
         }
-        preg_match_all('/src=\"([^\/](?!\:\/\/)[^\"]*)\"/i', $data['ret_str'], $preg);
-        if (!empty($preg[1]))
+        preg_match_all('~src\s*=\s*\"([^\/](?!\:\/\/)[^\"]*)\"~i', $data['ret_str'], $preg);
+        if (!empty($preg[1])) {
             foreach ($preg[1] as $p) {
-                $data['ret_str'] = str_replace('src="' . $p, 'src="/' . $p, $data['ret_str']);
+                if (strpos($p, "http") === false) {
+                    $search_arr = array('src ="' . $p, 'src= "' . $p, 'src = "' . $p, 'src="' . $p);
+                    $data['ret_str'] = str_replace($search_arr, 'src="/' . $p, $data['ret_str']);
+                }
             }
+        }
         return $data;
     }
 
@@ -259,6 +263,18 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         $feedback_data = array();
         $feedback_data['choice_data'] = $choice_data;
         $feedback_data['uanswer'] = $uanswer;
+
+        foreach ($feedback_data['choice_data'] as $qone) {
+            preg_match_all('~src\s*=\s*\"([^\/](?!\:\/\/)[^\"]*)\"~i', $qone->text, $preg);
+            if (!empty($preg[1])) {
+                foreach ($preg[1] as $p) {
+                    if (strpos($p, "http") === false) {
+                        $search_arr = array('src ="' . $p, 'src= "' . $p, 'src = "' . $p, 'src="' . $p);
+                        $qone->text = str_replace($search_arr, 'src="/' . $p, $qone->text);
+                    }
+                }
+            }
+        }
 
         $qhtml = JoomlaQuiz_template_class::JQ_createFeedback($feedback_data, $data);
 

@@ -15,195 +15,181 @@ jimport('joomla.application.component.modellist');
  */
 class JoomlaquizModelResults extends JModelList
 {	
-	public function getResults(){
-		
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$user = JFactory::getUser();
-		$app = JFactory::getApplication();
-		
-		$limitstart	= JFactory::getApplication()->input->get('limitstart', 0);
-		$limit = $app->getUserStateFromRequest('com_joomlaquiz.limit', 'limit', 20, 'INT');
-		
-		/* Only for logged in users */
-		if(!$user->id) {
-			return;
-		}
-		
-		/* loading quiz ids */
-		$query->clear();
-		$query->select($db->qn('c_id'))
-			->from($db->qn('#__quiz_t_quiz'))
-			->where($db->qn('c_id').' <> 0');
-		$db->setQuery($query);
-		$quiz_ids = $db->loadColumn();
+	public function getResults()
+    {
+        $user = JFactory::getUser();
+        // Only for logged users
+        if(!$user->id) {
+            return;
+        }
 
-		/* checking access to results and certificates */
-		$quiz_cert = array();
-		if($quiz_ids) 
-			foreach($quiz_ids as $key => $quiz){
-				if(!$user->authorise('core.result', 'com_joomlaquiz.quiz.'.$quiz)){
-					unset($quiz_ids[$key]);
-				}else{
-					$quiz_cert[] = $quiz;
-				}
-			}
-		
-		if(!$quiz_ids){
-			return 'no_access';
-		}
-		
-		/* getting results list */
-		$query->clear();
-		$query->select($db->qn('sq.unique_id'))
-			->select($db->qn('sq.c_id','id'))
-			->select('SUM('.$db->qn('squ.c_score').') AS user_score')
-			->select($db->qn('sq.c_passed'))
-			->select($db->qn('sq.c_total_score'))
-			->select($db->qn('sq.c_total_time'))
-			->select($db->qn('sq.c_date_time'))
-			->select($db->qn('sq.c_passing_score','sq_c_passing_score'))
-			->select($db->qn('sq.c_quiz_id'))
-			->select($db->qn('sq.c_student_id'))
-			->select($db->qn('sq.user_name'))
-			->select($db->qn('sq.user_surname'))
-			->select($db->qn('q.c_id'))
-			->select($db->qn('q.c_title'))
-			->select($db->qn('q.c_author'))
-			->select($db->qn('q.c_passing_score'))
-            ->select($db->qn(array('sq.c_max_score'),array('c_full_score')))   //'sq.c_max_score' as 'c_full_score'
-			->select($db->qn('q.c_pool'))
-			->select($db->qn('q.c_grading'))
-			->select($db->qn('q.c_certificate'))
-			->select($db->qn('u.username'))
-			->select($db->qn('u.name'))
-			->select($db->qn('u.email'))
-			->select($db->qn('ch.q_chain'))
-			->from($db->qn('#__quiz_r_student_quiz','sq'))
-			->join('left',$db->qn('#__quiz_r_student_question','squ').' ON '.$db->qn('sq.c_id').' = '.$db->qn('squ.c_stu_quiz_id'))
-			->join('left',$db->qn('#__users','u').' ON '.$db->qn('sq.c_student_id').' = '.$db->qn('u.id'))
-			->join('left',$db->qn('#__quiz_q_chain','ch').' ON '.$db->qn('ch.s_unique_id').' = '.$db->qn('sq.unique_id'))
-			->join('left',$db->qn('#__quiz_t_quiz','q').' ON '.$db->qn('sq.c_quiz_id').' = '.$db->qn('q.c_id'))
-			->where($db->qn('q.c_id').' IN ('.implode(",", $quiz_ids).')')
-			->group($db->qn('squ.c_stu_quiz_id'))
-			->order($db->qn('sq.c_date_time').' DESC');
+        $app = JFactory::getApplication();
+        $limitstart	= $app->input->getInt('limitstart', 0);
+        $limit = $app->getUserStateFromRequest('com_joomlaquiz.limit', 'limit', 20, 'INT');
+
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        // loading quizzes ids
+        $query->select($db->qn('c_id'))
+            ->from($db->qn('#__quiz_t_quiz'));
+        $db->setQuery($query);
+        $quiz_ids = $db->loadColumn();
+
+        // checking access to results
+        if($quiz_ids) {
+            foreach ($quiz_ids as $key => $quiz) {
+                if (!$user->authorise('core.result', 'com_joomlaquiz.quiz.' . $quiz)) {
+                    unset($quiz_ids[$key]);
+                }
+            }
+            $quiz_ids = array_values($quiz_ids);
+        }
+        if(!$quiz_ids){
+            return;
+        }
+
+        foreach ($quiz_ids as $quiz_id){
+            $quiz_id = $db->q($quiz_id);
+        }
+
+        $query->clear();
+        $query->select($db->qn('sq.c_quiz_id'))
+            ->select($db->qn('sq.c_id'))
+            ->select($db->qn('q.c_grading'))
+            ->select($db->qn('q.c_pool'))
+            ->from($db->qn('#__quiz_r_student_quiz','sq'))
+            ->join('left',$db->qn('#__quiz_r_student_question','squ').' ON '.$db->qn('sq.c_id').' = '.$db->qn('squ.c_stu_quiz_id'))
+            ->join('left',$db->qn('#__quiz_t_quiz','q').' ON '.$db->qn('sq.c_quiz_id').' = '.$db->qn('q.c_id'))
+            ->where($db->qn('q.c_id').' IN ('.implode(",", $quiz_ids).')')
+            ->group($db->qn('squ.c_stu_quiz_id'))
+            ->order($db->qn('sq.c_date_time').' DESC')
+            ->setLimit($limit, $limitstart);
 
         if(!$user->authorise('core.managefe','com_joomlaquiz')){
-			$query->where($db->qn('c_student_id').' = '.$db->q($user->id));
-		}
-		
-		$db->setQuery( $query );
-		$rows = $db->loadObjectList();
-		
-		$gquizzes = array();
-		foreach($rows as $i=>$row){			
-			/* check manual grading */
-			$query->clear();
-			$query->select($db->q('1'))
-				->from($db->qn('#__quiz_t_question','q'))
-				->from($db->qn('#__quiz_r_student_question','sq'))
-				->where($db->qn('q.published').' = '.$db->q('1'))
-				->where($db->qn('q.c_manual').' = '.$db->q('1'))
-				->where($db->qn('reviewed').' = '.$db->q('0'))
-				->where($db->qn('q.c_id').' = '.$db->qn('sq.c_question_id'))
-				->where($db->qn('sq.c_stu_quiz_id').' = '.$db->q($row->c_id));
-			$db->setQuery( $query );
-			
-			$not_graded = $db->loadResult();
-			
-			/* getting score (why so big set of data??? - need tests) */
-			$query->clear();
-			$query->select($db->qn('sq.unique_id'))
-				->select($db->qn('sq.c_passed'))
-				->select($db->qn('sq.c_total_time'))
-				->select($db->qn('sq.c_date_time'))
-				->select($db->qn('sq.c_passing_score','sq_c_passing_score'))
-				->select($db->qn('sq.c_quiz_id'))
-				->select($db->qn('q.c_id'))
-				->select($db->qn('q.c_title'))
-				->select($db->qn('q.c_author'))
-				->select($db->qn('q.c_passing_score'))
-				->select($db->qn('sq.c_student_id'))
-				->select($db->qn('sq.c_student_id'))
-				->select($db->qn('u.username'))
-				->select($db->qn('u.name'))
-				->select($db->qn('u.email'))
-                ->select($db->qn(array('sq.c_max_score'),array('c_full_score')))
-				->select($db->qn('q.c_pool'))
-				->select($db->qn('ch.q_chain'))
-				->select($db->qn('q.c_grading'))
-				->select($db->qn('q.c_certificate'))
-				->from($db->qn('#__quiz_r_student_quiz','sq'))
-				->join('left', $db->qn('#__users','u').' ON '.$db->qn('sq.c_student_id').' = '.$db->qn('u.id'))
-				->join('left', $db->qn('#__quiz_q_chain','ch').' ON '.$db->qn('ch.s_unique_id').' = '.$db->qn('sq.unique_id'))
-				->join('left', $db->qn('#__quiz_t_quiz','q').' ON '.$db->qn('sq.c_quiz_id').' = '.$db->qn('q.c_id'))
-				->where($db->qn('sq.c_quiz_id').' = '.$db->q($row->c_quiz_id));
+            $query->where($db->qn('sq.c_student_id').' = '.$db->q($user->id));
+        }
 
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        $total_rows = 0;
+        if($rows && !empty($rows)){
+            $query->clear();
+            $query->select('COUNT(*)')
+                ->from($db->qn('#__quiz_r_student_quiz','sq'))
+                ->join('left',$db->qn('#__quiz_r_student_question','squ').' ON '.$db->qn('sq.c_id').' = '.$db->qn('squ.c_stu_quiz_id'))
+                ->join('left',$db->qn('#__quiz_t_quiz','q').' ON '.$db->qn('sq.c_quiz_id').' = '.$db->qn('q.c_id'))
+                ->where($db->qn('q.c_id').' IN ('.implode(",", $quiz_ids).')')
+                ->group($db->qn('squ.c_stu_quiz_id'));
             if(!$user->authorise('core.managefe','com_joomlaquiz')){
-				$query->where($db->qn('c_student_id').' = '.$db->q($user->id));
-			}
-			
-			if($row->c_grading){
-				$gquizzes[] = $row->c_quiz_id;
-				switch($row->c_grading){
-					case 1:
-						// grade by first attempt
-						$query->select($db->qn('sq.c_id','id'))
-							->select($db->qn('sq.c_total_score'))
-							->order($db->qn('sq.c_id').' ASC');
-						break;
-					case 2:
-						// grade by last attempt
-						$query->select($db->qn('sq.c_id','id'))
-							->select($db->qn('sq.c_total_score'))
-							->order($db->qn('sq.c_id').' DESC');
-						break;
-					case 3:
-						// grade by highest score
-						$query->select($db->qn('sq.c_id','id'))
-							->select($db->qn('sq.c_total_score'))
-							->order($db->qn('sq.c_total_score').' DESC');
-						break;
-					case 4:
-						// grade by average score
-						$query->select('MAX('.$db->qn('sq.c_id').') AS '.$db->qn('id' /* was `c_id` */))
-							->select('AVG('.$db->qn('sq.c_total_score').') AS '.$db->qn('c_total_score'))
-							->order($db->qn('sq.c_date_time').' DESC')
-							->group($db->qn('sq.c_quiz_id'));
-						break;
-				}
-				$db->setQuery( $query );
-				$row = $db->loadObject();
-			}
-				
-			if ($not_graded){
-				$row->c_passed = -1;
-				$row->c_total_score = JText::_('COM_JQ_SCORE_PENDING');
-			}
-			
-		}
+                $query->where($db->qn('sq.c_student_id').' = '.$db->q($user->id));
+            }
+            $db->setQuery($query);
+            $total_rows = $db->loadResult();
+        }
 
-		$total = count($rows);
-		if($limit)
-			$rows = array_slice($rows, $limitstart, $limit);
-		else
-			$rows = array_slice($rows, $limitstart);
-		$rows = array_merge($rows, array());
-				
-		for($i=0, $n=count($rows); $i<$n; $i++) {
-			if ($rows[$i]->c_pool) {
-				$qids = str_replace('*', ",", $rows[$i]->q_chain);
-				$total_score = 0;
-				
-				$total_score = JoomlaquizHelper::getTotalScore($qids, $rows[$i]->c_id);
-				$rows[$i]->	c_full_score = $total_score;
-			}
-		}
-		
-		jimport('joomla.html.pagination');
-		$pagination = new JPagination($total, $limitstart, $limit);
-		
-		return array($rows, $pagination);
+        $quizzes = array();
+        foreach($rows as $row){
+
+            $query->clear();
+            $query->select($db->qn('sq.unique_id'))
+                ->select($db->qn('sq.c_id','id'))
+                ->select('SUM('.$db->qn('squ.c_score').') AS user_score')
+                ->select($db->qn('sq.c_passed'))
+                ->select($db->qn('sq.c_total_time'))
+                ->select($db->qn('sq.c_date_time'))
+                ->select($db->qn('sq.c_passing_score','sq_c_passing_score'))
+                ->select($db->qn('sq.c_quiz_id'))
+                ->select($db->qn('sq.c_total_score'))
+                ->select($db->qn('sq.user_name'))
+                ->select($db->qn('sq.user_surname'))
+                ->select($db->qn('q.c_id'))
+                ->select($db->qn('q.c_title'))
+                ->select($db->qn('q.c_author'))
+                ->select($db->qn('q.c_passing_score'))
+                ->select($db->qn('sq.c_student_id'))
+                ->select($db->qn('u.username'))
+                ->select($db->qn('u.name'))
+                ->select($db->qn('u.email'))
+                ->select($db->qn(array('sq.c_max_score'),array('c_full_score')))
+                ->select($db->qn('q.c_pool'))
+                ->select($db->qn('ch.q_chain'))
+                ->select($db->qn('q.c_grading'))
+                ->select($db->qn('q.c_certificate'))
+                ->from($db->qn('#__quiz_r_student_quiz','sq'))
+                ->join('left',$db->qn('#__quiz_r_student_question','squ').' ON '.$db->qn('sq.c_id').' = '.$db->qn('squ.c_stu_quiz_id'))
+                ->join('left', $db->qn('#__users','u').' ON '.$db->qn('sq.c_student_id').' = '.$db->qn('u.id'))
+                ->join('left', $db->qn('#__quiz_q_chain','ch').' ON '.$db->qn('ch.s_unique_id').' = '.$db->qn('sq.unique_id'))
+                ->join('left', $db->qn('#__quiz_t_quiz','q').' ON '.$db->qn('sq.c_quiz_id').' = '.$db->qn('q.c_id'))
+                ->where($db->qn('sq.c_id').' = '.$db->q((int)$row->c_id));
+
+            if($row->c_grading){
+                switch($row->c_grading){
+                    case 1:
+                        // grade by first attempt
+                        $query->select($db->qn('sq.c_id','id'))
+                            ->select($db->qn('sq.c_total_score'))
+                            ->order($db->qn('sq.c_id').' ASC');
+                        break;
+                    case 2:
+                        // grade by last attempt
+                        $query->select($db->qn('sq.c_id','id'))
+                            ->select($db->qn('sq.c_total_score'))
+                            ->order($db->qn('sq.c_id').' DESC');
+                        break;
+                    case 3:
+                        // grade by highest score
+                        $query->select($db->qn('sq.c_id','id'))
+                            ->select($db->qn('sq.c_total_score'))
+                            ->order($db->qn('sq.c_total_score').' DESC');
+                        break;
+                    case 4:
+                        // grade by average score
+                        $query->select('MAX('.$db->qn('sq.c_id').') AS '.$db->qn('id' /* was `c_id` */))
+                            ->select('AVG('.$db->qn('sq.c_total_score').') AS '.$db->qn('c_total_score'))
+                            ->order($db->qn('sq.c_date_time').' DESC')
+                            ->group($db->qn('sq.c_quiz_id'));
+                        break;
+                }
+            }
+
+            $db->setQuery( $query );
+            $data = $db->loadObject();
+
+            // check manual grading
+            $query->clear();
+            $query->select($db->q('1'))
+                ->from($db->qn('#__quiz_t_question','q'))
+                ->from($db->qn('#__quiz_r_student_question','sq'))
+                ->where($db->qn('q.published').' = '.$db->q('1'))
+                ->where($db->qn('q.c_manual').' = '.$db->q('1'))
+                ->where($db->qn('sq.reviewed').' = '.$db->q('0'))
+                ->where($db->qn('q.c_id').' = '.$db->qn('sq.c_question_id'))
+                ->where($db->qn('sq.c_stu_quiz_id').' = '.(int)$db->q($row->c_id));
+            $db->setQuery( $query );
+            $not_graded = $db->loadResult();
+
+            if ($not_graded){
+                $data->c_passed = -1;
+                $data->c_total_score = JText::_('COM_JQ_SCORE_PENDING');
+            }
+
+            $quizzes[] = $data;
+        }
+
+        for($i=0, $n=count($quizzes); $i<$n; $i++) {
+            if ($quizzes[$i]->c_pool) {
+                $qids = str_replace('*', ",", $quizzes[$i]->q_chain);
+                $total_score = JoomlaquizHelper::getTotalScore($qids, $quizzes[$i]->c_id);
+                $quizzes[$i]->c_full_score = $total_score;
+            }
+        }
+
+        jimport('joomla.html.pagination');
+        $pagination = new JPagination($total_rows, $limitstart, $limit);
+
+        return array($quizzes, $pagination);
 	}
 	
 	public function getQuizParams(){

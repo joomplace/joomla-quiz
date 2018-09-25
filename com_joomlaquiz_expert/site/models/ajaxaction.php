@@ -1465,7 +1465,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$is_attempts = true;
 						$plugin = (isset($_REQUEST['plug'])) ? $_REQUEST['plug'] : 0;
 						
-						$href = ($plugin) ? JRoute::_('index.php'.$plugin) : JRoute::_("index.php?option=com_joomlaquiz&view=quiz&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId());
+						$href = ($plugin) ? JRoute::_('index.php'.$plugin) : JRoute::_("index.php?Itemid=" . JFactory::getApplication()->input->get('Itemid') . "&force=1");
 						$footer_ar[6] = "<div class='jq_footer_link jq_try_again'><a href='".$href."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 					}
 					

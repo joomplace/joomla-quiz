@@ -27,7 +27,7 @@ $document->addStyleSheet(JURI::root().'components/com_joomlaquiz/assets/css/joom
 	<?php foreach($lpath_list as $k=>$lpath_item) { ?>
 		<div class="row lp-link-row">
 			<div class="span12 lp-link">
-				<a href="<?= JRoute::_('/index.php?option=com_joomlaquiz&view=lpath&lpath_id='.$lpath_item->id) ?>"><h2><?= $lpath_item->title?></h2></a>
+				<a href="<?= JRoute::_('index.php?option=com_joomlaquiz&view=lpath&lpath_id='.$lpath_item->id) ?>"><h2><?= $lpath_item->title?></h2></a>
 			</div>
 		</div>
 	<?php } ?>

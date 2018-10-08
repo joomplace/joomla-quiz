@@ -770,8 +770,10 @@ function jq_AnalizeRequest(http_request) {
 					<?php if(preg_match("/pretty_green/", $quiz->template_name) && $quiz->c_show_timer){?>
 					jq_jQuery(".jq_time_tick_container").css("visibility", "hidden");
 					<?php } ?>
+
 					quiz_blocked = 1;
-					setTimeout("jq_releaseBlock()", 1000);
+                    jq_getObj('jq_time_tick_container').style.visibility = "hidden";
+                    setTimeout("jq_releaseBlock()", 1000);
 					try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {}
 					var quiz_cont = jq_getObj('jq_quiz_container');
 					jq_getObj('jq_quiz_container').style.display = '';
@@ -1343,8 +1345,8 @@ function jq_StartQuiz() {
 
 function JQ_gotoQuestionOn(qid) {
 
-	clearInterval(quest_timer);
-	jq_jQuery('#jq_time_tick_container').html('');
+	<!--clearInterval(quest_timer);-->
+	<!--jq_jQuery('#jq_time_tick_container').html('');-->
 	if(jq_jQuery('#jq_total_memory_point')){
 		jq_jQuery('#jq_total_memory_point').remove();
 		jq_jQuery('#jq_current_memory_point').remove();
@@ -1470,7 +1472,6 @@ function jq_Check_valueItem(item_name, form_name) {
 
 function jq_QuizNextOn() { // Two steps CHECK (delete this func in the future)
     clearInterval(quest_timer);
-    jq_getObj('jq_time_tick_container').style.visibility = "hidden";
     for(var n=0; n < quest_count; n++) {
 		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 0, '');
 	   // jq_QuizContinueFinish

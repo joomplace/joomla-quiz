@@ -109,6 +109,7 @@ var path_elems = new Array();
 var mes_question_is_misconfigured = '<?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IS_CONFIGURED');?>';
 var margin_top = '<?php echo $this->margin_top?>';
 var qs = getParameter('qs');
+var quiz_pagination = <?php echo $quiz->c_pagination; ?>
 
 <?php
 $live_url = JURI::root();
@@ -496,10 +497,10 @@ function jq_AnalizeRequest(http_request) {
 							quest_timer_sec = 0;
 						}
                          */
-						if(limit_time != 0 && (quest_type < 11 || quest_type > 14)){
+						if(quiz_pagination == 0 && max_quiz_time == 3600000 && limit_time != 0 && (quest_type < 11 || quest_type > 14)){
 							quest_timer_sec = limit_time;
 							var min_str = (limit_time < 10) ? '0' + limit_time : limit_time;
-							jq_jQuery('.jq_quest_time_past').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
+							jq_jQuery('#jq_time_tick_container').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
 							jq_Start_Question_TickTack(limit_time);
 							quest_timer = setInterval("jq_Start_Question_TickTack("+limit_time+")", 1000);
 						}
@@ -552,16 +553,16 @@ function jq_AnalizeRequest(http_request) {
 						quest_timer_sec = 0;
 					}
                     */
-					if(limit_time != 0 && (quest_type < 11 || quest_type > 14)){
+					if(quiz_pagination == 0 && max_quiz_time == 3600000 && limit_time != 0 && (quest_type < 11 || quest_type > 14)){
 						clearInterval(quest_timer);
 						quest_timer_sec = limit_time;
 						var min_str = (limit_time < 10) ? '0' + limit_time : limit_time;
-						jq_jQuery('.jq_quest_time_past').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
+						jq_jQuery('#jq_time_tick_container').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
 						jq_Start_Question_TickTack(limit_time);
 						quest_timer = setInterval("jq_Start_Question_TickTack("+limit_time+")", 1000);
 					} else {
 						clearInterval(quest_timer);
-						jq_jQuery('.jq_quest_time_past').html('');
+						jq_jQuery('#jq_time_tick_container').html('');
 					}
 
 					if (is_prev && is_last) {
@@ -662,16 +663,16 @@ function jq_AnalizeRequest(http_request) {
 					var skip_question = jq_jQuery(response).find('skip_question').text();
 					var limit_time = jq_jQuery(response).find('quest_limit_time').text();
 
-					if(limit_time != 0 && (quest_type < 11 || quest_type > 14)){
+					if(quiz_pagination == 0 && max_quiz_time == 3600000 && limit_time != 0 && (quest_type < 11 || quest_type > 14)){
 							clearInterval(quest_timer);
 							quest_timer_sec = limit_time;
 							var min_str = (limit_time < 10) ? '0' + limit_time : limit_time;
-							jq_jQuery('.jq_quest_time_past').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
+							jq_jQuery('#jq_time_tick_container').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
 							jq_Start_Question_TickTack(limit_time);
 							quest_timer = setInterval("jq_Start_Question_TickTack("+limit_time+")", 1000);
 						} else {
 							clearInterval(quest_timer);
-							jq_jQuery('.jq_quest_time_past').html('');
+							jq_jQuery('#jq_time_tick_container').html('');
 						}
 
 					var is_prev = parseInt(response.getElementsByTagName('is_prev')[0].firstChild.data);
@@ -695,16 +696,16 @@ function jq_AnalizeRequest(http_request) {
 					var limit_time = jq_jQuery(response).find('quest_limit_time').text();
 					var quest_task = jq_jQuery(response).find('quest_task').text();
 
-					if(limit_time!=0 && quest_task != 'no_attempts' && (quest_type < 11 || quest_type > 14)){
+					if(quiz_pagination == 0 && max_quiz_time == 3600000 && limit_time!=0 && quest_task != 'no_attempts' && (quest_type < 11 || quest_type > 14)){
 							clearInterval(quest_timer);
 							quest_timer_sec = limit_time;
 							var min_str = (limit_time < 10) ? '0' + limit_time : limit_time;
-							jq_jQuery('.jq_quest_time_past').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
+							jq_jQuery('#jq_time_tick_container').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
 							jq_Start_Question_TickTack(limit_time);
 							quest_timer = setInterval("jq_Start_Question_TickTack("+limit_time+")", 1000);
 						} else {
 							clearInterval(quest_timer);
-							jq_jQuery('.jq_quest_time_past').html('');
+							jq_jQuery('#jq_time_tick_container').html('');
 						}
 
 					var is_prev = parseInt(response.getElementsByTagName('is_prev')[0].firstChild.data);
@@ -1123,7 +1124,8 @@ function jq_releaseBlock() {
 
 function jq_Start_Question_TickTack(limit_time)
 {
-    console.log(limit_time, quest_timer_sec);
+    <!--console.log(limit_time, quest_timer_sec);-->
+    jq_getObj('jq_time_tick_container').style.visibility = "visible";
     if(quest_timer_sec <= 0 ){
         ShowMessage('error_messagebox', 1, '<?php echo JText::_('COM_QUIZ_TIME_FOR_ANSWERING_HAS_RUN_OUT');?>');
         quest_count = response.getElementsByTagName('quest_count')[0].firstChild.data;
@@ -1133,7 +1135,7 @@ function jq_Start_Question_TickTack(limit_time)
         alert('<?php echo JText::_('COM_QUIZ_TIME_FOR_ANSWERING_HAS_RUN_OUT');?>');
         setTimeout("jq_QuizNextOn()", 300);
         clearInterval(quest_timer);
-        jq_jQuery('.jq_quest_time_past').html('');
+        jq_jQuery('#jq_time_tick_container').html('');
         if(jq_jQuery('#jq_total_memory_point')){
             jq_jQuery('#jq_total_memory_point').remove();
             jq_jQuery('#jq_current_memory_point').remove();
@@ -1150,7 +1152,7 @@ function jq_Start_Question_TickTack(limit_time)
         if (time_str.length == 1) time_str = '0'+time_str;
         quest_time_str2 = plus_sec + '';
         if (quest_time_str2.length == 1) quest_time_str2 = '0'+quest_time_str2;
-        jq_jQuery('.jq_quest_time_past').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + time_str + ':' + quest_time_str2);
+        jq_jQuery('#jq_time_tick_container').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + time_str + ':' + quest_time_str2);
         quest_timer_sec--;
     }
 }
@@ -1342,7 +1344,7 @@ function jq_StartQuiz() {
 function JQ_gotoQuestionOn(qid) {
 
 	clearInterval(quest_timer);
-	jq_jQuery('.jq_quest_time_past').html('');
+	jq_jQuery('#jq_time_tick_container').html('');
 	if(jq_jQuery('#jq_total_memory_point')){
 		jq_jQuery('#jq_total_memory_point').remove();
 		jq_jQuery('#jq_current_memory_point').remove();
@@ -1467,7 +1469,9 @@ function jq_Check_valueItem(item_name, form_name) {
 }
 
 function jq_QuizNextOn() { // Two steps CHECK (delete this func in the future)
-	for(var n=0; n < quest_count; n++) {
+    clearInterval(quest_timer);
+    jq_getObj('jq_time_tick_container').style.visibility = "hidden";
+    for(var n=0; n < quest_count; n++) {
 		ShowMessage('error_messagebox_quest'+questions[n].cur_quest_id, 0, '');
 	   // jq_QuizContinueFinish
 	}

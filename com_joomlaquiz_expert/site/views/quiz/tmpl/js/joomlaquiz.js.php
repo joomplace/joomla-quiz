@@ -471,52 +471,52 @@ function jq_AnalizeRequest(http_request) {
 			stop_timer = 0;
 			switch (task) {
 				case 'start':
-						quiz_blocked = 1;
-						setTimeout("jq_releaseBlock()", 1000);
-						try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {}
-						user_unique_id = response.getElementsByTagName('user_unique_id')[0].firstChild.data;
-						stu_quiz_id = response.getElementsByTagName('stu_quiz_id')[0].firstChild.data;
-						var skip_question = jq_jQuery(response).find('skip_question').text();
-						var limit_time = jq_jQuery(response).find('quest_limit_time').text();
+                    quiz_blocked = 1;
+                    setTimeout("jq_releaseBlock()", 1000);
+                    try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {}
+                    user_unique_id = response.getElementsByTagName('user_unique_id')[0].firstChild.data;
+                    stu_quiz_id = response.getElementsByTagName('stu_quiz_id')[0].firstChild.data;
+                    var skip_question = jq_jQuery(response).find('skip_question').text();
+                    var limit_time = jq_jQuery(response).find('quest_limit_time').text();
 
-						quiz_count_quests = response.getElementsByTagName('quiz_count_quests')[0].firstChild.data;
-						jq_getObj('jq_quiz_container').innerHTML = '';
-						jq_getObj('jq_quiz_container').style.display = '';
+					quiz_count_quests = response.getElementsByTagName('quiz_count_quests')[0].firstChild.data;
+					jq_getObj('jq_quiz_container').innerHTML = '';
+					jq_getObj('jq_quiz_container').style.display = '';
 
-						quest_count = response.getElementsByTagName('quest_count')[0].firstChild.data;
-						jq_CreateQuestions();
+					quest_count = response.getElementsByTagName('quest_count')[0].firstChild.data;
+					jq_CreateQuestions();
 
-						var is_last = parseInt(response.getElementsByTagName('is_last')[0].firstChild.data);
-						if (is_last){
-							jq_UpdateTaskDiv('next_last', skip_question);
-						} else {
-							jq_UpdateTaskDiv('next', skip_question);
-						}
-                        /*
-						if(quest_type == 13){
-							quest_timer_sec = 0;
-						}
-                         */
-						if(quiz_pagination == 0 && max_quiz_time == 3600000 && limit_time != 0 && (quest_type < 11 || quest_type > 14)){
-							quest_timer_sec = limit_time;
-							var min_str = (limit_time < 10) ? '0' + limit_time : limit_time;
-							jq_jQuery('#jq_time_tick_container').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
-							jq_Start_Question_TickTack(limit_time);
-							quest_timer = setInterval("jq_Start_Question_TickTack("+limit_time+")", 1000);
-						}
+                    var is_last = parseInt(response.getElementsByTagName('is_last')[0].firstChild.data);
+                    if (is_last){
+                        jq_UpdateTaskDiv('next_last', skip_question);
+                    } else {
+                        jq_UpdateTaskDiv('next', skip_question);
+                    }
+                    /*
+                    if(quest_type == 13){
+                        quest_timer_sec = 0;
+                    }
+                     */
+                    if(quiz_pagination == 0 && max_quiz_time == 3600000 && limit_time != 0 && (quest_type < 11 || quest_type > 14)){
+                        quest_timer_sec = limit_time;
+                        var min_str = (limit_time < 10) ? '0' + limit_time : limit_time;
+                        jq_jQuery('#jq_time_tick_container').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + min_str + ':00');
+                        jq_Start_Question_TickTack(limit_time);
+                        quest_timer = setInterval("jq_Start_Question_TickTack("+limit_time+")", 1000);
+                    }
 
-						<?php if ($quiz->c_show_timer) { ?>
-							var past_time = 0;
-							try {
-								past_time = parseInt(response.getElementsByTagName('quiz_past_time')[0].firstChild.data);
-							} catch(e){}
-							jq_Start_TickTack(past_time);
-						<?php }
-						if ($quiz->c_slide) { ?>
-							jq_getObj('jq_quiz_result_container').innerHTML = response.getElementsByTagName('quiz_panel_data')[0].firstChild.data;
-							jq_getObj('jq_panel_link_container').style.visibility = 'visible';
-						<?php } ?>
-					break;
+					<?php if ($quiz->c_show_timer) { ?>
+						var past_time = 0;
+						try {
+							past_time = parseInt(response.getElementsByTagName('quiz_past_time')[0].firstChild.data);
+						} catch(e){}
+						jq_Start_TickTack(past_time);
+					<?php }
+					if ($quiz->c_slide) { ?>
+						jq_getObj('jq_quiz_result_container').innerHTML = response.getElementsByTagName('quiz_panel_data')[0].firstChild.data;
+						jq_getObj('jq_panel_link_container').style.visibility = 'visible';
+					<?php } ?>
+				break;
 
 				case 'seek_quest':
 					quiz_blocked = 1;

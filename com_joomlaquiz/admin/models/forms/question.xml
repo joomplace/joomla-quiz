@@ -25,22 +25,27 @@
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<!--
-+		<field
-+				name="c_show_timer"
-+				type="radio"
-+				class="btn-group"
-+				label="COM_JOOMLAQUIZ_SHOW_TIMER"
-+				labelclass="control-label"
-+				default="0">
-+				<option value="0">COM_JOOMLAQUIZ_NO</option>
-+				<option value="1">COM_JOOMLAQUIZ_YES</option>
-+		</field>
-+		<field name="c_time_limit" type="text" default="" size="30"
-+				label="COM_JOOMLAQUIZ_TIME_LIMIT3" 
-+				description="COM_JOOMLAQUIZ_SPECIFY_THE_QUESTION_TIME" labelclass="control-label">
-+		</field>
-+		-->
+		<field
+				name="c_show_timer"
+				type="radio"
+				class="btn-group"
+				label="COM_JOOMLAQUIZ_SHOW_TIMER_LABEL"
+				description="COM_JOOMLAQUIZ_SHOW_TIMER_DESC"
+				labelclass="control-label"
+				default="0">
+			<option value="0">COM_JOOMLAQUIZ_NO</option>
+			<option value="1">COM_JOOMLAQUIZ_YES</option>
+		</field>
+		<field name="c_time_limit" type="text" default="" size="30"
+			   label="COM_JOOMLAQUIZ_TIME_LIMIT3"
+			   description="COM_JOOMLAQUIZ_SPECIFY_THE_TIME" labelclass="control-label">
+		</field>
+		<field name="c_timer_style" type="list" default="0" label="COM_JOOMLAQUIZ_TIMER_STYLE_LABEL" description="COM_JOOMLAQUIZ_TIMER_STYLE_DESC"
+			   labelclass="control-label">
+			<option value="0">COM_JOOMLAQUIZ_STANDART</option>
+			<option value="1">COM_JOOMLAQUIZ_REMAINING_TIME</option>
+			<option value="2">COM_JOOMLAQUIZ_STANDART_WITH_LIMIT</option>
+		</field>
 		<field name="c_separator" type="list" default="0" label="COM_JOOMLAQUIZ_SEPARATORLINE" labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_DO_NOT_ADD</option>
 			<option value="1">COM_JOOMLAQUIZ_ADD_SEPARATOR</option>

@@ -49,7 +49,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			default:		
 			break;
 		}
-			
+
 		$jq_ret_str = JHtml::_('content.prepare',$jq_ret_str);
 		
 		$regex  = '#href="index.php\?([^"]*)#m';
@@ -2746,6 +2746,10 @@ class JoomlaquizModelAjaxaction extends JModelList
                     . ']]></quest_score>' . "\n";
                 $ret_str .= "\t" . '<quest_separator><![CDATA['
                     . $q_data->c_separator . ']]></quest_separator>' . "\n";
+                $ret_str .= ($q_data->c_time_limit) ? "\t"
+                    . '<quest_limit_time>' . $q_data->c_time_limit
+                    . '</quest_limit_time>' . "\n"
+                    : "\t" . '<quest_limit_time>0</quest_limit_time>' . "\n";
                 //if randomize quest
                 $query
                     = "SELECT c_random from #__quiz_t_question WHERE c_id = '"

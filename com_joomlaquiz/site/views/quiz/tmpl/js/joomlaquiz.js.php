@@ -567,6 +567,7 @@ function jq_AnalizeRequest(http_request) {
 					jq_jQuery(".jq_time_tick_container").css("visibility", "hidden");
 					<?php } ?>
 					jq_updateHotspot();
+                    stop_timer = 1;
 				break;
 
 				case 'review_next':
@@ -581,6 +582,7 @@ function jq_AnalizeRequest(http_request) {
 
 					jq_UpdateTaskDiv('review_next');
 					jq_updateHotspot();
+                    stop_timer = 1;
 				break;
 
 				case 'review_finish':
@@ -605,6 +607,7 @@ function jq_AnalizeRequest(http_request) {
 						jq_jQuery('#jq_penalty_memory_point').remove();
 					}
 					jq_updateHotspot();
+                    stop_timer = 1;
 				break;
 
 				case 'next':

@@ -22,7 +22,9 @@ $userId = $user->get('id');
 $extension = 'com_joomlaquiz';
 
 $sortFields = $this->getSortFields();
-
+if (extension_loaded ('mbstring')) {
+    $enable_mod_mb_string = 'load';
+}
 ?>
 <script type="text/javascript">
     Joomla.orderTable = function () {
@@ -151,13 +153,14 @@ $sortFields = $this->getSortFields();
                                         $length = 40;
                                         $dots = "...";
                                         $spacebar = ' ';
-                                        if (mb_strlen($quiz) > $length) {
-                                            $part = mb_substr($quiz, 0, $length);
+                                        $length_quiz = (!empty($enable_mod_mb_string)) ? mb_strlen($quiz) : strlen($quiz);
+                                        if ($length_quiz > $length) {
+                                            $part = (!empty($enable_mod_mb_string)) ? mb_substr($quiz, 0, $length) : substr($quiz, 0, $length);
                                             $pos = strrpos($part, $spacebar);
                                             if ($pos === false) {
-                                                $part = mb_substr($part, 0, $length);
+                                                $part = (!empty($enable_mod_mb_string)) ? mb_substr($part, 0, $length) : substr($part, 0, $length);
                                             } else {
-                                                $part = mb_substr($part, 0, $pos);
+                                                $part = (!empty($enable_mod_mb_string)) ? mb_substr($part, 0, $pos) : substr($part, 0, $pos);
                                             }
                                             $quiz = $part . $dots;
                                         }

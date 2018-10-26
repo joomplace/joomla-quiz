@@ -22,7 +22,9 @@ $userId = $user->get('id');
 $extension = 'com_joomlaquiz';
 
 $sortFields = $this->getSortFields();
-
+if (extension_loaded ('mbstring')) {
+    $enable_mod_mb_string = 'load';
+}
 ?>
 <script type="text/javascript">
     Joomla.orderTable = function () {
@@ -125,13 +127,14 @@ $sortFields = $this->getSortFields();
                                         $length = 100;
                                         $dots = "...";
                                         $spacebar = ' ';
-                                        if (mb_strlen($category) > $length) {
-                                            $part = mb_substr($category, 0, $length);
-                                            $pos = mb_strrpos($part, $spacebar);
+                                        $length_category = (!empty($enable_mod_mb_string)) ? mb_strlen($category) : strlen($category);
+                                        if ($length_category > $length) {
+                                            $part = (!empty($enable_mod_mb_string)) ? mb_substr($category, 0, $length) : substr($category, 0, $length);
+                                            $pos = (!empty($enable_mod_mb_string)) ? mb_strrpos($part, $spacebar) : strrpos($part, $spacebar);
                                             if ($pos === false) {
-                                                $part = mb_substr($part, 0, $length);
+                                                $part = (!empty($enable_mod_mb_string)) ? mb_substr($part, 0, $length) : substr($part, 0, $length);
                                             } else {
-                                                $part = mb_substr($part, 0, $pos);
+                                                $part = (!empty($enable_mod_mb_string)) ? mb_substr($part, 0, $pos) : substr($part, 0, $pos);
                                             }
                                             $category = $part . $dots;
                                         }

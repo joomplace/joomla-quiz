@@ -47,7 +47,17 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 					
 		$qhtml = JoomlaQuiz_template_class::JQ_createQuestion($choice_data, $data);
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div style="width:100%;clear:both;" id="div_qoption'.$data['q_data']->c_id.'"><form onsubmit=\'javascript: return false;\' name=\'quest_form'.$data['q_data']->c_id.'\'>'. $qhtml .'</form></div>]]></quest_data_user>' . "\n";
-		
+
+        preg_match_all('~src\s*=\s*\"([^\/](?!\:\/\/)[^\"]*)\"~i', $data['ret_str'], $preg);
+        if (!empty($preg[1])) {
+            foreach ($preg[1] as $p) {
+                if (strpos($p, "http") === false) {
+                    $search_arr = array('src ="' . $p, 'src= "' . $p, 'src = "' . $p, 'src="' . $p);
+                    $data['ret_str'] = str_replace($search_arr, 'src="/' . $p, $data['ret_str']);
+                }
+            }
+        }
+
 		return $data;
 	}
 	
@@ -238,6 +248,19 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		$feedback_data = array();
 		$feedback_data['choice_data'] = $choice_data;
 		$feedback_data['uanswer'] = $uanswer;
+
+        foreach ($feedback_data['choice_data'] as $qone) {
+            preg_match_all('~src\s*=\s*\"([^\/](?!\:\/\/)[^\"]*)\"~i', $qone->text, $preg);
+            if (!empty($preg[1])) {
+                foreach ($preg[1] as $p) {
+                    if (strpos($p, "http") === false) {
+                        $search_arr = array('src ="' . $p, 'src= "' . $p, 'src = "' . $p, 'src="' . $p);
+                        $qone->text = str_replace($search_arr, 'src="/' . $p, $qone->text);
+                    }
+                }
+            }
+        }
+
 		$qhtml = JoomlaQuiz_template_class::JQ_createFeedback($feedback_data, $data);					
 		
 		if(preg_match('/pretty_green/', $data['cur_template'])){

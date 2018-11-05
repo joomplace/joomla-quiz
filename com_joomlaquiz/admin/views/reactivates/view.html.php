@@ -73,7 +73,6 @@ class JoomlaquizViewReactivates extends JViewLegacy
 	{
 		return array(
 			'order_id' => JText::_('COM_JOOMLAQUIZ_ORDER'),
-			'product_name' => JText::_('COM_JOOMLAQUIZ_PRODUCTS'),
 			'order_status_name' => JText::_('COM_JOOMLAQUIZ_ORDER_STATUS'),
 			'name' => JText::_('COM_JOOMLAQUIZ_USER_NAME')
 		);

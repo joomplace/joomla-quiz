@@ -42,10 +42,10 @@ div.correct_answer
 	border:none !important;
 }
 
-#quest_table strong
+/*#quest_table strong
 {
 	color:#000000;
-}
+}*/
 
 div.jq_draggable_div {
     position:relative;

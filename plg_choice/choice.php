@@ -118,7 +118,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
             $database->SetQuery($query);
             $inc_ddd = $database->LoadObjectList();
             if (count($inc_ddd))
-                $data['questtype1_answer_incorrect'] = htmlspecialchars(nl2br($inc_ddd[0]->c_incorrect_feed));
+                $data['questtype1_answer_incorrect'] = htmlspecialchars($inc_ddd[0]->c_incorrect_feed);
         }
         $data['c_quest_cur_attempt'] = 0;
         $query = "SELECT c_id, c_attempts FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '" . $data['stu_quiz_id'] . "' and c_question_id = '" . $data['quest_id'] . "'";

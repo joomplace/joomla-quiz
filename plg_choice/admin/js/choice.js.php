@@ -264,17 +264,15 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name) {
 
     var new_element_txt = document.getElementById(elem_field) ? document.getElementById(elem_field).value : '';
 
-    if(typeof Joomla !== 'undefined'){
-        new_element_txt = Joomla.editors.instances[elem_field] ? Joomla.editors.instances[elem_field].getValue() : '';
+    <?php if ($editor_name == 'jce') { ?>
+         var new_element_txt = window.frames[elem_field+"_ifr"].contentWindow.document.getElementsByTagName('body')[0].innerHTML;
+    <?php } else {?>
+        var new_element_txt = document.getElementById(elem_field) ? document.getElementById(elem_field).value : '';
+        if(typeof Joomla !== 'undefined'){
+            new_element_txt = Joomla.editors.instances[elem_field] ? Joomla.editors.instances[elem_field].getValue() : '';
+        } 
+    <?php } ?>
 
-        //old versions of Joomla 3 (for example, 3.6.4)
-        if(!new_element_txt){
-            if(jQuery('#' + elem_field + '_ifr').length){
-                new_element_txt = jQuery('body',jQuery('iframe#' + elem_field + '_ifr').contents()).html();
-                jQuery('body',jQuery('iframe#' + elem_field + '_ifr').contents()).html('');
-            }
-        }
-    }
 
     if (!TRIM_str(new_element_txt)) {
         alert("<?php echo JText::_('COM_JOOMLAQUIZ_PLEASE_ENTER_TEXT');?>");

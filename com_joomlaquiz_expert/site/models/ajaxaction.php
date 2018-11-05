@@ -701,6 +701,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$quest_answer = count($q_ids);
 					$quest_num = $quest_answer;
 					$qchids = explode('*',$qch_ids);
+                    $stat_qchids = $qchids;
 					$q_ids = array_diff($q_ids, $quest_ids);
 					$qchids = array_diff($qchids, $q_ids);
 					$qchids = array_values($qchids);
@@ -715,20 +716,27 @@ class JoomlaquizModelAjaxaction extends JModelList
 						}else{
 							$quest_pos++;
 						}
-						
-						for($i = $quest_pos; $i < $q_total; $i++){
-							$database->setQuery("SELECT `c_attempts` FROM #__quiz_t_question WHERE `c_id` = '".$qchids[$i]."'");
-							$all_attempts = $database->loadResult();
-								
-							$query = "SELECT `c_attempts` FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qchids[$i]."'";
-							$database->SetQuery( $query );
-							$c_attempts = $database->LoadResult();
-							
-							if($c_attempts < $all_attempts && $qchids[$i] != end($quest_ids) ){
-								$qnum = $qchids[$i];
-								break;
-							}
-						}
+
+                        $cur_id = end($quest_ids);
+                        $key_cur_id = array_keys($stat_qchids, $cur_id)[0];
+                        if(isset($stat_qchids[$key_cur_id + 1])){
+                            $qnum = $stat_qchids[$key_cur_id + 1];
+                        }
+                        else {
+                            for ($i = $quest_pos; $i < $q_total; $i++) {
+//							    $database->setQuery("SELECT `c_attempts` FROM #__quiz_t_question WHERE `c_id` = '".$qchids[$i]."'");
+//							    $all_attempts = $database->loadResult();
+
+//							    $query = "SELECT `c_attempts` FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qchids[$i]."'";
+//							    $database->SetQuery( $query );
+//							    $c_attempts = $database->LoadResult();
+                                if (//$c_attempts < $all_attempts &&
+                                        $qchids[$i] != end($quest_ids)) {
+                                    $qnum = $qchids[$i];
+                                    break;
+                                }
+                            }
+                        }
 					}
 
 					$z = 0;

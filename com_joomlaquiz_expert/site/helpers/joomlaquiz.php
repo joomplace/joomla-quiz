@@ -746,44 +746,53 @@ class JoomlaquizHelper
 			}
 			
 			//Check attempts
-			$product_quantity = 1;
-			if($vm){
-				$query = "SELECT vm_oi.product_quantity"
-				. "\n FROM #__virtuemart_orders AS vm_o"
-				. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
-				. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-				. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = ".$package_id." AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
-				;
-				$database->SetQuery( $query );
-				$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
-			}
-
-			if($product_data->type == 'q') {
-                $attempts = (!empty($products_stat) && array_key_exists($rel_id, $products_stat) && $products_stat[$rel_id]->attempts ? $products_stat[$rel_id]->attempts : 0);
-                if ($product_data->attempts && ($product_data->attempts * $product_quantity) <= $attempts) {
-                    $quiz_params[0]->error = 1;
-                    $quiz_params[0]->message = '<p align="left">' . JText::_('COM_ACCESS_EXPIRED') . '</p>';
-                    return $quiz_params[0];
+            if((int)$product_data->attempts){
+                $product_quantity = 1;
+                if($vm){
+                    $query = "SELECT vm_oi.product_quantity"
+                    . "\n FROM #__virtuemart_orders AS vm_o"
+                    . "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
+                    . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
+                    . "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = ".$package_id." AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
+                    ;
+                    $database->SetQuery( $query );
+                    $product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
                 }
-            }
-            else if($product_data->type == 'l'){
-                $query = "SELECT * FROM `#__quiz_lpath_stage` 
-                          WHERE `uid` = {$my->id} AND `rel_id` = {$rel_id}  AND `lpid` = {$rel_check[0]->rel_id} 
-                          AND `type` = 'q' AND oid = '{$package_id}' ";
-                $database->SetQuery( $query );
-                $quiz_lpath_stage = $database->loadObjectList();
-                $yet_attempts = false;
-                if($quiz_lpath_stage && is_array($quiz_lpath_stage) && !empty($quiz_lpath_stage)){
-                    for($i=0; $i<count($quiz_lpath_stage); $i++){
-                        if($quiz_lpath_stage[$i]->attempts < ($product_data->attempts * $product_quantity)){
-                            $yet_attempts = true;
-                        }
+
+                if($product_data->type == 'q') {
+                    $attempts = (!empty($products_stat) && array_key_exists($rel_id, $products_stat) && $products_stat[$rel_id]->attempts ? $products_stat[$rel_id]->attempts : 0);
+                    if ($product_data->attempts && ($product_data->attempts * $product_quantity) <= $attempts) {
+                        $quiz_params[0]->error = 1;
+                        $quiz_params[0]->message = '<p align="left">' . JText::_('COM_ACCESS_EXPIRED') . '</p>';
+                        return $quiz_params[0];
                     }
                 }
-                if(!$yet_attempts){
-                    $quiz_params[0]->error = 1;
-                    $quiz_params[0]->message = '<p align="left">' . JText::_('COM_ACCESS_EXPIRED') . '</p>';
-                    return $quiz_params[0];
+                else if($product_data->type == 'l'){
+                    $query = "SELECT * FROM `#__quiz_lpath_stage` 
+                              WHERE `uid` = {$my->id} AND `rel_id` = {$rel_id}  AND `lpid` = {$rel_check[0]->rel_id} 
+                              AND `type` = 'q' AND oid = '{$package_id}' ";
+                    $database->SetQuery( $query );
+                    $quiz_lpath_stage = $database->loadObjectList();
+
+                    $yet_attempts = true;
+                    if($quiz_lpath_stage && is_array($quiz_lpath_stage) && !empty($quiz_lpath_stage)){
+                        for($i=0; $i<count($quiz_lpath_stage); $i++){
+                            if($quiz_lpath_stage[$i]->attempts >= ($product_data->attempts * $product_quantity)){
+                                $yet_attempts = false;
+                            }
+                        }
+                    }
+                    else {
+                        if($product_data->attempts * $product_quantity < 1){
+                            $yet_attempts = false;
+                        }
+                    }
+
+                    if(!$yet_attempts){
+                        $quiz_params[0]->error = 1;
+                        $quiz_params[0]->message = '<p align="left">' . JText::_('COM_ACCESS_EXPIRED') . '</p>';
+                        return $quiz_params[0];
+                    }
                 }
             }
 			

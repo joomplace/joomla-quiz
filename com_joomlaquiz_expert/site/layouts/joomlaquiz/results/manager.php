@@ -42,7 +42,7 @@ JHtml::_('script', 'system/core.js', true, true);
 					<?php } ?>
 				</td>
 				<td align="left">
-					<a href="<?php echo $link; ?>">								
+					<a href="<?php echo JRoute::_($link); ?>">
 						<?php echo $row->c_title; ?>
 					</a>
 				</td>

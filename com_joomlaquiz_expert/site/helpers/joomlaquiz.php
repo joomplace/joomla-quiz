@@ -800,7 +800,7 @@ class JoomlaquizHelper
 				$_SESSION['quiz_check_rel_item'] = 1;
 				$_SESSION['quiz_check_rel_order_id'] = $package_id;
 				$_SESSION['quiz_check_rel_item_id'] = $rel_check[0]->rel_id;
-				$mainframe->redirect(JURI::root()."index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$rel_check[0]->rel_id}&force=1");
+				$mainframe->redirect(JRoute::_(JURI::root()."index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$rel_check[0]->rel_id}&force=1"));
 			}
 			else if($rel_check[0]->type == 'l') {
 				$lpath_id = $rel_check[0]->rel_id;

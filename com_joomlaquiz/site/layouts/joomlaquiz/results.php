@@ -11,7 +11,7 @@ $pagination = $displayData->pagination;
 JHtml::_('script', 'system/core.js', true, true);
 ?>
 <div class="jq_results_container">
-	<form name="adminForm" id="adminForm" action="index.php?option=com_joomlaquiz&view=results<?php echo JoomlaquizHelper::JQ_GetItemId();?>" method="post">
+	<form name="adminForm" id="adminForm" action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=results'.JoomlaquizHelper::JQ_GetItemId()); ?>" method="post">
 	<table class="jq_results_container_table table-striped" cellpadding="10" cellspacing="10" border="0" width="100%">
 	<tr>	
 		<td class="sectiontableheader">#</td>
@@ -28,8 +28,7 @@ JHtml::_('script', 'system/core.js', true, true);
 		<?php
 		$k = 1;
 		foreach($displayData->items as $i=>$row){
-			$link 	= "index.php?option=com_joomlaquiz&task=results.sturesult&id=".$row->id.JoomlaquizHelper::JQ_GetItemId();
-
+			$link = JRoute::_("index.php?option=com_joomlaquiz&task=results.sturesult&id=".$row->id.JoomlaquizHelper::JQ_GetItemId());
 			$img_passed	= $row->c_passed ? 'result_panel_true.png' : 'result_panel_false.png';
 			$alt_passed = $row->c_passed ? JText::_('COM_JQ_RESULT_PASSED') : JText::_('COM_JQ_RESULT_FAILED');			
 			?>

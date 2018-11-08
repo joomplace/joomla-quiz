@@ -220,7 +220,7 @@ class JoomlaquizModelResults extends JModelList
 		}
 		
 		if ((!$user->id || !$stu_id) && !$is_share){
-			$app->redirect('index.php?option=com_joomlaquiz&view=results');
+			$app->redirect(JRoute::_('index.php?option=com_joomlaquiz&view=results'));
 			die;
 		}
 		

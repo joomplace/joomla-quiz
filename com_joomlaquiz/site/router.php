@@ -1,6 +1,5 @@
 <?php
-
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\Router\RouterBase;
 
@@ -9,31 +8,20 @@ class JoomlaquizRouter extends RouterBase
     public function build(&$query)
     {
         $segments = array();
-        $app = JFactory::getApplication();
-        $menu = $app->getMenu();
 
-        if (empty($query['Itemid']))
-        {
-            $menuItem = $menu->getActive();
-        }
-        else
-        {
-            $menuItem = $menu->getItem($query['Itemid']);
+        if(empty($query['view'])){
+            if(!empty($query['task'])){
+                $query['view'] = explode('.', $query['task'])[0];
+            }else {
+                $query['view'] = '';
+            }
         }
 
-//        isset($query['view']) ?: $query['view'] = (empty($menuItem->query['view'])) ? null : $menuItem->query['view'];
+        if(!empty($query['view'])) {
+            $segments[] = $query['view'];
 
-//        if ( isset( $query['option'] ) ) {
-//            $segments[] = $query['option'];
-//            unset( $query['option'] );
-//        }
-        isset($query['view']) ? $query['task'] : isset($query['task']) ? $query['view'] = explode('.', $query['task'])[0]:'';
-        if ( isset( $query['view'] )) {
-//            if (empty($query['Itemid']) || empty($menuItem) || $menuItem->component != 'com_joomlaquiz') {
-				$segments[] = $query['view'];
-//			}
             switch ($query['view']) {
-                case 'quiz' :
+                case 'quiz':
                     if ( isset($query['quiz_id'])){
                         $segments[] = $query['quiz_id'];
                         unset( $query['quiz_id'] );
@@ -43,23 +31,13 @@ class JoomlaquizRouter extends RouterBase
                         unset( $query['lid'] );
                     }
                     break;
-                case 'qcategory' :
-                    break;
-                case 'lpath' :
+                case 'lpath':
                     if ( isset($query['lpath_id'])){
                         $segments[] = $query['lpath_id'];
                         unset( $query['lpath_id'] );
                     }
                     break;
-                case 'lpaths' :
-                    if ( isset($query['lpath_id'])){
-                        $segments[] = $query['lpath_id'];
-                        unset( $query['lpath_id'] );
-                    }
-                    break;
-                case 'packages' :
-                    break;
-                case 'results' :
+                case 'results':
                     if ( isset($query['task'])){
                         $segments[] = $query['task'];
                         unset( $query['task'] );
@@ -69,9 +47,7 @@ class JoomlaquizRouter extends RouterBase
                         unset( $query['id'] );
                     }
                     break;
-                case 'statistics' :
-                    break;
-                case 'printcert' :
+                case 'printcert':
                     if ( isset($query['task'])){
                         $segments[] = $query['task'];
                         unset( $query['task'] );
@@ -103,6 +79,11 @@ class JoomlaquizRouter extends RouterBase
                         unset( $query['user_unique_id'] );
                     }
                     break;
+                case 'qcategory':
+                case 'lpaths':
+                case 'packages':
+                case 'statistics':
+                    break;
                 default:
                     if ( isset($query['quiz_id'])){
                         $segments[] = $query['quiz_id'];
@@ -110,8 +91,8 @@ class JoomlaquizRouter extends RouterBase
                     }
                     break;
             }
-            unset( $query['view'] );
         }
+        unset( $query['view'] );
 
         return $segments;
     }
@@ -119,88 +100,82 @@ class JoomlaquizRouter extends RouterBase
     public function parse(&$segments)
     {
         $vars = array();
-        $count = count( $segments );
-        if ( $count ) {
+        $count = count($segments);
+        if($count){
             $count--;
             $segment = array_shift($segments);
             $vars['view'] = $segment;
         }
         switch ($vars['view']){
-            case 'quiz' :
-                if ( $count ) {
+            case 'quiz':
+                if($count){
                     $count--;
                     $segment = array_shift($segments);
                     $vars['quiz_id'] = $segment;
                 }
-                if ( $count ) {
+                if($count){
                     $count--;
                     $segment = array_shift($segments);
                     $vars['lid'] = $segment;
                 }
                 break;
-            case 'qcategory' :
-                break;
-            case 'lpath' :
-                if ( $count ) {
+            case 'lpath':
+                if($count){
                     $count--;
                     $vars['lpath_id'] = array_shift($segments);
                 }
                 break;
-            case 'lpaths':
-                break;
-            case 'packages':
-                break;
             case 'results':
-                if ( $count ) {
+                if($count){
                     $count--;
                     $vars['task'] = array_shift($segments);
                 }
-                if ( $count ) {
+                if($count){
                     $count--;
                     $vars['id'] = array_shift($segments);
                 }
                 break;
-            case 'statistics':
-                break;
-            case 'printcert' :
-                if ( $count ) {
+            case 'printcert':
+                if($count){
                     $count--;
                     $vars['task'] = array_shift($segments);
                 }
-                if ( $count ) {
+                if($count){
                     $count--;
                     $vars['stu_quiz_id'] = array_shift($segments);
                 }
-                if ( $count ) {
+                if($count){
                     $count--;
                     $vars['user_unique_id'] = array_shift($segments);
                 }
                 break;
-            case 'printresult' :
-                if ( $count ) {
+            case 'printresult':
+                if($count){
                     $count--;
                     $vars['task'] = array_shift($segments);
                 }
-                if ( $count ) {
+                if($count){
                     $count--;
                     $vars['lang'] = array_shift($segments);
                 }
-                if ( $count ) {
+                if($count){
                     $count--;
                     $vars['stu_quiz_id'] = array_shift($segments);
                 }
-                if ( $count ) {
+                if($count){
                     $count--;
                     $vars['user_unique_id'] = array_shift($segments);
                 }
                 break;
+            case 'qcategory':
+            case 'lpaths':
+            case 'packages':
+            case 'statistics':
             default:
                 break;
         }
 
-        $vars['option'] = "com_joomlaquiz";
+        $vars['option'] = 'com_joomlaquiz';
         return $vars;
-
-
     }
 }

@@ -1072,7 +1072,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$share_id = $database->loadResult();
 					}
 
-					$share_link = urlencode(JURI::root().'index.php?option=com_joomlaquiz&view=quiz&id='.$quiz_id.JoomlaquizHelper::JQ_GetItemId());
+					$share_link = urlencode(JRoute::_(JURI::root().'index.php?option=com_joomlaquiz&view=quiz&id='.$quiz_id.JoomlaquizHelper::JQ_GetItemId()));
 				}
 			}
 
@@ -1448,11 +1448,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$next = $database->loadObjectList();
 		
 							if(!empty($next)) {
-								$footer_ar[6] = "<div class='jq_footer_link jq_nquiz'><a href='"
-									. "index.php?option=com_joomlaquiz&view=quiz&lid=" . $lid
-									. ($next[0]->type == 'q' ? '&quiz_id=' : '&article_id=') . $next[0]->qid . JoomlaquizHelper::JQ_GetItemId()
-									. "'>".JText::_('COM_LPATH_NEXT_QUIZ')."</a></div>"
-									;
+								$footer_ar[6] = "<div class='jq_footer_link jq_nquiz'><a href='".JRoute::_('index.php?option=com_joomlaquiz&view=quiz&lid='.$lid.($next[0]->type == 'q' ? '&quiz_id=' : '&article_id=') . $next[0]->qid . JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_LPATH_NEXT_QUIZ')."</a></div>";
 							}
 						}
 						
@@ -1485,8 +1481,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$this->user = JFactory::getUser();
 					$certAccessGranted = $this->user->authorise('core.certificate', 'com_joomlaquiz.quiz.'.$quiz->c_id);
                     $reviewAccessGranted = $this->user->authorise('core.review', 'com_joomlaquiz.quiz.'.$quiz->c_id);
-					$urlPrefix = JRoute::_("index.php?option=com_joomlaquiz");
-					$urlPrefix = $urlPrefix.(strpos($urlPrefix, '?') === false?'?':'&');
 					if ($quiz->c_certificate && !$c_manual && $user_passed && $certAccessGranted) {
 						$footer_ar[2] = "<div class='jq_footer_link jq_certificate'><a href='javascript:void(0)' onclick=\"window.open ('". JRoute::_( "index.php?option=com_joomlaquiz&task=printcert.get_certificate&stu_quiz_id=" . $stu_quiz_id . "&user_unique_id=") . "' + user_unique_id,'blank');\">".JText::_('COM_QUIZ_FIN_BTN_CERTIFICATE')."</a></div>";
 					}
@@ -1591,8 +1585,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 								if($req_scoremes!=''){
 									$message .= "<br>\n<br>\n".$req_scoremes;
 								} elseif ($c_manual) {
-									$message .= "<br>\n<br>\n".JText::_('COM_JQ_RESULT_SHOULD_BE_REVIEWED2')."<br/>\n".'<a href="'.JURI::root().'administrator/index.php?option=com_joomlaquiz&view=results&layout=stu_report&cid='.$stu_quiz_id.'">'.JText::_('COM_JQ_CLICK_TO_REVIEW').'</a>';
-								} else {
+                                    $message .= "<br>\n<br>\n".JText::_('COM_JQ_RESULT_SHOULD_BE_REVIEWED2')."<br/>\n".'<a href="'.JURI::root().'administrator/index.php?option=com_joomlaquiz&view=results&layout=stu_report&cid='.$stu_quiz_id.'">'.JText::_('COM_JQ_CLICK_TO_REVIEW').'</a>';
+                                } else {
 									$message .= "<br>\n<br>\n".($user_passed?JText::_('COM_QUIZ_USER_PASSES2'):JText::_('COM_QUIZ_USER_FAILS2'));
 								}
 

@@ -101,7 +101,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		}
 		
 		unset($_SESSION['com_joomlaquiz.move.quizzes.cids']);
-		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=quizzes', $msg.$msg2);
+		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg.$msg2);
 	}
 	
 	public function copy_quiz_sel(){
@@ -119,7 +119,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 	{
 		$model = $this->getModel();
 		$msg = $model->copyQuizzes();
-		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=quizzes', $msg);
+		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg);
 	}
 	
 	public function export_quizzes_all()
@@ -1583,7 +1583,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             }
         }
 
-        $this->setRedirect( "index.php?option=com_joomlaquiz&view=quizzes", JText::_('COM_JOOMLAQUIZ_QUIZES_SUCCESSFULY_IMPORT').$msg2 );
+        $this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', JText::_('COM_JOOMLAQUIZ_QUIZES_SUCCESSFULY_IMPORT').$msg2 );
     }
 	
 	function delzip($basedir){

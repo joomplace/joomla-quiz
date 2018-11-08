@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
 $sec_tbl = 1;
 foreach ($result as $one_res) {
 	if(is_file(JPATH_SITE."/components/com_comprofiler/comprofiler.php") && $user_profile){
-		$usr_d = '<a href="index.php?option=com_comprofiler&task=userProfile&user='.$one_res->id.'">'.($m_user_display?$one_res->name:$one_res->username).'</a>';
+		$usr_d = '<a href="'.JRoute::_('index.php?option=com_comprofiler&task=userProfile&user='.$one_res->id).'">'.($m_user_display?$one_res->name:$one_res->username).'</a>';
 	}else{
 		$usr_d = ($m_user_display?$one_res->name:$one_res->username);
 	}

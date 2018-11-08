@@ -27,7 +27,7 @@ if(isset($quizzes[0]) && isset($quizzes[0]->available) && $quizzes[0]->available
 } else {
 ?>
 <div class="moduletable joomlaquiz_container contentpane joomlaquiz">
-	<form action="index.php?option=com_joomlaquiz&view=statistics" method="post" name="adminForm">
+	<form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=statistics'); ?>" method="post" name="adminForm">
 		<h1 class="componentheading"><?php echo $header; ?></h1>
 		<br/>
 		<?php if ($quizzes) {?>

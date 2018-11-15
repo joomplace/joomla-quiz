@@ -41,7 +41,14 @@ function ScrollToElement(theElement){
 	} catch(e){}
 
 }
+<?php
+$jinput = JFactory::getApplication()->input;
+echo "var reStartOption = '".$jinput->get('option',0)."';\n";
 
+echo "var reStartView = '".$jinput->get('view',0)."';\n";
+
+echo "var reStartID = '".$jinput->get('id',0)."';\n";
+?>
 var penaltyPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_PENALTY_POINT')?>';
 var currentPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_CURRENT_POINT')?>';
 var totalPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_TOTAL_POINT')?>';
@@ -1536,9 +1543,19 @@ function jq_QuizContinue() {
 }
 
 function jq_QuizContinueFinish() {
-	var query = window.location.search;
-	var plugin = (query.indexOf('view=article') != -1) ? '&plug='+ encodeURIComponent(query) : '';
-	jq_MakeRequest('&ajax_task=finish_stop&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id + plugin, 1);
+    var reStartString='';
+    if(reStartOption!=0 && reStartOption!='com_joomlaquiz') {
+        reStartString = '?';
+        reStartString += 'option='+reStartOption+'&';
+        if(reStartView!=0) {
+            reStartString += 'view='+reStartView+'&';
+        }
+        if(reStartID!=0) {
+            reStartString += 'id='+reStartID+'&';
+        }
+        reStartString = encodeURIComponent(reStartString);
+    }
+	jq_MakeRequest('&ajax_task=finish_stop&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id + '&reStartString='+reStartString, 1);
 }
 
 function jq_QuizCallCode() {

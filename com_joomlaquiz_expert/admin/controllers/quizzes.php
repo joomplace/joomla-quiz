@@ -144,13 +144,16 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $iso = explode( '=', _ISO );
                 $xml_encoding = $iso[1];
             }
-            if($cid != -1)
-            {
-                $q_cids = implode(',',$cid);
+
+            $q_cids = '';
+            if($cid != -1) {
+                $q_cids = implode(',', $cid);
+            }
+
+            if($cid != -1) {
                 $query = "SELECT * FROM #__quiz_t_quiz WHERE c_id IN (".$q_cids.")";
             }
-            else
-            {
+            else {
                 $query = "SELECT * FROM #__quiz_t_quiz WHERE c_id!=0";
             }
             $database->SetQuery($query);
@@ -172,13 +175,31 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_xml .= "\n\t\t<description><![CDATA[JoomlaQuizDelux]]></description>\r\n";
             ///-- categories ----///
 
-            $query = "SELECT * FROM `#__categories` WHERE `extension`='com_joomlaquiz' AND `published` IN (0,1)";
-            $database->SetQuery($query);
-            $quiz_cat = $database->LoadObjectList();
+            $query = $database->getQuery(true);
+            $query->select('c.*')
+                ->from($database->qn('#__categories', 'c'))
+                ->where($database->qn('c.extension') .'='. $database->q('com_joomlaquiz'))
+                ->where($database->qn('c.published') .' IN ('.$database->q(0).','.$database->q(1).')');
+            if($cid != -1) {
+                $query->leftJoin($database->qn('#__quiz_t_quiz', 'q') . ' ON ' . $database->qn('q.c_category_id') .'='. $database->qn('c.id'));
+                $query->where($database->qn('q.c_id') . ' IN (' . $q_cids . ')');
+                $query->group('c.id');
+            }
+            $database->setQuery($query);
+            $quiz_cat = $database->loadObjectList();
 
-            $query = "SELECT * FROM `#__categories` WHERE `extension`='com_joomlaquiz.questions' AND `published` IN (0,1)";
-            $database->SetQuery($query);
-            $quest_cat = $database->LoadObjectList();
+            $query->clear();
+            $query->select('c.*')
+                ->from($database->qn('#__categories', 'c'))
+                ->where($database->qn('c.extension') .'='. $database->q('com_joomlaquiz.questions'))
+                ->where($database->qn('c.published') .' IN ('.$database->q(0).','.$database->q(1).')');
+            if($cid != -1) {
+                $query->leftJoin($database->qn('#__quiz_t_question', 'qn') . ' ON ' . $database->qn('qn.c_ques_cat') .'='. $database->qn('c.id'));
+                $query->where($database->qn('qn.c_quiz_id') . ' IN (' . $q_cids . ')');
+                $query->group('c.id');
+            }
+            $database->setQuery($query);
+            $quest_cat = $database->loadObjectList();
 
             $quiz_xml .= "\n\t\t<quiz_categories>";
             if(count($quiz_cat)) {
@@ -226,9 +247,17 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_xml .= "\n\t\t</quest_categories>";
 
             ///--- certificates ---///
-            $query = "SELECT * FROM #__quiz_certificates";
-            $database->SetQuery($query);
-            $quiz_certificate = $database->LoadObjectList();
+            $query = $database->getQuery(true);
+            $query->select('cer.*')
+                ->from($database->qn('#__quiz_certificates', 'cer'));
+            if($cid != -1) {
+                $query->leftJoin($database->qn('#__quiz_t_quiz', 'q') . ' ON ' . $database->qn('q.c_certificate') .'='. $database->qn('cer.id'));
+                $query->where($database->qn('q.c_id') . ' IN (' . $q_cids . ')');
+                $query->group('cer.id');
+            }
+            $database->setQuery($query);
+            $quiz_certificate = $database->loadObjectList();
+
             $quiz_xml .= "\n\t\t\t<quiz_certificates>";
             if(count($quiz_certificate))
                 for ($i=0, $n=count($quiz_certificate); $i < $n; $i++) {

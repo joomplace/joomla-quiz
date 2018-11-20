@@ -300,6 +300,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         case 1:
                         case 2:
                         case 3:
+                        case 10:
                             $query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = ".$pool->c_id;
                             $database->SetQuery($query);
                             $choice_data = $database->LoadObjectList();
@@ -533,6 +534,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         case 1:
                         case 2:
                         case 3:
+                        case 10:
                             $query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = ".$quest->c_id;
                             $database->SetQuery($query);
                             $choice_data = $database->LoadObjectList();
@@ -737,8 +739,19 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		   JError::raiseNotice(500, $category->getError());
 		   return false;
 		}
-		
-		$category->rebuildPath($category->id);
+
+        // Rebuild the path for the category:
+        if (!$category->rebuildPath($category->id))
+        {
+            JError::raiseNotice(500, $category->getError());
+            return false;
+        }
+        // Rebuild the paths of the category's children:
+        if (!$category->rebuild())
+        {
+            JError::raiseNotice(500, $category->getError());
+            return false;
+        }
 		
 		return $category;
 	}
@@ -1266,7 +1279,10 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     }
 
                     if($qcat->quiz_image) $quiz_images[] = $qcat->quiz_image;
-                    $new_quiz_id = $qcat->id;
+                    //$new_quiz_id = $qcat->id;
+                    $query = "SELECT max(c_id) FROM #__quiz_t_quiz";
+                    $database->setQuery($query);
+                    $new_quiz_id = $database->loadResult();
 
                     if(count(@$qcat->quiz_questions))
                     {

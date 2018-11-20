@@ -1634,17 +1634,21 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
         $this->delzip(JPATH_SITE.'/tmp/');
 
         $msg2 = '';
+        $count_import_total = 0;
         for($i=0; $i<count($quizis_titles);$i++)
         {
             $query = "SELECT COUNT(*) FROM #__quiz_t_quiz WHERE c_title=".$db->quote($quizis_titles[$i])."";
             $database->setQuery($query);
-            if($database->loadResult() > 1)
+            $count_import = (int)$database->loadResult();
+            $count_import_total += $count_import;
+            if($count_import > 1)
             {
-                $msg2 .= " ".$database->loadResult().JText::_('COM_JOOMLAQUIZ_QUIZES_QUIZZES').$quizis_titles[$i].JText::_('COM_JOOMLAQUIZ_AFTER_IMPORT');
+                $msg2 .= " ".$count_import.JText::_('COM_JOOMLAQUIZ_QUIZES_QUIZZES').$quizis_titles[$i].JText::_('COM_JOOMLAQUIZ_AFTER_IMPORT');
             }
         }
+        $msg1 = $count_import_total > 1 ? JText::_('COM_JOOMLAQUIZ_QUIZES_SUCCESSFULY_IMPORT') : JText::_('COM_JOOMLAQUIZ_QUIZ_SUCCESSFULY_IMPORT');
 
-        $this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', JText::_('COM_JOOMLAQUIZ_QUIZES_SUCCESSFULY_IMPORT').$msg2 );
+        $this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg1.$msg2.JText::_('COM_JOOMLAQUIZ_AFTER_IMPORT_TRANSFER_MEDIA') );
     }
 	
 	function delzip($basedir){

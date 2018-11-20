@@ -374,6 +374,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_xml .= "\n\t\t\t\t<blank_data>";
             $quiz_xml .= $quest_blank;
             $quiz_xml .= "\n\t\t\t\t</blank_data>";
+            $quiz_xml .= "\n\t\t\t\t<blank_distr_data>";
+            $quiz_xml .= $quest_distr_blank;
+            $quiz_xml .= "\n\t\t\t\t</blank_distr_data>";
             $quiz_xml .= "\n\t\t\t\t<hotspot_data>";
             $quiz_xml .= $quest_hotspot;
             $quiz_xml .= "\n\t\t\t\t</hotspot_data>";
@@ -571,6 +574,16 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 $quest_blank .= "\n\t\t\t\t\t\t<blank_text><![CDATA[".$choice->c_text."]]></blank_text>";
                                 $quest_blank .= "\n\t\t\t\t\t</quest_blank>";
                             }
+                            $query = "SELECT c_text, c_id FROM #__quiz_t_faketext WHERE c_quest_id = ".$quest->c_id;
+                            $database->SetQuery($query);
+                            $choice_data = $database->LoadObjectList();
+                            $quest_distr_blank = '';
+                            for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
+                                $choice = $choice_data[$k];
+                                $quest_distr_blank .= "\n\t\t\t\t\t<quest_distr_blank c_question_id=\"".$quest->c_id."\" c_distr_id=\"".$quest->c_id."\">";
+                                $quest_distr_blank .= "\n\t\t\t\t\t\t<distr_text><![CDATA[".$choice->c_text."]]></distr_text>";
+                                $quest_distr_blank .= "\n\t\t\t\t\t</quest_distr_blank>";
+                            }
                             break;
                         case 7:
                             $query = "SELECT * FROM #__quiz_t_hotspot as h WHERE h.c_question_id = ".$quest->c_id;
@@ -598,6 +611,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $quiz_xml .= "\n\t\t\t\t<blank_data>";
                 $quiz_xml .= $quest_blank;
                 $quiz_xml .= "\n\t\t\t\t</blank_data>";
+                $quiz_xml .= "\n\t\t\t\t<blank_distr_data>";
+                $quiz_xml .= $quest_distr_blank;
+                $quiz_xml .= "\n\t\t\t\t</blank_distr_data>";
                 $quiz_xml .= "\n\t\t\t\t<hotspot_data>";
                 $quiz_xml .= $quest_hotspot;
                 $quiz_xml .= "\n\t\t\t\t</hotspot_data>";

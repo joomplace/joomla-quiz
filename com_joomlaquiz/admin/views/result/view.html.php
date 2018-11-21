@@ -42,7 +42,7 @@ class JoomlaquizViewResult extends JViewLegacy
 		$appsLib->loadApplications();
 		
 		$add_lists = (method_exists($className, 'onGetAdminAddLists')) ? $appsLib->triggerEvent( 'onGetAdminAddLists' , $data ) : array();
-		if(count($add_lists)){
+		if(!empty($add_lists)){
 			$data['lists'] = array_merge($lists, $add_lists[0]);
 		} else {
 			$data['lists'] = $lists;
@@ -50,7 +50,7 @@ class JoomlaquizViewResult extends JViewLegacy
 		
 		$report_html = (method_exists($className, 'onGetAdminReportsHTML')) ? $appsLib->triggerEvent( 'onGetAdminReportsHTML' , $data ) : array('');
 				
-		if (count($errors = $this->get('Errors'))) 
+		if (!empty($errors = $this->get('Errors')))
 		{
 			JError::raiseError(500, implode('<br />', $errors));
 			return false;

@@ -38,7 +38,7 @@ class JoomlaquizViewLpath extends JViewLegacy
 		$this->quizzes_data['articles_list'] = JHTML::_('select.genericlist', $this->articles_data['articles'], 'article_id', 'class="" size="1"', 'value', 'text' );
 		
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (!empty($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}

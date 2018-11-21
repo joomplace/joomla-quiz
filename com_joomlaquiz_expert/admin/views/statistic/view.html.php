@@ -31,7 +31,7 @@ class JoomlaquizViewStatistic extends JViewLegacy
         $this->messageTrigger = $this->get('CurrDate');
 		$statistic		= $this->get('StatisticData');
 		
-		if (count($errors = $this->get('Errors'))) 
+		if (!empty($errors = $this->get('Errors')))
 		{
 			JError::raiseError(500, implode('<br />', $errors));
 			return false;

@@ -286,7 +286,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$data['question']->correct =round(($correct*100)/($past_this)).'%';
 		$data['question']->correct_c = intval($correct);
 		
-		$data['question']->incorrect = (intval($past_this)?(100-$data['question']->correct):0).'%';
+		$data['question']->incorrect = (intval($past_this)?(100-$data['question']->correct_c):0).'%';
 		$data['question']->incorrect_c = intval($past_this-$correct);
 		
 		return $data['question'];		

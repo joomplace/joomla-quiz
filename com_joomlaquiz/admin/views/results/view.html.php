@@ -37,7 +37,7 @@ class JoomlaquizViewResults extends JViewLegacy
 			$this->items = $this->get('Items');						$model = $this->getModel();			foreach($this->items as &$row){				$row->c_point += $model->getItemSum($row);			}									$pagination = new JPagination($this->get('Total'), $this->get('Start'), $model->getState('list.limit'),'stu_');			//$pagination = $this->get('Pagination');			
 			//$this->items = $model->getReportItems($cid, $pagination);
 			
-			if (count($errors = $this->get('Errors'))) 
+			if (!empty($errors = $this->get('Errors')))
 			{
 				JError::raiseError(500, implode('<br />', $errors));
 				return false;
@@ -58,7 +58,7 @@ class JoomlaquizViewResults extends JViewLegacy
 			$state		= $this->get('State');
 			$lists		= $this->get('Lists');
 			
-			if (count($errors = $this->get('Errors'))) 
+			if (!empty($errors = $this->get('Errors')))
 			{
 				JError::raiseError(500, implode('<br />', $errors));
 				return false;

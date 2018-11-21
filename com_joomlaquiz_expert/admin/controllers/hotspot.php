@@ -55,7 +55,8 @@ class JoomlaquizControllerHotspot extends JControllerForm
 			if (!JFile::move($userfile['tmp_name'],$base_Dir.$userfile['name']) || !JPath::setPermissions($base_Dir.$userfile['name'])) {
 				$message = JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$userfile_name.JText::_('COM_JOOMLAQUIZ_FAILED');
 			} else {
-				$message = JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$userfile_name.JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL');
+				$message = '<span class="hotspotimg_upload_success" style="color: #3c763d;">'.JText::_('COM_JOOMLAQUIZ_UPLOAD_OF')
+                    .$userfile_name.JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL').'</span>';
 			}
 		}
 		

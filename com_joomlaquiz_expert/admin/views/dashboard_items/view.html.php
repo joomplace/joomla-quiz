@@ -22,7 +22,7 @@ class JoomlaquizViewDashboard_Items extends JViewLegacy
         $this->state		= $this->get('State');
         $this->pagination	= $this->get('Pagination');
 
-		if (count($errors = $this->get('Errors')))
+		if (!empty($errors = $this->get('Errors')))
 		{
 			JError::raiseError(500, implode('<br />', $errors));
 			return false;

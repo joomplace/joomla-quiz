@@ -49,8 +49,8 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 		$ret_answer  = '';
 		$ans_count = 0;
 		for ($i=0, $n = count( $match_data ); $i < $n; $i++ ) {
-			$data['ret_str'] .= '<tr><td align=\'center\'><div id=\'cdiv'.$data['q_data']->c_id.'_'.($i+1).'\' class=\'jq_cont_drag_div\'>'
-			. stripslashes($match_data[$i]->c_left_text) . '</div></td><td><div id=\'ddiv'.$data['q_data']->c_id.'_'.($i+1).'\'  class=\'jq_draggable_div\' style=\'top:0px;left:0px;\'>'
+			$data['ret_str'] .= '<tr><td align=\'center\' class=\'jq_cont_drag_div_wrap\'><div id=\'cdiv'.$data['q_data']->c_id.'_'.($i+1).'\' class=\'jq_cont_drag_div\'>'
+			. stripslashes($match_data[$i]->c_left_text) . '</div></td><td class=\'jq_draggable_div_wrap\'><div id=\'ddiv'.$data['q_data']->c_id.'_'.($i+1).'\'  class=\'jq_draggable_div\' style=\'top:0px;left:0px;\'>'
 			. stripslashes($shuffle_match[$i]->c_right_text) . '</div></td></tr>';
 							
 			for ($j=0, $m = count( $match_data ); $j < $m; $j++ ) {
@@ -304,8 +304,8 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div>' . "\n"
 		. '<div style=\'width:100%;text-align:center\'><table class=\'jq_mchoice_overal\' id=\'quest_table\' align="center">';
 		for ($i=0, $n = count( $match_data ); $i < $n; $i++ ) {
-			$data['ret_str'] .= '<tr><td><div id=\'cdiv_'.($i+1).'\' class=\'jq_cont_drag_div\'>'
-			. stripslashes($match_data[$i]->c_left_text) . '</div></td><td><div id=\'ddiv_'.($i+1).'\' class=\'jq_draggable_stop_div\'>'
+			$data['ret_str'] .= '<tr><td class=\'jq_cont_drag_div_wrap\'><div id=\'cdiv_'.($i+1).'\' class=\'jq_cont_drag_div\'>'
+			. stripslashes($match_data[$i]->c_left_text) . '</div></td><td class=\'jq_draggable_stop_div_wrap\'><div id=\'ddiv_'.($i+1).'\' class=\'jq_draggable_stop_div\'>'
 			. stripslashes($shuffle_match[$i]->c_right_text) . '</div></td></tr>';
 		}
 		

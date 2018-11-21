@@ -23,7 +23,7 @@ class JoomlaquizViewDynamic extends JViewLegacy
 		$this->addTemplatePath(JPATH_BASE.'/components/com_joomlaquiz/helpers/html');
 		$this->lists	= $this->get('Lists');
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (!empty($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}

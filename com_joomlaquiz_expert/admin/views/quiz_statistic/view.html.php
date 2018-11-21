@@ -34,7 +34,7 @@ class JoomlaquizViewQuiz_Statistic extends JViewLegacy
 		
 		$this->activeFilters 	= $this->get('ActiveFilters');
 
-		if (count($errors = $this->get('Errors')))
+		if (!empty($errors = $this->get('Errors')))
 		{
 			JError::raiseError(500, implode('<br />', $errors));
 			return false;

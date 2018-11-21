@@ -31,7 +31,7 @@ class JoomlaquizViewQuestcategory extends JViewLegacy
 		$this->qc_tag_dd = JHTML::_('select.genericlist', $this->get('Tags'), 'qc_tag_dd', 'class="" size="1"', 'value', 'text', $this->item->qc_tag );
 		
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (!empty($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}

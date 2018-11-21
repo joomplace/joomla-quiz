@@ -440,8 +440,9 @@ div.jq_cont_drag_div {
 }
 div.jq_highlight_drag_div {
 	position:relative;
-	width:250px;
-	height:30px;/* !important always == 30px ! */
+	width:95%;
+	max-width:250px;
+	min-height:30px;/* !important always == 30px ! */
 	margin:10px;
 	background: url(../images/cont_img.gif) no-repeat;
 	background-position:right;

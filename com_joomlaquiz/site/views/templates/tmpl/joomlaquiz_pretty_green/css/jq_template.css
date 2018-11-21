@@ -122,8 +122,9 @@ div.jq_cont_drag_div {
 }
 div.jq_highlight_drag_div {
     position:relative;
-    width:250px;
-    height:30px;/* !important always == 30px ! */
+	width:95%;
+	max-width:250px;
+	min-height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #bcdb95 !important; /* Old browsers */
     background: -moz-radial-gradient(center, ellipse cover,  #bcdb95 1%, #bbd895 18%, #b0d185 33%, #a5c47d 67%, #9fbf76 84%, #9bb679 100%) !important; /* FF3.6+ */

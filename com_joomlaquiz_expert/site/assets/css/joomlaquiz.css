@@ -626,3 +626,14 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
 		padding: 0; 
 	}
 }
+
+.msg_email_sent_success{
+	background-color: #5bdd61;
+	background-image: repeating-radial-gradient(ellipse farthest-corner at left bottom,rgb(181, 243, 126) 0%,rgb(154, 255, 249) 100%);
+	color: #3c763d;
+	display: inline-block;
+	font-weight: bold;
+	border-radius: 0.125rem;
+	margin: 1rem 0 0 1rem;
+	padding: 0.25rem 0.5rem;
+}

@@ -477,7 +477,7 @@ class JoomlaquizModelResults extends JModelList
 			$str .= $csv_rows[$i]->c_title.'","'.$csv_rows[$i]->c_author.'","';
 			$str .= $csv_rows[$i]->c_full_score.'","';
 			$str .= $csv_rows[$i]->c_passing_score.'%","';
-			$str .= ($csv_rows[$i]->username != ''? $csv_rows[$i]->username: (($csv_rows[$i]->user_name != '') ? $csv_rows[$i]->user_name : (($csv_rows[$i]->user_email != '') ? $csv_rows[$i]->user_email : JText::_('COM_JOOMLAQUIZ_ANONYMOUS_USER')))).'","'.$csv_rows[$i]->user_email.'","'.$csv_rows[$i]->c_total_score.'","'.JHtml::_('date',$csv_rows[$i]->c_date_time,'Y-m-d H:i:s');
+			$str .= ($csv_rows[$i]->username != ''? $csv_rows[$i]->username: (($csv_rows[$i]->user_name != '') ? $csv_rows[$i]->user_name : (($csv_rows[$i]->user_email != '') ? $csv_rows[$i]->user_email : JText::_('COM_JOOMLAQUIZ_ANONYMOUS_USER')))).'","'.$csv_rows[$i]->user_email.'","'.$csv_rows[$i]->c_total_score.'","'.JHtml::_('date',$csv_rows[$i]->c_date_time,'Y-m-d H:i:s').'"';
 			$custom_data = JHtml::_('content.prepare','',$csv_rows[$i],'admin.results.csv.row');
 			$str .= '"'.($custom_data)?$custom_data.'':'"';
 			$tot_min = floor($csv_rows[$i]->c_total_time / 60);

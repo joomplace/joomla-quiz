@@ -47,10 +47,18 @@ div.correct_answer
 	color:#000000;
 }*/
 
+.jq_cont_drag_div_wrap,
+.jq_draggable_div_wrap,
+.jq_draggable_stop_div_wrap
+{
+	text-align: center;
+	width: 50%;
+}
 div.jq_draggable_div {
     position:relative;
-    width:250px;
-    height:30px;/* !important always == 30px ! */
+	width:95%;
+	max-width:250px;
+	min-height:30px;/* !important always == 30px ! */
     margin:10px;
 	background: #bcdb95 !important; /* Old browsers */
     background: -moz-radial-gradient(center, ellipse cover,  #bcdb95 1%, #bbd895 18%, #b0d185 33%, #a5c47d 67%, #9fbf76 84%, #9bb679 100%) !important; /* FF3.6+ */
@@ -70,8 +78,9 @@ div.jq_draggable_div {
 }
 div.jq_draggable_stop_div {
     position:relative;
-    width:250px;
-    height:30px;/* !important always == 30px ! */
+	width:95%;
+	max-width:250px;
+	min-height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #bcdb95 !important; /* Old browsers */
     background: -moz-radial-gradient(center, ellipse cover,  #bcdb95 1%, #bbd895 18%, #b0d185 33%, #a5c47d 67%, #9fbf76 84%, #9bb679 100%) !important; /* FF3.6+ */
@@ -91,8 +100,9 @@ div.jq_draggable_stop_div {
 }
 div.jq_cont_drag_div {
     position:relative;
-    width:250px;
-    height:30px;/* !important always == 30px ! */
+	width:95%;
+	max-width:250px;
+	min-height:30px;/* !important always == 30px ! */
     margin:10px;
     background: #9edb64 !important; /* Old browsers */
     background: -moz-radial-gradient(center, ellipse cover,  #9edb64 0%, #92d157 17%, #91ce58 33%, #85bf50 67%, #80b252 83%, #74a547 100%) !important; /* FF3.6+ */

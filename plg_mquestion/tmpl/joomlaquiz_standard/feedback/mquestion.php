@@ -28,6 +28,12 @@ class JoomlaquizViewFeedbackMquestion
 							</tr> \n";
 		$k = 2;
 		foreach ($feedback_data['choice_data'] as $qone) {
+		    if(empty($feedback_data['choice_data'][0]->c_title_false)) {
+                $feedback_data['choice_data'][0]->c_title_false = 'false';
+            }
+            if(empty($feedback_data['choice_data'][0]->c_title_true)) {
+                $feedback_data['choice_data'][0]->c_title_true = 'true';
+            }
 			$jq_tmpl_html .= "
 					<tr class='sectiontableentry".$k."'>
 						<td align='left' class='quest_pos'>".stripslashes($qone->text)."</td> \n

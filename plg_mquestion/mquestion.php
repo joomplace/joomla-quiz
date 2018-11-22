@@ -575,11 +575,11 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$lists['c_random']['input'] = $c_random;
 		$lists['c_random']['label'] = JText::_('COM_JOOMLAQUIZ_RANDOMIZE_ANSWERS');
 		
-		$c_title_true = (isset($row->c_title_true)) ? $row->c_title_true : '';
+		$c_title_true = (isset($row->c_title_true)) ? $row->c_title_true : 'true';
 		$lists['c_title_true']['input'] = "<input type='text' size='30' name='c_title_true' value='".$c_title_true."' />";
 		$lists['c_title_true']['label'] = JText::_('COM_JOOMLAQUIZ_TITLE_FOR_TRUE');
 		
-		$c_title_false = (isset($row->c_title_false)) ? $row->c_title_false : '';
+		$c_title_false = (isset($row->c_title_false)) ? $row->c_title_false : 'false';
 		$lists['c_title_false']['input'] = "<input type='text' size='30' name='c_title_false' value='".$c_title_false."' />";
 		$lists['c_title_false']['label'] = JText::_('COM_JOOMLAQUIZ_TITLE_FOR_FALSE');
 		

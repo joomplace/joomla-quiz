@@ -38,4 +38,11 @@ class JoomlaquizTablePayment extends JTable
 			
 			return $res;
 		}
+
+		function load($keys = null, $reset = true)
+        {
+            if($keys > 1000000000)
+                $keys = $keys-1000000000;
+            return parent::load($keys, $reset);
+        }
 }

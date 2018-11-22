@@ -317,9 +317,9 @@ class com_joomlaquizInstallerScript
 		$db->setQuery("SELECT COUNT(id) FROM #__quiz_dashboard_items");
 		if(!$db->loadResult()){
 			$db->setQuery("INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
-			(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/media/com_joomlaquiz/images/quizzes48.png', 1),
-			(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/media/com_joomlaquiz/images/questions48.png', 1),
-			(3, 'Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '".JURI::root(true)."/media/com_joomlaquiz/images/help48.png', 1);");
+			(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
+			(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
+			(3, 'Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);");
 			$db->execute();
 		} else {
             $query = $db->getQuery(true);

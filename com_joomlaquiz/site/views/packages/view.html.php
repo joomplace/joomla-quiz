@@ -19,14 +19,14 @@ class JoomlaquizViewPackages extends JViewLegacy
     {
 		$this->packages = $this->get('Packages');
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (!empty($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
 
         $load_vm_lang = false;
         foreach ($this->packages as $item){
-            if($item->vm){
+            if(!empty($item->vm)){
                 $load_vm_lang = true;
                 break;
             }

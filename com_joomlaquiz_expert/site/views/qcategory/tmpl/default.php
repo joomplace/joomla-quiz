@@ -126,13 +126,13 @@ foreach($this->categories as $categ){
 		<?php } ?>
 		</div>
 		
-		<?php if(!count($bought_quizzes) && !count($lpaths)) { 				
+		<?php if(empty($bought_quizzes) && empty($lpaths)) {
 			echo '</div>';
 		}else{ ?>
 		
 		<br />
 		<div class="jq_pquiz_container">
-		<?php if(count($bought_quizzes)) { ?>
+		<?php if(!empty($bought_quizzes)) { ?>
 			<h4><?php echo JText::_('COM_JQ_PURCH_QUIZZES'); ?></h4>
 		
 			<?php
@@ -158,7 +158,7 @@ foreach($this->categories as $categ){
 		<br />
 		
 		<div class="jq_lpath_container">
-		<?php if(count($lpaths)) { ?>
+		<?php if(!empty($lpaths)) { ?>
 			<h4><?php echo JText::_('COM_QUIZ_PURCH_LPATHS');	?></h4>
 			
 			<?php

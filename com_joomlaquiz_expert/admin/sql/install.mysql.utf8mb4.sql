@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_dashboard_items` (
 INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
 (1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
 (2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
-(3, 'Help', 'http://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe/index.html', '/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
+(3, 'Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
 
 
 

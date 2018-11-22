@@ -73,7 +73,7 @@ class JoomlaquizModelPackages extends JModelList
 		foreach($orders as $i=>$order) {
 			$package = new stdClass;
 			
-			if ($order->vm) {
+			if (!empty($order->vm)) {
 				$query = "SELECT vm_order_history.*, vm_order_history.created_on as date_added, vm_order_history.virtuemart_order_id as order_id, vm_order_status.virtuemart_orderstate_id as order_status_id, vm_order_status.order_status_name"
 				. "\n FROM `#__virtuemart_order_histories` AS vm_order_history"
 				. "\n INNER JOIN `#__virtuemart_orderstates` AS vm_order_status ON (vm_order_status.order_status_code = vm_order_history.order_status_code AND vm_order_status.virtuemart_vendor_id = " . $order->vendor_id . ')'
@@ -91,13 +91,13 @@ class JoomlaquizModelPackages extends JModelList
 			$database->SetQuery( $query );
 			$orders_status = $database->loadObject();
 
-			if ($order->vm) {
+            if (!empty($order->vm)) {
 				JoomlaquizHelper::JQ_GetJoomFish($orders_status->order_status_name, 'vm_order_status', 'order_status_name', $orders_status->order_status_id);
 			} else {
 				$orders_status->order_status_name = isset($jq_language[$orders_status->order_status_name])? $jq_language[$orders_status->order_status_name]: $orders_status->order_status_name;
 			}
-			
-			if ($order->vm) {
+
+            if (!empty($order->vm)) {
 				$query = "SELECT qp.*"
 				. "\n FROM #__virtuemart_order_items AS vm_oi"
 				. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
@@ -129,8 +129,8 @@ class JoomlaquizModelPackages extends JModelList
 			if(!count($rel_quizzes)) {
 				continue;
 			}
-			
-			if ($order->vm) {
+
+            if (!empty($order->vm)) {
 				$query = "SELECT vm_p.*, vm_p_engb.product_name, vm_p.virtuemart_product_id as product_id"
 				. "\n FROM #__virtuemart_order_items AS vm_oi"
 				. "\n INNER JOIN #__virtuemart_products AS vm_p ON vm_p.virtuemart_product_id = vm_oi.virtuemart_product_id"
@@ -165,7 +165,7 @@ class JoomlaquizModelPackages extends JModelList
 			}
 			
 			$products_stat = array();
-			if ($order->vm) {
+            if (!empty($order->vm)) {
 					$query = "SELECT *"
 					. "\n FROM #__quiz_products_stat"
 					. "\n WHERE uid = $my->id AND oid = " . $order->order_id
@@ -251,7 +251,7 @@ class JoomlaquizModelPackages extends JModelList
 					
 					$product_quantity = 1;
 					if($data->attempts > 0) {
-						if ($order->vm) {
+                        if (!empty($order->vm)) {
 							if($version == '1.5'){
 								$query = "SELECT vm_oi.product_quantity"
 								. "\n FROM #__vm_orders AS vm_o"
@@ -290,25 +290,15 @@ class JoomlaquizModelPackages extends JModelList
 						}								
 					}
 
-					
 					$quiz = $all_quizzez[$data->rel_id];
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_title, 'quiz_t_quiz', 'c_title', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_description, 'quiz_t_quiz', 'c_description', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_short_description, 'quiz_t_quiz', 'c_short_description', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_right_message, 'quiz_t_quiz', 'c_right_message', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_wrong_message, 'quiz_t_quiz', 'c_wrong_message', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_pass_message, 'quiz_t_quiz', 'c_pass_message', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_unpass_message, 'quiz_t_quiz', 'c_unpass_message', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_metadescr, 'quiz_t_quiz', 'c_metadescr', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_keywords, 'quiz_t_quiz', 'c_keywords', $quiz->c_id);
-					JoomlaquizHelper::JQ_GetJoomFish($quiz->c_metatitle, 'quiz_t_quiz', 'c_metatitle', $quiz->c_id);
 					
-					if ($data->expired)
-						$data->suffix = JText::_('COM_QUIZ_EXPIRED');
-						
-					if ($data->expired_a)
-						$data->suffix = JText::_('COM_QUIZ_NOT_ATTEMPTS2');
-						
+					if ($data->expired) {
+                        $data->suffix = JText::_('COM_QUIZ_EXPIRED');
+                    }
+					if ($data->expired_a) {
+                        $data->suffix = JText::_('COM_QUIZ_NOT_ATTEMPTS2');
+                    }
+
 					$bought_quizze = new stdClass;
 					$bought_quizze->quiz = $quiz;
 					$bought_quizze->rel_id = $data->id;
@@ -328,15 +318,12 @@ class JoomlaquizModelPackages extends JModelList
 					$l_count = count($rel_quizzes['l']);
 
 					if(is_array($rel_quizzes['l']) && count($rel_quizzes['l']))
-					foreach($rel_quizzes['l'] as $data) {
+					foreach($rel_quizzes['l'] as $data)
+					{
 						if(empty($lpath[$data->rel_id])) {
 							continue;
 						}
-						
-						JoomlaquizHelper::JQ_GetJoomFish($lpath[$data->rel_id]->title, 'quiz_lpath', 'title', $lpath[$data->rel_id]->id);
-						JoomlaquizHelper::JQ_GetJoomFish($lpath[$data->rel_id]->short_descr, 'quiz_lpath', 'short_descr', $lpath[$data->rel_id]->id);
-						JoomlaquizHelper::JQ_GetJoomFish($lpath[$data->rel_id]->descr, 'quiz_lpath', 'descr', $lpath[$data->rel_id]->id);
-						
+
 						$data->title = $lpath[$data->rel_id]->title;
 						$data->short_descr = $lpath[$data->rel_id]->short_descr;
 						$data->descr = $lpath[$data->rel_id]->descr;
@@ -400,7 +387,7 @@ class JoomlaquizModelPackages extends JModelList
 						
 						$product_quantity = 1;
 						if($data->attempts > 0) {
-							if ($order->vm) {
+                            if (!empty($order->vm)) {
 								
 								$query = "SELECT vm_oi.product_quantity"
 								. "\n FROM #__virtuemart_orders AS vm_o"
@@ -429,12 +416,12 @@ class JoomlaquizModelPackages extends JModelList
 				}
 			}
 					
-			if(!count($bq_count) && !count($l_count)) {
+			if(empty($bq_count) && empty($l_count)) {
 				continue;
 			}
 			
-			$package->vm = $order->vm;
-			$package->package_number = $order->vm? $orders_status->order_id: $orders_status->order_id + 1000000000;
+			$package->vm = !empty($order->vm) ? $order->vm : 0;
+			$package->package_number = !empty($order->vm) ? $orders_status->order_id: $orders_status->order_id + 1000000000;
 			$package->order_status_code = $orders_status->order_status_code;
 			$package->order_status_name = JText::_($orders_status->order_status_name);
 			$package->order_status_date = date(JText::_('COM_PACKAGE_STATUS_FROM_FORMAT'), strtotime($orders_status->date_added));

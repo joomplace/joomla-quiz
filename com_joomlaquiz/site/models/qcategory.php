@@ -70,7 +70,7 @@ class JoomlaquizModelQcategory extends JModelList
 
             $quiz_products = array_merge($quiz_products, $VM_quiz_products);
 
-            if (is_array($quiz_products) && count($quiz_products)) {
+            if (is_array($quiz_products) && !empty($quiz_products)) {
                 foreach ($quiz_products as $q) {
                     $rel_quizzes[$q->type][] = $q;
                     if ($q->type == 'l') {
@@ -127,31 +127,8 @@ class JoomlaquizModelQcategory extends JModelList
         $rows = $purch_quizzes = array();
         if (is_array($all_quizzez)) {
             foreach ($all_quizzez as $i => $row) {
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_title,
-                    'quiz_t_quiz', 'c_title', $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_description,
-                    'quiz_t_quiz', 'c_description', $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_short_description,
-                    'quiz_t_quiz', 'c_short_description',
-                    $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_right_message,
-                    'quiz_t_quiz', 'c_right_message', $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_wrong_message,
-                    'quiz_t_quiz', 'c_wrong_message', $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_pass_message,
-                    'quiz_t_quiz', 'c_pass_message', $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_unpass_message,
-                    'quiz_t_quiz', 'c_unpass_message', $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_metadescr,
-                    'quiz_t_quiz', 'c_metadescr', $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_keywords,
-                    'quiz_t_quiz', 'c_keywords', $all_quizzez[$i]->c_id);
-                JoomlaquizHelper::JQ_GetJoomFish($all_quizzez[$i]->c_metatitle,
-                    'quiz_t_quiz', 'c_metatitle', $all_quizzez[$i]->c_id);
-
                 if ($all_quizzez[$i]->paid_check == 0) {
-                    $all_quizzez[$i]->payment
-                            = JText::_('COM_QUIZ_PAYMENT_FREE');
+                    $all_quizzez[$i]->payment = JText::_('COM_QUIZ_PAYMENT_FREE');
                     $rows[] = $all_quizzez[$i];
                 } else {
                     $purch_quizzes[] = $all_quizzez[$i]->c_id;
@@ -160,7 +137,7 @@ class JoomlaquizModelQcategory extends JModelList
         }
 
         $bought_quizzes = array();
-        if (array_key_exists('q', $rel_quizzes) && count($rel_quizzes['q'])) {
+        if (array_key_exists('q', $rel_quizzes) && !empty($rel_quizzes['q'])) {
             foreach ($rel_quizzes['q'] as $data) {
 
                 $inAll = false;
@@ -175,52 +152,62 @@ class JoomlaquizModelQcategory extends JModelList
                     continue;
                 }
 
+                $expired = false;
+                $ts = strtotime(\JFactory::getDate('now', JFactory::getConfig()->get('offset', 'UTC')));
                 if ($data->xdays > 0) {
-                    $data->suffix = sprintf(JText::_('COM_QUIZ_XDAYS'),
-                        $data->xdays);
+                    if(!empty($products_stat) && array_key_exists($data->id, $products_stat)) {
+                        $confirm_date = strtotime($products_stat[$data->id]->xdays_start);
+                    }
+                    if($confirm_date) {
+                        $ts_day_end = $confirm_date + $data->xdays*24*60*60;
+                        if (strtotime(JFactory::getDate()) > $ts_day_end) {
+                            $days_left = 0;
+                            $expired = true;
+                            $data->suffix = JText::_('COM_QUIZ_EXPIRED');
+                        } else {
+                            $days_left = ceil(($ts_day_end - strtotime(JFactory::getDate()))/(24*60*60));
+                        }
+                    } else {
+                        $days_left = 0;
+                        $expired = true;
+                    }
+                    $data->suffix = sprintf(JText::_('COM_QUIZ_XDAYS'), $days_left);
                 } else {
-                    if (($data->period_start
-                            && $data->period_start != '0000-00-00')
-                        || ($data->period_end
-                            && $data->period_end != '0000-00-00')
-                    ) {
-                        if (!empty($products_stat)
-                            && array_key_exists($data->id, $products_stat)
-                        ) {
-                            $data->period_start
-                                = $products_stat[$data->id]->period_start;
-                            $data->period_end
-                                = $products_stat[$data->id]->period_end;
-                        }
-                        $period = array();
-                        if ($data->period_start
-                            && $data->period_start != '0000-00-00'
-                        ) {
-                            $period[]
-                                = sprintf(JText::_('COM_QUIZ_LPATH_PERIOD_FROM'),
-                                date(JText::_('COM_QUIZ_LPATH_PERIOD_FORMAT'),
-                                    strtotime($data->period_start)));
-                        }
-                        if ($data->period_end
-                            && $data->period_end != '0000-00-00'
-                        ) {
-                            $period[]
-                                = sprintf(JText::_('COM_QUIZ_LPATH_PERIOD_TO'),
-                                date(JText::_('COM_QUIZ_LPATH_PERIOD_FORMAT'),
-                                    strtotime($data->period_end)));
-                        }
-                        $data->suffix = sprintf(JText::_('COM_QUIZ_PERIOD'),
-                            implode(' ', $period));
+                    if(!empty($products_stat) && array_key_exists($data->id, $products_stat)) {
+                        $data->period_start = $products_stat[$data->id]->period_start;
+                        $data->period_end = $products_stat[$data->id]->period_end;
+                    }
+                    $period = array();
+                    $ts_start = null;
+                    if($data->period_start && $data->period_start != '0000-00-00') {
+                        $ts_start = strtotime($data->period_start . ' 00:00:00');
+                        $period[] = sprintf(JText::_('COM_QUIZ_LPATH_PERIOD_FROM'), date(JText::_('COM_QUIZ_LPATH_PERIOD_FORMAT'), $ts_start));
+                    }
+                    $ts_end = null;
+                    if($data->period_end && $data->period_end != '0000-00-00') {
+                        $ts_end = strtotime($data->period_end . ' 23:59:59');
+                        $period[] = sprintf(JText::_('COM_QUIZ_LPATH_PERIOD_TO'), date(JText::_('COM_QUIZ_LPATH_PERIOD_FORMAT'), $ts_end));
+                    }
+                    $data->suffix = sprintf(JText::_('COM_QUIZ_PERIOD'), implode(' ', $period));
+                    if(($ts_start && $ts_start > $ts) || ($ts_end && $ts_end < $ts)) {
+                        $expired = true;
                     }
                 }
 
-                if ($data->attempts > 0 && $data->xdays > 0) {
-                    $data->suffix = sprintf(JText::_('COM_QUIZ_XDAYS_ATTEMPTS'),
-                        $data->attempts, $data->xdays);
-                } else {
-                    $data->suffix .= ($data->suffix ? ' ' : '')
-                        . sprintf(JText::_('COM_QUIZ_ATTEMPTS'),
-                            $data->attempts);
+                if($data->attempts > 0) {
+                    $attempts = (!empty($products_stat) && array_key_exists($data->id, $products_stat) && $products_stat[$data->id]->attempts ? $products_stat[$data->id]->attempts : 0);
+                    $attempts_left = $data->attempts - $attempts;
+
+                    if($data->xdays > 0) {
+                        $data->suffix = sprintf(JText::_('COM_QUIZ_XDAYS_ATTEMPTS'), $attempts_left, $days_left);
+                    } else if (($data->period_start && $data->period_start != '0000-00-00') || ($data->period_end && $data->period_end != '0000-00-00')) {
+                        $data->suffix = sprintf(JText::_('COM_QUIZ_PERIOD_ATTEMPTS'), $attempts_left, implode(' ', $period));
+                    } else {
+                        $data->suffix .= ($data->suffix ? ' ' : '') . sprintf(JText::_('COM_QUIZ_ATTEMPTS'), $attempts_left);
+                    }
+                    if($data->attempts <= $attempts) {
+                        $expired = true;
+                    }
                 }
 
                 foreach($all_quizzez as $quiz){
@@ -230,8 +217,11 @@ class JoomlaquizModelQcategory extends JModelList
                     }
                 }
 
-                $data->pid        = $data->order_id;
-                $bought_quizzes[] = $data;
+                $data->pid = $data->order_id;
+
+                if(!$expired) {
+                    $bought_quizzes[] = $data;
+                }
             }
         }
 

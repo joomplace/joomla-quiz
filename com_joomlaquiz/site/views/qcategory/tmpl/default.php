@@ -126,7 +126,7 @@ foreach($this->categories as $categ){
 		<?php } ?>
 		</div>
 		
-		<?php if(!count($bought_quizzes) && !count($lpaths)) { 				
+		<?php if(empty($bought_quizzes) && empty($lpaths)) {
 			echo '</div>';
 		}else{ ?>
 			
@@ -157,7 +157,7 @@ foreach($this->categories as $categ){
 			</div>
 			<br />
 			<div class="jq_lpath_container">
-			<?php if(count($lpaths)) { ?>
+			<?php if(!empty($lpaths)) { ?>
 				<h4><?php echo JText::_('COM_QUIZ_PURCH_LPATHS');	?></h4>
 				
 				<?php

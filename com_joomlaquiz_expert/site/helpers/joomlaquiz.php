@@ -389,17 +389,24 @@ class JoomlaquizHelper
 			$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id=".$q_id;
 			$database->setQuery($query);
 			$blnk = $database->loadObjectList();
-			for($i=0;$i<count($blnk);$i++){
-				
+			for($i=0;$i<count($blnk);$i++)
+			{
+                $c_texts = array();
+
 				$query = "SELECT c_id, c_text FROM #__quiz_t_text WHERE c_blank_id = ".$blnk[$i]->c_id." ORDER BY ordering ";
 				$database->setQuery($query);
 				$tmp2 = $database->loadObjectList();
-				$c_texts = array();
-				foreach($tmp2 as $t=>$cd) {		
-					JoomlaquizHelper::JQ_GetJoomFish($tmp2[$t]->c_text, 'quiz_t_text', 'c_text', $tmp2[$t]->c_id);
+				foreach($tmp2 as $t=>$cd) {
 					$c_texts[] = $tmp2[$t]->c_text;
 				}
-				
+
+                $query = "SELECT `c_id`, `c_text` FROM `#__quiz_t_faketext` WHERE `c_quest_id` = ".(int)$q_id;
+                $database->setQuery($query);
+                $tmp3 = $database->loadObjectList();
+                foreach($tmp3 as $t=>$cd) {
+                    $c_texts[] = $tmp3[$t]->c_text;
+                }
+
 				$replacement = JoomlaQuiz_template_class::JQ_createBlank_review(implode(', ',$c_texts));		
 				
 				if(function_exists('str_ireplace')){

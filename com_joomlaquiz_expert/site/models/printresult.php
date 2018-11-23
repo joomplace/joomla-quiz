@@ -10,7 +10,7 @@ defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.modellist');
 
-require_once( JPATH_ROOT .'/components/com_joomlaquiz/libraries/apps.php' ); 
+require_once( JPATH_ROOT .'/components/com_joomlaquiz/libraries/apps.php' );
 
 /**
  * Print Result(PDF) Model.
@@ -198,32 +198,20 @@ class JoomlaquizModelPrintresult extends JModelList
 		$appsLib = JqAppPlugins::getInstance();
 		$plugins = $appsLib->loadApplications();
 
-		defined(_PDF_GENERATED) or define(
-			'_PDF_GENERATED', JText::_('COM_JOOMLAQUIZ_PDF_GENERATED')
-		);
+		defined(_PDF_GENERATED) or define('_PDF_GENERATED', JText::_('COM_JOOMLAQUIZ_PDF_GENERATED'));
 		$database = JFactory::getDBO();
 
 		$str = "";
-		$query
-		     = "SELECT sq.*, q.*, u.* FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq LEFT JOIN #__users AS u ON sq.c_student_id = u.id"
+		$query = "SELECT sq.*, q.*, u.* FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq LEFT JOIN #__users AS u ON sq.c_student_id = u.id"
 			. "\n WHERE sq.c_id = '" . $sid . "' AND sq.c_quiz_id = q.c_id";
 		$database->SetQuery($query);
 		$info = $database->LoadAssocList();
 		$info = $info[0];
 
-		$info['username'] = ($info['username'])
-			? $info['username']
-			: JText::_(
-				'COM_JOOMLAQUIZ_ANONYMOUS'
-			);
-		$info['name']     = ($info['name']) ? $info['name']
-			: $info['user_name'] . ' ' . $info['user_surname'];
-		$info['email']    = ($info['email']) ? $info['email']
-			: $info['user_email'];
+		$info['username'] = ($info['username']) ? $info['username'] : JText::_('COM_JOOMLAQUIZ_ANONYMOUS');
+		$info['name']     = ($info['name']) ? $info['name'] : $info['user_name'] . ' ' . $info['user_surname'];
+		$info['email']    = ($info['email']) ? $info['email'] : $info['user_email'];
 
-		JoomlaquizHelper::JQ_GetJoomFish(
-			$info['c_title'], 'quiz_t_quiz', 'c_title', $info['c_quiz_id']
-		);
 		$quiz_id = $info['c_quiz_id'];
 
 		/*$query = "SELECT q_chain FROM #__quiz_q_chain "
@@ -233,6 +221,19 @@ class JoomlaquizModelPrintresult extends JModelList
 		$qch_ids = str_replace('*', ',', $qch_ids);
 		$total = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
 		*/
+
+		//It is necessary to load the current template if there is a type of question `Fill In The Blank` (type 6)
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('t.template_name')
+            ->from($db->qn('#__quiz_templates', 't'))
+            ->leftJoin($db->qn('#__quiz_t_quiz', 'q') . ' ON ' . $db->qn('q.c_skin') .'='. $db->qn('t.id'))
+            ->leftJoin($db->qn('#__quiz_r_student_quiz', 'sq') . ' ON ' . $db->qn('sq.c_quiz_id') .'='. $db->qn('q.c_id'))
+            ->where($db->qn('sq.c_id') .'='. $db->q((int)$sid));
+        $db->setQuery($query);
+        $cur_template = $db->LoadResult();
+        JoomlaquizHelper::JQ_load_template($cur_template);
+
         $total = $info['c_max_score'];
 
         $lang = \JFactory::getLanguage()->getTag();
@@ -430,16 +431,23 @@ class JoomlaquizModelPrintresult extends JModelList
 				. "]";
 			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
+            $type = $data['c_type'];
+            $t = JoomlaquizHelper::getQuestionType($type);
+
+            if((int)$data['c_type'] == 6){ //Fill In The Blank
+                if ($cur_template) {
+                    $data['c_question'] = JoomlaquizHelper::Blnk_replace_quest_review($data['c_id'], $data['c_question']);
+                }
+            }
+
 			$pdf->setFont($fontFamily, 'B');
 			//$pdf->setStyle('b', false);
-			$str = $data['c_question'];
+            $str = $data['c_question'];
 			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
-			$type           = $data['c_type'];
 			$answer         = '';
 			$correct_answer = '';
 
-			$t                      = JoomlaquizHelper::getQuestionType($type);
 			$pdf_data               = array();
 			$pdf_data['quest_type'] = $t;
 			$pdf_data['pdf_doc']    = $pdf_doc;

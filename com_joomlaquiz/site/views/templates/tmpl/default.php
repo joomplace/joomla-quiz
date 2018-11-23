@@ -448,7 +448,7 @@ EOF_MSG;
 		if($is_correct){
 			$html = '<font color="green">'.$user_answer.'</font>';
 		}else{
-			$html = '<font color="red" style="text-decoration: line-through;">'.$user_answer.'</font> <font color="blue">'.array_shift($correct_answers).(($correct_answers)?' ('.implode(', ',$correct_answers).')':'').'</font>';
+			$html = '<font color="red" style="text-decoration: line-through;">'.$user_answer.'</font> <font color="green">'.array_shift($correct_answers).(($correct_answers)?' ('.implode(', ',$correct_answers).')':'').'</font>';
 		}
 		
 		return $html;

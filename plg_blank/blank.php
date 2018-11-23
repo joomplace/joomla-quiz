@@ -542,7 +542,9 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
+        if(JFactory::getApplication()->input->get('task')=='copy_quizzes') {
+            return true;
+        }
 		$database = JFactory::getDBO();
 		
 		$database->setQuery("UPDATE #__quiz_t_question SET `c_immediate` = '".$_POST['jform']['c_immediate']."', `c_qform` = '".$_POST['c_qform']."', `c_image` = '".$_POST['c_image']."' WHERE c_id = '".$data['qid']."'");

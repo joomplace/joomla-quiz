@@ -46,7 +46,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$c_quest_score = 0;
 		$data['c_all_attempts'] = 1;
 		$data['is_avail'] = 1;
-		if (count($ddd)) {
+		if (!empty($ddd)) {
 			$ans_array = explode(',', $data['answer']);
 
 			if ($ans_array[2]) {
@@ -62,7 +62,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
 		
-		if (count($c_tmp)) {
+		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
@@ -163,7 +163,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$query = "SELECT a.`c_point`, a.`c_attempts` FROM `#__quiz_t_question` as a WHERE a.c_id = '".$data['quest_id']."' AND a.`published` = 1";
         $database->SetQuery( $query );
         $ddd = $database->LoadObjectList();
-		if (count($ddd)) {
+		if (!empty($ddd)) {
 			$ans_array = explode(',',$data['answer']);
             if ($ans_array[2]) {
               $data['is_correct'] = 1;
@@ -382,7 +382,12 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$query = "SELECT * FROM #__quiz_r_student_hotspot WHERE c_sq_id = '".$data['id']."'";
 		$database->SetQuery( $query );
 		$answer = $database->LoadObjectList();
-		if (!count($answer)) { $answer = array(); $answer[0]->c_select_x = 0; $answer[0]->c_select_y = 0; }
+		if (empty($answer)) {
+		    $answer = array();
+            $answer[0] = new \stdClass;
+		    $answer[0]->c_select_x = 0;
+		    $answer[0]->c_select_y = 0;
+		}
 		
 		$lists['answer'] = $answer;
 		$lists['id'] = $data['id'];
@@ -390,7 +395,14 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$query = "SELECT * FROM `#__quiz_t_ext_hotspot` WHERE `c_question_id` = '".$data['q_id']."'";
 		$database->SetQuery( $query );
 		$hotspot = $database->LoadObjectList();
-		if (!count($hotspot)) { $hotspot = array(); $hotspot[0]->c_start_x = 0; $hotspot[0]->c_start_y = 0; $hotspot[0]->c_width = 0; $hotspot[0]->c_height = 0; }
+		if (empty($hotspot)) {
+		    $hotspot = array();
+            $hotspot[0] = new \stdClass;
+		    $hotspot[0]->c_start_x = 0;
+		    $hotspot[0]->c_start_y = 0;
+		    $hotspot[0]->c_width = 0;
+		    $hotspot[0]->c_height = 0;
+		}
 				
 		$lists['hotspot'] = $hotspot[0];
 		

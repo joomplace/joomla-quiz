@@ -21,7 +21,7 @@ function getTotalScoreChoice($qid){
 	$database->SetQuery( $query );
 	$qch_ids_type_1 = $database->loadColumn();
 
-	if(count($qch_ids_type_1)) {
+	if(!empty($qch_ids_type_1)) {
 		foreach($qch_ids_type_1 as $key => $c_quetion_id){
 			$query = "SELECT b.c_right FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$c_quetion_id."' AND b.c_question_id = a.c_id AND a.published = 1";
 			$database->SetQuery( $query );

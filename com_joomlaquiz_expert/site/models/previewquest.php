@@ -34,20 +34,9 @@ class JoomlaquizModelPreviewquest extends JModelList
 			if ($quiz_id) {
 				$query = "SELECT a.*, b.template_name FROM #__quiz_t_quiz as a, #__quiz_templates as b WHERE a.c_id = '".$quiz_id."' and a.c_skin = b.id";
 				$database->SetQuery($query);
-				$quiz_params = $database->LoadObjectList();		
-				
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_title, 'quiz_t_quiz', 'c_title', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_description, 'quiz_t_quiz', 'c_description', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_short_description, 'quiz_t_quiz', 'c_short_description', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_right_message, 'quiz_t_quiz', 'c_right_message', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_wrong_message, 'quiz_t_quiz', 'c_wrong_message', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_pass_message, 'quiz_t_quiz', 'c_pass_message', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_unpass_message, 'quiz_t_quiz', 'c_unpass_message', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_metadescr, 'quiz_t_quiz', 'c_metadescr', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_keywords, 'quiz_t_quiz', 'c_keywords', $quiz_params[0]->c_id);
-				JoomlaquizHelper::JQ_GetJoomFish($quiz_params[0]->c_metatitle, 'quiz_t_quiz', 'c_metatitle', $quiz_params[0]->c_id);
+				$quiz_params = $database->LoadObjectList();
 		
-				if (count($quiz_params)) {
+				if (!empty($quiz_params)) {
 					$query = "SELECT count(*) FROM #__quiz_t_question WHERE c_id = '".$quest_id."' AND c_type = 4 AND published = 1" ;
 					$database->SetQuery( $query );
 					$quiz_params[0]->if_dragdrop_exist = $database->LoadResult();

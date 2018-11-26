@@ -45,7 +45,7 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$data['is_avail'] = 1;
 
 		$answer = trim( ($data['answer']));//decode_unicode_url
-		if (count($ddd)) {
+		if (!empty($ddd)) {
 			if ($answer) {
 				$data['is_correct'] = 1;
 				$c_quest_score = $ddd[0]->c_point;
@@ -58,7 +58,7 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
 		
-		if (count($c_tmp)) {
+		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
@@ -141,7 +141,11 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$ddd = $database->LoadObjectList();
 		
 		$answer = trim(urldecode($data['answer']));
-		if (count($ddd)) { if ($answer) { $data['is_correct'] = 1; }}
+		if (!empty($ddd)) {
+		    if ($answer) {
+		        $data['is_correct'] = 1;
+		    }
+		}
 		
 		return $data;
 	}
@@ -303,7 +307,11 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$answer = $database->LoadObjectList();
 		
-		if (!count($answer)) { $answer = array(); $answer[0] = new stdClass; $answer[0]->c_answer = ''; }
+		if (empty($answer)) {
+		    $answer = array();
+		    $answer[0] = new stdClass;
+		    $answer[0]->c_answer = '';
+		}
 		$lists['id'] = $data['id'];
 		$lists['answer'] = $answer;
 

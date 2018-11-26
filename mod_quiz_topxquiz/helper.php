@@ -35,14 +35,14 @@ class modTopxquizHelper
        
 		if ($quiz_id) {
 			$quiz_ids = explode( ',', $quiz_id );
-			if(count($quiz_ids)){
+			if(!empty($quiz_ids)){
 				$query .= "\n AND ( qtq.c_id=" . implode( " OR qtq.c_id=", $quiz_ids ) . " )";
 			}
 		}
 		$query .= "ORDER BY qrsq.c_total_score DESC, qtq.c_title ASC LIMIT 0,".$v_content_count;
 		$database->SetQuery($query);
 		$result = $database->LoadObjectList();
-		if (count($result) == 0) {
+		if (empty($result)) {
 			$result = array(); 
 		}
 		

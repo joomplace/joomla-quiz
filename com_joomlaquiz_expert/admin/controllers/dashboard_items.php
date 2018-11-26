@@ -36,7 +36,7 @@ class JoomlaquizControllerDashboard_items extends JControllerAdmin
         $tmpl = JFactory::getApplication()->input->get('tmpl');
         if ($tmpl == 'component') $tmpl = '&tmpl=component'; else $tmpl = '';
 
-        if (!is_array($cid) || count($cid) < 1) {
+        if (!is_array($cid) || empty($cid)) {
             JError::raiseWarning(500, JText::_($this->text_prefix . '_NO_ITEM_SELECTED'));
         } else {
             // Get the model.

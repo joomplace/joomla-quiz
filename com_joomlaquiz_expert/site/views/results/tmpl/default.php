@@ -30,7 +30,7 @@ if($share_id != ''){
 
 if(!$my->id && !$is_share) {
 	echo JText::_('COM_RESULTS_FOR_REGISTERED');
-} elseif(!count($rows)) {
+} elseif(empty($rows)) {
 	?>
 	<div class="contentpane joomlaquiz">
 		<h1 class="componentheading"><?php echo JText::_('COM_SHOW_RESULTS_TITLE'); ?></h1>

@@ -19,7 +19,7 @@ function removeQuestionsBlank($cids){
 	$query = "SELECT c_id FROM #__quiz_t_blank WHERE c_question_id IN ( $cids )";
 	$database->SetQuery( $query );
 	$blank_cid = $database->loadColumn();
-	if (is_array( $blank_cid ) && (count($blank_cid) > 0)) {
+	if (is_array( $blank_cid ) && (!empty($blank_cid))) {
 		$blank_cids = implode( ',', $blank_cid );
 
 		$query = "DELETE FROM #__quiz_t_text"

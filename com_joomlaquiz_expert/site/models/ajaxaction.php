@@ -145,7 +145,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
 		
-		if (count($quiz)) { $quiz = $quiz[0];
+		if (!empty($quiz)) { $quiz = $quiz[0];
 		} else { return $ret_str; }
 		
 		if(!$this->userHasAccess($quiz, $my)){
@@ -237,7 +237,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$query = "SELECT * FROM `#__quiz_lpath` WHERE `id` = '{$rel_check[0]->rel_id}' AND published = 1";
 						$database->SetQuery( $query );
 						$lpath = $database->loadObjectList();
-						if(count($lpath)) {
+						if(!empty($lpath)) {
 							$lpath = $lpath[0];
 						} else {
 							return '';
@@ -282,7 +282,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$query = "SELECT * FROM `#__quiz_lpath` WHERE `id` = '{$lid}' AND published = 1";
 					$database->SetQuery( $query );
 					$lpath = $database->loadObjectList();
-					if(count($lpath)) {
+					if(!empty($lpath)) {
 						$lpath = $lpath[0];
 					} else {
 						return '';
@@ -343,7 +343,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				case '2':	$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz_id."'";
 							$database->SetQuery($query);
 							$poolcat_data = $database->LoadObjectList();
-							if (count($poolcat_data))
+							if (!empty($poolcat_data))
 							{
 								foreach( $poolcat_data as $dapool )
 								{
@@ -462,7 +462,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 					else
 					{
-						if(count($q_data))
+						if(!empty($q_data))
 						{
 							foreach($q_data as $q_num)
 							{
@@ -502,7 +502,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".$quiz_id."'";
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
@@ -540,7 +540,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 
 			$quiz_time = JHtml::_('date',time(), 'Y-m-d H:i:s');
 			$start_quiz = 0;
-			if (count($st_quiz_data)) {
+			if (!empty($st_quiz_data)) {
 				$start_quiz = $st_quiz_data[0]->c_quiz_id;
 			} else { return $ret_str; }
 			
@@ -694,7 +694,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$database->SetQuery( $query );
 					$q_ids = $database->loadColumn();
 
-					if (!count($q_ids)) {
+					if (empty($q_ids)) {
 						$q_ids = array(0);
 					}
 													
@@ -709,7 +709,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					
 					$qnum = 0;
 					
-					if(count($qchids)){
+					if(!empty($qchids)){
 						$quest_pos = array_search(end($quest_ids), $qchids);
 						if(!isset($qchids[$quest_pos + 1]) && ($quest_pos+1) >= count($qchids) ){
 							$quest_pos = 0;
@@ -790,7 +790,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".$quiz_id."'";
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
@@ -829,7 +829,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 
 			$quiz_time =JHtml::_('date',time(), 'Y-m-d H:i:s');
 			$start_quiz = 0;
-			if (count($st_quiz_data)) {
+			if (!empty($st_quiz_data)) {
 				$start_quiz = $st_quiz_data[0]->c_quiz_id;
 			} else { return $ret_str; }
 
@@ -911,7 +911,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$database->SetQuery( $query );
 					$q_ids = $database->loadColumn();
 
-					if (!count($q_ids)) {
+					if (empty($q_ids)) {
 						$q_ids = array(0);
 					}
 
@@ -1013,7 +1013,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".$quiz_id."'";
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
@@ -1082,7 +1082,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$st_quiz_data = $database->LoadObjectList();
 
 				$start_quiz = 0;
-				if (count($st_quiz_data)) {
+				if (!empty($st_quiz_data)) {
 					$start_quiz = $st_quiz_data[0]->c_quiz_id;
 				} else {
 					return '';
@@ -1098,7 +1098,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".$quiz_id."'";
 				$database->SetQuery( $query );
 				$quiz_info = $database->LoadObjectList();
-				if (count($quiz_info)) { $quiz_info = $quiz_info[0]; }
+				if (!empty($quiz_info)) { $quiz_info = $quiz_info[0]; }
 				else { return ''; }
 		
 				$query = "SELECT SUM(c_score) FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
@@ -1180,7 +1180,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 							$query = "SELECT * FROM `#__quiz_lpath` WHERE `id` = '{$rel_check[0]->rel_id}' AND published = 1";
 							$database->SetQuery( $query );
 							$lpath = $database->loadObjectList();
-							if(count($lpath)) {
+							if(!empty($lpath)) {
 								$lpath = $lpath[0];
 							} else {
 								return '';
@@ -1225,7 +1225,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$query = "SELECT * FROM `#__quiz_lpath` WHERE `id` = '{$lid}' AND published = 1";
 						$database->SetQuery( $query );
 						$lpath = $database->loadObjectList();
-						if(count($lpath)) {
+						if(!empty($lpath)) {
 							$lpath = $lpath[0];
 						} else {
 							return '';
@@ -1562,7 +1562,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 
                             $emails = explode(',', $quiz->c_emails);
 
-                            if (is_array($emails) && count($emails)){
+                            if (is_array($emails) && !empty($emails)){
 								$subject = '[QUIZ] '.JText::_('COM_QUIZ_AN_MAIL_SUBJECT').'('.$quiz->c_title.')';
 								if ($my->id) {
 									$message = JText::_('COM_QUIZ_MAIL_MESSAGE_USER').$my->name.' ('.$my->username.', '.$my->email.') '.JText::_('COM_QUIZ_MAIL_MESSAGE_HAS_FINISHED').' "'.$quiz->c_title.'"<br/>'."\n";
@@ -1653,14 +1653,14 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
 		
-		if (count($quiz)) { $quiz = $quiz[0];
+		if (!empty($quiz)) { $quiz = $quiz[0];
 		} else { return $ret_str; }
 		$user_unique_id = strval( JFactory::getApplication()->input->get( 'user_unique_id', '') );
 		$query = "SELECT * FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 		$database->SetQuery( $query );
 		$stu_info = $database->LoadObjectList();
 		
-		if (count($stu_info)) {
+		if (!empty($stu_info)) {
 			$stu_info = $stu_info[0];
 			if ( ($user_unique_id == $stu_info->unique_id) && ($quiz_id == $stu_info->c_quiz_id) && ($my->id == $stu_info->c_student_id) ) {
 				$query = "SELECT u.email, u.username, q.c_email_to, q.c_language, sq.unique_id "
@@ -1669,7 +1669,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$database->setQuery( $query );
 				$rows = $database->loadObjectList();
 				
-				if (count($rows)) {
+				if (!empty($rows)) {
 					if ($rows[0]->c_email_to) {
 						$query = "SELECT q_chain FROM #__quiz_q_chain "
 						. "\n WHERE s_unique_id = '".$rows[0]->unique_id."'";
@@ -1734,7 +1734,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
 		
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 		
@@ -1752,7 +1752,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$st_quiz_data = $database->LoadObjectList();
 
 				$start_quiz = 0;
-				if (count($st_quiz_data)) {
+				if (!empty($st_quiz_data)) {
 					$start_quiz = $st_quiz_data[0]->c_quiz_id;
 				} else { return ''; }
 				if ($user_unique_id != $st_quiz_data[0]->unique_id) { return ''; }
@@ -1773,7 +1773,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					
 						$z = 0;
 						$q_data = array();
-						if(count($qchids))
+						if(!empty($qchids))
 						foreach ($qchids as $q_ord)
 						{
 						$query = "SELECT * FROM #__quiz_t_question WHERE c_id = ".intval($q_ord)." AND published = 1 ";
@@ -1818,7 +1818,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						case '2':	$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz_id."'";
 									$database->SetQuery($query);
 									$poolcat_data = $database->LoadObjectList();
-									if (count($poolcat_data)){
+									if (!empty($poolcat_data)){
 										foreach( $poolcat_data as $dapool )
 										{
 											if( $dapool->q_count ){
@@ -1841,7 +1841,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			}	
 				
 				$ret_str .= "\t" . '<task>review_start</task>' . "\n";
-				if (count($q_data) > 0) {
+				if (!empty($q_data)) {
 					$ret_str .= "\t" . '<quiz_count_quests>'.($qcount? $qcount: count($q_data)).'</quiz_count_quests>' . "\n";
                     
                     $str = $this->JQ_GetQuestData_review($q_data[0], $quiz_id, $stu_quiz_id);
@@ -1862,7 +1862,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                     }
 
                     $out_html = "";
-                    if(count($out_arr))
+                    if(!empty($out_arr))
                     {
                         foreach($out_arr as $html_c => $html_peace){
                             if(count($out_arr) != $html_c && isset($img_urls[$html_c])){
@@ -1898,7 +1898,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".$quiz_id."'";
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
@@ -1917,7 +1917,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$database->SetQuery($query);
 			$st_quiz_data = $database->LoadObjectList();
 			$start_quiz = 0;
-			if (count($st_quiz_data)) {
+			if (!empty($st_quiz_data)) {
 				$start_quiz = $st_quiz_data[0]->c_quiz_id;
 			} else { return $ret_str; }
 			if ($user_unique_id != $st_quiz_data[0]->unique_id) { return ''; }
@@ -1948,7 +1948,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$q_total = count($qchids);
 				$z = 0;
 				$q_data = array();
-				if(count($qchids))
+				if(!empty($qchids))
 				foreach ($qchids as $q_ord)
 				{
 					$query = "SELECT * FROM #__quiz_t_question WHERE c_id = ".intval($q_ord)." AND published = 1 ";
@@ -1988,7 +1988,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                     }
 
                     $out_html = "";
-                    if(count($out_arr))
+                    if(!empty($out_arr))
                     {
                         foreach($out_arr as $html_c => $html_peace){
                             if(count($out_arr) != $html_c && isset($img_urls[$html_c])){
@@ -2028,7 +2028,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
 		
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { 
 			return $ret_str; 
@@ -2070,7 +2070,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			if ($cur_tmpl) {
 				$is_correct = 1;//first preview - previous question not defined (always correct)				
 				JoomlaquizHelper::JQ_load_template($cur_tmpl);
-				if (count($q_data) > 0) {
+				if (!empty($q_data)) {
 					$ret_str .= "\t" . '<task>quest_preview</task>' . "\n";
 					$ret_str .= "\t" . '<quiz_count_quests>'.$q_data_count.'</quiz_count_quests>' . "\n";		
 					$ret_str .= "\t" . '<quiz_prev_correct>'.$is_correct.'</quiz_prev_correct>' . "\n";
@@ -2101,7 +2101,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
 		
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 		
@@ -2171,7 +2171,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] =(($question[0]->c_type==8) && ($question[0]->c_right_message)) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_ACCEPTED');				
 				
 				if ($cur_tmpl) {				
-					if (count($q_data) > 0) {
+					if (!empty($q_data)) {
 						
 						$feedback_count++;
 						$ret_str .= "\t" . '<feedback>' . "\n";
@@ -2200,7 +2200,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			
 			$ret_str .= "\t" . '<feedback_count>'.$feedback_count.'</feedback_count>' . "\n";
 			
-			if (count($q_data) > 0) {
+			if (!empty($q_data)) {
 				$ret_str .= "\t" . '<task>preview_finish</task>' . "\n";			
 			}			
 		}
@@ -2219,7 +2219,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
 		
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
@@ -2254,7 +2254,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 
 			$quiz_time = JHtml::_('date',time(), 'Y-m-d H:i:s');
 			$start_quiz = 0;
-			if (count($st_quiz_data)) {
+			if (!empty($st_quiz_data)) {
 				$start_quiz = $st_quiz_data[0]->c_quiz_id;
 			} else { return $ret_str; }
 			
@@ -2353,7 +2353,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->SetQuery ($query );
 		$quiz = $database->LoadObjectList();
 		
-		if (count($quiz)) {
+		if (!empty($quiz)) {
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
@@ -2511,7 +2511,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$query = "SELECT * FROM `#__quiz_t_text` WHERE `c_blank_id` = ".$bid;
 			$database->setQuery($query);
 			$btexts = $database->loadObjectList();
-			if (count($btexts)){
+			if (!empty($btexts)){
 				$is_correct = false;
 				foreach($btexts as $btext){	
 					if ($btext->regexp) {	
@@ -2677,8 +2677,7 @@ class JoomlaquizModelAjaxaction extends JModelList
             $qchids = explode('*', $qch_ids);
         }
 
-        if (is_array($all_quests) && count($all_quests) && is_array($qchids)
-            && count($qchids)
+        if (is_array($all_quests) && !empty($all_quests) && is_array($qchids) && !empty($qchids)
         ) {
             if ($qchids[0] <> $all_quests[0]->c_id) {
                 $is_prev = 1;
@@ -2691,7 +2690,7 @@ class JoomlaquizModelAjaxaction extends JModelList
             $ret_str        .= "\t" . '<question_data>';
             $c_all_attempts = $q_data->c_attempts;
             $z              = 1;
-            if ($stu_quiz_id && is_array($qchids) && count($qchids)) {
+            if ($stu_quiz_id && is_array($qchids) && !empty($qchids)) {
 
                 foreach ($qchids as $qchid) {
                     if ($qchid == $q_data->c_id) {
@@ -2720,7 +2719,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                             . $q_data->c_id . "'";
                         $database->SetQuery($query);
                         $c_tmp = $database->LoadObjectList();
-                        if (count($c_tmp)) {
+                        if (!empty($c_tmp)) {
                             $c_quest_cur_attempt = (int)$c_tmp[0]->c_attempts;
                             if ($c_quest_cur_attempt >= $c_all_attempts
                                 && $c_all_attempts != 0
@@ -2756,7 +2755,7 @@ class JoomlaquizModelAjaxaction extends JModelList
                     . "'";
                 $database->SetQuery($query);
                 $c_tmp = $database->LoadObjectList();
-                if (count($c_tmp)) {
+                if (!empty($c_tmp)) {
                     $c_quest_cur_attempt = (int)$c_tmp[0]->c_attempts;
                     if ($c_quest_cur_attempt >= $c_all_attempts
                         && $c_all_attempts != 0
@@ -2892,14 +2891,11 @@ class JoomlaquizModelAjaxaction extends JModelList
             }
 
             $out_html = "";
-            if (count($out_arr)) {
+            if (!empty($out_arr)) {
                 foreach ($out_arr as $html_c => $html_peace) {
-                    if (count($out_arr) != $html_c
-                        && isset($img_urls[$html_c])
-                    ) {
+                    if (count($out_arr) != $html_c && isset($img_urls[$html_c])) {
                         if (!$img_urls[$html_c]) {
-                            $out_html .= $html_peace
-                                . $quest_images[$html_c][0];
+                            $out_html .= $html_peace . $quest_images[$html_c][0];
                         } else {
                             $src_arr  = explode($quest_images[$html_c][2],
                                 $quest_images[$html_c][0]);
@@ -2956,9 +2952,9 @@ class JoomlaquizModelAjaxaction extends JModelList
         $is_last = 0;
 
         if (!$seek_quest_id && $stu_quiz_id && is_array($all_quests)
-            && count($all_quests)
+            && !empty($all_quests)
             && is_array($qchids)
-            && count($qchids)
+            && !empty($qchids)
         ) {
             $query
                 = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '"
@@ -2966,9 +2962,9 @@ class JoomlaquizModelAjaxaction extends JModelList
             $database->SetQuery($query);
             $q_ids = $database->loadColumn();
 
-            if (is_array($q_ids) && count($q_ids)) {
+            if (is_array($q_ids) && !empty($q_ids)) {
                 $diff = array_diff($qchids, $q_ids);
-                if (count($diff)) {
+                if (!empty($diff)) {
                     if (count($diff) == 1
                         && array_pop($diff) == $q_data->c_id
                     ) {
@@ -2978,9 +2974,8 @@ class JoomlaquizModelAjaxaction extends JModelList
                     $is_last = 1;
                 }
             }
-        } elseif (!$seek_quest_id && is_array($all_quests) && count($all_quests)
-            && is_array($qchids)
-            && count($qchids)
+        } elseif (!$seek_quest_id && is_array($all_quests) && !empty($all_quests)
+            && is_array($qchids) && !empty($qchids)
         ) {
             if ($qchids[count($qchids) - 1] == $q_data->c_id) {
                 $is_last = 1;
@@ -3012,9 +3007,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$database->SetQuery( $query );
 				$q_ids = $database->loadColumn();
 				
-				if (is_array($qchids) && count($qchids)) {
-					$diff = (is_array($q_ids) && count($q_ids)) ? array_diff ($qchids, $q_ids) : $qchids;
-						if(count($diff)){
+				if (is_array($qchids) && !empty($qchids)) {
+					$diff = (is_array($q_ids) && !empty($q_ids)) ? array_diff ($qchids, $q_ids) : $qchids;
+						if(!empty($diff)){
 						$diff = array_values($diff);
 						$key = array_search($current_quest, $diff);
 						if($quiz_data->c_random && $quiz_data->c_enable_skip != 2){
@@ -3304,7 +3299,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			}
 			
 			$out_html = "";
-			if(count($out_arr))
+			if(!empty($out_arr))
 			{
 				foreach($out_arr as $html_c => $html_peace){
 					if(count($out_arr) != $html_c && isset($img_urls[$html_c])){
@@ -3509,7 +3504,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			
 			if ($cur_template) {
 				$z = 1;
-				if ($stu_quiz_id && is_array($qchids) && count($qchids)) {
+				if ($stu_quiz_id && is_array($qchids) && !empty($qchids)) {
 
 					foreach($qchids as $qchid) {
 						if ($qchid == $q_data->c_id) {
@@ -3586,7 +3581,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		}
 		
 		$is_last = 0;
-		if (is_array($all_quests) && count($all_quests) && is_array($qchids) && count($qchids)) {
+		if (is_array($all_quests) && !empty($all_quests) && is_array($qchids) && !empty($qchids)) {
 			if ($qchids[count($qchids)-1] == $q_data->c_id) {	
 				$is_last = 1;
 			}

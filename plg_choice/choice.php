@@ -106,7 +106,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
 
         $data['c_all_attempts'] = 1;
         $data['is_avail'] = 1;
-        if (count($ddd)) {
+        if (!empty($ddd)) {
             if ($ddd[0]->c_id == $data['answer']) {
                 $c_quest_score += $ddd[0]->c_point;
                 $data['is_correct'] = 1;
@@ -121,7 +121,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
             $query = "SELECT b.c_incorrect_feed FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '" . $data['quest_id'] . "' and b.c_question_id = a.c_id and b.c_id = '" . $data['answer'] . "' AND a.published = 1";
             $database->SetQuery($query);
             $inc_ddd = $database->LoadObjectList();
-            if (count($inc_ddd))
+            if (!empty($inc_ddd))
                 $data['questtype1_answer_incorrect'] = htmlspecialchars($inc_ddd[0]->c_incorrect_feed);
         }
         $data['c_quest_cur_attempt'] = 0;
@@ -129,7 +129,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         $database->SetQuery($query);
         $c_tmp = $database->LoadObjectList();
 
-        if (count($c_tmp)) {
+        if (!empty($c_tmp)) {
             $data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
             if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
                 $data['is_avail'] = 0;
@@ -181,7 +181,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         $database->SetQuery($query);
         $qch_ids_type_1 = $database->loadColumn();
 
-        if (count($qch_ids_type_1)) {
+        if (!empty($qch_ids_type_1)) {
             foreach ($qch_ids_type_1 as $key => $c_quetion_id) {
                 $query = "SELECT b.c_right FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '" . $c_quetion_id . "' AND b.c_question_id = a.c_id AND a.published = 1";
                 $database->SetQuery($query);
@@ -294,7 +294,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         $query = "SELECT a.c_point, b.c_id, a.c_attempts FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '" . $data['quest_id'] . "' and b.c_question_id = a.c_id and b.c_right = '1' AND a.published = 1";
         $database->SetQuery($query);
         $ddd = $database->LoadObjectList();
-        if (count($ddd)) {
+        if (!empty($ddd)) {
             if ($ddd[0]->c_id == $data['answer']) {
                 $data['is_correct'] = 1;
             }
@@ -303,7 +303,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         $query = "SELECT b.c_incorrect_feed FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '" . $data['quest_id'] . "' and b.c_question_id = a.c_id and b.c_id = '" . $data['answer'] . "' AND a.published = 1";
         $database->SetQuery($query);
         $inc_ddd = $database->LoadObjectList();
-        if (count($inc_ddd))
+        if (!empty($inc_ddd))
             $data['questtype1_answer_incorrect'] = htmlspecialchars(nl2br($inc_ddd[0]->c_incorrect_feed));
 
         return $data;

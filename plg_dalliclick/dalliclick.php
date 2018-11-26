@@ -42,7 +42,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 			$img_data = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
 		}
 		$ratio = 1;
-		if(count($img_data)){
+		if(!empty($img_data)){
 			if($img_data[0] >= $width){
 				if($img_data[0] > $img_data[1]){
 					$ratio = $img_data[1]/$img_data[0];
@@ -141,7 +141,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 				$is_avail = 1;
 				$is_correct = 0;
 				
-				if (count($ddd)) {
+				if (!empty($ddd)) {
 					if ($ddd[0]->c_id == $answer) {
 						$c_quest_score = $c_quest_score - $o_sq * $c_penalty;
 						$is_correct = 1;
@@ -159,14 +159,14 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 				$query = "SELECT b.c_incorrect_feed FROM #__quiz_t_question as a, #__quiz_t_dalliclick as b WHERE a.c_id = '".$quest_id."' and b.c_question_id = a.c_id and b.c_id = '".$answer."' AND a.published = 1";
 				$database->SetQuery( $query );
 				$inc_ddd = $database->LoadObjectList();
-				if (count($inc_ddd))
+				if (!empty($inc_ddd))
 					$questtype1_answer_incorrect = htmlspecialchars(nl2br($inc_ddd[0]->c_incorrect_feed));
 				
 				$c_quest_cur_attempt = 0;
 				$query = "SELECT c_id, c_attempts FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."' and c_question_id = '".$quest_id."'";
 				$database->SetQuery( $query );
 				$c_tmp = $database->LoadObjectList();
-				if (count($c_tmp)) {
+				if (!empty($c_tmp)) {
 					$c_quest_cur_attempt = $c_tmp[0]->c_attempts;
 					if ($c_quest_cur_attempt >= $c_all_attempts) {
 						$is_avail = 0;
@@ -229,7 +229,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$qch_ids_type_14 = $database->LoadResultArray();
 
-		if(count($qch_ids_type_14)) {
+		if(!empty($qch_ids_type_14)) {
 			$query = "SELECT SUM(a_point) FROM #__quiz_t_dalliclick WHERE c_question_id IN (".implode(',', $qch_ids_type_14).") AND c_right = 0";
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
@@ -291,7 +291,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 			$img_data = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
 		}
 		$ratio = 1;
-		if(count($img_data)){
+		if(!empty($img_data)){
 			if($img_data[0] >= $width){
 				if($img_data[0] > $img_data[1]){
 					$ratio = $img_data[1]/$img_data[0];
@@ -370,7 +370,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 			$img_data = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
 		}
 		$ratio = 1;
-		if(count($img_data)){
+		if(!empty($img_data)){
 			if($img_data[0] >= $width){
 				if($img_data[0] > $img_data[1]){
 					$ratio = $img_data[1]/$img_data[0];

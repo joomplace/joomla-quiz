@@ -140,14 +140,14 @@ class JoomlaquizTableProducts extends JTable
 				}
 			}
 
-			if(!count($insert) && !count($not_for_delete)) {
+			if(empty($insert) && empty($not_for_delete)) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_QUIZZES_OR_LEARNING')."'); window.history.go(-1); </script>\n";
 				exit();
 			}
 
 			$query = 'DELETE FROM #__quiz_products'
 			. "\n WHERE `pid` = '{$product_id}'"
-			. (count($not_for_delete) ? ' AND id NOT IN (' . implode(',', $not_for_delete) . ')' : '')
+			. (!empty($not_for_delete) ? ' AND id NOT IN (' . implode(',', $not_for_delete) . ')' : '')
 			;
 			$database->setQuery($query);
 			if(!$database->query()) {
@@ -155,7 +155,7 @@ class JoomlaquizTableProducts extends JTable
 				exit();
 			}
 
-			if(count($insert)) {
+			if(!empty($insert)) {
 				$query = 'INSERT INTO #__quiz_products'
 				. "\n (`pid`, `type`, `rel_id`, `xdays`, `period_start`, `period_end`, `attempts`)"
 				. "\n VALUES"

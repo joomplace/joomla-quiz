@@ -17,7 +17,7 @@ function getTotalScorePuzzle($qid){
 	$database->SetQuery( $query );
 	$qch_ids_type_11 = $database->loadColumn();
 	
-	if(count($qch_ids_type_11)){
+	if(!empty($qch_ids_type_11)){
 		foreach($qch_ids_type_11 as $c_question_id){
 			$query = "SELECT c_pieces FROM #__quiz_t_puzzle WHERE c_question_id = '".$c_question_id."'";
 			$database->SetQuery( $query );

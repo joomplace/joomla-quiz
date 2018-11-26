@@ -99,7 +99,7 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 		$data['is_avail'] = 1;
 		$answer = urldecode($data['answer']);
 		$ans_array = explode('```',$answer);
-		if (count($ddd2) && count($ddd)) {							
+		if (!empty($ddd2) && !empty($ddd)) {
 			$data['is_correct'] = 1; 
 			$rr_num = 0;
 			foreach ($ddd2 as $right_row) {	
@@ -121,7 +121,7 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
 		
-		if (count($c_tmp)) {
+		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
@@ -172,7 +172,7 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$qch_ids_type_45 = $database->loadColumn();
 		
-		if(count($qch_ids_type_45)) {
+		if(!empty($qch_ids_type_45)) {
 			$query = "SELECT SUM(a_points) FROM #__quiz_t_matching WHERE c_question_id IN (".implode(',', $qch_ids_type_45).")";
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
@@ -273,7 +273,7 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 		$answer = urldecode($data['answer']);
 		
 		$ans_array = explode('```', $answer);
-		if (count($ddd2) && count($ddd)) {
+		if (!empty($ddd2) && !empty($ddd)) {
 			$is_correct = 1; $rr_num = 0;
 			foreach ($ddd2 as $right_row) {
 				if (md5(intval($right_row->c_id).'answer') != $ans_array[$rr_num]) {

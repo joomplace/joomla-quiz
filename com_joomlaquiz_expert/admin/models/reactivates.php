@@ -89,7 +89,7 @@ class JoomlaquizModelReactivates extends JModelList
 
         $novm_query = "SELECT users.name, payments.id AS order_id, '' AS order_status, CONVERT (`payments`.`status` USING utf8) COLLATE utf8_unicode_ci AS order_status_name, '0' AS `vm` " .
             "FROM #__quiz_payments AS payments INNER JOIN #__users AS users ON users.id = payments.user_id" .
-            (count($where) ? " WHERE ".implode(' AND ', $where) : "");
+            (!empty($where) ? " WHERE ".implode(' AND ', $where) : "");
 
         if($no_virtuemart) {
             $query = $novm_query;
@@ -98,7 +98,7 @@ class JoomlaquizModelReactivates extends JModelList
                 " FROM #__virtuemart_orders AS orders" .
                 " INNER JOIN #__users AS users ON users.id = orders.virtuemart_user_id" .
                 " LEFT JOIN #__virtuemart_orderstates AS order_status ON order_status.order_status_code = orders.order_status " .
-                (count($where) ? " WHERE ".implode(' AND ', $where) : "").")" .
+                (!empty($where) ? " WHERE ".implode(' AND ', $where) : "").")" .
                 " UNION (".$novm_query.")";
         }
 

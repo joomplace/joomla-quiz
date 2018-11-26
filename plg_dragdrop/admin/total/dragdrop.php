@@ -17,7 +17,7 @@ function getTotalScoreDragdrop($qid){
 	$database->SetQuery( $query );
 	$qch_ids_type_4 = $database->loadColumn();
 
-	if(count($qch_ids_type_4)) {
+	if(!empty($qch_ids_type_4)) {
 		$query = "SELECT SUM(a_points) FROM #__quiz_t_matching WHERE c_question_id IN (".implode(',', $qch_ids_type_4).")";
 		$database->SetQuery( $query );
 		$total_score += $database->LoadResult();

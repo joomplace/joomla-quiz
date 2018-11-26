@@ -41,7 +41,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$answers = $database->loadColumn();
 
-		if(is_array($answers) && count($answers))
+		if(is_array($answers) && !empty($answers))
 		for($c = 0, $cn = count($choice_data); $c < $cn; $c++) {
 			if (in_array($choice_data[$c]->value, $answers)) {
 				$choice_data[$c]->c_right = 1;
@@ -103,7 +103,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$data['is_avail'] = 1;
 		$ans_array = explode(',', $data['answer']);
 		
-		if (count($ddd) && (count($ddd2) || count($ddd3))) {
+		if (!empty($ddd) && (!empty($ddd2) || !empty($ddd3))) {
 			$c_quest_score = $ddd[0]->c_point;
 			$data['is_correct'] = 1;
 			foreach ($ddd2 as $right_row) {
@@ -152,7 +152,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
 		
-		if (count($c_tmp)) {
+		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
@@ -205,7 +205,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$qch_ids_type_10 = $database->loadColumn();
 
-		if(count($qch_ids_type_10)) {
+		if(!empty($qch_ids_type_10)) {
 			$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id IN (".implode(',', $qch_ids_type_10).") AND c_right = 0";
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
@@ -321,7 +321,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$ddd3 = $database->LoadObjectList();
 		
 		$ans_array = explode(',',$data['answer']);
-		if ((count($ddd2) || count($ddd3)) && count($ddd)) {
+		if ((!empty($ddd2) || !empty($ddd3)) && !empty($ddd)) {
 			$data['is_correct'] = 1;
 			foreach ($ddd2 as $right_row) {
 				if (!in_array($right_row->c_id, $ans_array)) { $data['is_correct'] = 0; }

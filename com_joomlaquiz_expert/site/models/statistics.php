@@ -48,7 +48,7 @@ class JoomlaquizModelStatistics extends JModelList
 			$database->setQuery( $query );
 			$quizzes = $database->loadObjectList();
 			
-			if (!count($quizzes)){
+			if (empty($quizzes)){
 				$quizzes[0] = new stdClass;
 				$quizzes[0]->available = 'no stats';
 				return array($header, $quizzes);

@@ -28,7 +28,7 @@ foreach ($result as $one_res) {
 	if ($sec_tbl == 1) $sec_tbl = 2;
 	else $sec_tbl = 1;
 }
-if (count($result) == $v_content_count) {
+if (!empty($result) && (count($result) == $v_content_count)) {
 	echo "<tr><td class='sectiontableentry".$sec_tbl.$moduleclass_sfx."'>" . JText::_('MOD_JOOMLAQUIZ_MOD_SOON') . "</td><td class='sectiontableentry".$sec_tbl.$moduleclass_sfx."'>&nbsp;</td></tr>";
 }
 echo "</table></div>";

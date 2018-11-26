@@ -132,7 +132,7 @@ $ordering_list = $this->ordering_list;
 				</div>
 			</div>
 			<?php 
-			if(count($this->add_form)){
+			if(!empty($this->add_form)){
 				foreach($this->add_form as $for => $item){?>
 				<div class="control-group">
 				<?php if ($for=='c_qform') 

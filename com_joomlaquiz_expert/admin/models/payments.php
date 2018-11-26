@@ -66,7 +66,7 @@ class JoomlaquizModelPayments extends JModelList
 	public static function delete($cid){
 		$database = JFactory::getDBO();
 
-		if (!is_array( $cid ) || count( $cid ) < 1) {
+		if (!is_array( $cid ) || empty( $cid )) {
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_DELETE')."'); window.history.go(-1);</script>\n";
 			exit();
 		}

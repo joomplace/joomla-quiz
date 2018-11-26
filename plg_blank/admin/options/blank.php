@@ -84,7 +84,7 @@ for ($z = 0; $z < count($blank_data); $z++) {
 					</tr>
 					<?php
 					$k = 0; $ii = 1; $ind_last = count($fake_data);
-					if(count($fake_data)){
+					if(!empty($fake_data)){
 						foreach ($fake_data as $frow) { ?>
 							<tr class="<?php echo "row$k"; ?>">
 								<td align="center"><?php echo $ii?></td>

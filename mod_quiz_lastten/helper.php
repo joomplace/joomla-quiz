@@ -39,7 +39,7 @@ class modLasttenHelper
 
 		if ($quiz_id) {
 			$quiz_ids = explode( ',', $quiz_id );
-			if(count($quiz_ids)){
+			if(!empty($quiz_ids)){
 				foreach ($quiz_ids as $key => $value) {
 					$quiz_ids[$key] = $db->q($value);
 				}
@@ -61,7 +61,7 @@ class modLasttenHelper
 			}
 		}
 
-		if (count($result) == 0) {
+		if (empty($result)) {
 			$result = array(); 
 		}
 		

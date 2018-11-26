@@ -28,7 +28,7 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 		$cc = 0;				
 		$summ_pairs = 0;
 		$cols = $data['q_data']->c_column;
-		if(count($memory_data)){
+		if(!empty($memory_data)){
 			foreach($memory_data as $mem){
 				$summ_pairs += $mem->a_pairs;
 			}
@@ -452,7 +452,7 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 		}	
 		$files = JFolder::files($memory_dir);
 		$tmp_files = array();
-		if(count($files))
+		if(!empty($files))
 		{
 			foreach($files as $file){
 				if($file == 'tnnophoto.jpg') continue;

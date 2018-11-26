@@ -41,7 +41,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
         if(!$data['q_data']->c_height){
             $data['q_data']->c_height = 100;
         }
-		if(count($match_data)){
+		if(!empty($match_data)){
 			foreach($match_data as $ii => $dd_data){
 				$data['ret_str'] .= "\t" .'<tr>';
 				$data['ret_str'] .= "\t" .'<td style="padding:10px 0;">';
@@ -100,7 +100,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$answer = urldecode($data['answer']);
 		$ans_array = explode('```',$answer);
 		
-		if (count($ddd2) && count($ddd)) {							
+		if (!empty($ddd2) && !empty($ddd)) {
 			$data['is_correct'] = 1; 
 			$rr_num = 0;
 			foreach ($ddd2 as $right_row) {
@@ -128,7 +128,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$query = "SELECT c_id, c_attempts FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' and c_question_id = '".$data['quest_id']."'";
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
-		if (count($c_tmp)) {
+		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
@@ -178,7 +178,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$qch_ids_type_12 = $database->LoadColumn();
 		
-		if(count($qch_ids_type_12)) {
+		if(!empty($qch_ids_type_12)) {
 			$query = "SELECT SUM(a_points) FROM #__quiz_t_matching WHERE c_question_id IN (".implode(',', $qch_ids_type_12).")";
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
@@ -249,7 +249,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		
 		$match_str = '';
 		$match_array = array();
-		if(count($images_match)){
+		if(!empty($images_match)){
 			foreach($images_match as $image_match){
 				$match_array[] = $image_match->c_id."***".$image_match->c_left_text."|||".$image_match->c_right_text;
 			}
@@ -508,7 +508,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		}
 		$files = JFolder::files($resize_dir);
 		$tmp_files = array();
-		if(count($files))
+		if(!empty($files))
 		{
 			foreach($files as $file){
 				if($file == 'tnnophoto.jpg') continue;

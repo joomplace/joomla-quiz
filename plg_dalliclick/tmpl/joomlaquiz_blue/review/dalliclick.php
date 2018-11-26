@@ -20,7 +20,7 @@ class JoomlaquizViewReviewDalliclick
 		
 		$jq_tmpl_html .= "<div class='dc_buttons_container'><table class='jq_feedback_question_content_inner'>";
 		
-		if(count($review_data['choice_data'])){
+		if(!empty($review_data['choice_data'])){
 			foreach($review_data['choice_data'] as $ii => $qone){
 				$bck = ($qone->value == $review_data['uanswer']['c_choice_id'][0]) ? ($qone->c_right == 1 ? "style='background:#93C162;color:white;'" : "style='background:#FF3333;color:white;'") : "";
 				if($review_data['choice_data'][$ii]->c_right == 1) $bck = "style='background:#93C162;color:white;'";

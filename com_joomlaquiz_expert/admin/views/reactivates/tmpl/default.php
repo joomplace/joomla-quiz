@@ -142,7 +142,7 @@ $sortFields = $this->getSortFields();
                         <div class="pull-left">
                             <?php 
 							$products_names = $this->model->getProducts($item->order_id, $item->vm);
-							if (count($products_names)) echo implode('; ', $products_names);
+							if (!empty($products_names)) echo implode('; ', $products_names);
 							?>
                         </div>
 					</td>

@@ -96,7 +96,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		$c_temp_incor = 0;
 		$data['is_avail'] = 1;
 		$ans_array = explode(',',$data['answer']);					
-		if (count($ddd2) && count($ddd)) {
+		if (!empty($ddd2) && !empty($ddd)) {
 			$c_quest_score = $ddd[0]->c_point;
 			$data['is_correct'] = 1;						
 			foreach ($ddd2 as $right_row) {
@@ -140,7 +140,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		$query = "SELECT c_id, c_attempts FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' and c_question_id = '".$data['quest_id']."'";
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
-		if (count($c_tmp)) {
+		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
@@ -289,7 +289,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		$ddd3 = $database->LoadObjectList();
 		
 		$ans_array = explode(',',$data['answer']);
-		if (count($ddd2) && count($ddd)) {
+		if (!empty($ddd2) && !empty($ddd)) {
 			$data['is_correct'] = 1;
 			foreach ($ddd2 as $right_row) {
 				if (!in_array($right_row->c_id, $ans_array)) { $data['is_correct'] = 0; }

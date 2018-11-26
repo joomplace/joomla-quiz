@@ -73,7 +73,7 @@ class JoomlaquizModelQuestions extends JModelList
 			$task = JFactory::getApplication()->input->getCmd('task');
 			$state = ($task == 'publish') ? 1 : 0;
 			
-			if (!is_array( $cid ) || count( $cid ) < 1) {
+			if (!is_array( $cid ) || empty( $cid )) {
 				$action = ($task == 'publish') ? 'publish' : 'unpublish';
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO')." $action'); window.history.go(-1);</script>\n";
 				exit();
@@ -95,7 +95,7 @@ class JoomlaquizModelQuestions extends JModelList
 	}
 	
 	public function delete($cid){
-		if (count( $cid )) {
+		if (!empty( $cid )) {
 			$cids = implode( ',', $cid );
 			$database = JFactory::getDBO();
 		
@@ -113,7 +113,7 @@ class JoomlaquizModelQuestions extends JModelList
 				JoomlaquizHelper::JQ_Delete_Items($cids, 'remove/questions/', 'removeQuestions');		
 			}
 			//recalculate quizzes TotalScore
-			if (count($ch_quizzes)) {
+			if (!empty($ch_quizzes)) {
 				foreach ($ch_quizzes as $c_q) {
 					JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($c_q->c_quiz_id);
 				}
@@ -230,7 +230,7 @@ class JoomlaquizModelQuestions extends JModelList
 				$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id = '".$old_quest_id."'";
 				$database->setQuery( $query );
 				$blanks_to_copy = $database->LoadObjectList();
-				if (count($blanks_to_copy) > 0) {
+				if (!empty($blanks_to_copy)) {
 					foreach($blanks_to_copy as $blank_to_copy) {
 						$old_blank_id = $blank_to_copy->c_id;
 
@@ -442,11 +442,11 @@ class JoomlaquizModelQuestions extends JModelList
 			@set_time_limit(0);
 			
 			$userfile			= JRequest::getVar('importme', '', 'files', 'array');
-			if(!count($userfile)){
+			if(empty($userfile)){
 				$this->setRedirect( "index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions", JText::_('COM_JOOMLAQUIZ_NO_FILE_SELECTED') );
 			}
-			$userfileTempName	= (count($userfile) > 0? $userfile['tmp_name']: '');
-			$userfileName 		= (count($userfile) > 0? $userfile['name']: '');
+			$userfileTempName	= !empty($userfile) ? $userfile['tmp_name']: '';
+			$userfileName 		= !empty($userfile) ? $userfile['name']: '';
 			
 			$quiz_id			= JFactory::getApplication()->input->get('filter_quiz_id', 0);
 			

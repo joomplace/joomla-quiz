@@ -56,7 +56,7 @@ class JoomlaquizModelDashboard_items extends JModelList
         $task = JFactory::getApplication()->input->getCmd('task');
         $state = ($task == 'publish') ? 1 : 0;
 
-        if (!is_array( $cid ) || count( $cid ) < 1) {
+        if (!is_array( $cid ) || empty( $cid )) {
             $action = ($task == 'publish') ? 'publish' : 'unpublish';
             echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO')." $action'); window.history.go(-1);</script>\n";
             exit();

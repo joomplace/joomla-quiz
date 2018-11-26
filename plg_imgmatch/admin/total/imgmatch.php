@@ -17,7 +17,7 @@ function getTotalScoreImgmatch($qid){
 	$database->SetQuery( $query );
 	$qch_ids_type_12 = $database->loadColumn();
 
-	if(count($qch_ids_type_12)) {
+	if(!empty($qch_ids_type_12)) {
 		$query = "SELECT SUM(a_points) FROM #__quiz_t_matching WHERE c_question_id IN (".implode(',', $qch_ids_type_12).")";
 		$database->SetQuery( $query );
 		$total_score += $database->LoadResult();

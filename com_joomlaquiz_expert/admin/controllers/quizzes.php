@@ -34,7 +34,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 	
 	public function move_quiz_sel(){
 		$cid = $this->input->get('cid', array(), 'array');
-		if (!is_array( $cid ) || count( $cid ) < 1) {
+		if (!is_array( $cid ) || empty( $cid )) {
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 			exit;
 		}
@@ -106,7 +106,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 	
 	public function copy_quiz_sel(){
 		$cid = $this->input->get('cid', array(), 'array');
-		if (!is_array( $cid ) || count( $cid ) < 1) {
+		if (!is_array( $cid ) || empty( $cid )) {
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 			exit;
 		}
@@ -202,7 +202,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quest_cat = $database->loadObjectList();
 
             $quiz_xml .= "\n\t\t<quiz_categories>";
-            if(count($quiz_cat)) {
+            if(!empty($quiz_cat)) {
                 for ($i=0, $n=count($quiz_cat); $i < $n; $i++) {
                     $quizcat = $quiz_cat[$i];
                     $quiz_xml .= "\n\t\t\t<quiz_category c_id=\"".$quizcat->id."\">";
@@ -224,7 +224,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             }
             $quiz_xml .= "\n\t\t</quiz_categories>";
             $quiz_xml .= "\n\t\t<quest_categories>";
-            if(count($quest_cat)){
+            if(!empty($quest_cat)){
                 for ($i=0, $n=count($quest_cat); $i < $n; $i++) {
                     $quizcat = $quest_cat[$i];
                     $quiz_xml .= "\n\t\t\t<quest_category c_id=\"".$quizcat->id."\">";
@@ -259,7 +259,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_certificate = $database->loadObjectList();
 
             $quiz_xml .= "\n\t\t\t<quiz_certificates>";
-            if(count($quiz_certificate))
+            if(!empty($quiz_certificate))
                 for ($i=0, $n=count($quiz_certificate); $i < $n; $i++) {
                     $qcert = $quiz_certificate[$i];
                     $quiz_xml .= "\n\t\t\t\t<quiz_certificate id=\"".$qcert->id."\" crtf_align=\"".$qcert->crtf_align."\" crtf_shadow=\"".$qcert->crtf_shadow."\"  text_x=\"".$qcert->text_x."\" text_y=\"".$qcert->text_y."\" text_size=\"".$qcert->text_size."\">";
@@ -280,7 +280,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_xml .= "\n\t\t\t<quizess_poolos>";
             ///-- pools --- ///
             $quiz_xml .= "\n\t\t\t<quizzes_question_pool>";
-            if(count($pool_data))
+            if(!empty($pool_data))
             {
                 for ($i=0, $n=count($pool_data); $i < $n; $i++) {
                     $pool = $pool_data[$i];
@@ -644,7 +644,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             //add _lms_course_files_ catalog
             $pz->create($filename_xml, PCLZIP_OPT_REMOVE_PATH, $filename_xml = JPATH_SITE.'/tmp/');
 
-            if(count($all_images))
+            if(!empty($all_images))
                 foreach($all_images as $quiz_image){
                     $filename = JPATH_SITE . '/images/joomlaquiz/images/'.$quiz_image;
                     $pz->add($filename,PCLZIP_OPT_REMOVE_PATH, JPATH_SITE . '/images/joomlaquiz/images/',PCLZIP_OPT_ADD_PATH, 'quiz_images');
@@ -848,7 +848,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         $db = JFactory::getDbo();
         $categories_relations_quiz = array();
-        if(count($quiz_cat))
+        if(!empty($quiz_cat))
             foreach($quiz_cat as &$qcat)
             {
                 $query = $db->getQuery(true);
@@ -874,7 +874,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
         $quest_cat = $xmlReader->quest_categories();
 
         $categories_relations_questions = array();
-        if(count($quest_cat))
+        if(!empty($quest_cat))
             foreach($quest_cat as $qcat)
             {
                 $query = $db->getQuery(true);
@@ -900,13 +900,13 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         $certificates = $xmlReader->certificates();
 
-        if(count($certificates))
+        if(!empty($certificates))
             foreach($certificates as $qcat)
             {
                 $query = "SELECT * FROM #__quiz_certificates WHERE id=".$qcat->id;
                 $database->setQuery($query);
                 $dubl_row = $database->LoadObjectList();
-                if(count($dubl_row))
+                if(!empty($dubl_row))
                 {
                     if($dubl_row[0]->cert_name != $qcat->cert_name || $dubl_row[0]->cert_file != $qcat->cert_file)
                     {
@@ -956,7 +956,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $free_id =  $database->loadResult()+1;
 
 
-                if(count($dubl_row))
+                if(!empty($dubl_row))
                 {
                     if($dubl_row[0]->c_title != $qcat->quiz_title || $dubl_row[0]->c_created_time != $qcat->quiz_createtime)
                     {
@@ -1055,14 +1055,14 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         $query = "SELECT max(c_id) FROM #__quiz_t_quiz";
                         $database->setQuery($query);
                         $new_quiz_id = $database->loadResult();
-                        if(count(@$qcat->quiz_questions))
+                        if(!empty(@$qcat->quiz_questions))
                         {
                             foreach($qcat->quiz_questions as $q_quest)
                             {
                                 $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$q_quest->id;
                                 $database->setQuery($query);
                                 $dubl_rowq = $database->LoadObjectList();
-                                if(count($dubl_rowq))
+                                if(!empty($dubl_rowq))
                                 {
                                     $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
                                     $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
@@ -1088,7 +1088,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     if($q_quest->question_image) $quiz_images[] = $q_quest->question_image;
                                     $new_quest_id = $q_quest->id;
                                 }
-                                if(count(@$qcat->choice_data))
+                                if(!empty(@$qcat->choice_data))
                                 {
                                     foreach($qcat->choice_data as $ch_data)
                                     {
@@ -1105,7 +1105,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                         }
                                     }
                                 }
-                                if(count(@$qcat->match_data))
+                                if(!empty(@$qcat->match_data))
                                 {
                                     foreach($qcat->match_data as $ch_data)
                                     {
@@ -1122,7 +1122,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                         }
                                     }
                                 }
-                                if(count(@$qcat->blank_data))
+                                if(!empty(@$qcat->blank_data))
                                 {
                                     $c_blank_id = 0;
                                     $new_blank_id = 0;
@@ -1158,7 +1158,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
 
-                                if(count(@$qcat->blank_distr_data))
+                                if(!empty(@$qcat->blank_distr_data))
                                 {
                                     foreach($qcat->blank_distr_data as $ch_data)
                                     {
@@ -1176,7 +1176,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
 
-                                if(count(@$qcat->hotspot_data))
+                                if(!empty(@$qcat->hotspot_data))
                                 {
                                     foreach($qcat->hotspot_data as $ch_data)
                                     {
@@ -1300,14 +1300,14 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $database->setQuery($query);
                     $new_quiz_id = $database->loadResult();
 
-                    if(count(@$qcat->quiz_questions))
+                    if(!empty(@$qcat->quiz_questions))
                     {
                         foreach($qcat->quiz_questions as $q_quest)
                         {
                             $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$q_quest->id;
                             $database->setQuery($query);
                             $dubl_rowq = $database->LoadObjectList();
-                            if(count($dubl_rowq))
+                            if(!empty($dubl_rowq))
                             {
                                 $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
                                 $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
@@ -1356,7 +1356,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 if($q_quest->question_image) $quiz_images[] = $q_quest->question_image;
                                 $new_quest_id = $q_quest->id;
                             }
-                            if(count($qcat->choice_data))
+                            if(!empty($qcat->choice_data))
                             {
                                 foreach($qcat->choice_data as $ch_data)
                                 {
@@ -1373,7 +1373,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
                             }
-                            if(count($qcat->match_data))
+                            if(!empty($qcat->match_data))
                             {
                                 foreach($qcat->match_data as $ch_data)
                                 {
@@ -1390,7 +1390,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
                             }
-                            if(count($qcat->blank_data))
+                            if(!empty($qcat->blank_data))
                             {
                                 foreach($qcat->blank_data as $ch_data)
                                 {
@@ -1418,7 +1418,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
                             }
-                            if(count($qcat->blank_distr_data))
+                            if(!empty($qcat->blank_distr_data))
                             {
                                 foreach($qcat->blank_distr_data as $ch_data)
                                 {
@@ -1435,7 +1435,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
                             }
-                            if(count($qcat->hotspot_data))
+                            if(!empty($qcat->hotspot_data))
                             {
                                 foreach($qcat->hotspot_data as $ch_data)
                                 {
@@ -1462,14 +1462,14 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
         {
             $quizzes_poolk = $xmlReader->quizess_pool();
 
-            if(count($quizzes_poolk))
+            if(!empty($quizzes_poolk))
                 foreach($quizzes_poolk as $qcat)
                 {
                     $qcat->id = 0;
 
                     $new_quiz_id = 0;
 
-                    if(count($qcat->quizzes_question_pool))
+                    if(!empty($qcat->quizzes_question_pool))
                     {
                         foreach($qcat->quizzes_question_pool as $q_quest)
                         {
@@ -1477,7 +1477,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             $database->setQuery($query);
                             $dubl_rowq = $database->LoadObjectList();
 
-                            if(count($dubl_rowq))
+                            if(!empty($dubl_rowq))
                             {
                                 if($dubl_rowq[0]->c_question != $q_quest->question_text)
                                 {
@@ -1510,7 +1510,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
                             }
 
-                            if(count($qcat->choice_data))
+                            if(!empty($qcat->choice_data))
                             {
                                 foreach($qcat->choice_data as $ch_data)
                                 {
@@ -1527,7 +1527,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
                             }
-                            if(count($qcat->match_data))
+                            if(!empty($qcat->match_data))
                             {
                                 foreach($qcat->match_data as $ch_data)
                                 {
@@ -1544,7 +1544,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
                             }
-                            if(count($qcat->blank_data))
+                            if(!empty($qcat->blank_data))
                             {
                                 foreach($qcat->blank_data as $ch_data)
                                 {
@@ -1573,7 +1573,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 }
                             }
 
-                            if(count(@$qcat->blank_distr_data))
+                            if(!empty(@$qcat->blank_distr_data))
                             {
                                 foreach($qcat->blank_distr_data as $ch_data)
                                 {
@@ -1590,7 +1590,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
                             }
-                            if(count($qcat->hotspot_data))
+                            if(!empty($qcat->hotspot_data))
                             {
                                 foreach($qcat->hotspot_data as $ch_data)
                                 {
@@ -1615,7 +1615,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
         }
 
         // Copy quiz images
-        if (count($quiz_images)) {
+        if (!empty($quiz_images)) {
             $fromDir = $extract_dir."quiz_images/";
             $toDir   = JPATH_SITE."/images/joomlaquiz/images/";
             $i = 0;

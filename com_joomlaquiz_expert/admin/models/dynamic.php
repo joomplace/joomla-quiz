@@ -210,7 +210,7 @@ class JoomlaquizModelDynamic extends JModelAdmin
 		$fields['order_id'] = 'Order_id';
 		$fields['quiz_name'] = 'Quiz name';
 		
-		if (count($qids) && is_array($rows)) {
+		if (!empty($qids) && is_array($rows)) {
 			$query = "SELECT * FROM #__quiz_t_question WHERE c_id IN ('".implode("','", $qids)."')";
 			$database->SetQuery( $query );
 			$questions = $database->LoadObjectList();
@@ -232,7 +232,7 @@ class JoomlaquizModelDynamic extends JModelAdmin
 							$database->setQuery( $query );
 							$stu_choices = $database->loadColumn();	
 							
-							if(count($stu_choices)){
+							if(!empty($stu_choices)){
 								foreach($choices as $choice) {	
 									if ( in_array($choice->c_id, $stu_choices) ) {
 										$answer .= $choice->c_choice.'; ';								

@@ -191,7 +191,7 @@ class JoomlaquizModelCertificates extends JModelList
 		$fields = $database->loadObjectList();
 
 		$ad = 0;			
-		if (is_array($fields) && count($fields)) {
+		if (is_array($fields) && !empty($fields)) {
 			foreach($fields as $field){
 				$font = JPATH_SITE . "/media/".(isset($field->font)? $field->font: 'arial.ttf');
 				if ($field->shadow) imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2, $grey, $font, $field->f_text);

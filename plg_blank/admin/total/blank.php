@@ -17,7 +17,7 @@ function getTotalScoreBlank($qid){
 	$database->SetQuery( $query );
 	$qch_ids_type_6 = $database->loadColumn();
 
-	if(count($qch_ids_type_6)) {
+	if(!empty($qch_ids_type_6)) {
 		$query = "SELECT SUM(points) FROM #__quiz_t_blank WHERE c_question_id IN (".implode(',', $qch_ids_type_6).")";
 		$database->SetQuery( $query );
 		$total_score += $database->LoadResult();

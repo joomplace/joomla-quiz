@@ -19,7 +19,7 @@ class JoomlaquizViewCreateHotspot
 		$isMobile = JFactory::getApplication()->client->mobile;
 
 		$live_site = JURI::root();
-		$count_hotspot = count($hotspot);
+        $count_hotspot = !empty($hotspot) ? count($hotspot) : 0;
 		
 		$hotspot['c_select_x'] = (isset($hotspot['c_select_x'])? $hotspot['c_select_x']: 0);
 		$hotspot['c_select_y'] = (isset($hotspot['c_select_y'])? $hotspot['c_select_y']: 0);
@@ -31,7 +31,7 @@ class JoomlaquizViewCreateHotspot
 		}
 
         $path_str = '';
-		if(count($data['hs_data_array'])){
+		if(!empty($data['hs_data_array'])){
 			foreach($data['hs_data_array'] as $path){
 				$path_str .= "paths.push('".$path."')"."\n\t\t\t\t";
 			}

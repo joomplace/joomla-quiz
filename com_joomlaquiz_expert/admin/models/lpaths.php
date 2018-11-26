@@ -59,7 +59,7 @@ class JoomlaquizModelLpaths extends JModelList
 	public static function delete($cid){
 		$database = JFactory::getDBO();
 		
-		if (!is_array( $cid ) || count( $cid ) < 1) {
+		if (!is_array( $cid ) || empty( $cid )) {
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_DELETE')."'); window.history.go(-1);</script>\n";
 			exit();
 		}
@@ -133,7 +133,7 @@ class JoomlaquizModelLpaths extends JModelList
 			$task = JFactory::getApplication()->input->getCmd('task');
 			$state = ($task == 'publish') ? 1 : 0;
 			
-			if (!is_array( $cid ) || count( $cid ) < 1) {
+			if (!is_array( $cid ) || empty( $cid )) {
 				$action = ($task == 'publish') ? 'publish' : 'unpublish';
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO')." $action'); window.history.go(-1);</script>\n";
 				exit();

@@ -19,7 +19,7 @@ class JoomlaquizViewPreviewquest extends JViewLegacy
     {
 		$this->result	=	$return;
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (!empty($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}

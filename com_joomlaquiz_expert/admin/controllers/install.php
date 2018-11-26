@@ -58,7 +58,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 
 		if(JArchive::extract($source, $destination))
 		{
-			if(count($_REQUEST['jform'])){
+			if(!empty($_REQUEST['jform'])){
 				foreach($_REQUEST['jform'] as $plg_name => $enable){
 					if($enable){
 						$plugins[]     = JPATH_ROOT . '/components/com_joomlaquiz/jq_plugins/plg_'.$plg_name.'.zip';
@@ -123,7 +123,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 			sleep(1);
 		}
 	
-		if(count($_REQUEST['jform'])){
+		if(!empty($_REQUEST['jform'])){
 			foreach($_REQUEST['jform'] as $plg_name => $enable){
 				if($enable){
 					$this->_enablePlugin($plg_name);
@@ -207,7 +207,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 
 		if(JArchive::extract($source, $destination))
 		{
-			if(count($_REQUEST['jform'])){
+			if(!empty($_REQUEST['jform'])){
 				foreach($_REQUEST['jform'] as $mod_name => $enable){
 					if($enable){
 						$modules[]     = JPATH_ROOT . '/components/com_joomlaquiz/jq_modules/'.$mod_name.'.zip';
@@ -318,7 +318,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 		jimport( 'joomla.filesystem.folder' );
 		
 		$plugin = false;
-		if(count($_REQUEST['jform'])){
+		if(!empty($_REQUEST['jform'])){
 			foreach($_REQUEST['jform'] as $plg_name => $enable){
 				if($enable){
 						$plugin     = JPATH_ROOT . '/components/com_joomlaquiz/quiz_content_plugin.zip';
@@ -419,7 +419,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 		// Create an array of queries from the sql file
 		$queries = JDatabaseDriver::splitSql($buffer);
 
-		if (count($queries) == 0)
+		if (empty($queries))
 		{
 			// No queries to process
 			return 0;

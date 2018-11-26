@@ -117,7 +117,7 @@ class JoomlaquizModelReactivate extends JModelAdmin
 		$database->SetQuery( $query );
 		$lists['products_stat'] = $database->loadObjectList('qp_id');
 	
-		if (!count($lists['all'])) {
+		if (empty($lists['all'])) {
 			$app = JFactory::getApplication();
 			$app->redirect( "index.php?option=com_joomlaquiz&task=reactivate", JText::_('COM_JOOMLAQUIZ_INVALID_PAYMENT') );	
 		}

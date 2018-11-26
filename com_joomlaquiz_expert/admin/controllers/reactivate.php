@@ -33,7 +33,7 @@ class JoomlaquizControllerReactivate extends JControllerForm
 		$vm	= $oid < 1000000000;
 		
 		$cids = JFactory::getApplication()->input->get('cid', array(), '');
-		if (!count($cids)) {
+		if (empty($cids)) {
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_QUIZZES_OR_LEARNING')."'); window.history.go(-1); </script>\n";
 			exit();
 		}
@@ -94,7 +94,7 @@ class JoomlaquizControllerReactivate extends JControllerForm
 				$database->execute();
 			}
 
-			if(count($set) && array_key_exists($qp->id, $quiz_products_stat)) {
+			if(!empty($set) && array_key_exists($qp->id, $quiz_products_stat)) {
 				$query = 'UPDATE #__quiz_products_stat SET ' . implode(', ', $set)
 				. ' WHERE `id` = ' . $quiz_products_stat[$qp->id]->id;
 			} else {

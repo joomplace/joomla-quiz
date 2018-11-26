@@ -57,7 +57,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 			$database->SetQuery($query);
 			$ddd2 = $database->LoadObjectList();
 
-			if (count($ddd2) && count($ddd)) {
+			if (!empty($ddd2) && !empty($ddd)) {
 				$is_correct_b = $is_correct_q;
 				$is_correct_t = 0;
 
@@ -114,9 +114,10 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 					$data['c_all_attempts'] = $ddd[0]->c_attempts; 
 				}
 				
-				if ($ddd2[0]->gtype && count($ddd2) == $is_correct_t)
-					$is_correct_q++;
-					
+				if ($ddd2[0]->gtype && (!empty($ddd2) && count($ddd2) == $is_correct_t)) {
+                    $is_correct_q++;
+                }
+
 				if ($is_correct_b == $is_correct_q){
 					$blank_fbd .= '<quest_blank_id><![CDATA['.$blnk_cid[$z].']]></quest_blank_id>' . "\n". "\t" . '<is_correct><![CDATA[0]]></is_correct>';
 					$blank_fbd_count++;
@@ -132,7 +133,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
 		
-		if (count($c_tmp)) {
+		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
@@ -182,7 +183,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$qch_ids_type_6 = $database->loadColumn();
 
-		if(count($qch_ids_type_6)) {
+		if(!empty($qch_ids_type_6)) {
 			$query = "SELECT SUM(points) FROM #__quiz_t_blank WHERE c_question_id IN (".implode(',', $qch_ids_type_6).") AND gtype = 0";
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
@@ -261,7 +262,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 			$database->SetQuery( $query );
 			$ddd2 = $database->LoadObjectList();
 			
-			if (count($ddd2) && count($ddd)) {
+			if (!empty($ddd2) && !empty($ddd)) {
 				foreach ($ddd2 as $right_row) {
 					JoomlaquizHelper::JQ_GetJoomFish($right_row->c_text, 'quiz_t_text', 'c_text', $right_row->c_id);
 					if ($right_row->regexp) {	
@@ -281,7 +282,9 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 			}
 		}
 		
-		if($is_correct_q == count($blnk_cid)) {$data['is_correct'] = 1; }
+		if(!empty($blnk_cid) && ($is_correct_q == count($blnk_cid))) {
+		    $data['is_correct'] = 1;
+		}
 		
 		return $data;
 	}
@@ -656,12 +659,15 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$answer = $database->LoadObjectList();
 
-		if (!count($answer)) { $answer = array(); $answer[0]->c_answer = ''; }
+		if (empty($answer)) {
+		    $answer = array();
+		    $answer[0]->c_answer = '';
+		}
+
 		$lists['answer'] = $answer;
 		$lists['id'] = $data['id'];
 		
 		return $lists;
-		
 	}
 	
 	public function onGetAdminReportsHTML(&$data){

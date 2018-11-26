@@ -21,7 +21,7 @@ class JoomlaquizViewReviewHotspot
 		$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 		
 		$path_str = '';
-		if(count($review_data['c_paths'])){
+		if(!empty($review_data['c_paths'])){
 			foreach($review_data['c_paths'] as $path){
 				$path_str .= '<path style="fill-opacity: 0.5;" fill="#147edb" stroke="#ffffff" d="'.$path.'" stroke-width="3" fill-opacity="0.5"/>'."\n";
 			}

@@ -35,7 +35,7 @@ class JoomlaquizTableQuestions extends JTable
 		{
 			$db = JFactory::getDBO();
 			$filter_quiz_id = JFactory::getApplication()->input->get('filter_quiz_id');
-			if(count($idArray)){
+			if(!empty($idArray)){
 				foreach($idArray as $ord => $qid){
 					$db->setQuery("UPDATE #__quiz_t_question SET `ordering` = '".$ord."' WHERE `c_id` = '".$qid."' AND `c_quiz_id` = '".$filter_quiz_id."'");
 					$db->execute();

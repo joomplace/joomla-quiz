@@ -89,7 +89,7 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		
 		$data['c_all_attempts'] = 1;
 		$data['is_avail'] = 1;
-		if (count($ddd)) {
+		if (!empty($ddd)) {
 			if ($ddd[0]->c_id == $data['answer']) {
 				$c_quest_score += $ddd[0]->c_point;
 				$data['is_correct'] = 1;
@@ -104,7 +104,7 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 			$query = "SELECT b.c_incorrect_feed FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' and b.c_question_id = a.c_id and b.c_id = '".$data['answer']."' AND a.published = 1";
 			$database->SetQuery( $query );
 			$inc_ddd = $database->LoadObjectList();
-			if (count($inc_ddd))
+			if (!empty($inc_ddd))
 				$data['questtype1_answer_incorrect'] = htmlspecialchars(nl2br($inc_ddd[0]->c_incorrect_feed));
 		}
 		$data['c_quest_cur_attempt'] = 0;
@@ -112,7 +112,7 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
 		
-		if (count($c_tmp)) {
+		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
 				$data['is_avail'] = 0;
@@ -227,7 +227,11 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		$query = "SELECT a.c_point, b.c_id, a.c_attempts FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' and b.c_question_id = a.c_id and b.c_right = '1' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd = $database->LoadObjectList();
-		if (count($ddd)) { if ($ddd[0]->c_id == $data['answer']) { $data['is_correct'] = 1; }}
+		if (!empty($ddd)) {
+		    if ($ddd[0]->c_id == $data['answer']) {
+		        $data['is_correct'] = 1;
+		    }
+		}
 				
 		return $data;
 	}
@@ -461,7 +465,7 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		$ans_true = 0;$ans_false = 0;
 		if ($ans_right) { $ans_true = 1; } else { $ans_false = 1; }
 		$new_field = new stdClass;
-		if(count($faltrue))
+		if(!empty($faltrue))
 		{
 			if($faltrue[0]->c_choice == 'true')
 				$new_field->c_id = $faltrue[0]->c_id;
@@ -484,7 +488,7 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		}
 		
 		$new_field = new stdClass;
-		if(count($faltrue))
+		if(!empty($faltrue))
 		{
 			if($faltrue[0]->c_choice == 'false')
 				$new_field->c_id = $faltrue[0]->c_id;

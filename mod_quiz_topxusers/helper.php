@@ -36,7 +36,7 @@ class modTopxusersHelper
 		$query->from($db->qn('#__quiz_r_student_quiz', 'qrsq'));
 		if ($quiz_id) {
 			$quiz_ids = explode( ',', $quiz_id );
-			if(count($quiz_ids)){
+			if(!empty($quiz_ids)){
 				$query->join('LEFT', $db->qn('#__quiz_t_quiz', 'qtq') . ' ON (' . $db->qn('qtq.c_id') . ' = ' . $db->qn('qrsq.c_quiz_id') . ') AND ( qtq.c_id=' . implode( ' OR qtq.c_id=', $quiz_ids ) . ' )');
 
 				foreach ($quiz_ids as $key => $value) {
@@ -69,7 +69,7 @@ class modTopxusersHelper
 			}
 		}
 
-		if (count($result) == 0) {
+		if (empty($result)) {
 			$result = array(); 
 		}
 		return $result;

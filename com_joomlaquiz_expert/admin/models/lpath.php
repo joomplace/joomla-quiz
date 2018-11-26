@@ -113,7 +113,7 @@ class JoomlaquizModelLpath extends JModelAdmin
 		
 		$query = "SELECT `c_id` AS value, `c_title` AS text"
 		. "\n FROM #__quiz_t_quiz"
-		. "\n WHERE `published` = 1" . (count($lpath_quiz) ? ' AND `c_id` NOT IN (' . implode(',', array_keys($lpath_quiz)) . ')' : '')
+		. "\n WHERE `published` = 1" . (!empty($lpath_quiz) ? ' AND `c_id` NOT IN (' . implode(',', array_keys($lpath_quiz)) . ')' : '')
 		. "\n ORDER BY c_title"
 		;
 		$database->setQuery( $query );
@@ -151,7 +151,7 @@ class JoomlaquizModelLpath extends JModelAdmin
 			$catid_where = ($c_catid) ? " AND `catid` = '".$c_catid."'" : "";
 		} else {
 			$cat_ids = $this->getAllCategories($c_catid);
-			if(count($cat_ids)){
+			if(!empty($cat_ids)){
 				$catid_where = " AND `catid` IN (".implode(",", $cat_ids).")";
 			}
 		}
@@ -159,7 +159,7 @@ class JoomlaquizModelLpath extends JModelAdmin
 		$query = "SELECT `id` AS value, `title` AS text"
 		. "\n FROM #__content"
 		. "\n WHERE `state` = 1" . $catid_where
-		. (count($lpath_article) ? ' AND `id` NOT IN (' . implode(',', array_keys($lpath_article)) . ')' : '')
+		. (!empty($lpath_article) ? ' AND `id` NOT IN (' . implode(',', array_keys($lpath_article)) . ')' : '')
 		. "\n ORDER BY title"
 		;
 		$database->setQuery( $query );

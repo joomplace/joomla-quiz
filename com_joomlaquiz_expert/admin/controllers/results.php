@@ -60,7 +60,7 @@ class JoomlaquizControllerResults extends JControllerAdmin
 			$database = JFactory::getDBO();
 
 			$cid = JFactory::getApplication()->input->get('cid', array(), '');
-			if(count($cid)){
+			if(!empty($cid)){
 				$query = "UPDATE `#__quiz_r_student_question` SET `c_flag_question` = '' WHERE `c_stu_quiz_id` IN (".implode(',', $cid).")";
 				$database->setQuery($query);
 				$database->query();
@@ -88,7 +88,7 @@ class JoomlaquizControllerResults extends JControllerAdmin
 			$database->setQuery("SELECT * FROM `#__quiz_t_question` WHERE `c_quiz_id` = '".$quiz_id."' AND `published` = 1");
 			$questions = $database->loadObjectList();
 			
-			if(empty($questions) && count($cid)){
+			if(empty($questions) && !empty($cid)){
 				$questions = array();
 				$query = "SELECT a.q_chain FROM `#__quiz_q_chain` AS a, `#__quiz_r_student_quiz` AS b"
 						. "\n WHERE a.s_unique_id =  b.unique_id AND  b.c_id IN (".implode(',', $cid).")";
@@ -116,7 +116,7 @@ class JoomlaquizControllerResults extends JControllerAdmin
 			}
 
 			$numbers = $stu_quiz_id = array();
-			if(count($questions)){
+			if(!empty($questions)){
 				foreach($questions as $question){
 					
 					$database->setQuery("SELECT COUNT(c_flag_question) FROM `#__quiz_r_student_question` WHERE `c_flag_question` = 1 AND c_question_id = '".$question->c_id."'");
@@ -129,7 +129,7 @@ class JoomlaquizControllerResults extends JControllerAdmin
 
 			$users = array();
 			
-			if(count($stu_quiz_id)){
+			if(!empty($stu_quiz_id)){
 				foreach($stu_quiz_id as $cid){
 					if($cid){
 						$database->setQuery("SELECT u.`name` FROM `#__users` as u LEFT JOIN `#__quiz_r_student_quiz` as sq ON sq.`c_student_id` = u.id WHERE sq.`c_student_id` <> 0 AND sq.`c_quiz_id` = '".$quiz_id."' AND sq.`c_id` IN (".$cid.")");
@@ -142,7 +142,7 @@ class JoomlaquizControllerResults extends JControllerAdmin
 			}
 			
 			foreach($questions as $ii => $question){
-				$str .= '"'.trim(strip_tags($question->c_question)).'", "'.$numbers[$ii].'", "'.((is_array($users[$ii]) && count($users[$ii])) ? implode(',', $users[$ii]) : "Anonymous").'"'."\n";
+				$str .= '"'.trim(strip_tags($question->c_question)).'", "'.$numbers[$ii].'", "'.((is_array($users[$ii]) && !empty($users[$ii])) ? implode(',', $users[$ii]) : "Anonymous").'"'."\n";
 			}
 			
 			$UserBrowser = '';

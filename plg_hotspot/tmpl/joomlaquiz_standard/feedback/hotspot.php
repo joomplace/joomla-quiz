@@ -23,7 +23,7 @@ class JoomlaquizViewFeedbackHotspot
 		$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 		
 		$path_str = '';
-		if(count($feedback_data['qdata']['c_paths'])){
+		if(!empty($feedback_data['qdata']['c_paths'])){
 			foreach($feedback_data['qdata']['c_paths'] as $path){
 				$path_str .= '<path style="fill-opacity: 0.5;" fill="#147edb" stroke="#ffffff" d="'.$path.'" stroke-width="3" fill-opacity="0.5" id="path_'.$feedback_data['qdata']['quest_id'].'"/>'."\n";
 			}

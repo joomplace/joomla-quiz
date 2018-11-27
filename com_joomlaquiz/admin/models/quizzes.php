@@ -188,7 +188,7 @@ class JoomlaquizModelQuizzes extends JModelList
 		$database = JFactory::getDBO();
 		$total = 0;
 	
-		if(count($cid)){
+		if(!empty($cid)){
 			$cids = implode( ',', $cid );
 			$total = count( $cid );		
 			$query = "SELECT * FROM #__quiz_t_question WHERE c_id IN ( $cids ) ORDER BY ordering";
@@ -199,7 +199,7 @@ class JoomlaquizModelQuizzes extends JModelList
 		}
 		$new_order = 0;
 
-		if(count($quests_to_copy)){
+		if(!empty($quests_to_copy)){
 			foreach ($quests_to_copy as $quest2copy) {
 				$old_quest_id = $quest2copy['c_id'];
 				$new_quest = $this->getTable('Question');
@@ -253,7 +253,7 @@ class JoomlaquizModelQuizzes extends JModelList
 					$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id = '".$old_quest_id."'";
 					$database->setQuery( $query );
 					$blanks_to_copy = $database->LoadObjectList();
-					if (count($blanks_to_copy) > 0) {
+					if (!empty($blanks_to_copy)) {
 						foreach($blanks_to_copy as $blank_to_copy) {
 							$old_blank_id = $blank_to_copy->c_id;
 
@@ -372,7 +372,7 @@ class JoomlaquizModelQuizzes extends JModelList
 	static public function delete($cid){
 		$db = JFactory::getDBO();
 		$option = "com_joomlaquiz";
-		if (count( $cid )) {
+		if (!empty( $cid )) {
 
 			$query = "DELETE FROM #__quiz_pool" . "\n WHERE " . $db->qn('q_id') . " IN ( ". implode(', ', $cid) . ")";
             $db->setQuery( $query );
@@ -415,7 +415,7 @@ class JoomlaquizModelQuizzes extends JModelList
 	
 	static public function JQ_removeQuestion(&$cid, $option, $run_from_quiz_remove = 0){
 		$db = JFactory::getDBO();
-		if (count( $cid )) {
+		if (!empty( $cid )) {
 			$cids = implode( ',', $cid );
 			$query = "SELECT distinct c_quiz_id FROM #__quiz_t_question WHERE c_id IN ( $cids )";
 			$db->SetQuery( $query );
@@ -443,7 +443,7 @@ class JoomlaquizModelQuizzes extends JModelList
 				$query = "SELECT c_id FROM #__quiz_t_blank WHERE c_question_id IN ( $cids )";
 				$db->SetQuery( $query );
 				$blank_cid = $db->loadColumn();
-				if (is_array( $blank_cid ) && (count($blank_cid) > 0)) {
+				if (is_array( $blank_cid ) && !empty($blank_cid)) {
 					$blank_cids = implode( ',', $blank_cid );
 					$query = "DELETE FROM #__quiz_t_text"
 					. "\n WHERE c_blank_id IN ( $blank_cids )"
@@ -456,7 +456,7 @@ class JoomlaquizModelQuizzes extends JModelList
                 $db->execute();
 			}
 			//recalculate quizzes TotalScore
-			if (count($ch_quizzes)) {
+			if (!empty($ch_quizzes)) {
 				foreach ($ch_quizzes as $c_q) {
 					JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($c_q->c_quiz_id);
 				}
@@ -469,7 +469,7 @@ class JoomlaquizModelQuizzes extends JModelList
 			$task = JFactory::getApplication()->input->getCmd('task');
 			$state = ($task == 'publish') ? 1 : 0;
 			
-			if (!is_array( $cid ) || count( $cid ) < 1) {
+			if (!is_array( $cid ) || empty( $cid )) {
 				$action = ($task == 'publish') ? 'publish' : 'unpublish';
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO')." $action'); window.history.go(-1);</script>\n";
 				exit();

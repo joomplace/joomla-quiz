@@ -165,7 +165,7 @@ class JQ_Installer {
 		
 		// Search the install dir for an xml file
 		$files = JQ_ReadDirectory( $this->installDir(), '.xml$', true, true );
-		if (count( $files ) > 0) {
+		if (!empty( $files )) {
 			foreach ($files as $file) {
 			
 				$packagefile = $this->isPackageFile( $file );
@@ -381,7 +381,7 @@ class JQ_Installer {
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.path');
 				
-		if (is_array( $p_files ) && count( $p_files ) > 0) {
+		if (is_array( $p_files ) && !empty( $p_files )) {
 			foreach($p_files as $_file) {
 				$filesource	= $this->JQ_PathName( $this->JQ_PathName( $p_sourcedir ) . $_file, false );
 				$filedest	= $this->JQ_PathName( $this->JQ_PathName( $p_destdir ) . $_file, false );
@@ -591,7 +591,7 @@ class JQ_InstallerQuestions extends JQ_Installer {
 		$childs = $admin->childNodes;
 		foreach($childs as $child){
 			$files = preg_split('/\.php/', $child->getText());
-			if(count($files)){
+			if(!empty($files)){
 				foreach($files as $file){
 					if($file == '') continue;
 					$this->installFilename($file.'.php');
@@ -615,7 +615,7 @@ class JQ_InstallerQuestions extends JQ_Installer {
 		$childs = $site->childNodes;
 		foreach($childs as $child){
 			$files = preg_split('/\.php/', $child->getText());
-			if(count($files)){
+			if(!empty($files)){
 				foreach($files as $file){
 					if($file == '') continue;
 					

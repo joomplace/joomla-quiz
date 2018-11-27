@@ -92,7 +92,7 @@ class JoomlaquizModelResults extends JModelList
 	public static function delete($cid){
 		
 		$database = JFactory::getDBO();
-		if (count( $cid )) {
+		if (!empty( $cid )) {
 			$cids = implode( ',', $cid );
 			
 			$query = "SELECT c_id FROM #__quiz_r_student_question"
@@ -326,7 +326,7 @@ class JoomlaquizModelResults extends JModelList
 		$database->setQuery( $query );
 		$questions_arr = $database->loadColumn();
 		
-		if (is_array($quizzies) && count($quizzies) > 0)
+		if (is_array($quizzies) && !empty($quizzies))
 		foreach($quizzies as $quiz_number=>$quiz_id) {
 			$query = $database->getQuery(true);
 			$query->select('*')
@@ -460,7 +460,7 @@ class JoomlaquizModelResults extends JModelList
 				$query = "SELECT c_id FROM #__quiz_t_question WHERE c_type = 10 AND c_id IN ('".$qids."')";
 				$database->SetQuery( $query );
 				$qch_ids_type_10 = $database->loadColumn();
-				if(count($qch_ids_type_10)) {
+				if(!empty($qch_ids_type_10)) {
 					$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id IN (".implode(',', $qch_ids_type_10).") AND c_right = 0";
 					$database->SetQuery( $query );
 					$total_score += $database->LoadResult();

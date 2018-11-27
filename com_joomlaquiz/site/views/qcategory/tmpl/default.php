@@ -107,7 +107,7 @@ foreach($this->categories as $categ){
 		<?php echo $cat->description ;?>	
 		<br />
 		<div class="jq_quiz_container">
-		<?php if(count($rows)) { ?>
+		<?php if(!empty($rows)) { ?>
 			<h4><?php echo JText::_('COM_QUIZ_QUIZZES');?></h4>
 			<?php foreach($rows as $row) { ?>
 				<div class="jq_cat_quiz_title">
@@ -132,7 +132,7 @@ foreach($this->categories as $categ){
 			
 			<br />
 			<div class="jq_pquiz_container">
-			<?php if(count($bought_quizzes)) { ?>
+			<?php if(!empty($bought_quizzes)) { ?>
 				<h4><?php echo JText::_('COM_JQ_PURCH_QUIZZES'); ?></h4>
 			
 				<?php

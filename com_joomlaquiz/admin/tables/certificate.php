@@ -45,7 +45,7 @@ class JoomlaquizTableCertificate extends JTable
         $jq_hid_field_h = JFactory::getApplication()->input->get('jq_hid_field_h', array(), '');
         $jq_hid_field_font = JFactory::getApplication()->input->get('jq_hid_field_font', array(), '');
 
-        if (is_array($jq_hid_fields_ids ) && count($jq_hid_fields_ids )) {
+        if (is_array($jq_hid_fields_ids ) && !empty($jq_hid_fields_ids )) {
             foreach($jq_hid_fields_ids as $i=>$jq_hid_fields_id) {
                 $query = "INSERT INTO #__quiz_cert_fields SET `cert_id` = '".$this->id."', 
 								`f_text` = '".$jq_hid_fields[$i]."',

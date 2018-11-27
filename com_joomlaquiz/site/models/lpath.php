@@ -62,7 +62,7 @@ class JoomlaquizModelLpath extends JModelList
 			$database->SetQuery( $query );
 			$lpath = $database->loadObjectList();
 			
-			if(count($lpath)) {
+			if(!empty($lpath)) {
 				$lpath = $lpath[0];
 			} else {
 				$lpath = new stdClass;
@@ -108,7 +108,7 @@ class JoomlaquizModelLpath extends JModelList
             $database->SetQuery( $query );
 			$lpath_stages = $database->loadObjectList();
 
-			if(is_array($lpath_stages) && count($lpath_stages))
+			if(is_array($lpath_stages) && !empty($lpath_stages))
 			foreach($lpath_stages as $ls) {
 				$passed_steps[$ls->type][$ls->qid] = 1;	
 			}
@@ -121,7 +121,7 @@ class JoomlaquizModelLpath extends JModelList
 
             $database->SetQuery( $query );
 			$passed_quizzes = $database->loadObjectList();
-			if(is_array($passed_quizzes) && count($passed_quizzes))
+			if(is_array($passed_quizzes) && !empty($passed_quizzes))
 			foreach($passed_quizzes as $ls) {
 				if (!array_key_exists($ls->c_quiz_id, $passed_steps['q'])){
                     if($lpath->package_id && $lpath->rel_id){
@@ -138,7 +138,7 @@ class JoomlaquizModelLpath extends JModelList
 			}
 
 			$link = true;
-			if(is_array($lpath_all ) && count($lpath_all ))
+			if(is_array($lpath_all ) && !empty($lpath_all ))
 			foreach($lpath_all as $i=>$row) {
 				$lpath_all[$i]->show_link = $link;
 				if($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {

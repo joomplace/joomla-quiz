@@ -139,7 +139,7 @@ class JoomlaquizTableQuiz extends JTable
 					exit();
 				}
 					
-				if(count($_POST['from_percent']))
+				if(!empty($_POST['from_percent']))
 				{	
 					for($i=0;$i<count($_POST['from_percent']);$i++)
 					{

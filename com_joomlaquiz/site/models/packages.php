@@ -62,14 +62,14 @@ class JoomlaquizModelPackages extends JModelList
 		$database->SetQuery( $query );
 		$payments = $database->loadObjectList();
 		
-		if (is_array($payments) && count($payments)) {
+		if (is_array($payments) && !empty($payments)) {
 			if (is_array($orders))
 				$orders = array_merge($orders, $payments);
 			else
 				$orders = $payments;
 		}
 		$packages = array();
-		if (is_array($orders) && count($orders))
+		if (is_array($orders) && !empty($orders))
 		foreach($orders as $i=>$order) {
 			$package = new stdClass;
 			
@@ -121,12 +121,12 @@ class JoomlaquizModelPackages extends JModelList
 			
 			$rel_quizzes = $products = array();
 			
-			if(is_array($quiz_products) && count($quiz_products))
+			if(is_array($quiz_products) && !empty($quiz_products))
 			foreach($quiz_products as $q) {
 				$rel_quizzes[$q->type][] = $q;
 			}
 			
-			if(!count($rel_quizzes)) {
+			if(empty($rel_quizzes)) {
 				continue;
 			}
 
@@ -142,7 +142,7 @@ class JoomlaquizModelPackages extends JModelList
 				$database->SetQuery( $query );	
 				$products_all = $database->loadObjectList();
 				
-				if(is_array($products_all) && count($products_all))
+				if(is_array($products_all) && !empty($products_all))
 				foreach($products_all as $product) {
 					JoomlaquizHelper::JQ_GetJoomFish($product->product_name, 'vm_product', 'product_name', $product->product_id);	
 					$products[] = $product->product_name;
@@ -157,7 +157,7 @@ class JoomlaquizModelPackages extends JModelList
 				$database->SetQuery( $query );	
 				$products_all = $database->loadObjectList();
 
-				if(is_array($products_all) && count($products_all))
+				if(is_array($products_all) && !empty($products_all))
 				foreach($products_all as $product) {
 					JoomlaquizHelper::JQ_GetJoomFish($product->name, 'quiz_product_info', 'name', $product->id);	
 					$products[] = $product->name;
@@ -184,7 +184,7 @@ class JoomlaquizModelPackages extends JModelList
 			$bought_quizzes = array();
 			$bq_count = $bq_counter_exiped = 0;
 
-			if(array_key_exists('q', $rel_quizzes) && count($rel_quizzes['q']) ) {
+			if(array_key_exists('q', $rel_quizzes) && !empty($rel_quizzes['q']) ) {
 				$bq_count = count($rel_quizzes['q']);
 
 				foreach($rel_quizzes['q'] as $ii=>$data) {
@@ -310,14 +310,14 @@ class JoomlaquizModelPackages extends JModelList
 			
 			$lpaths = array();
 			$l_count = $l_counter_exiped = 0;
-			if(array_key_exists('l', $rel_quizzes) && count($rel_quizzes['l'])) {
+			if(array_key_exists('l', $rel_quizzes) && !empty($rel_quizzes['l'])) {
 				$query = 'SELECT * FROM #__quiz_lpath WHERE published = 1';
 				$database->setQuery( $query );
 				$lpath = $database->loadObjectList('id');
 				if (!empty($lpath)) {
 					$l_count = count($rel_quizzes['l']);
 
-					if(is_array($rel_quizzes['l']) && count($rel_quizzes['l']))
+					if(is_array($rel_quizzes['l']) && !empty($rel_quizzes['l']))
 					foreach($rel_quizzes['l'] as $data)
 					{
 						if(empty($lpath[$data->rel_id])) {

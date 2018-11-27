@@ -79,7 +79,7 @@ class JoomlaquizModelCertificate extends JModelAdmin
 		$fonts = $this->jrReadDirectory(JPATH_SITE.'/media','.ttf');
 		
 		$lists['fonts'] = array();
-		if(is_array($fonts) && count($fonts)) {
+		if(is_array($fonts) && !empty($fonts)) {
 			foreach($fonts as $i=>$font) {
 				$lists['fonts'][$i] = new stdClass();
 				$lists['fonts'][$i]->value = $font;

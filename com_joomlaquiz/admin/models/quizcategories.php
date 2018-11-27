@@ -52,7 +52,7 @@ class JoomlaquizModelQuizcategories extends JModelList
 	}
 	
 	public static function delete($cid){
-		if (count( $cid )) {
+		if (!empty( $cid )) {
 			$cids = implode( ',', $cid );
 			$db = JFactory::getDBO();
 		

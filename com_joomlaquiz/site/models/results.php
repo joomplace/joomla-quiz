@@ -253,7 +253,7 @@ class JoomlaquizModelResults extends JModelList
 		$quiz_params = $db->loadObject();
 		
 		/* if quiz - clear up errors */
-		if(count($quiz_params)){
+		if(!empty($quiz_params)){
 			$quiz_params->error = 0;
 			$quiz_params->message = '';
 		}

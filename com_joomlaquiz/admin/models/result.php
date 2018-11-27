@@ -20,7 +20,7 @@ class JoomlaquizModelResult extends JModelList
 		
 	public function del_stu_report($cid){
 		$database = JFactory::getDBO();
-		if (count( $cid )) {
+		if (!empty( $cid )) {
 				$cids = implode( ',', $cid );
 				JoomlaquizHelper::JQ_Delete_Items($cids, 'remove/reports/', 'removeReports');
 								
@@ -51,7 +51,7 @@ class JoomlaquizModelResult extends JModelList
 		$q_data = $database->LoadObjectList();
 		
 		$lists = array();
-		if (count($q_data)) {
+		if (!empty($q_data)) {
 			$q_type = $q_data[0]->c_type;
 			$q_id = $q_data[0]->c_id;
 			$qid = $q_data[0]->c_stu_quiz_id;
@@ -69,7 +69,7 @@ class JoomlaquizModelResult extends JModelList
                 $user_info[0]->email = $unreg_user_info[0]->user_email;
             }
 			
-			if (count($user_info)) { $lists['user'] = $user_info[0];}
+			if (!empty($user_info)) { $lists['user'] = $user_info[0];}
 			else { 
 				$lists['user'] = new stdClass;
 				$lists['user']->username = JText::_('COM_JOOMLAQUIZ_ANONYMOUS2'); $lists['user']->name = " - "; $lists['user']->email = " - "; }

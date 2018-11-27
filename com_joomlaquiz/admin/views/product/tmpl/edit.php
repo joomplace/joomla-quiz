@@ -66,7 +66,7 @@ $listDirn	= $this->state->get('list.direction');
             <div class="tab-content" style="width:110%">
                 <div class="tab-pane active" id="quizzes">
 			        <table class="adminform">
-                    <?php if(count($this->lists['quiz'])!=0){ ?>
+                    <?php if(!empty($this->lists['quiz'])){ ?>
 							<table class="table table-striped">
                                 <thead>
                                 <tr>
@@ -145,7 +145,7 @@ $listDirn	= $this->state->get('list.direction');
                 </div>
                 <div class="tab-pane" id="lpaths">
                         <table class="adminform">
-                            <?php if(count($this->lists['lpath'])!=0){ ?>
+                            <?php if(!empty($this->lists['lpath'])){ ?>
 							<table class="table table-striped">
                                 <thead>
                                 <tr>

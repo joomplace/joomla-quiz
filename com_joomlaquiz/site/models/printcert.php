@@ -38,7 +38,7 @@ class JoomlaquizModelPrintcert extends JModelList
 		$database->SetQuery( $query );
 		$stu_quiz = $database->LoadObjectList();
 		
-		if (count($stu_quiz)) {
+		if (!empty($stu_quiz)) {
 			$stu_quiz = $stu_quiz[0];
             if ( (($my->id == $stu_quiz->c_student_id || $unique_pass_id == $stu_quiz->unique_pass_id) || $my->authorise('core.managefe','com_joomlaquiz')) && ($user_unique_id == $stu_quiz->unique_id) ) {
 				if ($stu_quiz->c_passed != 1) {
@@ -55,20 +55,20 @@ class JoomlaquizModelPrintcert extends JModelList
 					
 					$ftmp = array();
 					$conf = new JConfig();
-					if(count($cb_fields)){
+					if(!empty($cb_fields)){
 						foreach ($cb_fields as $cb_field) {
 							$query = "SELECT * FROM `information_schema`.`columns` WHERE `table_schema` = '".$conf->db."' AND `table_name` = '".$conf->dbprefix."comprofiler' AND column_name = '".$cb_field."'";
 							$database->setQuery($query);
 							$f = $database->loadObjectList();
 
-							if(count($f)){
+							if(!empty($f)){
 								$ftmp[] = $cb_field;
 							}
 						}
 					}
 					$cb_fields = $ftmp;
 					
-					if (count($cb_fields)) {
+					if (!empty($cb_fields)) {
 						$query = "SELECT `".implode('`,`', $cb_fields)."` FROM #__comprofiler WHERE user_id= ".$stu_quiz->c_student_id;
 						$database->SetQuery( $query );				
 						$cb_data = $database->loadObjectList();	
@@ -100,7 +100,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				$query .= " WHERE sq.c_id = '".$stu_quiz_id."' AND sq.c_student_id=u.id";
 				$database->SetQuery($query);
 				$inform = $database->LoadObjectList();			
-				if (count($inform)) {
+				if (!empty($inform)) {
 					if ($inform[0]->name != '') {
 						$u_name = $inform[0]->name;
 					} 
@@ -143,7 +143,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				$font_text = str_replace("#course#",$this->revUni($stu_quiz->c_title), $font_text);
 				$stu_datetime = strtotime($stu_quiz->c_date_time) + $stu_quiz->c_total_time;
 
-				if (count($cb_fields)) {
+				if (!empty($cb_fields)) {
 					foreach($cb_fields as $cb_field) {	
 						if ($cb_data && isset($cb_data->$cb_field))
 							$font_text = str_replace("#{$cb_field}#", $cb_data->$cb_field, $font_text);
@@ -249,7 +249,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				$fields = $database->loadObjectList();
 
 				$ad = 0;		
-				if (is_array($fields) && count($fields)) {
+				if (is_array($fields) && !empty($fields)) {
 					foreach($fields as $field){
 						$field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text),$stu_quiz,'');
 						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
@@ -258,16 +258,17 @@ class JoomlaquizModelPrintcert extends JModelList
 						$field->f_text = str_replace("#email#", $u_email, $field->f_text);
 						$field->f_text = str_replace("#username#",$this->revUni($u_usrname), $field->f_text);
 						$field->f_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$sc_procent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $field->f_text);
-                                                $field->f_text = str_replace("#points#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$stu_quiz->user_score." ".JText::_('COM_QUIZ_CERT_OUT_OF')." ".number_format($stu_quiz->c_full_score, 0, '.', '')." ".JText::_('COM_QUIZ_CERT_POINTS'), $field->f_text);
-                                                $field->f_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $field->f_text);
+                        $field->f_text = str_replace("#points#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$stu_quiz->user_score." ".JText::_('COM_QUIZ_CERT_OUT_OF')." ".number_format($stu_quiz->c_full_score, 0, '.', '')." ".JText::_('COM_QUIZ_CERT_POINTS'), $field->f_text);
+                        $field->f_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $field->f_text);
 						$field->f_text = str_replace("#course#",$this->revUni($stu_quiz->c_title), $field->f_text);
 
-						if (count($cb_fields)) {
+						if (!empty($cb_fields)) {
 							foreach($cb_fields as $cb_field) {	
-								if ($cb_data && isset($cb_data->$cb_field))
-									$field->f_text = str_replace("#{$cb_field}#", $cb_data->$cb_field, $field->f_text);
-								else 
-									$field->f_text = str_replace("#{$cb_field}#", '', $field->f_text);
+								if ($cb_data && isset($cb_data->$cb_field)) {
+                                    $field->f_text = str_replace("#{$cb_field}#", $cb_data->$cb_field, $field->f_text);
+                                } else {
+                                    $field->f_text = str_replace("#{$cb_field}#", '', $field->f_text);
+                                }
 							}
 						}
 						

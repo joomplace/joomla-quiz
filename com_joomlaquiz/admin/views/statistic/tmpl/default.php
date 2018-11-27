@@ -89,7 +89,7 @@ $extension = 'com_joomlaquiz';
 		<br />
 		<table class="adminlist">
 			<thead>
-            <?php if(count($this->statistic['questions'])){?>
+            <?php if(!empty($this->statistic['questions'])){?>
 				<tr>
 					<th class="title" colspan="2"><?php echo JText::_('COM_JOOMLAQUIZ_QUESTIONS');?></th>		
 				</tr>
@@ -97,7 +97,7 @@ $extension = 'com_joomlaquiz';
 			</thead>
 			<tbody>
 			<?php
-			if(count($this->statistic['questions'])){
+			if(!empty($this->statistic['questions'])){
 				$k = 0;
 				foreach($this->statistic['questions'] as $i => $question){
 					if($question != ''){

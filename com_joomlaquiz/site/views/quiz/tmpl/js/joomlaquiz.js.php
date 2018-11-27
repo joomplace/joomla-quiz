@@ -2008,7 +2008,7 @@ function getParameter(paramName) {
 </script>
 <?php
 	$paths = JoomlaquizHelper::getJavascriptFunctions();
-	if(count($paths)){
+	if(!empty($paths)){
 		foreach($paths as $path){
 			echo '<script type="text/javascript" src="'.$path.'"></script>';
 		}

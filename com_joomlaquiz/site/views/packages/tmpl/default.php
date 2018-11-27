@@ -43,7 +43,7 @@ $document->addScriptDeclaration("
 			}
 			jq_jQuery(document).ready(function() {JO_initAccordion();});
 		");
-if(!count($this->packages)) {
+if(empty($this->packages)) {
 	?>
 	<div class="contentpane joomlaquiz">
 		<h1 class="componentheading"><?php echo JText::_('COM_SHOW_PACKAGES_TITLE'); ?></h1>
@@ -97,7 +97,7 @@ if(!count($this->packages)) {
 				continue;
 			}
 			
-			if(count($package->bought_quizzes)) { ?>					
+			if(!empty($package->bought_quizzes)) { ?>
 				<br />
 				<strong style="text-transform:uppercase"><?php echo JText::_('COM_JQ_QUIZZES') ?></strong>
 				<br />
@@ -126,7 +126,7 @@ if(!count($this->packages)) {
 			?>
 	
 			<?php
-			if(count($package->lpaths)) { ?>					
+			if(!empty($package->lpaths)) { ?>
 				<br />
 				<strong style="text-transform:uppercase"><?php echo JText::_('COM_QUIZ_LPATHS'); ?></strong>
 				<br />

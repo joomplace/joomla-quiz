@@ -20,7 +20,7 @@ class JoomlaquizViewLpath extends JViewLegacy
 		$this->lpath_data = $this->get('LearningPaths');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (!empty($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}

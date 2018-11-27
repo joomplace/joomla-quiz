@@ -19,7 +19,7 @@ class JoomlaquizHelper
 			
 			jimport('joomla.filesystem.folder');
 			$folders = JFolder::folders(JPATH_SITE.'/plugins/joomlaquiz/', '.');
-			if(count($folders)){
+			if(!empty($folders)){
 				foreach($folders as $folder){
 					if(file_exists(JPATH_SITE.'/plugins/joomlaquiz/'.$folder.'/admin/'.$path.$folder.'.php')){
 						require_once(JPATH_SITE.'/plugins/joomlaquiz/'.$folder.'/admin/'.$path.$folder.'.php');
@@ -41,7 +41,7 @@ class JoomlaquizHelper
 			jimport('joomla.filesystem.folder');
 			$folders = JFolder::folders(JPATH_SITE.'/plugins/joomlaquiz', '.');
 			
-			if(count($folders)){
+			if(!empty($folders)){
 				foreach($folders as $folder){
 					if(file_exists(JPATH_SITE.'/plugins/joomlaquiz/'.$folder.'/admin/total/'.$folder.'.php')){
 						$database->setQuery("SELECT `enabled` FROM `#__extensions` WHERE folder = 'joomlaquiz' AND type = 'plugin' AND element = '".$folder."'");
@@ -88,7 +88,7 @@ class JoomlaquizHelper
 			$db->setQuery("SELECT `c_id`, `c_type` FROM #__quiz_t_qtypes");
 			$reg_types = $db->loadObjectList();
 			
-			if(count($reg_types)){
+			if(!empty($reg_types)){
 				foreach($reg_types as $reg_type){
 					$reg_type = (array) $reg_type;
 					if($reg_type['c_id'] == $new_qtype_id){

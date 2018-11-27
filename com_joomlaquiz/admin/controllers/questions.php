@@ -70,7 +70,7 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 		
 		public function move_question_sel(){
 			$cid = $this->input->get('cid', array(), 'array');
-			if (!is_array( $cid ) || count( $cid ) < 1) {
+			if (!is_array( $cid ) || empty( $cid )) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 				exit;
 			}
@@ -101,7 +101,7 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 				exit();
 			}
 			//re-calculate quizzes TotalScore
-			if (count($ch_quizzes)) {
+			if (!empty($ch_quizzes)) {
 				foreach ($ch_quizzes as $c_q) {
 					JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($c_q->c_quiz_id);
 				}
@@ -117,7 +117,7 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 		
 		public function copy_question_sel(){
 			$cid = $this->input->get('cid', array(), 'array');
-			if (!is_array( $cid ) || count( $cid ) < 1) {
+			if (!is_array( $cid ) || empty( $cid )) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 				exit;
 			}
@@ -173,7 +173,7 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			
 			$db->setQuery("SELECT `c_id` FROM #__quiz_r_student_question WHERE `c_question_id` = '".$q_id."'");
 			$cid = $db->loadColumn();
-			$cids = (count($cid)) ? implode(',', $cid) : '';
+			$cids = (!empty($cid)) ? implode(',', $cid) : '';
 			
 			if($cids != ''){
 				JoomlaquizHelper::JQ_Delete_Items($cids, 'remove/reports/', 'removeReports');
@@ -201,11 +201,11 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$database = JFactory::getDBO();
 			$mainframe = JFactory::getApplication();
 				
-			if(count($cid)){
+			if(!empty($cid)){
 				$database->setQuery("SELECT * FROM #__quiz_t_hotspot WHERE c_question_id IN (".implode(',', $cid).")");
 				$hs_datas = $database->loadObjectList();
 								
-				if(count($hs_datas)){
+				if(!empty($hs_datas)){
 					foreach($hs_datas as $ii => $hs_data){
 						
 						$json_paths = '[';

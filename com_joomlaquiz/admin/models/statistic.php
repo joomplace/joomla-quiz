@@ -96,7 +96,7 @@ class JoomlaquizModelStatistic extends JModelList
 			}
 			
 			$out_html = "";
-			if(count($out_arr))
+			if(!empty($out_arr))
 			{
 				foreach($out_arr as $html_c => $html_peace){
 					if(count($out_arr) != $html_c && isset($img_urls[$html_c])){

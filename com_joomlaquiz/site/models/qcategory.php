@@ -113,7 +113,7 @@ class JoomlaquizModelQcategory extends JModelList
         $c_titles = array_values($c_titles);
 
         $sort_quizzez = array();
-        if (count($all_quizzez)) {
+        if (!empty($all_quizzez)) {
             foreach ($c_titles as $title) {
                 foreach ($all_quizzez as $i => $row) {
                     if ($row->c_title == $title) {
@@ -226,20 +226,12 @@ class JoomlaquizModelQcategory extends JModelList
         }
 
         $lpaths = array();
-        if (array_key_exists('l', $rel_quizzes) && count($rel_quizzes['l'])) {
+        if (array_key_exists('l', $rel_quizzes) && !empty($rel_quizzes['l'])) {
             $query = 'SELECT * FROM #__quiz_lpath WHERE published = 1';
             $database->setQuery($query);
             $lpath = $database->loadObjectList('id');
             if (!empty($lpath)) {
-                foreach ($lpath as $i => $row) {
-                    JoomlaquizHelper::JQ_GetJoomFish($lpath[$i]->title,
-                        'quiz_lpath', 'title', $lpath[$i]->id);
-                    JoomlaquizHelper::JQ_GetJoomFish($lpath[$i]->short_descr,
-                        'quiz_lpath', 'short_descr', $lpath[$i]->id);
-                    JoomlaquizHelper::JQ_GetJoomFish($lpath[$i]->descr,
-                        'quiz_lpath', 'descr', $lpath[$i]->id);
-                }
-                if (is_array($rel_quizzes['l']) && count($rel_quizzes['l'])) {
+                if (is_array($rel_quizzes['l']) && !empty($rel_quizzes['l'])) {
                     foreach ($rel_quizzes['l'] as $data) {
                         if (empty($lpath[$data->rel_id])) {
                             continue;

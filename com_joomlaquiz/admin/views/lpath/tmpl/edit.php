@@ -158,7 +158,7 @@ $input = $app->input;
 		<?php } ?>
 
 		var articles_all = new Array();
-		<?php foreach($this->articles_data['all_articles'] as $a) { ?>
+		<?php foreach($this->articles_data['articles'] as $a) { ?>
 		articles_all[<?php echo $a->value; ?>] = '<?php echo str_replace("'", "\\'", $a->text); ?>';
 		<?php } ?>
 
@@ -243,6 +243,9 @@ $input = $app->input;
 			var tbl_id = element.parentNode.parentNode.parentNode.parentNode.id;
 			element.parentNode.parentNode.parentNode.deleteRow(del_index);
 			ReAnalize_tbl_Rows(del_index - 1, tbl_id);
+
+            jQuery('#quiz_id').trigger('liszt:updated');
+            jQuery('#article_id').trigger('liszt:updated');
 		}
 
 		function Up_tbl_row(element) {
@@ -406,4 +409,11 @@ function Add_new_tbl_field(elem_field, tbl_id, field_name, field_type) {
 			return initialgetUrlParam.apply(document, arguments);
 		}
 	}
+
+    jQuery(function($) {
+        $('#quiz_id_chzn, #article_id_chzn').on('click', function () {
+            window.scrollTo(0,document.body.scrollHeight);
+        });
+    });
+
 </script>

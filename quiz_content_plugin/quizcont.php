@@ -75,7 +75,7 @@ class plgContentQuizcont extends JPlugin {
 			$user = JFactory::getUser();
 			$viewAccessGranted = $user->authorise('core.view', 'com_joomlaquiz.quiz.'.$this->quiz_params->c_id);
 
-			if ($viewAccessGranted OR $this->quiz_params->c_guest)
+			if ($viewAccessGranted || (!empty($this->quiz_params->c_guest) && $this->quiz_params->c_guest))
 			{
 				@ob_start();
 				require_once JPATH_SITE.'/components/com_joomlaquiz/views/quiz/tmpl/default.php';

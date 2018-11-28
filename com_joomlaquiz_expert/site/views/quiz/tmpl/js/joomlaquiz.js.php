@@ -10,6 +10,14 @@
 defined('_JEXEC') or die;
 
 JHTML::_('behavior.modal');
+
+$jinput = JFactory::getApplication()->input;
+$reStartOption = $jinput->get('option','');
+$reStartView = $jinput->get('view','');
+$reStartID = $jinput->getInt('id',0);
+
+//content plugin in article?
+$margin_top = $this->get('_name') == 'quiz' ? $this->margin_top : JComponentHelper::getParams('com_joomlaquiz')->get('margin_top');
 ?>
 <script language="JavaScript" type="text/javascript">
 <!--//--><![CDATA[//><!--
@@ -41,14 +49,11 @@ function ScrollToElement(theElement){
 	} catch(e){}
 
 }
-<?php
-$jinput = JFactory::getApplication()->input;
-echo "var reStartOption = '".$jinput->get('option',0)."';\n";
 
-echo "var reStartView = '".$jinput->get('view',0)."';\n";
+var reStartOption = '<?php echo $reStartOption; ?>';
+var reStartView = '<?php echo $reStartView; ?>';
+var reStartID = '<?php echo $reStartID; ?>';
 
-echo "var reStartID = '".$jinput->get('id',0)."';\n";
-?>
 var penaltyPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_PENALTY_POINT')?>';
 var currentPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_CURRENT_POINT')?>';
 var totalPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_TOTAL_POINT')?>';
@@ -114,7 +119,7 @@ var quest_timer_ticktack = 0;
 var circle = null;
 var path_elems = new Array();
 var mes_question_is_misconfigured = '<?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IS_CONFIGURED');?>';
-var margin_top = '<?php echo $this->margin_top?>';
+var margin_top = '<?php echo $margin_top; ?>';
 var qs = getParameter('qs');
 
 <?php
@@ -1544,14 +1549,14 @@ function jq_QuizContinue() {
 
 function jq_QuizContinueFinish() {
     var reStartString='';
-    if(reStartOption!=0 && reStartOption!='com_joomlaquiz') {
+    if(reStartOption && reStartOption!='com_joomlaquiz') {
         reStartString = '?';
         reStartString += 'option='+reStartOption+'&';
-        if(reStartView!=0) {
+        if(reStartView) {
             reStartString += 'view='+reStartView+'&';
         }
         if(reStartID!=0) {
-            reStartString += 'id='+reStartID+'&';
+            reStartString += 'id='+reStartID;
         }
         reStartString = encodeURIComponent(reStartString);
     }

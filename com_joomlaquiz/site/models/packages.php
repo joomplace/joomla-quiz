@@ -191,7 +191,8 @@ class JoomlaquizModelPackages extends JModelList
 					if(empty($all_quizzez[$data->rel_id])) {
 						continue;
 					}
-					
+
+                    $data->suffix = !empty($data->suffix) ? $data->suffix : '';
 					$days_left = 0;
 					$data->expired = false;
 					$data->expired_a = false;

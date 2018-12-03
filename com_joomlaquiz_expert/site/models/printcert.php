@@ -138,8 +138,15 @@ class JoomlaquizModelPrintcert extends JModelList
 				$font_text = str_replace("#surname#", $this->revUni($u_surname), $font_text);
 				$font_text = str_replace("#email#", $this->revUni($u_email), $font_text);
 				$font_text = str_replace("#username#",$this->revUni($u_usrname), $font_text);
-				$font_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$sc_procent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $font_text);
-				$font_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $font_text);
+
+				$reg_answer_replace = number_format($stu_quiz->user_score, 2, '.', ' ') .
+                    ' ' . JText::_('COM_QUIZ_CERT_OUT_OF') . ' ' .
+                    number_format($stu_quiz->c_full_score, 2, '.', ' ') .
+                    ' (' . $sc_procent . JText::_('COM_QUIZ_CERT_PERCENT_SYMBOL') . ')';
+                //$font_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$sc_procent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $font_text);
+                $font_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$reg_answer_replace, $font_text);
+
+                $font_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $font_text);
 				$font_text = str_replace("#course#",$this->revUni($stu_quiz->c_title), $font_text);
 				$stu_datetime = strtotime($stu_quiz->c_date_time) + $stu_quiz->c_total_time;
 
@@ -259,7 +266,10 @@ class JoomlaquizModelPrintcert extends JModelList
 						$field->f_text = str_replace("#surname#", $this->revUni($u_surname), $field->f_text);
 						$field->f_text = str_replace("#email#", $u_email, $field->f_text);
 						$field->f_text = str_replace("#username#",$this->revUni($u_usrname), $field->f_text);
-						$field->f_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$sc_procent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $field->f_text);
+
+                        //$field->f_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$sc_procent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $field->f_text);
+                        $field->f_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$reg_answer_replace, $field->f_text);
+
 						$field->f_text = str_replace("#points#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$stu_quiz->user_score." ".JText::_('COM_QUIZ_CERT_OUT_OF')." ".number_format($stu_quiz->c_full_score, 0, '.', '')." ".JText::_('COM_QUIZ_CERT_POINTS'), $field->f_text);
                                                 $field->f_text = str_replace("#stu_points#",$stu_quiz->c_total_score, $field->f_text);
 						$field->f_text = str_replace("#course#",$this->revUni($stu_quiz->c_title), $field->f_text);

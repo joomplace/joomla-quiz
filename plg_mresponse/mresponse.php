@@ -347,7 +347,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		if(is_array($tmp))
 		foreach($tmp as $t) {
 			if($t['c_choice_id']) {
-				$answer .= $t['c_choice']."; ";
+				$answer .= (strpos($t['c_choice'], "<p>" )!==false)?$t['c_choice']:$t['c_choice']."; ";
 			}				
 		}	
 		

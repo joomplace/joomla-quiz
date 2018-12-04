@@ -27,7 +27,11 @@ class JoomlaquizViewCreateexthotspot extends JViewLegacy
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-		
+
+		if(JFactory::getApplication()->input->get('task', '') == 'createexthotspot') {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_CREATEEXTHOTSPOT_CLOSE_CONTOUR'));
+        }
+
 		parent::display($tpl);
     }
 }

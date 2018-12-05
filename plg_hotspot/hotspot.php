@@ -286,7 +286,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$data['question']->correct =round(($correct*100)/($past_this)).'%';
 		$data['question']->correct_c = intval($correct);
 		
-		$data['question']->incorrect = (intval($past_this)?(100-$data['question']->correct_c):0).'%';
+		$data['question']->incorrect = (intval($past_this)?(100-(int)$data['question']->correct_c):0).'%';
 		$data['question']->incorrect_c = intval($past_this-$correct);
 		
 		return $data['question'];		
@@ -305,7 +305,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 			<td><?php echo JText::_('COM_STATISTICS_INCORRECT');?></td>
 			<td><?php echo $data['question']->incorrect_c?></td>
 			<td><?php echo $data['question']->incorrect;?></td>
-			<td><div style="width:100%; border:1px solid #cccccc;"><div style="height: 5px; width: <?php echo $data['question']->incorrect+1;?>%;" class="jq_color_2"></div></div></td>
+			<td><div style="width:100%; border:1px solid #cccccc;"><div style="height: 5px; width: <?php echo (int)$data['question']->incorrect+1;?>%;" class="jq_color_2"></div></div></td>
 		</tr>
 		<?php
 		
@@ -448,7 +448,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$data['question']->correct =round(($correct*100)/($past_this)).'%';
 		$data['question']->correct_c = intval($correct);
 				
-		$data['question']->incorrect = (intval($past_this)?(100-$data['question']->correct):0).'%';
+		$data['question']->incorrect = (intval($past_this)?(100-(int)$data['question']->correct):0).'%';
 		$data['question']->incorrect_c = intval($past_this-$correct);
 		
 		return $data['question'];	
@@ -466,7 +466,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 			<td><?php echo JText::_('COM_JOOMLAQUIZ_INCORRECT');?></td> 
 			<td><?php echo $data['question']->incorrect_c?></td>
 			<td><?php echo $data['question']->incorrect;?></td>
-			<td><div style="width:100%; border:1px solid #cccccc;"><div style="height: 5px; width: <?php echo $data['question']->incorrect+1;?>%;" class="jq_color_2"></div></div></td>
+			<td><div style="width:100%; border:1px solid #cccccc;"><div style="height: 5px; width: <?php echo (int)$data['question']->incorrect+1;?>%;" class="jq_color_2"></div></div></td>
 		</tr>
 		<?php
 	}

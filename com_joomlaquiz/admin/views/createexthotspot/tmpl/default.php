@@ -128,7 +128,7 @@ $paths_array = json_decode($c_paths);
 	
 	var drawPolygons = function(){
 		var paths = new Array();
-		<?php if(count($paths_array)):?>
+		<?php if(!empty($paths_array)):?>
 		<?php foreach($paths_array as $path):?>
 		paths.push('<?php echo $path;?>');
 		<?php endforeach;?>

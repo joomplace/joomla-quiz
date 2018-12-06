@@ -29,7 +29,7 @@ class JoomlaquizModelLpaths extends JModelList
 //                . ' AND ' .$db->qn('c.published') . ' = '. $db->qn(1)
 //                . ' AND ' . $db->qn('lp.paid_check') . ' = ' . $db->qn(0));
 
-        $query = 'SELECT lp.* FROM #__quiz_lpath AS lp ' . 'WHERE lp.published = 1 AND lp.paid_check = 0';
+        $query = 'SELECT lp.* FROM #__quiz_lpath AS lp WHERE lp.published = 1 AND lp.paid_check = 0';
 
 //        echo $query;
 //        die();

@@ -57,8 +57,8 @@ class JoomlaquizViewLpath extends JViewLegacy
         }
         if ($canDo->get('core.create')) {
             JToolBarHelper::custom('lpath.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-            JToolBarHelper::custom('lpath.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY',
-                false);
+            //ToDo
+            //JToolBarHelper::custom('lpath.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY',false);
         }
 		JToolBarHelper::cancel('lpath.cancel', 'JTOOLBAR_CANCEL');
 		JToolBarHelper::help('JHELP_COMPONENTS_WEBLINKS_LINKS_EDIT');

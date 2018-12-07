@@ -48,18 +48,21 @@ class JoomlaquizControllerLpath extends JControllerForm
 		return parent::batch($model);
 	}
 	
-	public function save(){
-		parent::save();
-		$task = JFactory::getApplication()->input->getCmd('task');
-				
-		if($task == 'apply'){
-	
-		} elseif($task == 'save') {
-			$this->setRedirect('index.php?option=com_joomlaquiz&view=lpaths');
-		}
+	public function save($key = null, $urlVar = null){
+        $task = JFactory::getApplication()->input->get('task', '');
+        if($task=='save2copy'){
+            //ToDo
+        } else {
+            parent::save();
+            if($task == 'apply'){
+
+            } elseif($task == 'save'){
+                $this->setRedirect('index.php?option=com_joomlaquiz&view=lpaths');
+            }
+        }
 	}
 	
-	public function cancel(){
+	public function cancel($key = null){
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=lpaths');
 	}
 }

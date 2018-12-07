@@ -129,7 +129,13 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$feedback_data['answer'] = $answer;
 		
 		$qhtml = JoomlaQuiz_template_class::JQ_createFeedback($feedback_data, $data);
-		$data['qoption'] .= $qhtml.'<br/><strong>'.JText::_('COM_JQ_REMARK').'</strong>'.$remark."<br/>\n" . "\t" . '</form>' . "\n";
+
+        $data['qoption'] .= $qhtml;
+        if(!empty($remark) && trim($remark) != ''){
+            $data['qoption'] .= '<br/><strong>'.JText::_('COM_JQ_REMARK').'</strong>'.$remark;
+        }
+        $data['qoption'] .= "\n" . "\t" . '</form>' . "\n";
+
 		return $data['qoption'];
 	}
 	
@@ -170,7 +176,13 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		
 		$data['css_class'] = $data['q_data']->c_image;
 		$qhtml = JoomlaQuiz_template_class::JQ_createReview($answer, $data);
-		$data['ret_str'] .= $qhtml.'<br/><strong>'.JText::_('COM_JQ_REMARK').'</strong>'.$remark . "\n" . "\t" . '</form>]]></quest_data_user>' . "\n";
+
+        $data['ret_str'] .= $qhtml;
+		if(!empty($remark) && trim($remark) != ''){
+            $data['ret_str'] .= '<br/><strong>'.JText::_('COM_JQ_REMARK').'</strong>'.$remark;
+        }
+        $data['ret_str'] .= "\n" . "\t" . '</form>]]></quest_data_user>' . "\n";
+
 		return $data;		
 	}
 	

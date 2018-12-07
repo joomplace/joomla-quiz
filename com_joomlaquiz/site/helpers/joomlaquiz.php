@@ -334,7 +334,7 @@ class JoomlaquizHelper
 				}
 			}
 
-            return '<div style="overflow:auto;">'.$q_text.'</div>';
+            return '<div style="overflow:auto;" class="jq_blank_wrap">'.$q_text.'</div>';
 		}
 		
 		public static function Blnk_replace_quest_fdb($q_id, $q_text, $stu_quiz_id){

@@ -156,9 +156,10 @@ class jq_pdf {
 		
 	}
 	
-	function cleanText($text) {
-
+	function cleanText($text)
+    {
 		$text = trim(strip_tags($text));
+        $text = preg_replace('/^\s+$/m', '', $text);
 		$text = str_replace("\t",'', $text);
 		$text = str_replace("&nbsp;",' ', $text);
 		$text = $this->decodeHTML($text);

@@ -637,3 +637,9 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
 	margin: 1rem 0 0 1rem;
 	padding: 0.25rem 0.5rem;
 }
+.jq_blank_wrap>.row,
+.jq_blank_wrap>.row-fluid
+{
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}

@@ -125,8 +125,8 @@ class JoomlaquizModelQuestions extends JModelList
 		
 	public function getMoveQuestions(){
 		$db = JFactory::getDBO();
-		
-		$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];
+        $session = JFactory::getSession();
+        $cid = $session->get('com_joomlaquiz.move.questions.cids');
 		$cids = implode( ',', $cid );
 		$query = "SELECT a.c_question as question_name, b.c_title as quiz_name"
 		. "\n FROM #__quiz_t_question AS a LEFT JOIN #__quiz_t_quiz AS b ON b.c_id = a.c_quiz_id"

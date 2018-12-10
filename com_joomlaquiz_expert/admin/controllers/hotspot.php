@@ -28,7 +28,7 @@ class JoomlaquizControllerHotspot extends JControllerForm
 		$userfile2=(isset($userfile['tmp_name']) ? $userfile['tmp_name'] : "");
 		$userfile_name=(isset($userfile['name']) ? $userfile['name'] : "");
 		$directory = 'joomlaquiz';
-		if (isset($_FILES['userfile'])) {
+		if (!empty($userfile)) {
 			$base_Dir = JPATH_SITE."/images/joomlaquiz/images/";
 			
 			if (empty($userfile_name)) {

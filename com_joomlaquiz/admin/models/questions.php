@@ -424,8 +424,9 @@ class JoomlaquizModelQuestions extends JModelList
 	public function uploadQuestions(){
 			$database = JFactory::getDBO();
 			@set_time_limit(0);
-			
-			$userfile			= JRequest::getVar('importme', '', 'files', 'array');
+
+            $userfile = JFactory::getApplication()->input->files->get('importme', array(), 'array');
+
 			if(empty($userfile)){
 				$this->setRedirect( "index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions", JText::_('COM_JOOMLAQUIZ_NO_FILE_SELECTED') );
 			}

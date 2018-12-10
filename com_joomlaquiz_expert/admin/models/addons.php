@@ -54,7 +54,7 @@ class JoomlaquizModelAddons extends JModelAdmin
 			exit();
 		}
 
-		$userfile = JRequest::getVar('userfile', '', 'files', 'array');
+        $userfile = JFactory::getApplication()->input->files->get('userfile', array(), 'array');
 		
 		if (!$userfile) {
 			$this->showInstallMessage( JText::_('COM_JOOMLAQUIZ_NO_FILE_SELECTED'), JText::_('COM_JOOMLAQUIZ_UPLOAD_NEW_TEMPLATE'), $installer->returnTo( $option ));

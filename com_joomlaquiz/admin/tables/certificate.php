@@ -60,8 +60,8 @@ class JoomlaquizTableCertificate extends JTable
             }
         }
 
-        $post = JRequest::get('post');
-        $database->setQuery("UPDATE `#__quiz_certificates` SET `text_font` = '".$post['text_font']."' WHERE `id` = '".$this->id."'");
+        $text_font = JFactory::getApplication()->input->get('text_font', '');
+        $database->setQuery("UPDATE `#__quiz_certificates` SET `text_font` = '".$text_font."' WHERE `id` = '".$this->id."'");
         $database->execute();
 
         return $res;

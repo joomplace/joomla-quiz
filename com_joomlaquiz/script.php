@@ -11,7 +11,6 @@
 
 // Don't allow access
 defined( '_JEXEC' ) or die( 'Restricted access' );
-if(!defined('DS')) define('DS', '/');
 
 class com_joomlaquizInstallerScript
 {
@@ -20,32 +19,32 @@ class com_joomlaquizInstallerScript
 		jimport( 'joomla.filesystem.folder' );
 		jimport( 'joomla.filesystem.file' );
 		
-		$adminDir = JPATH_ROOT.DS.'administrator'.DS.'components'.DS.'com_joomlaquiz';
+		$adminDir = JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_joomlaquiz';
 		
 		/* is this needed? */
-		if (!JFolder::exists(JPATH_ROOT . DS . 'images'. DS . 'joomlaquiz') ) {
-			JFolder::create( JPATH_ROOT . DS . 'images' . DS . 'joomlaquiz');
+		if (!JFolder::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . 'joomlaquiz') ) {
+			JFolder::create( JPATH_ROOT . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz');
 		}
 					
-		if (!JFolder::exists(JPATH_ROOT . DS . 'images'. DS . 'joomlaquiz' . DS . 'images') ) {
-			JFolder::create( JPATH_ROOT . DS . 'images' . DS . 'joomlaquiz' . DS . 'images');
+		if (!JFolder::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images') ) {
+			JFolder::create( JPATH_ROOT . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images');
 		}
 		
 		/* need to be refactored // delete duplication */
-		if (!JFile::exists(JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_green.jpg')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'certificate_green.jpg', JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_green.jpg');
+		if (!JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_green.jpg')) {
+			JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images' .DIRECTORY_SEPARATOR. 'certificate_green.jpg', JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_green.jpg');
 		}
 		
-		if (!JFile::exists(JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_blue.jpg')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'certificate_blue.jpg', JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_blue.jpg');
+		if (!JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_blue.jpg')) {
+			JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images' .DIRECTORY_SEPARATOR. 'certificate_blue.jpg', JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_blue.jpg');
 		}
 		
-		if (!JFile::exists(JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_beige.jpg')) {
-			JFile::copy($adminDir . DS . 'assets'. DS . 'images' .DS. 'certificate_beige.jpg', JPATH_SITE . DS . 'images' . DS . 'joomlaquiz' . DS . 'images' . DS . 'certificate_beige.jpg');
+		if (!JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_beige.jpg')) {
+			JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images' .DIRECTORY_SEPARATOR. 'certificate_beige.jpg', JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_beige.jpg');
 		}
 		
 		/* copy font used for certificate //  need to be refactored  */
-		JFile::copy($adminDir . DS . 'assets' .DS. 'fonts' .DS. 'arial.ttf', JPATH_SITE . DS . 'media' . DS . 'arial.ttf');
+		JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets' .DIRECTORY_SEPARATOR. 'fonts' .DIRECTORY_SEPARATOR. 'arial.ttf', JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'arial.ttf');
 		
 	}
 	
@@ -503,25 +502,25 @@ class com_joomlaquizInstallerScript
 
 		if (!$category->check())
 		{
-		   JError::raiseNotice(500, $category->getError());
-		   return false;
+            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
+            return false;
 		}
 		if (!$category->store())
 		{
-		   JError::raiseNotice(500, $category->getError());
-		   return false;
+            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
+            return false;
 		}
 		
 		// Rebuild the path for the category:
         if (!$category->rebuildPath($category->id))
         {
-            JError::raiseNotice(500, $category->getError());
+            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
             return false;
         }
         // Rebuild the paths of the category's children:
         if (!$category->rebuild())
         {
-            JError::raiseNotice(500, $category->getError());
+            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
             return false;
         }
 		

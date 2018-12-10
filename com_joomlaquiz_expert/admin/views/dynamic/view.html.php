@@ -24,7 +24,7 @@ class JoomlaquizViewDynamic extends JViewLegacy
 		$this->lists	= $this->get('Lists');
 		// Check for errors.
 		if (!empty($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
+            JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 			return false;
 		}
 		

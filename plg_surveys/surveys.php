@@ -328,9 +328,9 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$lists['answer'] = $answer;
 
 		if (isset($_POST['c_score']) && !$q_data[0]->reviewed){
-			$remark = JRequest::getVar( 'remark', '', 'post', 'string', JREQUEST_ALLOWRAW );			
+            $remark = JFactory::getApplication()->input->getRaw('remark', '');
 
-			$c_score = (float)$_POST['c_score'];
+            $c_score = (float)$_POST['c_score'];
 			$query = "UPDATE #__quiz_r_student_question SET c_score = '".$c_score."', `remark` = ".$database->Quote($remark).", reviewed = 1 WHERE c_id = '".$data['id']."'";
 			$database->SetQuery( $query );
 			$database->execute();

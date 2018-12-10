@@ -44,7 +44,8 @@ class JFormFieldQuiz extends JFormFieldList
 
 		// Check for a database error.
 		if ($db->getErrorNum()) {
-			JError::raiseWarning(500, $db->getErrorMsg());
+            JFactory::getApplication()->enqueueMessage($db->getErrorMsg(), 'error');
+            return false;
 		}
 		
 		return $options; 

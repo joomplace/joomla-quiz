@@ -747,25 +747,25 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		$category->setLocation($parent_id, 'last-child');
 		if (!$category->check())
 		{
-		   JError::raiseNotice(500, $category->getError());
+            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
 		   return false;
 		}
 		if (!$category->store(true))
 		{
-		   JError::raiseNotice(500, $category->getError());
+            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
 		   return false;
 		}
 
         // Rebuild the path for the category:
         if (!$category->rebuildPath($category->id))
         {
-            JError::raiseNotice(500, $category->getError());
+            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
             return false;
         }
         // Rebuild the paths of the category's children:
         if (!$category->rebuild())
         {
-            JError::raiseNotice(500, $category->getError());
+            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
             return false;
         }
 		
@@ -778,34 +778,34 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
         $quiz_images = array();
         require_once(JPATH_BASE."/components/com_joomlaquiz/assets/pcl/pclzip.lib.php");
         if(!extension_loaded('zlib')) {
-            JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_ZLIB_LIBRARY'));
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_ZLIB_LIBRARY'), 'error');
             return false;
         }
 
-        $backupfile = JRequest::getVar('importme', '', 'files', 'array');
+        $backupfile = JFactory::getApplication()->input->files->get('importme', array(), 'array');
 
         if (!$backupfile) {
-            JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_SELECT_FILE'));
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SELECT_FILE'), 'error');
             return false;
         }
         $backupfile_name = $backupfile['name'];
         $filename = explode(".", $backupfile_name);
         if (empty($backupfile_name)) {
-            JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_SELECT_FILE'));
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SELECT_FILE'), 'error');
             return false;
         }
 
         if (strcmp($this->jq_substr($backupfile_name,-4,1),".")) {
-            JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'));
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
             return false;
         }
         if (strcmp($this->jq_substr($backupfile_name,-4),".zip")) {
-            JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'));
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
             return false;
         }
         $tmp_name = $backupfile['tmp_name'];
         if (!file_exists($tmp_name)) {
-            JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_SIZE_ERROR'));
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SIZE_ERROR'), 'error');
             return false;
         }
         if (preg_match("/.zip$/", strtolower($backupfile_name))) {
@@ -815,7 +815,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $exp_xml_file = false;
             foreach($zipContentArray as $thisContent) {
                 if ( preg_match('~.(php.*|phtml)$~i', $thisContent['filename']) ) {
-                    JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_READ_PACKAGE_ERROR'));
+                    JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_READ_PACKAGE_ERROR'), 'error');
                     return false;
                 }
                 if ($thisContent['filename'] == 'export.xml'){
@@ -823,11 +823,11 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 }
             }
             if ($exp_xml_file == false){
-                JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_NOT_FIND_COURSE'));
+                JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_NOT_FIND_COURSE'), 'error');
                 return false;
             }
         } else {
-            JError::raiseError(100, JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'));
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
             return false;
         }
         $msg = '';

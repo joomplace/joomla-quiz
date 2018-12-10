@@ -579,7 +579,8 @@ class JoomlaquizModelQuiz extends JModelList
 		
 		if (($article->id == 0)) {
 			$id = JFactory::getApplication()->input->get( 'id', '', 'default', 'int' );
-			return JError::raiseError( 404, JText::sprintf( 'Article # not found', $id ) );
+            JFactory::getApplication()->enqueueMessage(JText::sprintf( 'Article # not found', $id ), 'error');
+            return false;
 		}
 	
 		$access = null;

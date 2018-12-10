@@ -74,8 +74,8 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 				exit;
 			}
-			
-			$_SESSION['com_joomlaquiz.move.questions.cids'] = $cid;
+            $session = JFactory::getSession();
+            $session->set('com_joomlaquiz.move.questions.cids', $cid);
 			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=move_questions');
 		}
 		
@@ -85,14 +85,15 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 				exit;
 			}
-			
-			$_SESSION['com_joomlaquiz.move.questions.cids'] = $cid;
+            $session = JFactory::getSession();
+            $session->set('com_joomlaquiz.move.questions.cids', $cid);
 			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=move_questions_cat');
 		}
 		
 		public function move_question_cat_ok(){
 			$database = JFactory::getDBO();
-			$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];
+            $session = JFactory::getSession();
+            $cid = $session->get('com_joomlaquiz.move.questions.cids');
 			$catMove = strval( JFactory::getApplication()->input->get('catmove') );
 			$cids = implode( ',', $cid );
 			$total = count( $cid );
@@ -127,7 +128,8 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 		
 		public function move_question(){
 			$database = JFactory::getDBO();
-			$cid = $_SESSION['com_joomlaquiz.move.questions.cids'];
+            $session = JFactory::getSession();
+            $cid = $session->get('com_joomlaquiz.move.questions.cids');
 			
 			$quizMove = strval( JFactory::getApplication()->input->get('quizmove') );
 			$cids = implode( ',', $cid );

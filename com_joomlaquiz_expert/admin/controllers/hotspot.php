@@ -24,7 +24,7 @@ class JoomlaquizControllerHotspot extends JControllerForm
 		$css = JFactory::getApplication()->input->get('t','khepri');
 		
 		$message = '';
-		$userfile = JRequest::getVar('userfile', '', 'files', 'array');
+        $userfile = JFactory::getApplication()->input->files->get('userfile', array(), 'array');
 		$userfile2=(isset($userfile['tmp_name']) ? $userfile['tmp_name'] : "");
 		$userfile_name=(isset($userfile['name']) ? $userfile['name'] : "");
 		$directory = 'joomlaquiz';

@@ -24,7 +24,7 @@ class JoomlaquizViewDashboard_Items extends JViewLegacy
 
 		if (!empty($errors = $this->get('Errors')))
 		{
-			JError::raiseError(500, implode('<br />', $errors));
+            JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 			return false;
 		}
 

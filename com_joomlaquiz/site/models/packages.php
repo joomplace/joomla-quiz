@@ -253,21 +253,20 @@ class JoomlaquizModelPackages extends JModelList
 					$product_quantity = 1;
 					if($data->attempts > 0) {
                         if (!empty($order->vm)) {
-							if($version == '1.5'){
-								$query = "SELECT vm_oi.product_quantity"
-								. "\n FROM #__vm_orders AS vm_o"
-								. "\n INNER JOIN #__vm_order_item AS vm_oi ON vm_oi.order_id = vm_o.order_id"
-								. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.product_id"
-								. "\n WHERE vm_o.user_id = {$my->id} AND vm_o.order_id = ".$order->order_id." AND qp.id = ".$data->id." AND vm_o.order_status IN ('C')"
-								;
-							} else {
+							//if($version == '1.5'){
+							//	$query = "SELECT vm_oi.product_quantity"
+							//	. "\n FROM #__vm_orders AS vm_o"
+							//	. "\n INNER JOIN #__vm_order_item AS vm_oi ON vm_oi.order_id = vm_o.order_id"
+							//	. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.product_id"
+							//	. "\n WHERE vm_o.user_id = {$my->id} AND vm_o.order_id = ".$order->order_id." AND qp.id = ".$data->id." AND vm_o.order_status IN ('C')";
+							//} else {
 								$query = "SELECT vm_oi.product_quantity"
 								. "\n FROM #__virtuemart_orders AS vm_o"
 								. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
 								. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
 								. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = ".$order->order_id." AND qp.id = ".$data->id." AND vm_o.order_status IN ('C')"
 								;
-							}
+							//}
 						
 							$database->SetQuery( $query );
 							$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;

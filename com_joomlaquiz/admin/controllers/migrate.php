@@ -50,7 +50,10 @@ class JoomlaquizControllerMigrate extends JControllerForm
             echo 'Done.';
             return true;
         }
-        else return JError::raiseError(403, JText::_('Access denied!'));
+        else {
+            JFactory::getApplication()->enqueueMessage(JText::_('Access denied!'), 'error');
+            return false;
+        }
     }
 
   	public function regfullaccess(){

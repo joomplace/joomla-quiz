@@ -81,7 +81,7 @@ class JoomlaquizModelProduct extends JModelAdmin
 		$lists['products'] = '';
 	
 		if (!$no_virtuemart) {
-			if (!class_exists( 'VmConfig' )) require(JPATH_SITE.DS.'administrator'.DS.'components'.DS.'com_virtuemart'.DS.'helpers'.DS.'config.php');
+			if (!class_exists( 'VmConfig' )) require(JPATH_SITE.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_virtuemart'.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'config.php');
 			VmConfig::loadConfig();
 			VmConfig::loadJLang('com_virtuemart');
 			$query = "SELECT CONCAT(vmp_eg.product_name, ' (', vmp.product_sku, ')') AS text, vmp.virtuemart_product_id AS value"
@@ -142,8 +142,7 @@ class JoomlaquizModelProduct extends JModelAdmin
 	protected function isNotVirtuemart(){
 		
 		$no_virtuemart = false;
-		if(!defined('DS')) define('DS', '/');
-		if (!defined('JPATH_VM_ADMINISTRATOR')) define('JPATH_VM_ADMINISTRATOR', JPATH_BASE . DS. 'components'.DS.'com_virtuemart');
+		if (!defined('JPATH_VM_ADMINISTRATOR')) define('JPATH_VM_ADMINISTRATOR', JPATH_BASE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_virtuemart');
 						
 		if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/config.php'))
 			require_once(JPATH_BASE . '/components/com_virtuemart/helpers/config.php');

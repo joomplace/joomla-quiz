@@ -189,9 +189,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$user_name = $my->username;
 					$user_email = $my->email;
 				} else {
-					$user_name = addslashes(JRequest::getString('uname', ''));
-					$user_surname = addslashes(JRequest::getString('usurname', ''));
-					$user_email = addslashes(JRequest::getString('uemail', ''));
+					$user_name = addslashes(JFactory::getApplication()->input->getString('uname', ''));
+					$user_surname = addslashes(JFactory::getApplication()->input->getString('usurname', ''));
+					$user_email = addslashes(JFactory::getApplication()->input->getString('uemail', ''));
 				}
 				
 				JPluginHelper::importPlugin('content');

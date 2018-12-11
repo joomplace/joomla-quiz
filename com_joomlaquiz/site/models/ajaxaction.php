@@ -137,9 +137,17 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$ret_str = '';
 		
 		$quiz_id = intval( JFactory::getApplication()->input->get( 'quiz', 0 ) );
-		$lid = intval(empty($_SESSION['quiz_lid']) ? 0 : $_SESSION['quiz_lid']);
-		$rel_id = intval(empty($_SESSION['quiz_rel_id']) ? 0 : $_SESSION['quiz_rel_id']);
-		$package_id = intval(empty($_SESSION['quiz_package_id']) ? 0 : $_SESSION['quiz_package_id']);
+
+        $session = JFactory::getSession();
+
+        $session_lid = $session->get('quiz_lid');
+        $lid = intval(empty($session_lid) ? 0 : $session_lid);
+
+        $session_rel_id = $session->get('quiz_rel_id');
+        $rel_id = intval(empty($session_rel_id) ? 0 : $session_rel_id);
+
+        $session_package_id = $session->get('quiz_package_id');
+        $package_id = intval(empty($session_package_id) ? 0 : $session_package_id);
 		
 		$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".$quiz_id."'";
 		$database->SetQuery ($query );
@@ -922,10 +930,18 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database = JFactory::getDBO(); 
 		$my = JFactory::getUser();
 		$ret_str = '';
-		
-		$lid = intval(empty($_SESSION['quiz_lid']) ? 0 : $_SESSION['quiz_lid']);
-		$rel_id = intval(empty($_SESSION['quiz_rel_id']) ? 0 : $_SESSION['quiz_rel_id']);
-		$package_id = intval(empty($_SESSION['quiz_package_id']) ? 0 : $_SESSION['quiz_package_id']);
+
+        $session = JFactory::getSession();
+
+        $session_lid = $session->get('quiz_lid');
+        $lid = intval(empty($session_lid) ? 0 : $session_lid);
+
+        $session_rel_id = $session->get('quiz_rel_id');
+        $rel_id = intval(empty($session_rel_id) ? 0 : $session_rel_id);
+
+        $session_package_id = $session->get('quiz_package_id');
+        $package_id = intval(empty($session_package_id) ? 0 : $session_package_id);
+
 		$quiz_id = intval( JFactory::getApplication()->input->get( 'quiz', 0 ) );
 		
 		$result_mode = 0;

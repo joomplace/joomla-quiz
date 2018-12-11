@@ -38,8 +38,6 @@ class JoomlaquizModelLpath extends JModelList
 			$lpath->message = '<p align="left">'.JText::_('COM_LPATH_FOR_REGISTERED').'</p>';
 			return array($lpath, null);
 		}
-						
-		$_SESSION['quiz_check_rel_item'] = 0;	
 		
 		if (!$lpath_id) {
 			$lpath_id = JoomlaquizHelper::JQ_checkPackage($package_id, $rel_id, $vm);
@@ -55,7 +53,6 @@ class JoomlaquizModelLpath extends JModelList
 		}
 		
 		if($lpath_id && !is_object($lpath_id)) {
-			$_SESSION['quiz_check_rel_item'] = 1;
 
 			$query = "SELECT * FROM `#__quiz_lpath` WHERE `id` = {$lpath_id} AND published = 1";
 

@@ -528,9 +528,9 @@ class JoomlaquizHelper
 			$quiz = $quiz[0];
 			
 			$unique_pass_str = '';
-			if (!$my->id && isset($_COOKIE['quizupi'][$quiz_id])) {	
-				$unique_pass_id = $_COOKIE['quizupi'][$quiz_id];
-				
+            $cookieQuizupi = JFactory::getApplication()->input->cookie->get('quizupi');
+            if (!$my->id && !empty($cookieQuizupi[$quiz_id])) {
+                $unique_pass_id = $cookieQuizupi[$quiz_id];
 				$unique_pass_str = " `unique_pass_id` = '".$unique_pass_id."' AND `c_lid` = 0 AND `c_rel_id` = 0 ";	
 			} elseif ($lid && $my->id) {
 				$unique_pass_str = " `c_student_id` = '".$my->id."' AND `c_lid` = '".$lid."' ";
@@ -643,8 +643,7 @@ class JoomlaquizHelper
 			$database = JFactory::getDBO();
 			$my = JFactory::getUser();
 			$mainframe = JFactory::getApplication();
-			
-			$_SESSION['quiz_check_rel_item'] = 0;
+
 			$rel_id = intval($rel_id);
 			$package_id = intval($package_id);
 			$quiz_params = array();
@@ -804,9 +803,6 @@ class JoomlaquizHelper
 			}
 
 			if($rel_check[0]->type == 'q') {
-				$_SESSION['quiz_check_rel_item'] = 1;
-				$_SESSION['quiz_check_rel_order_id'] = $package_id;
-				$_SESSION['quiz_check_rel_item_id'] = $rel_check[0]->rel_id;
 				$mainframe->redirect(JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$rel_check[0]->rel_id}&force=1"));
 			}
 			else if($rel_check[0]->type == 'l') {

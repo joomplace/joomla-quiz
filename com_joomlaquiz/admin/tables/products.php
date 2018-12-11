@@ -79,7 +79,6 @@ class JoomlaquizTableProducts extends JTable
 			$not_for_delete = array();
 			foreach($types as $type) {
 
-				//$ids = ($_POST[$type . '_ids']) ? $_POST[$type . '_ids'] : array();
                 $type_ids = $type . '_ids';
                 $ids = !empty($jinput->get($type_ids)) ? $jinput->get($type_ids) : array();
 				
@@ -88,13 +87,11 @@ class JoomlaquizTableProducts extends JTable
 					$values[] = $product_id;
 					$values[] = $type;
 					$values[] = $id;
-					
-					//$access = ($_POST[$type . '_access_' . $id]) ? intval($_POST[$type . '_access_' . $id]) : 0;
+
                     $type_access_id = $type . '_access_' . $id;
                     $access = !empty($jinput->get($type_access_id)) ? (int)$jinput->get($type_access_id) : 0;
 
 					if($access == 0) {
-						//$xdays = ($_POST[$type . '_xdays_' . $id]) ? intval($_POST[$type . '_xdays_' . $id]) : 0;
                         $type_xdays_id = $type . '_xdays_' . $id;
                         $xdays = !empty($jinput->get($type_xdays_id)) ? (int)$jinput->get($type_xdays_id) : 0;
 					} else {
@@ -105,7 +102,6 @@ class JoomlaquizTableProducts extends JTable
 					if($access == 0) {
 						$period_start = '0000-00-00';
 					} else {
-                        //$period_start = ($_POST[$type . '_period_start_' . $id]) ? $_POST[$type . '_period_start_' . $id] : '0000-00-00';
                         $type_period_start_id = $type . '_period_start_' . $id;
                         $period_start = !empty($jinput->get($type_period_start_id)) ? $jinput->get($type_period_start_id) : '0000-00-00';
 						$period_start = JHtml::_('date',strtotime($period_start), 'Y-m-d');
@@ -115,14 +111,12 @@ class JoomlaquizTableProducts extends JTable
 					if($access == 0) {
 						$period_end = '0000-00-00';
 					} else {
-                        //$period_end = ($_POST[$type . '_period_end_' . $id]) ? $_POST[$type . '_period_end_' . $id] : '0000-00-00';
                         $type_period_end_id = $type . '_period_end_' . $id;
                         $period_end = !empty($jinput->get($type_period_end_id)) ? $jinput->get($type_period_end_id) : '0000-00-00';
 						$period_end = ($period_end && $period_end != '0000-00-00' ? JHtml::_('date',strtotime($period_end), 'Y-m-d') : '');
 					}
 					$values[] = $period_end;
 
-                    //$attempts = ($_POST[$type . '_attempts_' . $id]) ? intval($_POST[$type . '_attempts_' . $id]) : 0;
                     $type_attempts_id = $type . '_attempts_' . $id;
                     $attempts = !empty($jinput->get($type_attempts_id)) ? (int)$jinput->get($type_attempts_id) : 0;
 

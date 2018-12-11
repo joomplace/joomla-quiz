@@ -27,15 +27,15 @@ class JoomlaquizTableLpath extends JTable
                 $this->_trackAssets = true;
         }
 
-		function store($updateNulls = false){
-			
+		function store($updateNulls = false)
+        {
 			$database = JFactory::getDBO();
-			if($_POST['jform']['id']){
-				$this->id = $_POST['jform']['id'];
-			}
-
             $jinput = JFactory::getApplication()->input;
             $jform = $jinput->get('jform', array(), 'ARRAY');
+
+            if (!empty($jform['id'])) {
+                $this->id = $jform['id'];
+            }
 
             //==================================================
             // Access rules.
@@ -64,7 +64,7 @@ class JoomlaquizTableLpath extends JTable
 
 
 			$res = parent::store($updateNulls);
-			if($_POST['jform']['id']) {
+            if (!empty($jform['id'])) {
 				$query = 'DELETE FROM #__quiz_lpath_quiz WHERE `lid` = ' . $this->id;
 				$database->setQuery($query);
 				if(!$database->execute()) {

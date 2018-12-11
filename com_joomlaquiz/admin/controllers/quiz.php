@@ -48,11 +48,12 @@ class JoomlaquizControllerQuiz extends JControllerForm
 		return parent::batch($model);
 	}
 	
-	public function save(){
+	public function save($key = null, $urlVar = null){
 		$task = JFactory::getApplication()->input->getCmd('task');
 		if($task=='save2copy'){
 			$data = JFactory::getApplication()->input->get('jform',array(),'array');
-			$_SESSION['com_joomlaquiz.copy.quizzes.cids'] = array($data['c_id']);
+            $session = JFactory::getSession();
+            $session->set('com_joomlaquiz.copy.quizzes.cids', array($data['c_id']));
 			JFactory::getApplication()->input->set('categorycopy',$data['c_category_id']);
 			$model = $this->getModel('Quizzes');
 			$msg = $model->copyQuizzes();
@@ -67,7 +68,7 @@ class JoomlaquizControllerQuiz extends JControllerForm
 		}
 	}
 	
-	public function cancel(){
+	public function cancel($key = null){
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes');
 	}
 }

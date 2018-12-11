@@ -156,8 +156,8 @@ class JoomlaquizModelQuestions extends JModelList
 	
 	public function getCopyQuestions(){
 		$db = JFactory::getDBO();
-		
-		$cid = $_SESSION['com_joomlaquiz.copy.questions.cids'];
+        $session = JFactory::getSession();
+        $cid = $session->get('com_joomlaquiz.copy.questions.cids');
 		$cids = implode( ',', $cid );
 		$query = "SELECT a.c_question as question_name, b.c_title as quiz_name"
 		. "\n FROM #__quiz_t_question AS a LEFT JOIN #__quiz_t_quiz AS b ON b.c_id = a.c_quiz_id"
@@ -165,13 +165,13 @@ class JoomlaquizModelQuestions extends JModelList
 		;
 		$db->setQuery( $query );
 		$items = $db->loadObjectList();
-		
 		return $items;
 	}
 		
 	public function copyQuestions(){
 		$database = JFactory::getDBO();
-		$cid = $_SESSION['com_joomlaquiz.copy.questions.cids'];
+        $session = JFactory::getSession();
+        $cid = $session->get('com_joomlaquiz.copy.questions.cids');
 		
 		$run_from_quiz_copy = 0;
 		$quizMove = intval(JFactory::getApplication()->input->get('quizcopy'));
@@ -286,8 +286,10 @@ class JoomlaquizModelQuestions extends JModelList
 			$c_title = $database->loadResult();
 			$msg = $total ." Questions copied to ". $c_title;
 		}
-		
-		unset($_SESSION['com_joomlaquiz.copy.questions.cids']);
+
+        $session = JFactory::getSession();
+        $session->clear('com_joomlaquiz.copy.questions.cids');
+
 		return $msg;
 	}
 

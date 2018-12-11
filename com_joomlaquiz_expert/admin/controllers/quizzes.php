@@ -38,17 +38,18 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 			exit;
 		}
-		
-		$_SESSION['com_joomlaquiz.move.quizzes.cids'] = $cid;
+
+        $session = JFactory::getSession();
+        $session->set('com_joomlaquiz.move.quizzes.cids', $cid);
+
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes&layout=move_quizzes');
 	}
 	
 	public function move_quizzes(){
 		$database = JFactory::getDBO();
-		$cid = $_SESSION['com_joomlaquiz.move.quizzes.cids'];
-		
+        $session = JFactory::getSession();
+        $cid = $session->get('com_joomlaquiz.move.quizzes.cids');
 		$categoryMove = intval(JFactory::getApplication()->input->get('categorymove'));
-
 		$cids = implode( ',', $cid );
 		$total = count( $cid );
 		
@@ -99,8 +100,10 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		{
 			$msg .= " ".$cats_names.JText::_('COM_JOOMLAQUIZ_MOVED_FROM').$items[0]->category_name.JText::_('COM_JOOMLAQUIZ_TO').$items[0]->category_name.". ";
 		}
-		
-		unset($_SESSION['com_joomlaquiz.move.quizzes.cids']);
+
+        $session = JFactory::getSession();
+        $session->clear('com_joomlaquiz.move.quizzes.cids');
+
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg.$msg2);
 	}
 	
@@ -110,8 +113,10 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 			exit;
 		}
-		
-		$_SESSION['com_joomlaquiz.copy.quizzes.cids'] = $cid;
+
+        $session = JFactory::getSession();
+        $session->set('com_joomlaquiz.copy.quizzes.cids', $cid);
+
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes&layout=copy_quizzes');
 	}
 	
@@ -1458,7 +1463,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 }
             }
 
-        if( !empty($_POST['jform']['imp_pool']))
+        if(JFactory::getApplication()->input->getInt('imp_pool', 0))
         {
             $quizzes_poolk = $xmlReader->quizess_pool();
 

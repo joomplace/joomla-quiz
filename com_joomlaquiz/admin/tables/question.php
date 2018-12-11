@@ -32,6 +32,7 @@ class JoomlaquizTableQuestion extends JTable
 			require_once(JPATH_SITE."/components/com_joomlaquiz/libraries/apps.php");
 
 			$input = JFactory::getApplication()->input;
+            $jform = $input->get('jform', array(), 'ARRAY');
 			$appsLib = JqAppPlugins::getInstance();
 			$appsLib->loadApplications();
 			
@@ -40,8 +41,8 @@ class JoomlaquizTableQuestion extends JTable
 			$this->c_question = stripslashes($this->c_question);
 			$this->c_right_message = stripslashes($this->c_right_message);
 			$this->c_wrong_message = stripslashes($this->c_wrong_message);
-						
-			if(!$_POST['jform']['c_id'] && !$this->c_type){
+
+            if(empty($jform['c_id']) && !$this->c_type){
 				$query = "SELECT MAX(`ordering`) FROM #__quiz_t_question
 				WHERE `c_quiz_id`='" . $this->c_quiz_id . "'
 				";
@@ -52,10 +53,10 @@ class JoomlaquizTableQuestion extends JTable
 				$this->c_type = $new_qtype_id;
 			}
 			
-			if($_POST['jform']['c_id']){
-				$this->c_id = $_POST['jform']['c_id'];
-				$this->c_type = $_POST['jform']['c_type'];
-			}
+			if(!empty($jform['c_id'])){
+                $this->c_id = $jform['c_id'];
+                $this->c_type = $jform['c_type'];
+            }
 			
 			if ($input->get('task') == 'save2copy')
 			{
@@ -82,13 +83,16 @@ class JoomlaquizTableQuestion extends JTable
 			$appsLib = JqAppPlugins::getInstance();
 			$appsLib->loadApplications();
 			
-			$app = JFactory::getApplication();			
+			$app = JFactory::getApplication();
+            $input = $app->input;
+            $jform = $input->get('jform', array(), 'ARRAY');
+
 			$database = JFactory::getDBO();
 			$this->c_question = stripslashes($this->c_question);
 			$this->c_right_message = stripslashes($this->c_right_message);
 			$this->c_wrong_message = stripslashes($this->c_wrong_message);
 						
-			if(!$_POST['jform']['c_id'] && !$this->c_type){
+			if(empty($jform['c_id']) && !$this->c_type){
 				$query = "SELECT MAX(`ordering`) FROM #__quiz_t_question
 				WHERE `c_quiz_id`='" . $this->c_quiz_id . "'
 				";
@@ -98,11 +102,11 @@ class JoomlaquizTableQuestion extends JTable
 				$new_qtype_id = $app->getUserStateFromRequest( "question.new_qtype_id", 'new_qtype_id', 0 );
 				$this->c_type = $new_qtype_id;
 			}
-			
-			if($_POST['jform']['c_id']){
-				$this->c_id = $_POST['jform']['c_id'];
-				$this->c_type = $_POST['jform']['c_type'];
-			}
+
+            if(!empty($jform['c_id'])){
+                $this->c_id = $jform['c_id'];
+                $this->c_type = $jform['c_type'];
+            }
 			
 			$res = parent::store($updateNulls);			
 			JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($this->c_quiz_id);

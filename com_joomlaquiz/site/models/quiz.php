@@ -492,9 +492,10 @@ class JoomlaquizModelQuiz extends JModelList
             }
 		
 			/* setting up session vars - need to check it it is used anywhere */
-			$_SESSION['quiz_lid'] = $lid;
-			$_SESSION['quiz_rel_id'] = $rel_id;
-			$_SESSION['quiz_package_id'] = $package_id;
+            $session = JFactory::getSession();
+            $session->set('quiz_lid', $lid);
+            $session->set('quiz_rel_id', $rel_id);
+            $session->set('quiz_package_id', $package_id);
 			
 			$query->clear();
 			$query->select('COUNT(*)')

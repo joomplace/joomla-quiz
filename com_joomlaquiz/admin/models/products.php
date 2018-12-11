@@ -253,10 +253,6 @@ class JoomlaquizModelProducts extends JModelList
 			require_once(JPATH_BASE . '/components/com_virtuemart/helpers/shopfunctions.php');
 		else
 			$no_virtuemart = true;
-	
-		//if(empty($_SESSION["ps_vendor_id"])) {
-		//    $_SESSION["ps_vendor_id"] = 1;
-		//}
 		
 		return $no_virtuemart;
 	}

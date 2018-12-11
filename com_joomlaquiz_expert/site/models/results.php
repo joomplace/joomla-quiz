@@ -296,9 +296,10 @@ class JoomlaquizModelResults extends JModelList
 		}
 		
 		if ($doing_quiz == 1) {
-			$_SESSION['quiz_lid'] = 0;
-			$_SESSION['quiz_rel_id'] = 0;
-			$_SESSION['quiz_package_id'] = 0;
+            $session = JFactory::getSession();
+            $session->set('quiz_lid', 0);
+            $session->set('quiz_rel_id', 0);
+            $session->set('quiz_package_id', 0);
 			
 			$query = "SELECT count(*) FROM #__quiz_t_question WHERE c_quiz_id = '".$quiz_id."' AND c_type = 4 AND published = 1";
 			$db->SetQuery( $query );

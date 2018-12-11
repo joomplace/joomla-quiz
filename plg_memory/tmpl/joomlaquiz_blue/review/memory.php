@@ -26,7 +26,7 @@ class JoomlaquizViewReviewMemory
 		$k = 2;
 		if(count($review_data['memory_data'])){
 			foreach($review_data['memory_data'] as $mem) {
-				$wrong_correct = (in_array($mem->m_id, $review_data['udata'])) ? '<img src="'.JURI::root().'components/com_joomlaquiz/views/templates/tmpl/joomlaquiz_blue/images/tick.png" style="vertical-align:middle;margin-left:10px;"/>' : '<img src="'.JURI::root().'components/com_joomlaquiz/views/templates/tmpl/joomlaquiz_blue/images/tickr.png" style="vertical-align:middle;margin-left:10px;"/>';
+				$wrong_correct = (in_array($mem->m_id, $review_data['udata'])) ? '<img src="'.JURI::root().'components/com_joomlaquiz/assets/images/tick.png" style="vertical-align:middle;margin-left:10px;"/>' : '<img src="'.JURI::root().'components/com_joomlaquiz/assets/images/tickr.png" style="vertical-align:middle;margin-left:10px;"/>';
 				
 				$expl = '';
 				if(in_array($mem->m_id, $review_data['udata'])){

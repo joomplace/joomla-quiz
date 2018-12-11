@@ -28,7 +28,7 @@ class JoomlaquizViewFeedbackMemory
 		$sum_score = 0;
 		if(count($feedback_data['memory_data'])){
 			foreach($feedback_data['memory_data'] as $mem) {
-				$wrong_correct = (in_array($mem->m_id, $feedback_data['udata'])) ? '<img src="'.JURI::root().'components/com_joomlaquiz/views/templates/tmpl/joomlaquiz_standard/images/tick.png" style="vertical-align:middle;margin-left:10px;"/>' : '<img src="'.JURI::root().'components/com_joomlaquiz/views/templates/tmpl/joomlaquiz_standard/images/tickr.png" style="vertical-align:middle;margin-left:10px;"/>';
+				$wrong_correct = (in_array($mem->m_id, $feedback_data['udata'])) ? '<img src="'.JURI::root().'components/com_joomlaquiz/assets/images/tick.png" style="vertical-align:middle;margin-left:10px;"/>' : '<img src="'.JURI::root().'components/com_joomlaquiz/assets/images/tickr.png" style="vertical-align:middle;margin-left:10px;"/>';
 				
 				$expl = '';
 				if(in_array($mem->m_id, $feedback_data['udata'])){

@@ -169,8 +169,9 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 				exit;
 			}
-			
-			$_SESSION['com_joomlaquiz.copy.questions.cids'] = $cid;
+
+            $session = JFactory::getSession();
+            $session->set('com_joomlaquiz.copy.questions.cids', $cid);
 			$this->setRedirect('index.php?option=com_joomlaquiz&view=questions&layout=copy_questions');
 		}
 		

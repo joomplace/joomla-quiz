@@ -26,14 +26,15 @@ class JoomlaquizTableQuestcategory extends JTable
                 parent::__construct('#__quiz_q_cat', 'qc_id', $db);
         }
 		
-		function store($updateNulls = false){
-			
-			$qc_tag_t = $_POST['jform']['qc_tag_t'];
-			$qc_tag_dd = $_POST['qc_tag_dd'];
-			$qc_tag = ($qc_tag_t ? $qc_tag_t : $qc_tag_dd);
-			$this->qc_tag = stripslashes($qc_tag);
-			
-			$res = parent::store($updateNulls);
-			return $res;
+		function store($updateNulls = false)
+        {
+            $jinput = JFactory::getApplication()->input;
+            $jform = $jinput->get('jform', array(), 'ARRAY');
+            $qc_tag_t = $jform['qc_tag_t'];
+            $qc_tag_dd = $jform['qc_tag_dd'];
+            $qc_tag = ($qc_tag_t ? $qc_tag_t : $qc_tag_dd);
+            $this->qc_tag = stripslashes($qc_tag);
+            $res = parent::store($updateNulls);
+            return $res;
 		}
 }

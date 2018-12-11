@@ -27,15 +27,17 @@ class JoomlaquizTableQuiz extends JTable
                 $this->_trackAssets = true;
         }
 
-		function store($updateNulls = false){
-			
+		function store($updateNulls = false)
+        {
 			$database = JFactory::getDBO();
+            $input = JFactory::getApplication()->input;
+            $jform = $input->get('jform', array(), 'ARRAY');
 			
-			if ((int)$_POST['jform']['c_id'] < 1)
+			if ((int)$jform['c_id'] < 1)
 			{
 				$query = "SELECT COUNT(*) "
 				. "\n FROM #__quiz_t_quiz"
-                . "\n WHERE  c_title = ".$database->q($_POST['jform']['c_title'])."";
+                . "\n WHERE  c_title = ".$database->q($jform['c_title'])."";
 				
 				$database->setQuery( $query );
 				$rows_dubl = $database->loadResult();
@@ -47,29 +49,26 @@ class JoomlaquizTableQuiz extends JTable
 				}
 			}
 			
-			if (!$_POST['jform']['c_id']) {
+			if (!(int)$jform['c_id']) {
 				$date = strtotime(JFactory::getDate());
 				$s_day = mktime(0,0,0,JHtml::_('date',strtotime($date), 'm'), JHtml::_('date',strtotime($date), 'd'), JHtml::_('date',strtotime($date), 'Y'));
 				$this->c_created_time = JHtml::_('date',strtotime($s_day), 'Y-m-d');
 			}
-			
-			if($_POST['jform']['c_id']){
-				$this->c_id = $_POST['jform']['c_id'];
-			}
+
+            if ((int)$jform['c_id']) {
+                $this->c_id = (int)$jform['c_id'];
+            }
 			
 			if(!$this->c_user_id) $this->c_user_id = JFactory::getUser()->id;
 
-			$jinput = JFactory::getApplication()->input;
-			$jform = $jinput->get('jform', array(), 'ARRAY');
-
-			$this->c_pass_message = $_POST['jform']['c_pass_message'];
-			$this->c_unpass_message = $_POST['jform']['c_unpass_message'];
+			$this->c_pass_message = $jform['c_pass_message'];
+			$this->c_unpass_message = $jform['c_unpass_message'];
 
 			//==================================================
 			// Access rules.
 			//==================================================
 			
-			if (isset($jform['rules']))
+			if (!empty($jform['rules']))
 			{
 				$rulesArray = $jform['rules'];
 				
@@ -90,9 +89,9 @@ class JoomlaquizTableQuiz extends JTable
 				$this->setRules($rules);
 			}
 
-			$this->c_category_id = $_POST['jform']['c_category_id'];
-			$this->c_skin = $_POST['jform']['c_skin'];
-			$this->c_certificate = $_POST['jform']['c_certificate'];
+            $this->c_category_id = (int)$jform['c_category_id'];
+            $this->c_skin = $jform['c_skin'];
+            $this->c_certificate = $jform['c_certificate'];
 			$res = parent::store($updateNulls);			
 			// -- add pool ----//
 
@@ -102,9 +101,9 @@ class JoomlaquizTableQuiz extends JTable
 				echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 				exit();
 			}
-			switch($_POST['jform']['c_pool']){
+			switch($jform['c_pool']){
 				case 1:
-					$query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('".$this->c_id."','0','".$_POST['jform']['pool_rand']."')";
+					$query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('".$this->c_id."','0','".(int)$jform['pool_rand']."')";
 					$database->setQuery( $query );
 					if (!$database->execute()) {
 						echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -112,25 +111,27 @@ class JoomlaquizTableQuiz extends JTable
 					}
 					break;
 				case 2:
-					if(sizeof($_POST['pool_cats'])>0)
-					foreach ($_POST['pool_cats'] as $hid_pcat)
-					{
-						if($_POST['pnumber_'.$hid_pcat])
-						{
-							$query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('".$this->c_id."','".$hid_pcat."','".$_POST['pnumber_'.$hid_pcat]."')";
-							$database->setQuery( $query );
-							if (!$database->execute()) {
-								echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
-								exit();
-							}
-						}
-					}
+					$pool_cats = $input->get('pool_cats', array(), 'ARRAY');
+				    if(!empty($pool_cats)) {
+                        foreach ($pool_cats as $hid_pcat) {
+                            $pnumber_hid_pcat = intval('pnumber_' . $hid_pcat);
+                            $input_pnumber_hid_pcat = $input->get($pnumber_hid_pcat, 0);
+                            if ($input_pnumber_hid_pcat) {
+                                $query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('" . $this->c_id . "','" . $hid_pcat . "','" . $input_pnumber_hid_pcat . "')";
+                                $database->setQuery($query);
+                                if (!$database->execute()) {
+                                    echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+                                    exit();
+                                }
+                            }
+                        }
+                    }
 				default : break;
 				
-			}	
-			
+			}
+
 			// -- add feedback options --//
-			if(isset($_POST['jform']['c_feed_option']) && $_POST['jform']['c_feed_option'])
+			if((int)$jform['c_feed_option'])
 			{
 				$query = "DELETE FROM #__quiz_feed_option WHERE quiz_id=".$this->c_id;
 				$database->setQuery( $query );
@@ -138,22 +139,26 @@ class JoomlaquizTableQuiz extends JTable
 					echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
 					exit();
 				}
-					
-				if(!empty($_POST['from_percent']))
+
+				$from_percent = $input->get('from_percent', array(), 'ARRAY');
+                $to_percent = $input->get('to_percent', array(), 'ARRAY');
+                $feed_by_percent = $input->get('feed_by_percent', array(), 'ARRAY');
+
+				if(!empty($from_percent))
 				{	
-					for($i=0;$i<count($_POST['from_percent']);$i++)
+					for($i=0;$i<count($from_percent);$i++)
 					{
-						if($_POST['feed_by_percent'][$i])
+						if(!empty($feed_by_percent[$i]))
 						{
-							if(intval($_POST['from_percent'][$i]) <= intval($_POST['to_percent'][$i]))
+							if(intval($from_percent[$i]) <= intval($to_percent[$i]))
 							{
-								if((intval($_POST['from_percent'][$i])<101 && intval($_POST['to_percent'][$i])<101) || $_POST['jform']['c_feed_option']!= 1){
+								if((intval($from_percent[$i])<101 && intval($to_percent[$i])<101) || (int)$jform['c_feed_option'] != 1){
 
 									$query = new stdClass();
 									$query->quiz_id = $this->c_id;
-									$query->from_percent = intval($_POST['from_percent'][$i]);
-									$query->to_percent = intval($_POST['to_percent'][$i]);
-									$query->fmessage = stripslashes($_POST['feed_by_percent'][$i]);
+									$query->from_percent = intval($from_percent[$i]);
+									$query->to_percent = intval($to_percent[$i]);
+									$query->fmessage = stripslashes($feed_by_percent[$i]);
 
 									$result = $database->insertObject('#__quiz_feed_option', $query);
 									

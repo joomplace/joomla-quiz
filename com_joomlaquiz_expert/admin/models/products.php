@@ -254,9 +254,9 @@ class JoomlaquizModelProducts extends JModelList
 		else
 			$no_virtuemart = true;
 	
-		if(empty($_SESSION["ps_vendor_id"])) {
-				$_SESSION["ps_vendor_id"] = 1;
-		}
+		//if(empty($_SESSION["ps_vendor_id"])) {
+		//    $_SESSION["ps_vendor_id"] = 1;
+		//}
 		
 		return $no_virtuemart;
 	}

@@ -103,8 +103,8 @@ class JoomlaquizModelQuizzes extends JModelList
 	
 	public function getMovingQuizzes(){
 		$db = JFactory::getDBO();
-		
-		$cid = $_SESSION['com_joomlaquiz.move.quizzes.cids'];
+        $session = JFactory::getSession();
+        $cid = $session->get('com_joomlaquiz.move.quizzes.cids');
 		$cids = implode( ',', $cid );
 		$query = "SELECT a.c_title as quiz_name, b.title as category_name"
 		. "\n FROM #__quiz_t_quiz AS a LEFT JOIN #__categories AS b ON b.id = a.c_category_id"
@@ -112,14 +112,13 @@ class JoomlaquizModelQuizzes extends JModelList
 		;
 		$db->setQuery( $query );
 		$items = $db->loadObjectList();
-		
 		return $items;
 	}
 	
 	public function getCopyQuizzes(){
 		$db = JFactory::getDBO();
-		
-		$cid = $_SESSION['com_joomlaquiz.copy.quizzes.cids'];
+        $session = JFactory::getSession();
+        $cid = $session->get('com_joomlaquiz.copy.quizzes.cids');
 		$cids = implode( ',', $cid );
 		$query = "SELECT a.c_title as quiz_name, b.title as category_name"
 		. "\n FROM #__quiz_t_quiz AS a LEFT JOIN #__categories AS b ON b.id = a.c_category_id"
@@ -127,7 +126,6 @@ class JoomlaquizModelQuizzes extends JModelList
 		;
 		$db->setQuery( $query );
 		$items = $db->loadObjectList();
-		
 		return $items;
 	}
 	
@@ -138,10 +136,9 @@ class JoomlaquizModelQuizzes extends JModelList
 	
 	public function copyQuizzes(){
 		$database = JFactory::getDBO();
-		$cid = $_SESSION['com_joomlaquiz.copy.quizzes.cids'];
-		
-		$categoryCopy = intval(JFactory::getApplication()->input->get('categorycopy'));
-
+        $session = JFactory::getSession();
+        $cid = $session->get('com_joomlaquiz.copy.quizzes.cids');
+		$categoryCopy = intval(JFactory::getApplication()->input->get('categorycopy'))
 		$cids = implode( ',', $cid );
 		$total = count( $cid );
 		
@@ -194,8 +191,10 @@ class JoomlaquizModelQuizzes extends JModelList
 		;
 		$database->setQuery( $query );
 		$categoryNew = $database->loadObject();
-		
-		unset($_SESSION['com_joomlaquiz.copy.quizzes.cids']);
+
+		$session = JFactory::getSession();
+        $session->clear('com_joomlaquiz.copy.quizzes.cids');
+
 		$msg = " Quizzes including all questions was copied to ". $categoryNew->c_category;
 		return $msg;
 	}

@@ -602,7 +602,9 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 	function _uploadResizeImg(){
 		$mainframe = JFactory::getApplication();
 		$database = JFactory::getDBO();
-		
+        $jinput = $mainframe->input;
+        $user_files = $jinput->files->get('Filedata', array(), 'array');
+
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.path');
 		

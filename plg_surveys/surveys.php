@@ -297,10 +297,10 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
+        $jinput = JFactory::getApplication()->input;
 		$database = JFactory::getDBO();
-		
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$_POST['c_image']."', `c_manual` = '".$_POST['jform']['c_manual']."' WHERE c_id = '".$data['qid']."'");
+
+        $database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->get('c_image','', 'ALNUM')."', `c_manual` = '" .$jinput->get('c_manual',0, 'INT')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 	}
 	
@@ -308,7 +308,8 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		
 		$mainframe = JFactory::getApplication();
 		$database = JFactory::getDBO();
-		
+		$jinput = $mainframe->input;
+		$c_score = $jinput->get('c_score', 0, 'ALNUM');
 		$query = "SELECT q.c_type, q.c_id,q.c_image, sq.c_stu_quiz_id, q.c_question, c_title_true, c_title_false, sq.c_score, sq.`remark`, sq.reviewed FROM #__quiz_t_question as q, #__quiz_r_student_question as sq"
 		. "\n WHERE q.c_id = sq.c_question_id and sq.c_id = '".$data['id']."' AND q.published = 1"
 		;
@@ -327,10 +328,10 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$lists['id'] = $data['id'];
 		$lists['answer'] = $answer;
 
-		if (isset($_POST['c_score']) && !$q_data[0]->reviewed){
+		if (!empty($c_score) && !$q_data[0]->reviewed){
             $remark = JFactory::getApplication()->input->getRaw('remark', '');
 
-            $c_score = (float)$_POST['c_score'];
+            $c_score = (float)$c_score;
 			$query = "UPDATE #__quiz_r_student_question SET c_score = '".$c_score."', `remark` = ".$database->Quote($remark).", reviewed = 1 WHERE c_id = '".$data['id']."'";
 			$database->SetQuery( $query );
 			$database->execute();

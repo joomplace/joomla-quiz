@@ -613,30 +613,39 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
-		$database = JFactory::getDBO();
-		$plg_task = JFactory::getApplication()->input->get('plgtask', '');
+
+        $jinput = JFactory::getApplication()->input;
+        $jform = $jinput->get('jform', array(), 'ARRAY');
+		$plg_task = $jinput->get('plgtask', '');
+        $database = JFactory::getDBO();
 		
 		if($plg_task == 'upload_resize_crop_img'){
 			$this->_uploadResizeCropImg();
 			die;
 		}
-		
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_sec_penalty` = '".$_POST['c_sec_penalty']."', `c_height` = '".$_POST['c_height']."', `c_width` = '".$_POST['c_width']."', c_timer = '".$_POST['c_timer']."', `c_column` = '".$_POST['c_column']."', `c_img_cover` = '".$_POST['c_img_cover']."' WHERE c_id = '".$data['qid']."'");
+
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_sec_penalty` = '".$jinput->getInt('c_sec_penalty', 0)."', `c_height` = '".$jinput->getInt('c_height', 0)."', `c_width` = '".$jinput->getInt('c_width', 0)."', c_timer = '".$jinput->getInt('c_timer', 0)."', `c_column` = '".$jinput->getInt('c_column', 0)."', `c_img_cover` = '".$jinput->get('c_img_cover', '')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 		
 		$mcounter = 0;
 		$fids_arr = array();
-		if (isset($_POST['jq_hid_fields'])) {
-			foreach ($_POST['jq_hid_fields'] as $field_order => $f_row) {					
+
+        $jq_hid_fields        = $jinput->get('jq_hid_fields', array(), 'ARRAY');
+        $jq_hid_fields_ids    = $jinput->get('jq_hid_fields_ids', array(), 'ARRAY');
+        $jq_hid_fields_points = $jinput->get('jq_hid_fields_points', array(), 'ARRAY');
+        $jq_hid_fields_pairs  = $jinput->get('jq_hid_fields_pairs', array(), 'ARRAY');
+
+		if (!empty($jq_hid_fields)) {
+			foreach ($jq_hid_fields as $field_order => $f_row) {
 					$new_field = new stdClass;
-					if(intval($_POST['jq_hid_fields_ids'][$mcounter]))
-							$new_field->m_id = intval($_POST['jq_hid_fields_ids'][$mcounter]);
+					if(intval($jq_hid_fields_ids[$mcounter])) {
+                        $new_field->m_id = intval($jq_hid_fields_ids[$mcounter]);
+                    }
 					$new_field->c_question_id = $data['qid'];
 					$new_field->c_img = stripslashes($f_row);
-					$new_field->a_points	= floatval((isset($_POST['jq_hid_fields_points'][$field_order])?stripslashes($_POST['jq_hid_fields_points'][$field_order]):''));
-					$new_field->a_pairs	= floatval((isset($_POST['jq_hid_fields_pairs'][$field_order])?stripslashes($_POST['jq_hid_fields_pairs'][$field_order]):''));
-					
+					$new_field->a_points	= floatval(!empty($jq_hid_fields_points[$field_order]) ? stripslashes($jq_hid_fields_points[$field_order]) : '');
+					$new_field->a_pairs	= floatval(!empty($jq_hid_fields_pairs[$field_order]) ? stripslashes($jq_hid_fields_pairs[$field_order]) : '');
+
 					$database->setQuery("SELECT COUNT(m_id) FROM #__quiz_t_memory WHERE m_id = '".$new_field->m_id."'");
 					$exists = $database->loadResult();
 					if($exists){

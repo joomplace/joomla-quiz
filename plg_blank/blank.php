@@ -598,10 +598,9 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 
 				if (!empty($jq_hid_field)) {
                     if($jinput->get('task')=='save2copy') {
-                        $_POST['jq_hid_fields_ids_' . $blnk_n]
-                            = array_map(function ($id) {
+                        $jq_hid_fields_id = array_map(function ($id) {
                             return 0;
-                        }, $_POST['jq_hid_fields_ids_' . $blnk_n]);
+                        }, $jq_hid_fields_id);
                     }
 					foreach ($jq_hid_fields_id as $br=>$f_row) {
 						$new_field = new stdClass;

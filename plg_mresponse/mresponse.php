@@ -589,7 +589,7 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
         $task = JFactory::getApplication()->input->getCmd('task', '');
 	    $database = JFactory::getDBO();
 
-		$database->setQuery("UPDATE `#__quiz_t_question` SET `c_partially_message` = '".$database->escape($jinput->get('c_partially_message','', 'STRING'))."', `c_partial` = '".$jform_data['c_partial']."', `c_random` = '".$jform_data['c_random']."' WHERE c_id = '".$data['qid']."'");
+		$database->setQuery("UPDATE `#__quiz_t_question` SET `c_partially_message` = '".$database->escape($jinput->get('c_partially_message','', 'RAW'))."', `c_partial` = '".$jform_data['c_partial']."', `c_random` = '".$jform_data['c_random']."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 		
 		$field_order = 0;

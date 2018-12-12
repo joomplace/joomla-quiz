@@ -300,7 +300,7 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
         $jinput = JFactory::getApplication()->input;
 		$database = JFactory::getDBO();
 
-        $database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->get('c_image','', 'ALNUM')."', `c_manual` = '" .$jinput->get('c_manual',0, 'INT')."' WHERE c_id = '".$data['qid']."'");
+        $database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->get('c_image','')."', `c_manual` = '" .$jinput->get('c_manual',0, 'INT')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 	}
 	

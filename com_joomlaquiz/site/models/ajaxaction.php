@@ -169,8 +169,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$user_unique_id = md5(uniqid(rand(), true));
 			
 			$unique_pass_id = '';
-			if (isset($_COOKIE['quizupi'][$quiz_id]) ) {
-				$unique_pass_id = $_COOKIE['quizupi'][$quiz_id];
+            $cookieQuizupi = JFactory::getApplication()->input->cookie->get('quizupi');
+			if (!empty($cookieQuizupi[$quiz_id])) {
+				$unique_pass_id = $cookieQuizupi[$quiz_id];
 			} elseif ($my->id) {
 				$query = "SELECT unique_pass_id FROM #__quiz_r_student_quiz WHERE c_quiz_id = '".$quiz_id."' AND `c_order_id` = '".$package_id."' AND c_rel_id = '".$rel_id."' AND c_lid = '".$lid."' AND c_order_id = '".$package_id."' AND c_student_id = '".$my->id."' ORDER BY c_id DESC";
 				$database->SetQuery( $query );
@@ -180,8 +181,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 			if (!$unique_pass_id) {
 				$unique_pass_id = md5(uniqid(rand(), true));
 			}
-		
-			setcookie("quizupi[$quiz_id]", $unique_pass_id);
+
+            JFactory::getApplication()->input->cookie->set("quizupi[$quiz_id]", $unique_pass_id, 0);
 			
 			$stu_quiz_id = 0;
 			$old_quiz = false;
@@ -945,27 +946,33 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$quiz_id = intval( JFactory::getApplication()->input->get( 'quiz', 0 ) );
 		
 		$result_mode = 0;
-		if(!empty($_SESSION['jq_result_mode']) 
-			&& is_array($_SESSION['jq_result_mode'])
-			&& count($_SESSION['jq_result_mode']) == 3
-			&& $_SESSION['jq_result_mode'][0] == $rel_id && $_SESSION['jq_result_mode'][1] == $quiz_id) {
-			
+        $session = JFactory::getSession();
+        $session_jq_result_mode = $session->get('jq_result_mode');
+        $session_jq_result_mode_lid = $session->get('jq_result_mode_lid');
+        $session_jq_result_mode_5 = $session->get('jq_result_mode_5');
+		if(!empty($session_jq_result_mode)
+            && is_array($session_jq_result_mode)
+			&& count($session_jq_result_mode) == 3
+			&& $session_jq_result_mode[0] == $rel_id
+            && $session_jq_result_mode[1] == $quiz_id)
+		{
 			$result_mode = 1;
-			unset($_SESSION['jq_result_mode']);
-		} else if(!empty($_SESSION['jq_result_mode_lid']) 
-			&& is_array($_SESSION['jq_result_mode_lid'])
-			&& count($_SESSION['jq_result_mode_lid']) == 2
-			&& $_SESSION['jq_result_mode_lid'][0] == $lid && $_SESSION['jq_result_mode_lid'][1] == $quiz_id) {
-			
+            $session->clear('jq_result_mode');
+		} else if(!empty($session_jq_result_mode_lid)
+			&& is_array($session_jq_result_mode_lid)
+			&& count($session_jq_result_mode_lid) == 2
+			&& $session_jq_result_mode_lid[0] == $lid
+            && $session_jq_result_mode_lid[1] == $quiz_id)
+		{
 			$result_mode = 2;
-			unset($_SESSION['jq_result_mode_lid']);
-		} elseif (!empty($_SESSION['jq_result_mode_5']) 
-			&& is_array($_SESSION['jq_result_mode_5'])
-			&& count($_SESSION['jq_result_mode_5']) == 2
-			&& $_SESSION['jq_result_mode_5'][1] == $quiz_id) {
-
+            $session->clear('jq_result_mode_lid');
+		} elseif (!empty($session_jq_result_mode_5)
+			&& is_array($session_jq_result_mode_5)
+			&& count($session_jq_result_mode_5) == 2
+			&& $session_jq_result_mode_5[1] == $quiz_id)
+        {
 			$result_mode = 3;
-			unset($_SESSION['jq_result_mode_5']);
+            $session->clear('jq_result_mode_5');
 		}
 
 		$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".$quiz_id."'";
@@ -975,14 +982,17 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
-		$share_id = intval(empty($_SESSION['share_id']) ? 0 : $_SESSION['share_id']);
+        $session = JFactory::getSession();
+        $session_share_id = $session->get('share_id');
+		$share_id = intval(empty($session_share_id) ? 0 : $session_share_id);
 		$is_share = false;
 
 		if($share_id){
 			$database->setQuery("SELECT COUNT(id) FROM `#__quiz_r_student_share` WHERE `id` = '".$share_id."'");
 			$is_share = $database->loadResult();
 
-			unset($_SESSION['share_id']);
+            $session->clear('share_id');
+            unset($session_share_id);
 		}
 		
 		$false_share = false;

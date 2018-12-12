@@ -313,7 +313,7 @@ class JoomlaquizModelResults extends JModelList
 			$quiz_params->result_data = $result_data;
 			
 			$quiz_params->share_id = ($share_id != '') ? $share_id : 0;
-			$_SESSION['share_id'] = $quiz_params->share_id;
+            JFactory::getSession()->set('share_id', $quiz_params->share_id);
 
 			return $quiz_params;
 			

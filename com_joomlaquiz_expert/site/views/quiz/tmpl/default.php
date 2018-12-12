@@ -73,7 +73,7 @@ if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_im
 		<?php
 		} else if(@$quiz->rel_id && $quiz->rel_data && $quiz->rel_data->c_passed && $quiz->rel_data->c_finished && !$quiz->force) {
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');
-			$_SESSION['jq_result_mode'] = array(@$quiz->rel_id, @$quiz->rel_data->c_quiz_id, @$quiz->package_id);
+            JFactory::getSession()->set('jq_result_mode', array(@$quiz->rel_id, @$quiz->rel_data->c_quiz_id, @$quiz->package_id));
 		?>
 		<script language="javascript" type="text/javascript">
 		<!--//--><![CDATA[//><!--
@@ -94,7 +94,7 @@ if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_im
 		} else if(@$quiz->lid && isset($quiz->lid_data) && $quiz->lid_data->c_passed && $quiz->lid_data->c_finished  && !$quiz->force) {
 
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');
-			$_SESSION['jq_result_mode_lid'] = array(@$quiz->lid, @$quiz->lid_data->c_quiz_id);
+            JFactory::getSession()->set('jq_result_mode_lid', array(@$quiz->lid, @$quiz->lid_data->c_quiz_id));
 		?>
 		<script language="javascript" type="text/javascript">
 		<!--//--><![CDATA[//><!--
@@ -115,7 +115,7 @@ if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_im
 		} else if(isset($quiz->result_data)) {
 
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');
-			$_SESSION['jq_result_mode_5'] = array($quiz->result_data, $quiz->result_data->c_quiz_id);
+            JFactory::getSession()->set('jq_result_mode_5', array($quiz->result_data, $quiz->result_data->c_quiz_id));
 		?>
 		<script language="javascript" type="text/javascript">
 		<!--//--><![CDATA[//><!--

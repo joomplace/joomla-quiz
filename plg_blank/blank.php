@@ -544,31 +544,37 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 		return true;
 	}
 	
-	public function onAdminSaveOptions(&$data){
-        if(JFactory::getApplication()->input->get('task')=='copy_quizzes') {
+	public function onAdminSaveOptions(&$data)
+    {
+        $jinput = JFactory::getApplication()->input;
+        $jform = $jinput->get('jform', array(), 'ARRAY');
+
+        if($jinput->get('task') == 'copy_quizzes') {
             return true;
         }
+
 		$database = JFactory::getDBO();
-		
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_immediate` = '".$_POST['jform']['c_immediate']."', `c_qform` = '".$_POST['c_qform']."', `c_image` = '".$_POST['c_image']."' WHERE c_id = '".$data['qid']."'");
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_immediate` = '".$jform['c_immediate']."', `c_qform` = '".$jinput->get('c_qform')."', `c_image` = '".$jinput->get('c_image')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
-		
-		if(isset($_POST['blnk_arr']))
+
+        $post_blnk_arr = $jinput->get('blnk_arr', array(), 'ARRAY');
+        $post_blnk_arr_id = $jinput->get('blnk_arr_id', array(), 'ARRAY');
+		if(!empty($post_blnk_arr))
 		{
-            if(JFactory::getApplication()->input->get('task')=='save2copy') {
-                $_POST['blnk_arr_id'] = array_map(function ($id) {
+            if($jinput->get('task')=='save2copy') {
+                $post_blnk_arr_id = array_map(function ($id) {
                     return 0;
-                }, $_POST['blnk_arr_id']);
+                }, $post_blnk_arr_id);
             }
 			$ord = 0;
 			$blank_arr = array();
-			foreach ($_POST['blnk_arr'] as $blnk_n) {	
-				$database->SetQuery("SELECT c_id FROM #__quiz_t_blank WHERE c_id = '".(isset($_POST['blnk_arr_id'][$ord])?($_POST['blnk_arr_id'][$ord]):0)."'");
+			foreach ($post_blnk_arr as $blnk_n) {
+				$database->SetQuery("SELECT c_id FROM #__quiz_t_blank WHERE c_id = '".(!empty($post_blnk_arr_id[$ord]) ? ($post_blnk_arr_id[$ord]) : 0)."'");
 				$bid = $database->LoadResult();
 				
-				$new_points = floatval(@$_POST['jq_hid_points_'.$blnk_n]);
-				$new_css_class = (@$_POST['jq_hid_css_'.$blnk_n]);
-				$new_gtype = intval(@$_POST['jq_hid_gtype_'.$blnk_n][0]);
+				$new_points = floatval(@$jinput->get('jq_hid_points_'.$blnk_n));
+				$new_css_class = (@$jinput->get('jq_hid_css_'.$blnk_n));
+				$new_gtype = intval(@$jinput->get('jq_hid_gtype_'.$blnk_n, array(), 'ARRAY')[0]);
 
 				if (!$bid) {					
 					$database->SetQuery("INSERT INTO #__quiz_t_blank (c_question_id,ordering, points, css_class, gtype) VALUES('".$data['qid']."', '".$ord."', '".$new_points."', ".$database->Quote($new_css_class).", ".$new_gtype.")");
@@ -642,7 +648,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 			$database->setQuery( $query );
 			$database->execute();
 			
-			$jq_hid_fakes = JFactory::getApplication()->input->get('jq_hid_fake', '', array());
+			$jq_hid_fakes = $jinput->get('jq_hid_fake', array(), 'ARRAY');
 			foreach($jq_hid_fakes as $jq_hid_fake){
 				$query = "INSERT INTO #__quiz_t_faketext SET c_quest_id = '".$data['qid']."', c_text = ".$database->Quote($jq_hid_fake);
 				$database->setQuery( $query );

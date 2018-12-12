@@ -138,7 +138,7 @@ class JoomlaquizModelQuizzes extends JModelList
 		$database = JFactory::getDBO();
         $session = JFactory::getSession();
         $cid = $session->get('com_joomlaquiz.copy.quizzes.cids');
-		$categoryCopy = intval(JFactory::getApplication()->input->get('categorycopy'))
+		$categoryCopy = intval(JFactory::getApplication()->input->get('categorycopy'));
 		$cids = implode( ',', $cid );
 		$total = count( $cid );
 		

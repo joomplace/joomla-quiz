@@ -656,40 +656,49 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		return $tabs;
 	}
 	
-	public function onAdminSaveOptions(&$data){
-		
+	public function onAdminSaveOptions(&$data)
+    {
+        $jinput = JFactory::getApplication()->input;
+        $jform = $jinput->get('jform', array(), 'ARRAY');
+
 		$database = JFactory::getDBO();
-		
-		$database->setQuery("UPDATE #__quiz_t_question SET `sq_delayed` = '".$_POST['sq_delayed']."', `c_image` = '".$_POST['c_image']."' WHERE c_id = '".$data['qid']."'");
+		$database->setQuery("UPDATE #__quiz_t_question SET `sq_delayed` = '".$jinput->getInt('sq_delayed')."', `c_image` = '".$jinput->get('c_image')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
-		
+
 		$field_order = 0;
 		$ans_right = array();
-		if (isset($_REQUEST['jq_checked'])) {
-			foreach ($_REQUEST['jq_checked'] as $sss) {
+        $jq_checked = $jinput->get('jq_checked', array(), 'ARRAY');
+		if (!empty($jq_checked)) {
+			foreach ($jq_checked as $sss) {
 				$ans_right[] = $sss;
 			}
 		}
-		else
-		$msg .= JText::_('COM_JOOMLAQUIZ_QUESTION_NOT_COMPLETE');
-		if (isset($_POST['jq_hid_fields'])) {
+		else {
+            $msg .= JText::_('COM_JOOMLAQUIZ_QUESTION_NOT_COMPLETE');
+        }
+
+        $jq_hid_fields = $jinput->get('jq_hid_fields', array(), 'ARRAY');
+        $jq_hid_fields_ids = $jinput->get('jq_hid_fields_ids', array(), 'ARRAY');
+        $jq_incorrect_feed = $jinput->get('jq_incorrect_feed', array(), 'ARRAY');
+        $jq_a_points = $jinput->get('jq_a_points', array(), 'ARRAY');
+
+		if (!empty($jq_hid_fields)) {
 			$mcounter = 0;
 			$fids_arr = array();
-			
-			foreach ($_POST['jq_hid_fields'] as $f_row) {
+			foreach ($jq_hid_fields as $f_row) {
 					
 					$new_field = new stdClass;
-					if(intval($_POST['jq_hid_fields_ids'][$mcounter]))
-					$new_field->c_id = intval($_POST['jq_hid_fields_ids'][$mcounter]);
-					
+					if(intval($jq_hid_fields_ids[$mcounter])) {
+                        $new_field->c_id = intval($jq_hid_fields_ids[$mcounter]);
+                    }
 					$new_field->c_question_id = $data['qid'];
 					$new_field->c_choice = stripslashes($f_row);
-					$new_field->c_incorrect_feed = stripslashes($_POST['jq_incorrect_feed'][$mcounter]);
+					$new_field->c_incorrect_feed = !empty($jq_incorrect_feed[$mcounter]) ? stripslashes($jq_incorrect_feed[$mcounter]) : '';
 					
 					$new_field->c_right = in_array(($field_order+ 1), $ans_right)?1:0;
 					$new_field->ordering = $field_order;
-					$new_field->a_point = floatval($_POST['jq_a_points'][$mcounter]);
-					$new_field->c_quiz_id	= intval($_POST['jform']['c_quiz_id']);
+					$new_field->a_point = floatval($jq_a_points[$mcounter]);
+					$new_field->c_quiz_id	= intval($jform['c_quiz_id']);
 					
 					$database->setQuery("SELECT COUNT(c_id) FROM #__quiz_t_dalliclick WHERE c_id = '".$new_field->c_id."'");
 					$exists = $database->loadResult();

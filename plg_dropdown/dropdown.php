@@ -546,27 +546,36 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 	
 	public function onAdminSaveOptions(&$data){
 
-	    $task = JFactory::getApplication()->input->getCmd('task', '');
+        $jinput = JFactory::getApplication()->input;
+        $jform = $jinput->get('jform', array(), 'ARRAY');
+	    $task = $jinput->get('task', '');
+
 		$database = JFactory::getDBO();
-		
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_random` = '".$_POST['jform']['c_random']."' WHERE `c_id` = '".$data['qid']."'");
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_random` = '".$jform['c_random']."' WHERE `c_id` = '".$data['qid']."'");
 		$database->execute();
 		
 		$field_order = 0;
 		$mcounter = 0;
-		$fids_arr = array();		
-		if (isset($_POST['jq_hid_fields_left'])) {
-			foreach ($_POST['jq_hid_fields_left'] as $f_row) {					
+		$fids_arr = array();
+
+        $jq_hid_fields_left   = $jinput->get('jq_hid_fields_left', array(), 'ARRAY');
+        $jq_hid_fields_right  = $jinput->get('jq_hid_fields_right', array(), 'ARRAY');
+        $jq_hid_fields_ids    = $jinput->get('jq_hid_fields_ids', array(), 'ARRAY');
+        $jq_hid_fields_points = $jinput->get('jq_hid_fields_points', array(), 'ARRAY');
+
+		if (!empty($jq_hid_fields_left)) {
+			foreach ($jq_hid_fields_left as $f_row) {
 					$new_field = new stdClass;
-					if(intval($_POST['jq_hid_fields_ids'][$mcounter])) {
-                        $new_field->c_id = ($task == 'save2copy') ? 0 : intval($_POST['jq_hid_fields_ids'][$mcounter]);
+					if(intval($jq_hid_fields_ids[$mcounter])) {
+                        $new_field->c_id = ($task == 'save2copy') ? 0 : intval($jq_hid_fields_ids[$mcounter]);
                     }
 					$new_field->c_question_id = $data['qid'];
 					$new_field->c_left_text = stripslashes($f_row);
-					$new_field->c_right_text = (isset($_POST['jq_hid_fields_right'][$field_order])?stripslashes($_POST['jq_hid_fields_right'][$field_order]):'');
+					$new_field->c_right_text = !empty($jq_hid_fields_right[$field_order]) ? stripslashes($jq_hid_fields_right[$field_order]) : '';
 					$new_field->ordering = $field_order;
-					$new_field->c_quiz_id	= intval($_POST['jform']['c_quiz_id']);
-					$new_field->a_points	= floatval((isset($_POST['jq_hid_fields_points'][$field_order])?stripslashes($_POST['jq_hid_fields_points'][$field_order]):''));
+					$new_field->c_quiz_id	= intval($jform['c_quiz_id']);
+					$new_field->a_points	= floatval(!empty($jq_hid_fields_points[$field_order]) ? stripslashes($jq_hid_fields_points[$field_order]) : '');
+
 					$database->setQuery("SELECT COUNT(c_id) FROM #__quiz_t_matching WHERE c_id = '".$new_field->c_id."'");
 					$exists = $database->loadResult();
 					if($exists){

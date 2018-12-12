@@ -602,17 +602,17 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 	function _uploadResizeImg(){
 		$mainframe = JFactory::getApplication();
 		$database = JFactory::getDBO();
-        $jinput = $mainframe->input;
+		$jinput = $mainframe->input;
         $user_files = $jinput->files->get('Filedata', array(), 'array');
 
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.path');
 		
-		$userfile2=(isset($_FILES['Filedata']['tmp_name']) ? $_FILES['Filedata']['tmp_name'] : "");
-		$userfile_name=(isset($_FILES['Filedata']['name']) ? $_FILES['Filedata']['name'] : "");
+		$userfile2 = (!empty($user_files['tmp_name']) ? $user_files['tmp_name'] : "");
+		$userfile_name = (!empty($user_files['name']) ? $user_files['name'] : "");
 		$qid = JFactory::getApplication()->input->get('c_id');
 		
-		if (isset($_FILES['Filedata'])) {
+		if (!empty($user_files)) {
 			$base_Dir = JPATH_SITE."/images/joomlaquiz/images/resize";
 			$filename = explode(".", $userfile_name);
 		
@@ -631,7 +631,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 				die();
 			}
 			
-			if (!JFile::move($_FILES['Filedata']['tmp_name'],$base_Dir.'/'.$_FILES['Filedata']['name']) || !JPath::setPermissions($base_Dir.'/'.$_FILES['Filedata']['name'])) {
+			if (!JFile::move($user_files['tmp_name'],$base_Dir.'/'.$user_files['name']) || !JPath::setPermissions($base_Dir.'/'.$user_files['name'])) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$userfile_name.JText::_('COM_JOOMLAQUIZ_FAILED')."'); window.history.go(-1);</script>\n";
 				die();
 			} else {
@@ -642,14 +642,14 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 				$height = ($height) ? $height : 150;
 				
 				$image = new SimpleImage();
-				$image->load($base_Dir.'/'.$_FILES['Filedata']['name']);
+				$image->load($base_Dir.'/'.$user_files['name']);
 				
 				$image->resizeToHeight($height);
-				$image->save($base_Dir.'/'.$_FILES['Filedata']['name']);
-				
-				$javascript = '<script type="text/javascript">alert("'.JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$_FILES['Filedata']['name'].JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL').'"); var image_left = parent.document.getElementById("picture_left"); image_left.options[image_left.options.length] = new Option("'.$_FILES['Filedata']['name'].'", "'.$_FILES['Filedata']['name'].'");
+				$image->save($base_Dir.'/'.$user_files['name']);
+
+				$javascript = '<script type="text/javascript">alert("'.JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$user_files['name'].JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL').'"); var image_left = parent.document.getElementById("picture_left"); image_left.options[image_left.options.length] = new Option("'.$user_files['name'].'", "'.$user_files['name'].'");
 				parent.jQuery(\'#picture_left\').trigger(\'liszt:updated\');
-				var image_right = parent.document.getElementById("picture_right"); image_right.options[image_right.options.length] = new Option("'.$_FILES['Filedata']['name'].'", "'.$_FILES['Filedata']['name'].'");
+				var image_right = parent.document.getElementById("picture_right"); image_right.options[image_right.options.length] = new Option("'.$user_files['name'].'", "'.$user_files['name'].'");
 				parent.jQuery(\'#picture_right\').trigger(\'liszt:updated\');
 				
 				</script>';

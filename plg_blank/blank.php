@@ -559,6 +559,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 
         $post_blnk_arr = $jinput->get('blnk_arr', array(), 'ARRAY');
         $post_blnk_arr_id = $jinput->get('blnk_arr_id', array(), 'ARRAY');
+
 		if(!empty($post_blnk_arr))
 		{
             if($jinput->get('task')=='save2copy') {
@@ -590,22 +591,27 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 				$field_order = 0;
 				$mcounter = 0;
 				$fids_arr = array();
-				if (isset($_POST['jq_hid_fields_'.$blnk_n])) {
-                    if(JFactory::getApplication()->input->get('task')=='save2copy') {
+
+                $jq_hid_field = $jinput->get('jq_hid_fields_'.$blnk_n, array(), 'ARRAY');
+                $jq_hid_fields_id = $jinput->get('jq_hid_fields_ids_' . $blnk_n, array(), 'ARRAY');
+                $jq_hid_regexp = $jinput->get('jq_hid_regexp_'.$blnk_n, array(), 'ARRAY');
+
+				if (!empty($jq_hid_field)) {
+                    if($jinput->get('task')=='save2copy') {
                         $_POST['jq_hid_fields_ids_' . $blnk_n]
                             = array_map(function ($id) {
                             return 0;
                         }, $_POST['jq_hid_fields_ids_' . $blnk_n]);
                     }
-					foreach ($_POST['jq_hid_fields_'.$blnk_n] as $br=>$f_row) {
+					foreach ($jq_hid_fields_id as $br=>$f_row) {
 						$new_field = new stdClass;
-						if(intval($_POST['jq_hid_fields_ids_'.$blnk_n][$mcounter])){
-                            $new_field->c_id = intval($_POST['jq_hid_fields_ids_'.$blnk_n][$mcounter]);
+						if(intval($jq_hid_fields_id[$mcounter])){
+                            $new_field->c_id = intval($jq_hid_fields_id[$mcounter]);
                         }
 						$new_field->c_blank_id = $bid;
 						$new_field->c_text = (stripslashes($f_row));
 						$new_field->ordering = $field_order;
-						$new_field->regexp = intval(@$_POST['jq_hid_regexp_'.$blnk_n][$br]);
+						$new_field->regexp = intval(@$jq_hid_regexp[$br]);
 
 						$database->setQuery("SELECT COUNT(c_id) FROM #__quiz_t_text WHERE c_id = '".$new_field->c_id."'");
 						$exists = $database->loadResult();

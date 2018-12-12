@@ -412,10 +412,10 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
+        $jinput = JFactory::getApplication()->input;
 		$database = JFactory::getDBO();
-		
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$_POST['c_image']."', `c_width` = '".$_POST['c_width']."', `c_timer` = '".$_POST['c_timer']."' WHERE c_id = '".$data['qid']."'");
+
+        $database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->get('c_image','')."', `c_width` = '".$jinput->get('c_width','', 'INT')."', `c_timer` = '".$jinput->get('c_timer','', 'INT')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 		
 		$query = "SELECT c_id FROM #__quiz_t_puzzle WHERE c_question_id = '".$data['qid']."'";
@@ -425,7 +425,7 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 		$new_field = new stdClass;
 		$new_field->c_id = ($cid) ? $cid : '';
 		$new_field->c_question_id = $data['qid'];
-		$new_field->c_pieces = $_POST['c_pieces'];		
+		$new_field->c_pieces = $jinput->get('c_pieces',4,'INT');
 		
 		$database->setQuery("SELECT COUNT(c_id) FROM #__quiz_t_puzzle WHERE c_id = '".$new_field->c_id."'");
 		$exists = $database->loadResult();

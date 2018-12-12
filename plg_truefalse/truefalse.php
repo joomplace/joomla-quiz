@@ -456,7 +456,7 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 	public function onAdminSaveOptions(&$data){
 		
 		$database = JFactory::getDBO();
-		
+        $jform_data = JFactory::getApplication()->input->get('jform', array(), 'ARRAY');
 		$query = "SELECT c_id, c_choice FROM #__quiz_t_choice WHERE c_question_id = '".$data['qid']."'";
 		$database->setQuery( $query );
 		$faltrue = $database->LoadObjectList();		
@@ -477,7 +477,7 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 		$new_field->c_choice = "true";
 		$new_field->c_right = $ans_true;
 		$new_field->ordering = 1;
-		$new_field->c_quiz_id	= intval($_POST['jform']['c_quiz_id']);
+		$new_field->c_quiz_id	= intval($jform_data['c_quiz_id']);
 		$database->setQuery("SELECT COUNT(c_id) FROM #__quiz_t_choice WHERE c_id = '".$new_field->c_id."'");
 		$exists = $database->loadResult();
 		

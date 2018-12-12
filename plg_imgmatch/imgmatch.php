@@ -607,43 +607,43 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.path');
-		
+
 		$userfile2 = (!empty($user_files['tmp_name']) ? $user_files['tmp_name'] : "");
 		$userfile_name = (!empty($user_files['name']) ? $user_files['name'] : "");
 		$qid = JFactory::getApplication()->input->get('c_id');
-		
+
 		if (!empty($user_files)) {
 			$base_Dir = JPATH_SITE."/images/joomlaquiz/images/resize";
 			$filename = explode(".", $userfile_name);
-		
+
 			if (preg_match("/[^0-9a-zA-Z_]/", $filename[0])) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_FILE_MUST')."'); window.history.go(-1);</script>\n";
 				die();
 			}
-		
+
 			if (JFile::exists($base_Dir.'/'.$userfile_name)) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_IMAGE').$userfile_name.JText::_('COM_JOOMLAQUIZ_ALREADY_EXISTS')."'); window.history.go(-1);</script>\n";
 				die();
 			}
-		
+
 			if ((strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".gif")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpg")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpeg")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".png")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".bmp")) ) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_ACCEPTED_FILES')."'); window.history.go(-1);</script>\n";
 				die();
 			}
-			
+
 			if (!JFile::move($user_files['tmp_name'],$base_Dir.'/'.$user_files['name']) || !JPath::setPermissions($base_Dir.'/'.$user_files['name'])) {
 				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$userfile_name.JText::_('COM_JOOMLAQUIZ_FAILED')."'); window.history.go(-1);</script>\n";
 				die();
 			} else {
 				require_once(JPATH_SITE.'/administrator/components/com_joomlaquiz/assets/image.class.php');
-				
+
 				$database->setQuery("SELECT `c_height` FROM `#__quiz_t_question` WHERE `c_id` = '".$qid."'");
 				$height = $database->loadResult();
 				$height = ($height) ? $height : 150;
-				
+
 				$image = new SimpleImage();
 				$image->load($base_Dir.'/'.$user_files['name']);
-				
+
 				$image->resizeToHeight($height);
 				$image->save($base_Dir.'/'.$user_files['name']);
 
@@ -665,32 +665,37 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
+		$jinput = JFactory::getApplication()->input;
+		$jform_data = $jinput->get('jform', array(), 'ARRAY');
+		$jq_hid_fields_ids = $jinput->get('jq_hid_fields_ids', array(), 'ARRAY');
+		$jq_hid_fields_points = $jinput->get('jq_hid_fields_points', array(), 'ARRAY');
+		$jq_hid_fields_right = $jinput->get('jq_hid_fields_right', array(), 'ARRAY');
+		$jq_hid_fields_left = $jinput->get('jq_hid_fields_left', array(), 'ARRAY');
 		$database = JFactory::getDBO();
 		$plg_task = JFactory::getApplication()->input->get('plgtask', '');
 		if($plg_task == 'upload_resize_img'){
 			$this->_uploadResizeImg();
 			die;
 		}
-		
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_height` = '".$_POST['c_height']."',  `c_width` = '".$_POST['c_width']."', `c_random` = '".$_POST['jform']['c_random']."', c_timer = '".$_POST['c_timer']."' WHERE c_id = '".$data['qid']."'");
+
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_height` = '".$jinput->get('c_height',0, 'ALNUM')."',  `c_width` = '".$jinput->get('c_width',0, 'ALNUM')."', `c_random` = '".$jform_data['c_random']."', c_timer = '".$jinput->get('c_timer',0, 'ALNUM')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 		
 		$field_order = 0;
 		$mcounter = 0;
 		$fids_arr = array();		
-		if (isset($_POST['jq_hid_fields_left'])) {
-			foreach ($_POST['jq_hid_fields_left'] as $f_row) {					
+		if (!empty($jq_hid_fields_left)) {
+			foreach ($jq_hid_fields_left as $f_row) {
 					$new_field = new stdClass;
-					if(intval($_POST['jq_hid_fields_ids'][$mcounter]))
-					$new_field->c_id = intval($_POST['jq_hid_fields_ids'][$mcounter]);
+					if(intval($jq_hid_fields_ids[$mcounter]))
+					$new_field->c_id = intval($jq_hid_fields_ids[$mcounter]);
 					
 					$new_field->c_question_id = $data['qid'];
 					$new_field->c_left_text = stripslashes($f_row);
-					$new_field->c_right_text = (isset($_POST['jq_hid_fields_right'][$field_order])?stripslashes($_POST['jq_hid_fields_right'][$field_order]):'');
+					$new_field->c_right_text = (!empty($jq_hid_fields_right[$field_order])?stripslashes($jq_hid_fields_right[$field_order]):'');
 					$new_field->ordering = $field_order;
-					$new_field->c_quiz_id	= intval($_POST['jform']['c_quiz_id']);
-					$new_field->a_points	= floatval((isset($_POST['jq_hid_fields_points'][$field_order])?stripslashes($_POST['jq_hid_fields_points'][$field_order]):''));
+					$new_field->c_quiz_id	= intval($jform_data['c_quiz_id']);
+					$new_field->a_points	= floatval((!empty($jq_hid_fields_points[$field_order])?stripslashes($jq_hid_fields_points[$field_order]):''));
 					$database->setQuery("SELECT COUNT(c_id) FROM #__quiz_t_matching WHERE c_id = '".$new_field->c_id."'");
 					$exists = $database->loadResult();
 					if($exists){

@@ -415,7 +415,7 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
         $jinput = JFactory::getApplication()->input;
 		$database = JFactory::getDBO();
 
-        $database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->get('c_image','', 'ALNUM')."', `c_width` = '".$jinput->get('c_width','', 'INT')."', `c_timer` = '".$jinput->get('c_timer','', 'INT')."' WHERE c_id = '".$data['qid']."'");
+        $database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->get('c_image','')."', `c_width` = '".$jinput->get('c_width','', 'INT')."', `c_timer` = '".$jinput->get('c_timer','', 'INT')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 		
 		$query = "SELECT c_id FROM #__quiz_t_puzzle WHERE c_question_id = '".$data['qid']."'";

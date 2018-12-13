@@ -1,4 +1,11 @@
 <?php
+/**
+ * Joomlaquiz Component for Joomla 3
+ * @package Joomlaquiz
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
 /*
 	This font definition is basically stsongstdlight.php
 	The changes I made are commented in place.

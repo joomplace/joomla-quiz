@@ -1401,8 +1401,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 {
                                     if($ch_data->c_question_id == $q_quest->id)
                                     {
-                                        $query = "INSERT INTO #__quiz_t_blank(c_id,c_question_id) ";
-                                        $query .= " VALUES('',".$db->quote($new_quest_id).")";
+                                        $query = "INSERT INTO #__quiz_t_blank(c_id, c_question_id, points, css_class) ";
+                                        $query .= " VALUES('',".$db->quote($new_quest_id).", ".$db->quote($ch_data->points).", ".$db->quote($ch_data->css_class).")";
                                         $database->setQuery($query);
                                         if(!$database->execute())
                                         {
@@ -1412,13 +1412,14 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                         $query = "SELECT max(c_id) FROM #__quiz_t_blank";
                                         $database->setQuery($query);
                                         $new_blank_id = $database->loadResult();
-                                        $query = "INSERT INTO #__quiz_t_text(c_id,c_blank_id,c_text,ordering) ";
-                                        $query .= " VALUES('',".$db->quote($new_blank_id).",".$db->quote($ch_data->blank_text).",".$db->quote($ch_data->ordering).")";
-                                        $database->setQuery($query);
-                                        if(!$database->execute())
-                                        {
-                                            echo "<script>alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
-                                            exit();
+                                        if ($new_blank_id) {
+                                            $query = "INSERT INTO #__quiz_t_text(c_id,c_blank_id,c_text,ordering) ";
+                                            $query .= " VALUES(''," . $db->quote($new_blank_id) . "," . $db->quote($ch_data->blank_text) . "," . $db->quote($ch_data->ordering) . ")";
+                                            $database->setQuery($query);
+                                            if (!$database->execute()) {
+                                                echo "<script>alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+                                                exit();
+                                            }
                                         }
                                     }
                                 }
@@ -1555,8 +1556,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 {
                                     if($ch_data->c_question_id == $q_quest->id)
                                     {
-                                        $query = "INSERT INTO #__quiz_t_blank(c_id,c_question_id) ";
-                                        $query .= " VALUES('',".$db->quote($new_quest_id).")";
+                                        $query = "INSERT INTO #__quiz_t_blank(c_id, c_question_id, points, css_class) ";
+                                        $query .= " VALUES('',".$db->quote($new_quest_id).", ".$db->quote($ch_data->points).", ".$db->quote($ch_data->css_class).")";
                                         $database->setQuery($query);
                                         if(!$database->execute())
                                         {
@@ -1566,13 +1567,14 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                         $query = "SELECT max(c_id) FROM #__quiz_t_blank";
                                         $database->setQuery($query);
                                         $new_blank_id = $database->loadResult();
-                                        $query = "INSERT INTO #__quiz_t_text(c_id,c_blank_id,c_text,ordering) ";
-                                        $query .= " VALUES('',".$db->quote($new_blank_id).",".$db->quote($ch_data->blank_text).",".$db->quote($ch_data->ordering).")";
-                                        $database->setQuery($query);
-                                        if(!$database->execute())
-                                        {
-                                            echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
-                                            exit();
+                                        if($new_blank_id) {
+                                            $query = "INSERT INTO #__quiz_t_text(c_id,c_blank_id,c_text,ordering) ";
+                                            $query .= " VALUES(''," . $db->quote($new_blank_id) . "," . $db->quote($ch_data->blank_text) . "," . $db->quote($ch_data->ordering) . ")";
+                                            $database->setQuery($query);
+                                            if (!$database->execute()) {
+                                                echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+                                                exit();
+                                            }
                                         }
                                     }
                                 }

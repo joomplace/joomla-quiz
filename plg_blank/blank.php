@@ -602,7 +602,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
                             return 0;
                         }, $jq_hid_fields_id);
                     }
-					foreach ($jq_hid_fields_id as $br=>$f_row) {
+					foreach ($jq_hid_field as $br=>$f_row) {
 						$new_field = new stdClass;
 						if(intval($jq_hid_fields_id[$mcounter])){
                             $new_field->c_id = intval($jq_hid_fields_id[$mcounter]);

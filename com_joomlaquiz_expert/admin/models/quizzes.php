@@ -145,6 +145,7 @@ class JoomlaquizModelQuizzes extends JModelList
 		$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id IN ( $cids )";
 		$database->setQuery( $query );
 		$quizzes_to_copy = $database->loadAssocList();
+
 		foreach ($quizzes_to_copy as $quiz2copy) {
 			$new_quiz = $this->getTable();
 			
@@ -162,6 +163,7 @@ class JoomlaquizModelQuizzes extends JModelList
 				echo "<script> alert('".$new_quiz->getError()."'); window.history.go(-1); </script>\n"; exit(); 
 			}
 			$new_quiz_id = $new_quiz->c_id;
+
 			$query = "SELECT * FROM #__quiz_pool WHERE q_id = '".$quiz2copy['c_id']."'";
 			$pool = $database->SetQuery( $query )->loadObjectList();
 			foreach($pool as $pool_conf_item){
@@ -219,7 +221,9 @@ class JoomlaquizModelQuizzes extends JModelList
 				$old_quest_id = $quest2copy['c_id'];
 				$new_quest = $this->getTable('Question');
 				if (!$new_quest->bind( $quest2copy )) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-				$new_quest->c_id = 0; $new_quest->ordering = $new_order; $new_quest->c_quiz_id = $quizMove;
+				$new_quest->c_id = 0;
+				$new_quest->ordering = $new_order;
+				$new_quest->c_quiz_id = $quizMove;
 				if ($run_from_quiz_copy) { $new_order++; }
 				if (!$new_quest->check()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 				if (!$new_quest->store()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
@@ -276,10 +280,6 @@ class JoomlaquizModelQuizzes extends JModelList
 							$database->setQuery( $query );
 							$fields_to_copy = $database->loadAssocList();
 
-                            $query = "SELECT `c_text` FROM `#__quiz_t_faketext` WHERE `c_quest_id` = ".(int)$old_quest_id;
-                            $database->SetQuery($query);
-                            $faketext_to_copy = $database->loadObjectList();
-
                             $query = "INSERT INTO #__quiz_t_blank (`c_question_id`, `ordering`, `points`, `css_class`, `c_quiz_id`, `gtype`) VALUES('".(int)$new_quest_id."', '".(int)$blank_to_copy->ordering."', '".$blank_to_copy->points."', '".$blank_to_copy->css_class."', '".(int)$blank_to_copy->c_quiz_id."', '".$blank_to_copy->gtype."')";
                             $database->SetQuery( $query );
 							$database->execute();
@@ -293,15 +293,20 @@ class JoomlaquizModelQuizzes extends JModelList
 								if (!$new_field->check()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 								if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 							}
-                            foreach($faketext_to_copy as $faketext) {
-                                $query = "INSERT INTO `#__quiz_t_faketext` (`c_id`, `c_quest_id`, `c_text`) VALUES('','".(int)$new_quest_id."','".$faketext->c_text."')";
-                                $database->setQuery($query);
-                                if(!$database->execute()){
-                                    echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
-                                }
-                            }
 						}
 					}
+                    $query = "SELECT `c_text` FROM `#__quiz_t_faketext` WHERE `c_quest_id` = ".(int)$old_quest_id;
+                    $database->SetQuery($query);
+                    $faketext_to_copy = $database->loadObjectList();
+                    if($faketext_to_copy){
+                        foreach($faketext_to_copy as $faketext) {
+                            $query = "INSERT INTO `#__quiz_t_faketext` (`c_id`, `c_quest_id`, `c_text`) VALUES('','".(int)$new_quest_id."','".$faketext->c_text."')";
+                            $database->setQuery($query);
+                            if(!$database->execute()){
+                                echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                            }
+                        }
+                    }
 				}
 				if ( ($quest2copy['c_type'] == 7)) {
 

@@ -29,13 +29,21 @@ class JoomlaquizRouter extends RouterBase
 
             switch ($query['view']) {
                 case 'quiz':
-                    if ( isset($query['quiz_id'])){
+                    if ( isset($query['quiz_id']) && !isset($query['lid'])){
                         $segments[] = $query['quiz_id'];
                         unset( $query['quiz_id'] );
                     }
-                    if ( isset($query['lid'])){
-                        $segments[] = $query['lid'];
+                    if ( isset($query['lid'])){              //inside lpath
+                        $segments[] = 'lp'.$query['lid'];
                         unset( $query['lid'] );
+                        if ( isset($query['quiz_id'])){
+                            $segments[] = $query['quiz_id'];
+                            unset( $query['quiz_id'] );
+                        }
+                        else if ( isset($query['article_id'])){
+                            $segments[] = 'a'.$query['article_id'];
+                            unset( $query['article_id'] );
+                        }
                     }
                     break;
                 case 'lpath':
@@ -118,12 +126,21 @@ class JoomlaquizRouter extends RouterBase
                 if($count){
                     $count--;
                     $segment = array_shift($segments);
-                    $vars['quiz_id'] = $segment;
-                }
-                if($count){
-                    $count--;
-                    $segment = array_shift($segments);
-                    $vars['lid'] = $segment;
+                    if(stristr($segment, 'lp') === false) {
+                        $vars['quiz_id'] = $segment;
+                    } else {
+                        $vars['lid'] = str_replace('lp', '', $segment);
+
+                        if($count){
+                            $count--;
+                            $segment = array_shift($segments);
+                            if(stristr($segment, 'a') === false) {
+                                $vars['quiz_id'] = $segment;
+                            } else {
+                                $vars['article_id'] = str_replace('a', '', $segment);
+                            }
+                        }
+                    }
                 }
                 break;
             case 'lpath':

@@ -47,7 +47,7 @@ class JoomlaquizModelQuestions extends JModelList
 		
 		$quiz_id = $this->getUserStateFromRequest('questions.filter.quiz_id', 'filter_quiz_id');
 		$this->setState('filter.quiz_id', $quiz_id);
-		
+
 		$qtype_id = $this->getUserStateFromRequest('questions.filter.qtype_id', 'filter_qtype_id');
 		$this->setState('filter.qtype_id', $qtype_id);
 		
@@ -340,15 +340,13 @@ class JoomlaquizModelQuestions extends JModelList
 		}
 				
 		$quiz_id = $this->getState('filter.quiz_id');
-		
-		if(isset($_REQUEST['quiz_id']) && $_REQUEST['quiz_id'] != ''){
-			$this->setState('filter.quiz_id', $_REQUEST['quiz_id']);
-			$quiz_id = $_REQUEST['quiz_id'];
-		}
-		
+		if(!empty(JFactory::getApplication()->input->getInt('quiz_id', 0))){
+            $quiz_id = JFactory::getApplication()->input->getInt('quiz_id', 0);
+            $this->setState('filter.quiz_id', $quiz_id);
+        }
 		if (isset($quiz_id) && $quiz_id != '')
 		{
-			$query->where("a.c_quiz_id = $quiz_id");
+		    $query->where("a.c_quiz_id = $quiz_id");
 		}
 		
 		$qtype_id = $this->getState('filter.qtype_id');

@@ -42,7 +42,7 @@ class JoomlaquizTableQuestion extends JTable
 			$this->c_right_message = stripslashes($this->c_right_message);
 			$this->c_wrong_message = stripslashes($this->c_wrong_message);
 
-            if(empty($jform['c_id']) && !$this->c_type){
+			if(empty($jform['c_id']) && !$this->c_type){
 				$query = "SELECT MAX(`ordering`) FROM #__quiz_t_question
 				WHERE `c_quiz_id`='" . $this->c_quiz_id . "'
 				";
@@ -52,11 +52,13 @@ class JoomlaquizTableQuestion extends JTable
 				$new_qtype_id = $app->getUserStateFromRequest( "question.new_qtype_id", 'new_qtype_id', 0 );
 				$this->c_type = $new_qtype_id;
 			}
-			
-			if(!empty($jform['c_id'])){
-                $this->c_id = $jform['c_id'];
-                $this->c_type = $jform['c_type'];
-            }
+
+            if(!empty($jform['c_id'])){
+				$this->c_id = $jform['c_id'];
+                if(!empty($jform['c_type'])) {   //we are not in the quiz (copy quiz)
+                    $this->c_type = $jform['c_type'];
+                }
+			}
 			
 			if ($input->get('task') == 'save2copy')
 			{
@@ -103,10 +105,12 @@ class JoomlaquizTableQuestion extends JTable
 				$this->c_type = $new_qtype_id;
 			}
 
-            if(!empty($jform['c_id'])){
-                $this->c_id = $jform['c_id'];
-                $this->c_type = $jform['c_type'];
-            }
+			if(!empty($jform['c_id'])){
+				$this->c_id = $jform['c_id'];
+                if(!empty($jform['c_type'])) {   //we are not in the quiz (copy quiz)
+                    $this->c_type = $jform['c_type'];
+                }
+			}
 			
 			$res = parent::store($updateNulls);			
 			JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($this->c_quiz_id);

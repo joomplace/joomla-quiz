@@ -55,7 +55,9 @@ class JoomlaquizTableQuestion extends JTable
 
             if(!empty($jform['c_id'])){
 				$this->c_id = $jform['c_id'];
-				$this->c_type = $jform['c_type'];
+                if(!empty($jform['c_type'])) {   //we are not in the quiz (copy quiz)
+                    $this->c_type = $jform['c_type'];
+                }
 			}
 			
 			if ($input->get('task') == 'save2copy')
@@ -105,7 +107,9 @@ class JoomlaquizTableQuestion extends JTable
 			
 			if(!empty($jform['c_id'])){
 				$this->c_id = $jform['c_id'];
-				$this->c_type = $jform['c_type'];
+                if(!empty($jform['c_type'])) {   //we are not in the quiz (copy quiz)
+                    $this->c_type = $jform['c_type'];
+                }
 			}
 			
 			$res = parent::store($updateNulls);			

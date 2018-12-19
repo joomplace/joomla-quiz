@@ -2,12 +2,12 @@
 <extension version="3.0" type="module" client="site" method="upgrade">
 	<name>Available Learning Path</name>
 	<author>JoomPlace Team</author>
-	<creationDate>February 2018</creationDate>
+	<creationDate>December 2018</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.6</version>
+	<version>3.7.7</version>
 	<description>This module will display Available Learning Path (user did not start yet)</description>
 	<files>
 		<filename module="mod_quiz_availablelp">mod_quiz_availablelp.php</filename>

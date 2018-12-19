@@ -2,12 +2,12 @@
 <extension version="3.2" type="plugin" group="finder">
 	<name>Smart search - quizes</name>
 	<author>JoomPlace Team</author>
-	<creationDate>February 2018</creationDate>
+	<creationDate>December 2018</creationDate>
 	<copyright>Copyright (C) 2005 - 2016 Open Source Matters. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>support@jomplace.com</authorEmail>
 	<authorUrl>www.jomplace.com</authorUrl>
-	<version>3.7.6</version>
+	<version>3.7.7</version>
 	<description>Plugin for index quizzes in smart search</description>
 
 	<files>

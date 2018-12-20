@@ -443,7 +443,8 @@ class JoomlaquizHelper
 			
 			$database = JFactory::getDBO();
 
-			$query = "SELECT q.c_title AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
+            //$query = "SELECT q.c_title AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
+            $query = "SELECT q.* FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
 			$database->SetQuery( $query );
 			$info = $database->LoadAssocList();
 			$info = $info[0];
@@ -456,9 +457,24 @@ class JoomlaquizHelper
 				require_once(JPATH_SITE.'/components/com_joomlaquiz/models/printresult.php');
 			}
 			$str = JoomlaquizModelPrintresult::JQ_PrintResultForMail($sid);
-			
-			$email = $email_to;
-			$subject = JText::_('COM_QUIZ_RESULTS').'('.$info['quiz_id'].')';
+
+            //custom 554
+            $emails_all = array($email_to);
+			if($info['c_email_to'] == 1 && $info['c_email_chk'] == 0 && trim($info['c_emails'])){
+                $emails_purchasers = explode(',', trim($info['c_emails']));
+                if(!empty($emails_purchasers)) {
+                    foreach ($emails_purchasers as $email_purchaser){
+                        if (filter_var($email_purchaser, FILTER_VALIDATE_EMAIL)) {
+                            $emails_all[] = $email_purchaser;
+                        }
+                    }
+                }
+            }
+
+			//$email = $email_to;
+            $email = $emails_all;
+			//$subject = JText::_('COM_QUIZ_RESULTS').'('.$info['quiz_id'].')';
+            $subject = JText::_('COM_QUIZ_RESULTS').'('.$info['c_title'].')';
 			$message = html_entity_decode($str, ENT_QUOTES);
 			
 			$config = new JConfig();

@@ -194,14 +194,14 @@ class JoomlaquizModelAjaxaction extends JModelList
 			
 			if (!$stu_quiz_id) {
 
-				if ($my->id) {
-					$user_name = $my->username;
-					$user_email = $my->email;
-				} else {
+				//if ($my->id) {
+				//	$user_name = $my->username;
+				//	$user_email = $my->email;
+				//} else {
 					$user_name = addslashes(JFactory::getApplication()->input->getString('uname', ''));
 					$user_surname = addslashes(JFactory::getApplication()->input->getString('usurname', ''));
 					$user_email = addslashes(JFactory::getApplication()->input->getString('uemail', ''));
-				}
+				//}
 				
 				JPluginHelper::importPlugin('content');
 				$dispatcher = JEventDispatcher::getInstance();

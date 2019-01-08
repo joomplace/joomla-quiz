@@ -627,7 +627,13 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_xml .= "\n\t\t</quizess>";
             $quiz_xml .= "\n\t\t</course_backup>";
 
-            $filename_xml = JPATH_SITE.'/tmp/export.xml';
+            if (JFolder::exists(JPATH_SITE.'/tmp') !== false) {
+                $filename_xml = JPATH_SITE.'/tmp/export.xml';
+            } else {
+                $tmp_dir = JFactory::getConfig()->get('tmp_path');
+                $filename_xml = $tmp_dir.'/export.xml';
+            }
+
             $handle = fopen($filename_xml, 'w+');
 
             // try to write in XML file our xml-contents.

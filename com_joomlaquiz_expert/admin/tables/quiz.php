@@ -114,7 +114,7 @@ class JoomlaquizTableQuiz extends JTable
 					$pool_cats = $input->get('pool_cats', array(), 'ARRAY');
 				    if(!empty($pool_cats)) {
                         foreach ($pool_cats as $hid_pcat) {
-                            $pnumber_hid_pcat = intval('pnumber_' . $hid_pcat);
+                            $pnumber_hid_pcat = 'pnumber_' . (int)$hid_pcat;
                             $input_pnumber_hid_pcat = $input->get($pnumber_hid_pcat, 0);
                             if ($input_pnumber_hid_pcat) {
                                 $query = "INSERT INTO #__quiz_pool(q_id,q_cat,q_count) VALUES('" . $this->c_id . "','" . $hid_pcat . "','" . $input_pnumber_hid_pcat . "')";

@@ -558,35 +558,50 @@ class com_joomlaquizInstallerScript
             $db->execute();
         }
 
-        //adding tags in quiz categories
-        $query = $db->getQuery(true);
-        $query->select($db->qn('type_id'))
-            ->from($db->qn('#__content_types'))
-            ->where($db->qn('type_alias') .'='. $db->q('com_joomlaquiz.category'));
-        $db->setQuery($query);
-        $type_id = $db->loadObjectList();
-        if(!(int)$type_id){
-            $query->clear();
-            $columns = array('type_title', 'type_alias', 'table', 'rules', 'field_mappings', 'router', 'content_history_options');
-            $values = array(
-                $db->q('Joomla Quiz Deluxe Category'),
-                $db->q('com_joomlaquiz.category'),
-                $db->q('{"special":{"dbtable":"prfx_categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}'),
-                '',
-                $db->q('{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", "core_urls":"null", "core_version":"version", "core_ordering":"null", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"parent_id", "core_xreference":"null", "asset_id":"asset_id"}, "special":{"parent_id":"parent_id","lft":"lft","rgt":"rgt","level":"level","path":"path","extension":"extension","note":"note"}}'),
-                '', //ToDo : add router in v.3.8
-                $db->q('{"formFile":"administrator\/components\/com_categories\/models\/forms\/category.xml", "hideFields":["asset_id","checked_out","checked_out_time","version","lft","rgt","level","path","extension"], "ignoreChanges":["modified_user_id", "modified_time", "checked_out", "checked_out_time", "version", "hits", "path"],"convertToInt":["publish_up", "publish_down"], "displayLookup":[{"sourceColumn":"created_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"access","targetTable":"#__viewlevels","targetColumn":"id","displayColumn":"title"},{"sourceColumn":"modified_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"parent_id","targetTable":"#__categories","targetColumn":"id","displayColumn":"title"}]}')
-            );
-            $query->insert($db->qn('#__content_types'))
-                ->columns($db->qn($columns))
-                ->values(implode(',', $values));
-            $db->setQuery($query)
-                ->execute();
-        }
-        //END - adding tags in quiz categories
-
 		$this->migrateCategories();
         $this->defaultCategoryCheck();
+        $this->addTagsInCategories();
 	}
+
+    /**
+     * adding tags in categories
+     */
+    private function addTagsInCategories()
+    {
+        $tags_categories = array(
+            'com_joomlaquiz' => 'Joomla Quiz Deluxe Quiz Category',
+            'com_joomlaquiz.questions' => 'Joomla Quiz Deluxe Question Category',
+            //'com_joomlaquiz.lpath' => 'Joomla Quiz Deluxe Learning Path Category'  //Expert version
+        );
+
+        $db	= JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        foreach ($tags_categories as $ext => $name) {
+            $query->clear();
+            $query->select($db->qn('type_id'))
+                ->from($db->qn('#__content_types'))
+                ->where($db->qn('type_alias') . '=' . $db->q($ext.'.category'));
+            $db->setQuery($query);
+            $type_id = $db->loadObjectList();
+            if (!(int)$type_id) {
+                $query->clear();
+                $columns = array('type_title', 'type_alias', 'table', 'rules', 'field_mappings', 'router', 'content_history_options');
+                $values = array(
+                    $db->q($name),
+                    $db->q($ext.'.category'),
+                    $db->q('{"special":{"dbtable":"prfx_categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}'),
+                    '',
+                    $db->q('{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", "core_urls":"null", "core_version":"version", "core_ordering":"null", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"parent_id", "core_xreference":"null", "asset_id":"asset_id"}, "special":{"parent_id":"parent_id","lft":"lft","rgt":"rgt","level":"level","path":"path","extension":"extension","note":"note"}}'),
+                    '', //ToDo : add router in v.3.8
+                    $db->q('{"formFile":"administrator\/components\/com_categories\/models\/forms\/category.xml", "hideFields":["asset_id","checked_out","checked_out_time","version","lft","rgt","level","path","extension"], "ignoreChanges":["modified_user_id", "modified_time", "checked_out", "checked_out_time", "version", "hits", "path"],"convertToInt":["publish_up", "publish_down"], "displayLookup":[{"sourceColumn":"created_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"access","targetTable":"#__viewlevels","targetColumn":"id","displayColumn":"title"},{"sourceColumn":"modified_user_id","targetTable":"#__users","targetColumn":"id","displayColumn":"name"},{"sourceColumn":"parent_id","targetTable":"#__categories","targetColumn":"id","displayColumn":"title"}]}')
+                );
+                $query->insert($db->qn('#__content_types'))
+                    ->columns($db->qn($columns))
+                    ->values(implode(',', $values));
+                $db->setQuery($query)->execute();
+            }
+        }
+    }
 	
 }

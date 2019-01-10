@@ -644,7 +644,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             fclose($handle);
 
             $uniq = strtotime(JFactory::getDate());
-            $dir = JPATH_SITE."/tmp/";
+            $dir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
             $backup_zip = $dir.'course_export_'.$uniq.'.zip';
             $pz = new PclZip($backup_zip);
             //----insert into database-----//
@@ -653,7 +653,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $database->setQuery($query);
             $database->execute();
             //add _lms_course_files_ catalog
-            $pz->create($filename_xml, PCLZIP_OPT_REMOVE_PATH, $filename_xml = JPATH_SITE.'/tmp/');
+            $pz->create($filename_xml, PCLZIP_OPT_REMOVE_PATH, $filename_xml = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/');
 
             if(!empty($all_images))
                 foreach($all_images as $quiz_image){
@@ -687,6 +687,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
     }
 	
 	function extractBackupArchive($archivename , $extractdir) {
+        //ToDo delete this path
 		$base_Dir = JPATH_SITE . '/tmp/';
 		
 		if (preg_match( '/.zip$/i', $archivename )) {
@@ -706,7 +707,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
 		
-		$baseDir = JPATH_SITE . '/tmp/';
+		$baseDir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
 		if (file_exists( $baseDir )) {
 			if (is_writable( $baseDir )) {
 				if (JFile::move( $filename, $baseDir . $userfile_name )) {
@@ -845,9 +846,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         //copy upload file to /tmp
         $this->uploadFile( $backupfile['tmp_name'], $backupfile['name'], $msg );
-
-        $extract_dir = JPATH_SITE."/tmp/course_backup_".uniqid(rand(), true)."/";
-        $archive = JPATH_SITE."/tmp/".$backupfile['name'];
+        $tmp_dir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
+        $extract_dir = $tmp_dir."course_backup_".uniqid(rand(), true)."/";
+        $archive = $tmp_dir.$backupfile['name'];
         //exstract archive in uniqfolder tmp
         $this->extractBackupArchive( $archive, $extract_dir);
 
@@ -1644,7 +1645,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         // delete temporary files
         //$this->deldir_my($extract_dir);
-        $this->delzip(JPATH_SITE.'/tmp/');
+        $this->delzip($tmp_dir);
 
         $msg2 = '';
         $count_import_total = 0;

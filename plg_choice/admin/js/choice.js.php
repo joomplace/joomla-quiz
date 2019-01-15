@@ -427,11 +427,11 @@
 			
 			if(quest_type != 10)
 			{
-				input_check.type = "checkbox";
+				input_check.type = "radio";
 				input_check.setAttribute('name','jq_checked[]');
-			
+			    var jq_checked = document.getElementsByName('jq_checked[]');
+                input_check.value = jq_checked[jq_checked.length-1]?Number(jq_checked[jq_checked.length-1].value)+1:0;
 				input_check.checked = false;
-
 			} else {
 				var random_number = Math.floor(Math.random() * 1000000);
 				var input_check_id = 'jq_checked_' + random_number;

@@ -31,7 +31,7 @@
 					<?php
 					if($q_om_type != 10) {
 					?>
-					<input <?php echo ($frow->c_right ? 'checked' : ''); ?> type="checkbox" name="jq_checked[]" value="<?php echo $ii?>" onClick="jq_UnselectCheckbox2(event);" />
+					<input <?php echo ($frow->c_right ? 'checked' : ''); ?> type="radio" name="jq_checked[]" value="<?php echo $ii?>" onClick="jq_UnselectCheckbox2(event);" />
 					<?php
 					} else {
 					$random = rand(100000, 1000000);
@@ -67,7 +67,7 @@
 					<?php
 						if($q_om_type != 10) {
 					?>
-					<input <?php echo ($frow->c_right ? 'checked' : ''); ?> type="checkbox" name="jq_checked[]" value="<?php echo $ii?>" onClick="jq_UnselectCheckbox2(event);" />
+					<input <?php echo ($frow->c_right ? 'checked' : ''); ?> type="radio" name="jq_checked[]" value="<?php echo $ii?>" onClick="jq_UnselectCheckbox2(event);" />
 					<?php
 					} else {
 					$random = rand(100000, 1000000);

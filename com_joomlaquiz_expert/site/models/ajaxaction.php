@@ -520,9 +520,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 			return $ret_str;
 		}
 
-		$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
-		$quest_ids = JFactory::getApplication()->input->get( 'quest_id', array(), '' );
-		$answers = JFactory::getApplication()->input->get( 'answer', array(), '' );
+		$stu_quiz_id = JFactory::getApplication()->input->getInt( 'stu_quiz_id', 0 );
+		$quest_ids = JFactory::getApplication()->input->get( 'quest_id', array(), 'ARRAY' );
+		$answers = JFactory::getApplication()->input->get( 'answer', array(), 'ARRAY' );
 		$user_unique_id = strval( JFactory::getApplication()->input->get( 'user_unique_id', '') );
 		
 		$query = "SELECT template_name FROM #__quiz_templates WHERE id = '".$quiz->c_skin."'";
@@ -755,12 +755,18 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$database->SetQuery( $query );
 					$q_data = $database->LoadObjectList();
 					$j = count($q_data)?(0):(-1);
+
+					if((int)$quiz->c_pagination == 1){              //All questions on one page
+					    if($quest_answer == count($stat_qchids)){
+                            $j = -1;
+                        }
+                    }
+
 				}
 				// -- my chain ==//
 										
 				if (isset($q_data[$j])) {
 					$ret_str .= "\t" . '<task>next</task>' . "\n";
-										
 					$ret_str .= $this->JQ_GetQuestData($q_data[$j], $quiz_id, $stu_quiz_id);
 				} else {
 					$ret_str .= "\t" . '<task>finish</task>' . "\n";
@@ -1004,7 +1010,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$quiz_id = intval( JFactory::getApplication()->input->get( 'quiz', 0 ) );
 		
 		$result_mode = 0;
-        $session = JFactory::getSession();
         $session_jq_result_mode = $session->get('jq_result_mode');
         $session_jq_result_mode_lid = $session->get('jq_result_mode_lid');
         $session_jq_result_mode_5 = $session->get('jq_result_mode_5');
@@ -1040,7 +1045,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
-        $session = JFactory::getSession();
         $session_share_id = $session->get('share_id');
         $share_id = intval(empty($session_share_id) ? 0 : $session_share_id);
 		$is_share = false;

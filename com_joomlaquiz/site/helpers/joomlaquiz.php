@@ -464,6 +464,7 @@ class JoomlaquizHelper
                 $emails_purchasers = explode(',', trim($info['c_emails']));
                 if(!empty($emails_purchasers)) {
                     foreach ($emails_purchasers as $email_purchaser){
+                        $email_purchaser = trim($email_purchaser);
                         if (filter_var($email_purchaser, FILTER_VALIDATE_EMAIL)) {
                             $emails_all[] = $email_purchaser;
                         }

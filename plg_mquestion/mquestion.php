@@ -622,7 +622,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
         $task = $jinput->getCmd('task', '');
 
 		$database = JFactory::getDBO();
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '".$jform['c_qform']."', `c_partial` = '".$jform['c_partial']."', `c_random` = '".$jform['c_random']."', `c_title_true` = '".$jinput->getBool('c_title_true')."', `c_title_false` = '".$jinput->getBool('c_title_false')."' WHERE c_id = '".$data['qid']."'");
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '".$jform['c_qform']."', `c_partial` = '".$jform['c_partial']."', `c_random` = '".$jform['c_random']."', `c_title_true` = '".$jinput->get('c_title_true')."', `c_title_false` = '".$jinput->get('c_title_false')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 		
 		$field_order = 0;

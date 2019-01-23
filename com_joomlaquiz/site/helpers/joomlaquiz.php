@@ -459,23 +459,32 @@ class JoomlaquizHelper
 			$str = JoomlaquizModelPrintresult::JQ_PrintResultForMail($sid);
 
             //custom 554
-            $emails_all = array($email_to);
-			if($info['c_email_to'] == 1 && $info['c_email_chk'] == 0 && trim($info['c_emails'])){
-                $emails_purchasers = explode(',', trim($info['c_emails']));
-                if(!empty($emails_purchasers)) {
-                    foreach ($emails_purchasers as $email_purchaser){
-                        $email_purchaser = trim($email_purchaser);
-                        if (filter_var($email_purchaser, FILTER_VALIDATE_EMAIL)) {
-                            $emails_all[] = $email_purchaser;
+            $emails_all = array();
+			if((int)$info['c_email_to'] == 1 && (int)$info['c_email_chk'] == 0 && trim($info['c_emails'])){
+                $user_email = JFactory::getUser()->email;
+                if (filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
+                    $emails_all[] = $user_email;
+                }
+                $emails_admins = explode(',', trim($info['c_emails']));
+                if(!empty($emails_admins)) {
+                    foreach ($emails_admins as $email_admin){
+                        $email_admin = trim($email_admin);
+                        if (filter_var($email_admin, FILTER_VALIDATE_EMAIL)) {
+                            $emails_all[] = $email_admin;
                         }
                     }
                 }
             }
+			if(!empty($emails_all)){
+                $email = $emails_all;
+                $subject = JText::_('COM_QUIZ_RESULTS').'('.$info['c_title'].')';
+            }
+			//end custom 554
+			else {
+                $email = $email_to;
+                $subject = JText::_('COM_QUIZ_RESULTS').'('.$info['quiz_id'].')';
+            }
 
-			//$email = $email_to;
-            $email = $emails_all;
-			//$subject = JText::_('COM_QUIZ_RESULTS').'('.$info['quiz_id'].')';
-            $subject = JText::_('COM_QUIZ_RESULTS').'('.$info['c_title'].')';
 			$message = html_entity_decode($str, ENT_QUOTES);
 			
 			$config = new JConfig();

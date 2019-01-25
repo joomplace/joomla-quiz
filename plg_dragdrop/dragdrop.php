@@ -274,10 +274,10 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 		
 		$ans_array = explode('```', $answer);
 		if (!empty($ddd2) && !empty($ddd)) {
-			$is_correct = 1; $rr_num = 0;
+            $data['is_correct'] = 1; $rr_num = 0;
 			foreach ($ddd2 as $right_row) {
 				if (md5(intval($right_row->c_id).'answer') != $ans_array[$rr_num]) {
-					$is_correct = 0; 
+                    $data['is_correct'] = 0;
 				}
 				$rr_num ++;
 			}

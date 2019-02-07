@@ -3586,6 +3586,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 
         $ret_str .= "\t" . '</feedback>' . "\n";
 
+        preg_match_all('~src\s*=\s*\"([^\/](?!\:\/\/)[^\"]*)\"~i', $ret_str, $preg);
+        if (!empty($preg[1])) {
+            foreach ($preg[1] as $p) {
+                if (strpos($p, "http") === false) {
+                    $search_arr = array('src ="' . $p, 'src= "' . $p, 'src = "' . $p, 'src="' . $p);
+                    $ret_str = str_replace($search_arr, 'src="/' . $p, $ret_str);
+                }
+            }
+        }
+
         return $ret_str;
 	}
 

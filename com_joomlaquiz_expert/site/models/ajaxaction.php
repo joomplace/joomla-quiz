@@ -520,16 +520,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 			return $ret_str;
 		}
 
-		$stu_quiz_id = intval( JFactory::getApplication()->input->get( 'stu_quiz_id', 0 ) );
-		$quest_ids = JFactory::getApplication()->input->get( 'quest_id', array(), '' );
-		$answers = JFactory::getApplication()->input->get( 'answer', array(), '' );
+		$stu_quiz_id = JFactory::getApplication()->input->getInt( 'stu_quiz_id', 0 );
+		$quest_ids = JFactory::getApplication()->input->get( 'quest_id', array(), 'ARRAY' );
+		$answers = JFactory::getApplication()->input->get( 'answer', array(), 'ARRAY' );
 		$user_unique_id = strval( JFactory::getApplication()->input->get( 'user_unique_id', '') );
 		
 		$query = "SELECT template_name FROM #__quiz_templates WHERE id = '".$quiz->c_skin."'";
 		$database->SetQuery( $query );
 		$cur_tmpl = $database->LoadResult();
 				
-		if ($cur_tmpl && ($quiz_id) && ($stu_quiz_id) && is_array($quest_ids) && count($quest_ids)) {
+		if ($cur_tmpl && ($quiz_id) && ($stu_quiz_id) && !empty($quest_ids)) {
 			//'time is up' check
 			if ($quiz->c_time_limit) {
                 $query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
@@ -698,7 +698,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$database->SetQuery($query);
 				$qch_ids = $database->LoadResult();
 				
-				if($qch_ids) {
+				if(!empty($qch_ids)) {
 					$query = "SELECT c_question_id FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
 					$database->SetQuery( $query );
 					$q_ids = $database->loadColumn();
@@ -706,85 +706,41 @@ class JoomlaquizModelAjaxaction extends JModelList
 					if (empty($q_ids)) {
 						$q_ids = array(0);
 					}
-													
-					$quest_answer = count($q_ids);
-					$quest_num = $quest_answer;
-					$qchids = explode('*',$qch_ids);
-                    $stat_qchids = $qchids;
-					$q_ids = array_diff($q_ids, $quest_ids);
-					$qchids = array_diff($qchids, $q_ids);
-					$qchids = array_values($qchids);
-					$q_total = count($qchids);
-					
-					$qnum = 0;
-					
-					if(!empty($qchids)){
-						$quest_pos = array_search(end($quest_ids), $qchids);
-						if(!isset($qchids[$quest_pos + 1]) && ($quest_pos+1) >= count($qchids) ){
-							$quest_pos = 0;
-						}else{
-							$quest_pos++;
-						}
 
-                        $cur_id = end($quest_ids);
-                        $key_cur_id = array_keys($stat_qchids, $cur_id)[0];
-                        if(isset($stat_qchids[$key_cur_id + 1])){
-                            $qnum = $stat_qchids[$key_cur_id + 1];
+					$qchids = explode('*',$qch_ids);// chain
+
+                    $q_not_answer = array_diff($qchids, $q_ids);
+                    if (!empty($q_not_answer)) {
+                        $q_data = array();
+                        $query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval(array_shift($q_not_answer))."' AND published = 1 ";
+                        $database->SetQuery( $query );
+                        $q_data = $database->LoadObjectList();
+                        $ret_str .= "\t" . '<task>next</task>' . "\n";
+                        $ret_str .= $this->JQ_GetQuestData($q_data[0], $quiz_id, $stu_quiz_id);
+                    } else {
+                        $ret_str .= "\t" . '<task>finish</task>' . "\n";
+                        if ($is_no_attempts == 1) {
+                            $ret_str = "\t" . '<task>finish</task>' . "\n";
                         }
-                        else {
-                            for ($i = $quest_pos; $i < $q_total; $i++) {
-//							    $database->setQuery("SELECT `c_attempts` FROM #__quiz_t_question WHERE `c_id` = '".$qchids[$i]."'");
-//							    $all_attempts = $database->loadResult();
 
-//							    $query = "SELECT `c_attempts` FROM #__quiz_r_student_question WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qchids[$i]."'";
-//							    $database->SetQuery( $query );
-//							    $c_attempts = $database->LoadResult();
-                                if (//$c_attempts < $all_attempts &&
-                                        $qchids[$i] != end($quest_ids)) {
-                                    $qnum = $qchids[$i];
-                                    break;
-                                }
-                            }
-                        }
-					}
+                        $query = "SELECT sum(c_score) FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
+                        $database->SetQuery( $query );
+                        $q_total_score = $database->LoadResult();
 
-					$z = 0;
-					$q_data = array();
-					
-					$query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($qnum)."' AND published = 1 ";
-					$database->SetQuery( $query );
-					$q_data = $database->LoadObjectList();
-					$j = count($q_data)?(0):(-1);
-				}
-				// -- my chain ==//
-										
-				if (isset($q_data[$j])) {
-					$ret_str .= "\t" . '<task>next</task>' . "\n";
-										
-					$ret_str .= $this->JQ_GetQuestData($q_data[$j], $quiz_id, $stu_quiz_id);
-				} else {
-					$ret_str .= "\t" . '<task>finish</task>' . "\n";
-					if ($is_no_attempts == 1) {
-						$ret_str = "\t" . '<task>finish</task>' . "\n";
-					}
-					
-					$query = "SELECT sum(c_score) FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
-					$database->SetQuery( $query );
-					$q_total_score = $database->LoadResult();
+                        $query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
+                        $database->SetQuery( $query );
+                        list($quiz_time2, $quiz_time1) = $database->loadRow();
 
-					$query = "SELECT c_date_time, NOW() FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
-					$database->SetQuery( $query );
-                    list($quiz_time2, $quiz_time1) = $database->loadRow();
+                        $q_time_total = strtotime($quiz_time1) - strtotime($quiz_time2);
 
-					$q_time_total = strtotime($quiz_time1) - strtotime($quiz_time2);
-
-					$query = "UPDATE #__quiz_r_student_quiz SET c_total_score = '".$q_total_score."', c_total_time = '".$q_time_total."' WHERE c_id = '".$stu_quiz_id."'";
-					$database->SetQuery($query);
-					$database->execute();
+                        $query = "UPDATE #__quiz_r_student_quiz SET c_total_score = '".$q_total_score."', c_total_time = '".$q_time_total."' WHERE c_id = '".$stu_quiz_id."'";
+                        $database->SetQuery($query);
+                        $database->execute();
+                    }
 				}
 			}
 		}
-		
+
 		return $ret_str;
 	}
 	
@@ -1004,7 +960,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$quiz_id = intval( JFactory::getApplication()->input->get( 'quiz', 0 ) );
 		
 		$result_mode = 0;
-        $session = JFactory::getSession();
         $session_jq_result_mode = $session->get('jq_result_mode');
         $session_jq_result_mode_lid = $session->get('jq_result_mode_lid');
         $session_jq_result_mode_5 = $session->get('jq_result_mode_5');
@@ -1040,7 +995,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$quiz = $quiz[0];
 		} else { return $ret_str; }
 
-        $session = JFactory::getSession();
         $session_share_id = $session->get('share_id');
         $share_id = intval(empty($session_share_id) ? 0 : $session_share_id);
 		$is_share = false;

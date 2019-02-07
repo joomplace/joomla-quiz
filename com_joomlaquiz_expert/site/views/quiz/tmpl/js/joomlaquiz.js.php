@@ -1796,8 +1796,8 @@ function jq_UpdateTaskDiv(task, skip_question) {
 	skip_question = (skip_question && skip_question != 0) ? skip_question : null;
 	var task_container = '';
 	jq_jQuery('.jq_quiz_task_container').show(1);
-	skip_type=0;
-	last_quest_warning_message = '<?php echo JText::_('COM_LAST_MESSAGE') ?>';
+	var skip_type=0;
+	var last_quest_warning_message = '<?php echo JText::_('COM_LAST_MESSAGE') ?>';
 	var is_last = false;
 	switch (task) {
 		case 'start':

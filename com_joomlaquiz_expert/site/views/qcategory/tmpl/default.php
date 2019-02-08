@@ -99,7 +99,7 @@ foreach($this->categories as $categ){
 	$lpaths = (isset($categ->lpaths)) ? $categ->lpaths : array();
 	$bought_quizzes = (isset($categ->bought_quizzes)) ? $categ->bought_quizzes : array();
 	?>
-	<div class="contentpane <?php echo (!$parent)?'child-cat':'parent-cat'; echo ' rel-level'.$cat->level; ?> joomlaquiz">
+	<div class="contentpane <?php echo ($cat->parent_id != 'root')?'child-cat':'parent-cat'; echo ' rel-level'.$cat->level; ?> joomlaquiz">
 		<?php if(JFactory::getApplication()->getParams()->get('show_page_heading',0)){ ?>
 			<h1 class="componentheading"><?php echo JFactory::getApplication()->getParams()->get('page_heading',JText::_('COM_QUIZ_CAREGORY').": ".$cat->title);?></h1>
 		<?php } ?>
@@ -185,5 +185,4 @@ foreach($this->categories as $categ){
 	</div>
 <?php 
 	}
-	$parent = false;
 }

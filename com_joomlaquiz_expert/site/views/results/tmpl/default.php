@@ -13,7 +13,6 @@ $tag = JFactory::getLanguage()->getTag();
 $lang = JFactory::getLanguage();
 $lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
 
-global $Itemid;
 $document 	= JFactory::getDocument();
 $document->addStyleSheet(JURI::root().'components/com_joomlaquiz/views/templates/tmpl/joomlaquiz_standard/css/jq_template.css');		
 

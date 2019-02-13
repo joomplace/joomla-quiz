@@ -36,6 +36,7 @@ $document->addStyleSheet(JURI::root().'administrator/components/com_joomlaquiz/a
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_joomlaquiz&view=quizzes&layout=import_quizzes"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_IMPORT_QUIZZES');?></a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_joomlaquiz&view=lpaths"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_SETUP_LPATH');?></a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_categories&extension=com_joomlaquiz.lpath"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_CATEGORIES_LPATH');?></a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="index.php?option=com_joomlaquiz&view=usercategories"><?php echo JText::_('COM_JOOMLAQUIZ_SUBMENU_USERCATEGORIES');?></a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

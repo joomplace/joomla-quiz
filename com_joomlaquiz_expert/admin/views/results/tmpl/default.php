@@ -90,6 +90,12 @@ $sortFields = $this->getSortFields();
                     <label for="category_id" class="element-invisible"><?php echo JText::_('COM_JOOMLAQUIZ_FILTER');?></label>
                     <?php echo $this->lists['passed'];?>
             </div>
+            <?php //custom586 start ?>
+            <div class="btn-group pull-right">
+                <label for="category_id" class="element-invisible"><?php echo JText::_('COM_JOOMLAQUIZ_FILTER');?></label>
+                <?php echo $this->lists['categories'];?>
+            </div>
+            <?php //custom586 end ?>
         <div class="clearfix"> </div>
         <table class="table table-striped" id="resultsList">
             <thead>
@@ -103,6 +109,9 @@ $sortFields = $this->getSortFields();
 					<th>
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_DATA_TIME', 'c_date_time', $listDirn, $listOrder); ?> 
 					</th>
+                    <th><?php //custom586 start ?>
+                        <?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_CATEGORY_NAME', 'category_title', $listDirn, $listOrder); ?>
+                    </th><?php //custom586 end ?>
 					<th>
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_USER', 'username', $listDirn, $listOrder); ?>
 					</th>
@@ -164,10 +173,16 @@ $sortFields = $this->getSortFields();
 				
 				if (!$item->username) $item->username = "User not found";
 				if (!$item->c_title) $item->c_title = "Quiz not found";
-				
+
 				$img_passed	= $item->c_passed ? 'tick.png' : 'publish_x.png';
 				$alt_passed = $item->c_passed;
-				
+
+                //custom586 start
+                if(!(int)$item->c_finished){
+                    $img_passed	= 'incomplete_icon_16.png';
+                }
+                //custom586 end
+
 				$canEdit	= $user->authorise('core.edit',	$extension.'.results.'.$item->c_id);
                 $canCheckin	= $user->authorise('core.admin', 'com_checkin');
                 $canChange	= $user->authorise('core.edit.state', $extension.'.results.'.$item->c_id) && $canCheckin;
@@ -191,6 +206,11 @@ $sortFields = $this->getSortFields();
                             <?php endif; ?>
                         </div>
 					</td>
+                    <td class="has-context"><?php //custom586 start ?>
+                        <div class="pull-left">
+                            <?php echo $item->category_title; ?>
+                        </div>
+                    </td><?php //custom586 end ?>
 					<td class="has-context">
                         <div class="pull-left">
                             <?php echo $item->username; ?>

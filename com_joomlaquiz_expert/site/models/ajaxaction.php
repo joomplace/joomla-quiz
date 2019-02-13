@@ -1465,9 +1465,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 					
 					if ($result_mode == 3) {
-						$footer_ar[7] = "<div class='jq_footer_link jq_backtoresults'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=results".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_JQ_BACK_TO_RESULTS')."</a></div>";
+                        $footer_ar[7] = "<div class='jq_footer_link jq_backtoresults'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=results".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_JQ_BACK_TO_RESULTS')."</a></div>";
+                        //custom586 start
+                        parse_str(parse_url($_SERVER["HTTP_REFERER"], PHP_URL_QUERY), $url_params);
+                        //if(!empty($url_params['task']) && $url_params['task'] == 'results.sturesult'){
+                            if(!empty($url_params['rc'])){
+                                $footer_ar[7] = "<div class='jq_footer_link jq_backtoresults'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=resultscategory&cat_id=".(int)$url_params['rc'].JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_JQ_BACK_TO_RESULTS')."</a></div>";
+                            }
+                        //}
+                        //custom586 end
 					}
-
 					
 					$this->user = JFactory::getUser();
 					$certAccessGranted = $this->user->authorise('core.certificate', 'com_joomlaquiz.quiz.'.$quiz->c_id);

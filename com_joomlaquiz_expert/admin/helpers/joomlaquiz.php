@@ -147,6 +147,13 @@ class JoomlaquizHelper
                 'index.php?option=com_joomlaquiz&view=lpaths',
                 $vName == 'lpaths'
             );
+            //custom586 start
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_USERCATEGORIES'),
+                'index.php?option=com_joomlaquiz&view=usercategories',
+                $vName == 'usercategories'
+            );
+            //custom586 end
 		}
 
 		public static function addQuizzesSubmenu($vName)
@@ -175,6 +182,13 @@ class JoomlaquizHelper
                 'index.php?option=com_categories&extension=com_joomlaquiz.lpath',
                 $vName == 'lpathscategories'
             );
+            //custom586 start
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_USERCATEGORIES'),
+                'index.php?option=com_joomlaquiz&view=usercategories',
+                $vName == 'usercategories'
+            );
+            //custom586 end
 		}
 		
 		public static function addQuestionsSubmenu($vName)
@@ -198,6 +212,13 @@ class JoomlaquizHelper
 				'index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions',
 				$vName == 'uploadquestions'
 			);
+            //custom586 start
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_USERCATEGORIES'),
+                'index.php?option=com_joomlaquiz&view=usercategories',
+                $vName == 'usercategories'
+            );
+            //custom586 end
 		}
 		
 		public static function addPaymentsSubmenu($vName)
@@ -247,6 +268,13 @@ class JoomlaquizHelper
 				'index.php?option=com_joomlaquiz&view=dynamic',
 				$vName == 'dynamic'
 			);
+            //custom586 start
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_USERCATEGORIES'),
+                'index.php?option=com_joomlaquiz&view=usercategories',
+                $vName == 'usercategories'
+            );
+            //custom586 end
 		}
 
 		public static function getVirtuemartCategories() {

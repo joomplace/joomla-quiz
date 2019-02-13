@@ -34,6 +34,11 @@ class JoomlaquizModelResults extends JModelList
 				'c_passing_score', 'q.c_passing_score',
 				'c_passed', 'sq.c_passed',
 				'c_total_time', 'sq.c_total_time',);
+
+            //custom586 start
+            $config['filter_fields'][] = 'category_title';
+            $config['filter_fields'][] = 'qcat.title';
+            //custom586 end
 		}
 		
 		parent::__construct($config);
@@ -54,6 +59,11 @@ class JoomlaquizModelResults extends JModelList
 		
 		$passed = $this->getUserStateFromRequest('results.filter.passed', 'filter_passed');
 		$this->setState('filter.passed', $passed);
+
+        //custom586 start
+        $category_id = $this->getUserStateFromRequest('results.filter.category_id', 'filter_category_id', 0);
+        $this->setState('filter.category_id', $category_id);
+        //custom586 end
 
 		if(JFactory::getApplication()->input->get('layout')=='stu_report' && 1==1){
 
@@ -85,7 +95,10 @@ class JoomlaquizModelResults extends JModelList
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.quiz_id');
 		$id	.= ':'.$this->getState('filter.user_id');
-		$id	.= ':'.$this->getState('filter.passed');		
+		$id	.= ':'.$this->getState('filter.passed');
+        //custom586 start
+        $id	.= ':'.$this->getState('filter.category_id');
+        //custom586 end
 		return parent::getStoreId($id);
 	}
 	
@@ -189,7 +202,18 @@ class JoomlaquizModelResults extends JModelList
 			if($passed > -1){
 				$query->where('sq.c_passed = '.$passed);
 			}
-			
+
+            //custom586 start
+            $query->select($db->qn('sq.c_finished'));
+            $query->select($db->qn('qcat.title', 'category_title'));
+            $query->join('LEFT', '`#__categories` AS `qcat` ON `qcat`.`id` = `q`.`c_category_id`');
+            $query->where($db->qn('qcat.published') .'='. $db->q(1));
+            $category_id = $this->getState('filter.category_id', 0);
+            if((int)$category_id){
+                $query->where($db->qn('qcat.id') .'='. $db->q((int)$category_id));
+            }
+            //custom586 end
+
 			$orderCol	= $this->state->get('list.ordering', 'sq.c_date_time');	
 			$orderDirn	= $this->state->get('list.direction', 'ASC');
 			$query->order($db->escape($orderCol.' '.$orderDirn));		
@@ -301,7 +325,22 @@ class JoomlaquizModelResults extends JModelList
 		$users[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_ANONYMOUS') );
 		$users = array_merge( $users, $database->loadObjectList() );
 		$lists['user'] = JHTML::_('select.genericlist', $users,'filter_user_id', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $app->getUserStateFromRequest('results.filter.user_id', 'filter_user_id') );
-		
+
+        //custom586 start
+        $query = $database->getQuery(true);
+        $query->select($database->qn('id', 'value'))
+            ->select($database->qn('title', 'text'))
+            ->from($database->qn('#__categories'))
+            ->where($database->qn('extension') .'='. $database->q('com_joomlaquiz'))
+            ->where($database->qn('published') .'='. $database->q(1));
+        $database->setQuery($query);
+        $categories = array();
+        $categories[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_SELECT_CATEGORY') );
+        $categories = array_merge( $categories, $database->loadObjectList() );
+        $categories = JHTML::_('select.genericlist', $categories,'filter_category_id', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $app->getUserStateFromRequest('results.filter.category_id', 'filter_category_id', 0) );
+        $lists['categories'] = $categories;
+        //custom586 end
+
 		return $lists;
 	}
 	
@@ -429,8 +468,8 @@ class JoomlaquizModelResults extends JModelList
 		$quiz_id = $app->getUserStateFromRequest('results.filter.quiz_id', 'filter_quiz_id');
 		$user_id = $app->getUserStateFromRequest('results.filter.user_id', 'filter_user_id');
 		$passed = $app->getUserStateFromRequest('results.filter.passed', 'filter_passed');
-		
-		$query = "SELECT sq.c_id, sq.c_passed, sq.params , sq.c_total_score, sq.c_total_time, sq.c_date_time, sq.c_passed, sq.user_email, sq.user_name,"
+
+        $query = "SELECT sq.c_id, sq.c_passed, sq.params , sq.c_total_score, sq.c_total_time, sq.c_date_time, sq.c_passed, sq.user_email, sq.user_name,"
         . "\n q.c_title, q.c_author, q.c_passing_score,sq.c_student_id, u.username, u.name, u.email, sq.c_max_score as c_full_score, q.c_pool, ch.q_chain "
 		. "\n FROM #__quiz_r_student_quiz as sq"
 		. "\n LEFT JOIN #__users as u ON sq.c_student_id = u.id"
@@ -442,6 +481,35 @@ class JoomlaquizModelResults extends JModelList
 		. "\n AND sq.c_id IN (".implode(",", $cid).")"
 		. "\n ORDER BY sq.c_date_time DESC"
 		;
+
+        //custom586 start
+        /*
+        $join_categories = "";
+        $where_categories = "";
+        $category_id = $app->getUserStateFromRequest('results.filter.category_id', 'filter_category_id', 0);
+        if((int)$category_id){
+            $join_categories = "\n LEFT JOIN `#__categories` AS `qcat` ON `qcat`.`id` = `q`.`c_category_id` ";
+            $where_categories = "\n AND `qcat`.`id`='". (int)$category_id ."' AND `qcat`.`published`='1' ";
+        }
+
+		$query = "SELECT sq.c_id, sq.c_passed, sq.params , sq.c_total_score, sq.c_total_time, sq.c_date_time, sq.c_passed, sq.user_email, sq.user_name,"
+        . "\n q.c_title, q.c_author, q.c_passing_score,sq.c_student_id, u.username, u.name, u.email, sq.c_max_score as c_full_score, q.c_pool, ch.q_chain "
+		. "\n FROM #__quiz_r_student_quiz as sq"
+		. "\n LEFT JOIN #__users as u ON sq.c_student_id = u.id"
+		. "\n LEFT JOIN `#__quiz_q_chain` AS ch ON ch.s_unique_id = sq.unique_id "
+		. "\n LEFT JOIN #__quiz_t_quiz as q ON sq.c_quiz_id = q.c_id "
+        . $join_categories
+        . " WHERE 1=1 "
+		. ( $quiz_id ? "\n AND sq.c_quiz_id = $quiz_id" : '' )
+		. ( $user_id ? "\n AND c_student_id = $user_id" : '' )
+		. ( $passed > -1 ? "\n AND sq.c_passed = $passed " : '' )
+		. "\n AND sq.c_id IN (".implode(",", $cid).")"
+        . $where_categories
+        . "\n ORDER BY sq.c_date_time DESC"
+		;
+        */
+        //custom586 end
+
 		$database->SetQuery( $query );
 		$csv_rows = $database->LoadObjectList();
 		

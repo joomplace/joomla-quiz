@@ -655,3 +655,13 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_text` (
   PRIMARY KEY (`c_id`),
   KEY `c_blank_id` (`c_blank_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `#__quiz_usercategories` (
+  `id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) unsigned NOT NULL DEFAULT '0',
+  `category_id` INT(11) unsigned NOT NULL DEFAULT '0',
+  `notified` INT(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_usercat` (`user_id`,`category_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

@@ -33,7 +33,7 @@ class JoomlaquizControllerUsercategories extends JControllerForm
         {
             $this->setError(\JText::_('COM_JOOMLAQUIZ_USERCATEGORIES_ERROR_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(\JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(), false));
+            $this->setRedirect(\JRoute::_('index.php?option=com_joomlaquiz&view=usercategories' . $this->getRedirectToListAppend(), false));
 		    return false;
         }
 
@@ -41,7 +41,7 @@ class JoomlaquizControllerUsercategories extends JControllerForm
         {
             $this->setError(\JText::_('COM_JOOMLAQUIZ_USERCATEGORIES_ERROR_NOT_DATA'));
             $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(\JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(), false));
+            $this->setRedirect(\JRoute::_('index.php?option=com_joomlaquiz&view=usercategories' . $this->getRedirectToListAppend(), false));
             return false;
         }
 
@@ -78,7 +78,7 @@ class JoomlaquizControllerUsercategories extends JControllerForm
         {
             $this->setError(\JText::_('COM_JOOMLAQUIZ_USERCATEGORIES_ERROR_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(\JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(), false));
+            $this->setRedirect(\JRoute::_('index.php?option=com_joomlaquiz&view=usercategories' . $this->getRedirectToListAppend(), false));
             return false;
         }
 
@@ -86,7 +86,7 @@ class JoomlaquizControllerUsercategories extends JControllerForm
         {
             $this->setError(\JText::_('COM_JOOMLAQUIZ_USERCATEGORIES_ERROR_NOT_DATA'));
             $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(\JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $this->getRedirectToListAppend(), false));
+            $this->setRedirect(\JRoute::_('index.php?option=com_joomlaquiz&view=usercategories' . $this->getRedirectToListAppend(), false));
             return false;
         }
 

@@ -39,7 +39,7 @@ if(!$my->id && !$is_share) {
 } elseif(empty($rows)) {
 	?>
 	<div class="contentpane joomlaquiz">
-		<h1 class="componentheading"><?php echo JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_TITLE'); ?></h1>
+		<h1 class="componentheading"><?php echo JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_TITLE') . $this->categoryname; ?></h1>
 		<br/>
 		<?php
 			echo JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_NO_RESULTS');

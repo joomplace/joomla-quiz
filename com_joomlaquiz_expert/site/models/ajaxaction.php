@@ -2153,11 +2153,10 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($quest_id)."'";
 				$database->SetQuery( $query );
 				$question = $database->LoadObjectList();
-		
-				$jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message) ? htmlspecialchars($question[0]->c_wrong_message) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
-				$jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_CORRECT');
-				
-				$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] =(($question[0]->c_type==8) && ($question[0]->c_right_message)) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_ACCEPTED');				
+
+                $jq_language['COM_QUIZ_ANSWER_INCORRECT'] = ($question[0]->c_wrong_message || $question[0]->c_detailed_feedback) ? htmlspecialchars($question[0]->c_wrong_message . $question[0]->c_detailed_feedback) : JText::_('COM_QUIZ_ANSWER_INCORRECT');
+                $jq_language['COM_QUIZ_ANSWER_CORRECT'] = ($question[0]->c_right_message) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_CORRECT');
+				$jq_language['COM_QUIZ_ANSWER_ACCEPTED'] =(($question[0]->c_type==8) && ($question[0]->c_right_message)) ? htmlspecialchars($question[0]->c_right_message) : JText::_('COM_QUIZ_ANSWER_ACCEPTED');
 				
 				if ($cur_tmpl) {				
 					if (!empty($q_data)) {

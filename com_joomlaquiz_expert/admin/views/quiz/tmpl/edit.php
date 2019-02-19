@@ -602,7 +602,7 @@ window.onload = function (){
                     <?php echo $this->form->getLabel('pool_rand'); ?>
                 </div>
 				<div class="controls">
-					<input type="text" size="10" value="<?php echo $this->q_count;?>" id="jform_pool_rand" name="jform[pool_rand]" class="" aria-invalid="false">
+					<input type="text" size="10" value="<?php echo $this->item->c_pool==1 ? $this->q_count : '';?>" id="jform_pool_rand" name="jform[pool_rand]" class="" aria-invalid="false">
 				</div>
 			</div>
 			<div class="control-group">

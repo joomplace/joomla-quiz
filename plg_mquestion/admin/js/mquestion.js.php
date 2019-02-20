@@ -322,7 +322,7 @@ if ($wysiwyg) { ?>
 			}
 			
 			cell3.setAttribute('valign','top');
-			cell3.innerHTML = '<div style="float:right;padding-right:15px;"><a href="index.php?option=com_joomlaquiz&task=edit_field&id='+number+'&tmpl=component&KeepThis=true&TB_iframe=true&height=370&width=700" title="Edit option" onclick="javascript: tb_start(this);return false;"  class="thickbox">Edit</a></div>'
+			cell3.innerHTML = '<div style="float:right;padding-right:15px;"><a href="index.php?option=com_joomlaquiz&task=question.edit_field&id='+number+'&tmpl=component&KeepThis=true&TB_iframe=true&height=370&width=700" title="Edit option" onclick="javascript: tb_start(this);return false;"  class="thickbox">Edit</a></div>'
 			+'<div id="test_'+number+'">'+new_element_txt+'</div>';
 			
 			cell3.appendChild(ta_hidden);
@@ -527,5 +527,4 @@ if ($wysiwyg) { ?>
 		function jq_SetHidden(random_number, value) {
 			document.getElementById(random_number).value = value;
 		}
-
 </script>

@@ -31,7 +31,26 @@ class JoomlaquizViewQuiz extends JViewLegacy
             JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 			return false;
 		}
-		
+
+        if(!$this->is_preview)
+        {
+            $session = JFactory::getSession();
+            if(@$this->quiz_params->rel_id && $this->quiz_params->rel_data && $this->quiz_params->rel_data->c_passed
+                    && $this->quiz_params->rel_data->c_finished && !$this->quiz_params->force)
+            {
+                $session->set('jq_result_mode', array(@$this->quiz_params->rel_id, @$this->quiz_params->rel_data->c_quiz_id, @$this->quiz_params->package_id));
+            }
+            else if(@$this->quiz_params->lid && isset($this->quiz_params->lid_data) && $this->quiz_params->lid_data->c_passed
+                    && $this->quiz_params->lid_data->c_finished  && !$this->quiz_params->force)
+            {
+                $session->set('jq_result_mode_lid', array(@$this->quiz_params->lid, @$this->quiz_params->lid_data->c_quiz_id));
+            }
+            else if(isset($quiz->result_data))
+            {
+                $session->set('jq_result_mode_5', array($this->quiz_params->result_data, $this->quiz_params->result_data->c_quiz_id));
+            }
+        }
+
 		if(!$this->quiz_params->error){
 			// Checking access and displaying.
 			$this->user = JFactory::getUser();

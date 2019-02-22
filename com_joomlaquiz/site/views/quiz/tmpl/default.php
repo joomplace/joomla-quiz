@@ -205,10 +205,36 @@ if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_im
 		if ($quiz->c_ismetatitle && $quiz->c_metatitle) {
 			$document->setTitle($quiz->c_metatitle);
 		}
+
+        if($quiz->c_share_buttons){
+            $Itemid = JFactory::getApplication()->input->getInt('Itemid', 0);
+            $getItemid = $Itemid ? '&Itemid='.$Itemid : '';
+            $url = JRoute::_(JUri::root().'index.php?option=com_joomlaquiz&view=quiz&quiz_id='.$quiz->c_id.$getItemid);
+
+            $document->setMetaData('og:type', null);
+            $document->setMetaData('og:type', 'website', 'property');
+
+            if ($quiz->c_ismetatitle && $quiz->c_metatitle) {
+                $document->setMetaData('og:title', null);
+                $document->setMetaData('og:title', $quiz->c_metatitle, 'property');
+            }
+
+            if ($quiz->c_ismetadescr && $quiz->c_metadescr) {
+                $document->setMetaData('og:description', null);
+                $document->setMetaData('og:description', $quiz->c_metadescr, 'property');
+            }
+
+            $document->setMetaData('og:url', null);
+            $document->setMetaData('og:url', $url, 'property');
+
+            if($quiz->c_image){
+                $document->setMetaData('og:image', null);
+                $document->setMetaData('og:image', JUri::root().$quiz->c_image, 'property');
+            }
+        }
 	}
 	
 	echo JoomlaquizHelper::poweredByHTML();
 }
 
 ?>
-

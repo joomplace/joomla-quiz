@@ -995,7 +995,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$share_id = $database->loadResult();
 					}
 
-					$share_link = urlencode(JRoute::_('index.php?option=com_joomlaquiz&view=quiz&id='.$quiz_id.JoomlaquizHelper::JQ_GetItemId()));
+					$share_link = urlencode(JRoute::_(JURI::root().'index.php?option=com_joomlaquiz&view=quiz&quiz_id='.$quiz_id.JoomlaquizHelper::JQ_GetItemId()));
 				}
 			}
 
@@ -1234,8 +1234,14 @@ class JoomlaquizModelAjaxaction extends JModelList
 					if((!$is_share || $false_share) && $quiz->c_share_buttons){
 						$sshare_message = (JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id) && JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)!='COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)?(JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE_'.$quiz->c_id)):(JText::_('COM_QUIZ_SOCIAL_SCORE_SHARING_MESSAGE'));
 						$user_score_replaced = sprintf($sshare_message, number_format($user_score, 2, '.', ' '), number_format($max_score, 2, '.', ' ')).$quiz->c_title;
-						$social_buttons = '<div id="jq_share"><ul><li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer.php?u='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"></div></li><li><div class="jq_twitter" onclick="window.open(\'http://twitter.com/share?text='.$user_score_replaced.'&url='.$share_link.'\', \'_blank\');"><!--x--></div></li><li><div class="jq_linkedin" onclick="window.open(\'http://www.linkedin.com/shareArticle?mini=true&url='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"><!--x--></div></li></ul></div>';
-						
+
+						$social_buttons = '<div id="jq_share"><ul>';
+                        $social_buttons .= '<li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer.php?u='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"></div></li>';
+                        $social_buttons .= '<li><div class="jq_twitter" onclick="window.open(\'http://twitter.com/share?text='.$user_score_replaced.'&url='.$share_link.'\', \'_blank\');"><!--x--></div></li>';
+                        //$social_buttons .= '<li><div class="jq_linkedin" onclick="window.open(\'http://www.linkedin.com/shareArticle?mini=true&url='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"><!--x--></div>';
+						$social_buttons .= '<li><div class="jq_linkedin"<a class="linkedIn" href="javascript:void(0)" onclick="window.open( \'https://www.linkedin.com/sharing/share-offsite/?mini=true&amp;url='.$share_link.'\', \'sharer\', \'toolbar=0, status=0, width=626, height=436\');return false;" title="Linkedin" ></div></li>';
+                        $social_buttons .= '</ul></div>';
+
 						$results_txt = str_replace('<!-- SOCIAL BUTTONS -->', $social_buttons, $results_txt);
 					}
 					

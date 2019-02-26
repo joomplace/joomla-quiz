@@ -139,7 +139,13 @@ class JoomlaquizModelResults extends JModelList
     * @return      string  An SQL query
     */
     protected function getListQuery()
-    {        	
+    {
+        //custom586 start
+        if($this->getState('filter.passed') == -2){
+            return '';
+        }
+        //custom586 end
+
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);		
 		$layout = JFactory::getApplication()->input->get('layout');
@@ -301,6 +307,15 @@ class JoomlaquizModelResults extends JModelList
 		. "\n WHERE q.c_id = sq.c_quiz_id"
 		. "\n ORDER BY q.c_title"
 		;
+        //custom586 start
+        if($this->getState('filter.passed') == -2){
+            $query = "SELECT distinct q.c_id AS value, q.c_title AS text"
+                . "\n FROM #__quiz_t_quiz as q, #__quiz_usercategories as quc"
+                . "\n WHERE q.c_category_id=quc.category_id"
+                . "\n ORDER BY q.c_title"
+            ;
+        }
+        //custom586 end
 		$database->setQuery( $query );
 		$quizzes = array();
 		$quizzes[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_SELECT_QUIZ') );
@@ -312,6 +327,9 @@ class JoomlaquizModelResults extends JModelList
 		$opt[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_ANY_RESULT') );
 		$opt[] = JHTML::_('select.option', '1', JText::_('COM_JOOMLAQUIZ_PASSED') );
 		$opt[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_FAILED2') );
+        //custom586 start
+        $opt[] = JHTML::_('select.option', '-2', JText::_('COM_JOOMLAQUIZ_RESULTS_FILTERPASSED_OPTION_NOTSTARTED') );
+        //custom586 end
 		$lists['passed'] = JHTML::_('select.genericlist', $opt,'filter_passed', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $app->getUserStateFromRequest('results.filter.passed', 'filter_passed') );
 	
 		$query = "SELECT distinct q.id AS value, q.username AS text"
@@ -319,6 +337,15 @@ class JoomlaquizModelResults extends JModelList
 		. "\n WHERE q.id = sq.c_student_id"
 		. "\n ORDER BY q.username"
 		;
+        //custom586 start
+        if($this->getState('filter.passed') == -2){
+            $query = "SELECT distinct q.id AS value, q.name AS text"
+                . "\n FROM #__users as q"
+                . "\n WHERE q.id IN (SELECT DISTINCT `user_id` FROM `#__quiz_usercategories`)"
+                . "\n ORDER BY q.name"
+            ;
+        }
+        //custom586 end
 		$database->setQuery( $query );
 		$users = array();
 		$users[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_SELECT_USER') );
@@ -590,5 +617,86 @@ class JoomlaquizModelResults extends JModelList
             return false;
         }
     }
+
+    //custom586 start
+    public function getListNotStarted()
+    {
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select($db->qn('quc.user_id', 'user_id'))
+            ->select($db->qn('sq.c_id', 'quiz_id'))
+            ->select($db->qn('sq.c_title'))
+            ->select($db->qn('sq.c_full_score'))
+            ->select($db->qn('u.name', 'user_name'))
+            ->select($db->qn('u.email', 'user_email'))
+            ->select($db->qn('qcat.title', 'category_title'))
+            ->from($db->qn('#__quiz_usercategories', 'quc'))
+            ->leftJoin($db->qn('#__quiz_t_quiz', 'sq') .' ON '. $db->qn('sq.c_category_id') . '=' . $db->qn('quc.category_id'))
+            ->leftJoin($db->qn('#__users', 'u') .' ON '. $db->qn('u.id') . '=' . $db->qn('quc.user_id'))
+            ->leftJoin($db->qn('#__categories', 'qcat') .' ON '. $db->qn('qcat.id') . '=' . $db->qn('sq.c_category_id'))
+            ->where($db->qn('sq.published') . '=' . $db->q(1))
+            ->where($db->qn('qcat.published') . '=' . $db->q(1));
+
+        // Filter by search in title.
+        $search = $this->getState('filter.search');
+        if (!empty($search))
+        {
+            if (stripos($search, 'id:') === 0)
+            {
+                $query->where('sq.c_id = '.(int) substr($search, 3));
+            }
+            else {
+                $search = $db->q('%'.$db->escape($search, true).'%');
+                $query->where('(sq.c_title LIKE '.$search.')');
+
+            }
+        }
+
+        $quiz_id = $this->getState('filter.quiz_id');
+        if($quiz_id){
+            $query->where('sq.c_id = '.$quiz_id);
+        }
+
+        $user_id = $this->getState('filter.user_id');
+        if($user_id){
+            $query->where('quc.user_id = '.$user_id);
+        }
+
+        $category_id = $this->getState('filter.category_id', 0);
+        if((int)$category_id){
+            $query->where($db->qn('quc.category_id') .'='. $db->q((int)$category_id));
+        }
+
+        $orderCol	= $this->state->get('list.ordering', 'sq.c_id');
+        $orderDirn	= $this->state->get('list.direction', 'ASC');
+        $query->order($db->escape($orderCol.' '.$orderDirn));
+
+        $db->setQuery($query);
+        $user_quizzes = $db->loadObjectList();
+
+        $not_started = array();
+        if(empty($user_quizzes)){
+            return $not_started;
+        }
+
+        for($i=0; $i<count($user_quizzes); $i++)
+        {
+            $query->clear();
+            $query->select($db->qn('c_id'))
+                ->from($db->qn('#__quiz_r_student_quiz'))
+                ->where($db->qn('c_quiz_id') .'='. $db->q($user_quizzes[$i]->quiz_id))
+                ->where($db->qn('c_student_id') .'='. $db->q($user_quizzes[$i]->user_id));
+            $db->setQuery($query);
+            if(!$db->loadResult()){
+                $not_started[] = $user_quizzes[$i];
+            }
+        }
+
+        return $not_started;
+    }
+    //custom586 end
 
 }

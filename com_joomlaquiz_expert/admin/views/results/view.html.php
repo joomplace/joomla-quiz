@@ -27,6 +27,7 @@ class JoomlaquizViewResults extends JViewLegacy
 		$layout = $this->getLayout();
         $this->messageTrigger = $this->get('CurrDate');
 		$this->addTemplatePath(JPATH_BASE.'/components/com_joomlaquiz/helpers/html');
+
 		if($layout == 'stu_report'){
 			$cid = JFactory::getApplication()->input->get('cid');
 			$this->cid = $cid;
@@ -34,7 +35,13 @@ class JoomlaquizViewResults extends JViewLegacy
 			$submenu = 'stu_report';
 			JoomlaquizHelper::showTitle($submenu);			
 			$this->addStureportToolBar();			
-			$this->items = $this->get('Items');						$model = $this->getModel();			foreach($this->items as &$row){				$row->c_point += $model->getItemSum($row);			}									$pagination = new JPagination($this->get('Total'), $this->get('Start'), $model->getState('list.limit'),'stu_');			//$pagination = $this->get('Pagination');			
+			$this->items = $this->get('Items');
+			$model = $this->getModel();
+			foreach($this->items as &$row){
+			    $row->c_point += $model->getItemSum($row);
+			}
+			$pagination = new JPagination($this->get('Total'), $this->get('Start'), $model->getState('list.limit'),'stu_');
+			//$pagination = $this->get('Pagination');
 			//$this->items = $model->getReportItems($cid, $pagination);
 			
 			if (!empty($errors = $this->get('Errors')))
@@ -52,18 +59,36 @@ class JoomlaquizViewResults extends JViewLegacy
 			JoomlaquizHelper::addReportsSubmenu('results');
 			$this->sidebar = JHtmlSidebar::render();
 			$this->addToolBar();
-							 
-			$items 		= $this->get('Items');
-			$pagination = $this->get('Pagination');
-			$state		= $this->get('State');
+
+            //custom586 start
+            $state	= $this->get('State');
+
+            if($state->get('filter.passed') == -2){
+                $items = $this->get('ListNotStarted');
+                $total_notstarted = count($items);
+                $model = $this->getModel();
+                $start = $model->getState('list.start');
+                $limit = $model->getState('list.limit');
+                $items = array_slice($items, $start, $limit);
+                $tpl = 'notstarted';
+                $pagination = new JPagination($total_notstarted, $start, $limit);
+            } else {
+                $items = $this->get('Items');
+                $pagination = $this->get('Pagination');
+            }
+            //custom586 end
+
 			$lists		= $this->get('Lists');
-			
-			if (!empty($errors = $this->get('Errors')))
+
+            //custom586 start
+            $errors = $this->get('Errors');
+			if (!empty($errors) && !empty($errors[0]))
 			{
                 JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 				return false;
 			}
-			
+            //custom586 end
+
 			$this->items = $items;
 			$this->pagination = $pagination;
 			$this->state = $state;

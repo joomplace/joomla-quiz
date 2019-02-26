@@ -9,8 +9,14 @@
 defined('_JEXEC') or die();
 
 class JoomlaquizModelResultscategory extends JModelList
-{	
-	public function getResults()
+{
+    protected function populateState($ordering = null, $direction = null)
+    {
+        $app = JFactory::getApplication();
+        $this->setState('filter.startstate', $app->getUserStateFromRequest('filter.startstate', 'filter_start_state', 0, 'int'));
+    }
+
+    public function getResults()
     {
         $user = JFactory::getUser();
         // Only for logged users
@@ -341,5 +347,77 @@ class JoomlaquizModelResultscategory extends JModelList
             $category_name = $db->loadResult();
         }
 	    return $category_name;
+    }
+
+    public function getNotStarted()
+    {
+        $user = JFactory::getUser();
+        if(!$user->id) {
+            return array();
+        }
+
+        $app = JFactory::getApplication();
+        $limitstart	= $app->input->getInt('limitstart', 0);
+        $limit = JFactory::getConfig()->get('list_limit', 20);
+        $category_id = $app->input->getInt('cat_id', 0);
+
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        $query->select($db->qn('quc.user_id', 'user_id'))
+            ->select($db->qn('q.c_id', 'quiz_id'))
+            ->select($db->qn('q.c_title'))
+            ->select($db->qn('u.name', 'user_name'))
+            ->select($db->qn('u.email', 'user_email'))
+            ->select($db->qn('qcat.title', 'category_title'))
+            ->from($db->qn('#__quiz_usercategories', 'quc'))
+            ->leftJoin($db->qn('#__quiz_t_quiz', 'q') .' ON '. $db->qn('q.c_category_id') . '=' . $db->qn('quc.category_id'))
+            ->leftJoin($db->qn('#__users', 'u') .' ON '. $db->qn('u.id') . '=' . $db->qn('quc.user_id'))
+            ->leftJoin($db->qn('#__categories', 'qcat') .' ON '. $db->qn('qcat.id') . '=' . $db->qn('q.c_category_id'))
+            ->where($db->qn('quc.category_id') .'='. $db->q((int)$category_id))
+            ->where($db->qn('q.published') . '=' . $db->q(1))
+            ->where($db->qn('qcat.published') . '=' . $db->q(1));
+
+        if(!$user->authorise('core.managefe','com_joomlaquiz')){
+            $query->where($db->qn('quc.user_id') .'='. $db->q($user->id));
+        }
+
+        $db->setQuery($query);
+        $user_quizzes = $db->loadObjectList();
+
+        // checking access to results
+        if(!empty($user_quizzes)) {
+            for($i=0; $i<count($user_quizzes); $i++) {
+                if (!$user->authorise('core.result', 'com_joomlaquiz.quiz.' . $user_quizzes[$i]->quiz_id)) {
+                    unset($user_quizzes[$i]);
+                }
+            }
+            $user_quizzes = array_values($user_quizzes);
+        }
+
+        $not_started = array();
+        if(empty($user_quizzes)){
+            return $not_started;
+        }
+
+        for($i=0; $i<count($user_quizzes); $i++)
+        {
+            $query->clear();
+            $query->select($db->qn('c_id'))
+                ->from($db->qn('#__quiz_r_student_quiz'))
+                ->where($db->qn('c_quiz_id') .'='. $db->q($user_quizzes[$i]->quiz_id))
+                ->where($db->qn('c_student_id') .'='. $db->q($user_quizzes[$i]->user_id));
+            $db->setQuery($query);
+            if(!$db->loadResult()){
+                $not_started[] = $user_quizzes[$i];
+            }
+        }
+
+        jimport('joomla.html.pagination');
+        $pagination = new JPagination(count($not_started), $limitstart, $limit);
+
+        $not_started = array_slice($not_started, $limitstart, $limit);
+
+        return array($not_started, $pagination);
     }
 }

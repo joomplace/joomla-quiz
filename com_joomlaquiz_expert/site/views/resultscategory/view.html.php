@@ -10,11 +10,20 @@
 
 class JoomlaquizViewResultscategory extends JViewLegacy
 {
-    public function display($tpl = null) 
+    protected $state;
+
+    public function display($tpl = null)
     {
-		$this->results = $this->get('Results');
+        $this->state = $this->get('State');
         $this->categoryname = $this->get('Categoryname');
-		// Check for errors.
+
+        if($this->state->get('filter.startstate') == -1){
+            $this->results = $this->get('NotStarted');
+            $tpl = 'notstarted';
+        } else {
+            $this->results = $this->get('Results');
+        }
+
 		if (!empty($errors = $this->get('Errors'))) {
             JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 			return false;

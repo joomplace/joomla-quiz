@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 
 JHtml::_('script', 'system/core.js', true, true);
 
+$app= JFactory::getApplication();
 $my = JFactory::getUser();
 $isAdim = $my->authorise('core.managefe','com_joomlaquiz') ? 1 : 0;
  
@@ -57,12 +58,19 @@ if(!$my->id && !$is_share) {
 <div class="contentpane">
 	<h1 class="jq_results_title"><?php echo JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_TITLE') . $this->categoryname; ?></h1>
 	<br />
-	<div class="jq_results_descr">
+    <div class="jq_results_descr">
 		<strong><?php echo JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_RESULTS_DESCR'); ?></strong>
 	</div>
 	<br />
     <div class="jq_results_container">
-        <form name="adminForm" id="adminForm" action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=resultscategory'.JoomlaquizHelper::JQ_GetItemId());?>" method="post">
+        <form name="adminForm" id="adminForm" action="<?php echo htmlspecialchars(JUri::getInstance()->toString()); ?>" method="post">
+            <?php
+            $javascript = 'onchange="document.adminForm.submit();"';
+            $filter_start_state = array();
+            $filter_start_state[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_OPTION_STARTED') );
+            $filter_start_state[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_OPTION_NOTSTARTED') );
+            echo JHTML::_('select.genericlist', $filter_start_state, 'filter_start_state', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $this->escape($this->state->get('filter.startstate', 0)) );
+            ?>
             <table class="jq_results_container_table table-striped" cellpadding="10" cellspacing="10" border="0" width="100%">
                 <tr>
                     <td class="sectiontableheader">#</td>

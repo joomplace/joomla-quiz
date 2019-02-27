@@ -27,6 +27,13 @@ $pagination = (isset($this->results[1])) ? $this->results[1] : null;
 $category_id = JFactory::getApplication()->input->getInt('cat_id', 0);
 $return_category = $category_id ? '&rc='.$category_id : '';
 
+//filter
+$javascript = 'onchange="document.adminForm.submit();"';
+$filter_start_state = array();
+$filter_start_state[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_OPTION_STARTED') );
+$filter_start_state[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_OPTION_NOTSTARTED') );
+$filter_start_state_output = JHTML::_('select.genericlist', $filter_start_state, 'filter_start_state', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $this->escape($this->state->get('filter.startstate', 0)) );
+
 $database = JFactory::getDBO();
 $share_id = JFactory::getApplication()->input->get('share_id', '');
 $is_share = false;
@@ -42,10 +49,14 @@ if(!$my->id && !$is_share) {
 	<div class="contentpane joomlaquiz">
 		<h1 class="componentheading"><?php echo JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_TITLE') . $this->categoryname; ?></h1>
 		<br/>
-		<?php
-			echo JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_NO_RESULTS');
-			echo JoomlaquizHelper::poweredByHTML();
-		?>
+        <form name="adminForm" id="adminForm" action="<?php echo htmlspecialchars(JUri::getInstance()->toString()); ?>" method="post">
+            <?php echo $filter_start_state_output; ?>
+            <input type="hidden" name="option" value="com_joomlaquiz" />
+            <input type="hidden" name="view" value="resultscategory" />
+            <input type="hidden" name="Itemid" value="<?php echo $Itemid; ?>" />
+        </form>
+        <?php echo JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_NO_RESULTS'); ?>
+        <?php echo JoomlaquizHelper::poweredByHTML(); ?>
 	</div>
 	<?php
 } else {
@@ -64,13 +75,7 @@ if(!$my->id && !$is_share) {
 	<br />
     <div class="jq_results_container">
         <form name="adminForm" id="adminForm" action="<?php echo htmlspecialchars(JUri::getInstance()->toString()); ?>" method="post">
-            <?php
-            $javascript = 'onchange="document.adminForm.submit();"';
-            $filter_start_state = array();
-            $filter_start_state[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_OPTION_STARTED') );
-            $filter_start_state[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_VIEW_RESULTSCATEGORY_OPTION_NOTSTARTED') );
-            echo JHTML::_('select.genericlist', $filter_start_state, 'filter_start_state', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $this->escape($this->state->get('filter.startstate', 0)) );
-            ?>
+            <?php echo $filter_start_state_output; ?>
             <table class="jq_results_container_table table-striped" cellpadding="10" cellspacing="10" border="0" width="100%">
                 <tr>
                     <td class="sectiontableheader">#</td>

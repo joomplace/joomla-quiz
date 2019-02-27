@@ -863,7 +863,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     ->where('`published` = 1 OR `published` = 0');
                 $qcat->new_id = $db->setQuery($query)->loadResult();
 
-                if(!empty($qcat->new_id)){
+                if(empty($qcat->new_id)){
                     $extension = 'com_joomlaquiz';
                     $title     = $qcat->c_category;
                     $desc      = $qcat->c_instruction;
@@ -889,7 +889,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     ->where('`published` = 1 OR `published` = 0');
                 $qcat->new_id = $db->setQuery($query)->loadResult();
 
-                if(!empty($qcat->new_id)){
+                if(empty($qcat->new_id)){
                     $extension = 'com_joomlaquiz.questions';
                     $title     = ($qcat->qc_category)?$qcat->qc_category:$qcat->c_category;
                     $desc      = $qcat->instruction;
@@ -1460,8 +1460,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             }
 
 
-        $data_use_pool = JFactory::getApplication()->input->get('jform', array(), 'ARRAY');
-        if (!empty($data_use_pool['imp_pool'])) {
+        $jform = JFactory::getApplication()->input->get('jform', array(), 'ARRAY');
+        if (!empty($jform['imp_pool'])) {
             $quizzes_poolk = $xmlReader->quizess_pool();
 
             if(!empty($quizzes_poolk))

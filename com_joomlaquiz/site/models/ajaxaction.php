@@ -1401,8 +1401,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$is_attempts = true;
                         $jinput = JFactory::getApplication()->input;
                         $reStartString = $jinput->getString('reStartString', false);
-						$href = ($reStartString) ? /*JRoute::_('index.php'.$reStartString)*/ 'index.php'.$reStartString
-                            : JRoute::_("index.php?option=com_joomlaquiz&view=quiz&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId());
+                        $href = ($reStartString) ? JRoute::_('index.php'.$reStartString.'force=1') : JRoute::_("index.php?option=com_joomlaquiz&view=quiz&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId());
 						$footer_ar[6] = "<div class='jq_footer_link jq_try_again'><a href='".$href."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 					}
 					

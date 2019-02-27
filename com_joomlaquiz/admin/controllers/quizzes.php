@@ -796,33 +796,25 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         $backupfile = JFactory::getApplication()->input->files->get('importme', array(), 'array');
 
-        if (!$backupfile) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SELECT_FILE'), 'error');
-            return false;
-        }
-        $backupfile_name = $backupfile['name'];
-        $filename = explode(".", $backupfile_name);
-        if (empty($backupfile_name)) {
+        if (empty($backupfile['name'])) {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SELECT_FILE'), 'error');
             return false;
         }
 
-        if (strcmp($this->jq_substr($backupfile_name,-4,1),".")) {
+
+        if (strcmp($this->jq_substr($backupfile['name'],-4,1),".")) {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
             return false;
         }
-        if (strcmp($this->jq_substr($backupfile_name,-4),".zip")) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
-            return false;
-        }
-        $tmp_name = $backupfile['tmp_name'];
-        if (!file_exists($tmp_name)) {
+
+        if (!file_exists($backupfile['tmp_name'])) {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SIZE_ERROR'), 'error');
             return false;
         }
-        if (preg_match("/.zip$/", strtolower($backupfile_name))) {
 
-            $zipFile = new pclZip($tmp_name);
+        if (preg_match("/.zip$/", strtolower($backupfile['name']))) {
+
+            $zipFile = new pclZip($backupfile['tmp_name']);
             $zipContentArray = $zipFile->listContent();
             $exp_xml_file = false;
             foreach($zipContentArray as $thisContent) {
@@ -830,7 +822,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_READ_PACKAGE_ERROR'), 'error');
                     return false;
                 }
-                if ($thisContent['filename'] == 'export.xml'){
+                if ($thisContent['filename'] == 'export.xml') {
                     $exp_xml_file = true;
                 }
             }
@@ -871,7 +863,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     ->where('`published` = 1 OR `published` = 0');
                 $qcat->new_id = $db->setQuery($query)->loadResult();
 
-                if(!$qcat->new_id){
+                if(!empty($qcat->new_id)){
                     $extension = 'com_joomlaquiz';
                     $title     = $qcat->c_category;
                     $desc      = $qcat->c_instruction;
@@ -897,7 +889,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     ->where('`published` = 1 OR `published` = 0');
                 $qcat->new_id = $db->setQuery($query)->loadResult();
 
-                if(!$qcat->new_id){
+                if(!empty($qcat->new_id)){
                     $extension = 'com_joomlaquiz.questions';
                     $title     = ($qcat->qc_category)?$qcat->qc_category:$qcat->c_category;
                     $desc      = $qcat->instruction;
@@ -974,15 +966,13 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     {
 
                         foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
-                            $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage)
-                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
+                            $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
                             $database->setQuery($query);
                             $database->execute();
                         }
 
                         foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
-                            $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count)
-                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
+                            $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
                             $database->setQuery($query);
                             $database->execute();
                         }
@@ -1215,15 +1205,13 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 else
                 {
                     foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
-                        $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage)
-                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
+                        $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
                         $database->setQuery($query);
                         $database->execute();
                     }
 
                     foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
-                        $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count)
-                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
+                        $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
                         $database->setQuery($query);
                         $database->execute();
                     }
@@ -1471,8 +1459,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 }
             }
 
-        if(JFactory::getApplication()->input->getInt('imp_pool', 0))
-        {
+
+        $data_use_pool = JFactory::getApplication()->input->get('jform', array(), 'ARRAY');
+        if (!empty($data_use_pool['imp_pool'])) {
             $quizzes_poolk = $xmlReader->quizess_pool();
 
             if(!empty($quizzes_poolk))

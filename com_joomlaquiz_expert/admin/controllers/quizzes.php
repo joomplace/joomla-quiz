@@ -294,6 +294,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_image><![CDATA[".$pool->c_image."]]></question_image>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_rmess><![CDATA[".$pool->c_right_message."]]></question_rmess>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_wmess><![CDATA[".$pool->c_wrong_message."]]></question_wmess>";
+                    $quiz_xml .= "\n\t\t\t\t\t\t<question_dfmess><![CDATA[".$pool->c_detailed_feedback."]]></question_dfmess>";
                     $quiz_xml .= "\n\t\t\t\t\t</quiz_question>";
                     if($pool->c_image)
                     {
@@ -524,7 +525,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_image><![CDATA[".$quest->c_image."]]></question_image>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_rmess><![CDATA[".$quest->c_right_message."]]></question_rmess>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_wmess><![CDATA[".$quest->c_wrong_message."]]></question_wmess>";
-
+                    $quiz_xml .= "\n\t\t\t\t\t\t<question_dfmess><![CDATA[".$quest->c_detailed_feedback."]]></question_dfmess>";
 
                     if (array_search($quest->c_id, $pbreaks) === false) $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[0]]></question_pbeaks>";
                     else $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[1]]></question_pbeaks>";
@@ -1061,9 +1062,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$q_quest->id;
                                 $database->setQuery($query);
                                 $dubl_rowq = $database->LoadObjectList();
-                                if (!empty($dubl_rowq)) {
-                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
-                                    $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                                if(!empty($dubl_rowq)) {
+                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
+                                    $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                     $database->setQuery($query);
                                     if (!$database->execute()) {
                                         echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1074,8 +1075,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                     $new_quest_id = $database->insertid();
                                 } else {
-                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
-                                    $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
+                                    $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                     $database->setQuery($query);
                                     if (!$database->execute()) {
                                         echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1278,9 +1279,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$q_quest->id;
                             $database->setQuery($query);
                             $dubl_rowq = $database->LoadObjectList();
-                            if (!empty($dubl_rowq)) {
-                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
-                                $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                            if(!empty($dubl_rowq)) {
+                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
+                                $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                 $database->setQuery($query);
                                 if (!$database->execute()) {
                                     echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1303,8 +1304,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 }
                                 $new_quest_id = $database->insertid();
                             } else {
-                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
-                                $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
+                                $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                 $database->setQuery($query);
                                 if (!$database->execute()) {
                                     echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1427,10 +1428,10 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             $database->setQuery($query);
                             $dubl_rowq = $database->LoadObjectList();
 
-                            if (!empty($dubl_rowq)) {
-                                if ($dubl_rowq[0]->c_question != $q_quest->question_text) {
-                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
-                                    $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                            if(!empty($dubl_rowq)) {
+                                if($dubl_rowq[0]->c_question != $q_quest->question_text) {
+                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
+                                    $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                     $database->setQuery($query);
                                     if (!$database->execute()) {
                                         echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1444,8 +1445,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     $new_quest_id = $dubl_rowq[0]->c_id;
                                 }
                             } else {
-                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
-                                $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote(@$q_quest->c_qform).")";
+                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
+                                $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote(@$q_quest->c_qform).")";
                                 $database->setQuery($query);
                                 if (!$database->execute()) {
                                     echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";

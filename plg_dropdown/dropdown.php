@@ -504,13 +504,13 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 		$c_id = JFactory::getApplication()->input->get('c_id');
 		
 		$db->setQuery("SELECT `c_random` FROM #__quiz_t_question WHERE `c_id` = '".$c_id."'");
-		$row = $db->loadObject();
+		$field_random = (int)$db->loadResult();
 		
 		$lists = array();		
 		$c_random = array();
 		$c_random[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_NO'));
 		$c_random[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_YES'));
-		$c_random = JHTML::_('select.genericlist', $c_random, 'jform[c_random]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_layout) ? intval( $row->c_random ) : 0));
+		$c_random = JHTML::_('select.genericlist', $c_random, 'jform[c_random]', 'class="text_area" size="1" ', 'value', 'text',  $field_random);
 		$lists['c_random']['input'] = $c_random;
 		$lists['c_random']['label'] = JText::_('COM_JOOMLAQUIZ_RANDOMIZE_ANSWERS');
 		

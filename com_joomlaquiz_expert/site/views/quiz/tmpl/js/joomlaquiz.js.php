@@ -210,7 +210,7 @@ function jq_CreateQuestions() {
 		?>
 		div_inside.className = 'jq_question_inner';
 
-		<?php if ($quiz->c_show_quest_pos) { ?>
+		<?php if ($quiz->c_show_quest_pos && !$quiz->c_pagination  ) { ?>
 			<?php
 				if(preg_match("/t3_bs3/", $quiz->template_name) || preg_match("/pretty_green/", $quiz->template_name)){
 				?>

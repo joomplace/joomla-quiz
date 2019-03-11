@@ -255,6 +255,7 @@
 				label="COM_JOOMLAQUIZ_SHOW_QUESTION_X_LABEL"
 				description="COM_JOOMLAQUIZ_SHOW_QUESTION_X_DESC"
 				labelclass="control-label"
+				showon="c_pagination:0"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>

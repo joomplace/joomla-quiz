@@ -200,7 +200,10 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 ->where($database->qn('c.published') .' IN ('.$database->q(0).','.$database->q(1).')');
             if($cid != -1) {
                 $query->leftJoin($database->qn('#__quiz_t_question', 'qn') . ' ON ' . $database->qn('qn.c_ques_cat') .'='. $database->qn('c.id'));
-                $query->where($database->qn('qn.c_quiz_id') . ' IN (' . $q_cids . ')');
+                $query->leftJoin($database->qn('#__quiz_pool', 'qp') . ' ON ' . $database->qn('qp.q_cat')
+                    .'='. $database->qn('c.id'));
+                $query->where('(('.$database->qn('qn.c_quiz_id') . ' IN (' . $q_cids . ')) OR ('.$database->qn
+                    ('qp.q_id') . ' IN (' . $q_cids . ')))');
                 $query->group('c.id');
             }
             $database->setQuery($query);
@@ -969,12 +972,6 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             $database->execute();
                         }
 
-                        foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
-                            $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
-                            $database->setQuery($query);
-                            $database->execute();
-                        }
-
                         $query = "INSERT INTO #__quiz_t_quiz(
 								c_id, c_category_id, c_number_times,
 								c_show_author, c_autostart, c_timer_style,
@@ -1179,12 +1176,6 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 } else {
                     foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
                         $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
-                        $database->setQuery($query);
-                        $database->execute();
-                    }
-
-                    foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
-                        $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
                         $database->setQuery($query);
                         $database->execute();
                     }
@@ -1407,6 +1398,12 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             }
                         }
                     }
+                }
+                foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
+                    $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count) VALUES (" . $db->quote($free_id)
+                        . "," . $db->quote($categories_relations_questions[$quiz_pool_option->quiz_q_cat]) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
+                    $database->setQuery($query);
+                    $database->execute();
                 }
             }
         }

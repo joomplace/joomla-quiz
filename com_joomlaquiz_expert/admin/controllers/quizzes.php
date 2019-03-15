@@ -200,7 +200,10 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 ->where($database->qn('c.published') .' IN ('.$database->q(0).','.$database->q(1).')');
             if($cid != -1) {
                 $query->leftJoin($database->qn('#__quiz_t_question', 'qn') . ' ON ' . $database->qn('qn.c_ques_cat') .'='. $database->qn('c.id'));
-                $query->where($database->qn('qn.c_quiz_id') . ' IN (' . $q_cids . ')');
+                $query->leftJoin($database->qn('#__quiz_pool', 'qp') . ' ON ' . $database->qn('qp.q_cat')
+                    .'='. $database->qn('c.id'));
+                $query->orWhere(array($database->qn('qn.c_quiz_id') . ' IN (' . $q_cids . ')', $database->qn('qp.q_id')
+                    . ' IN (' . $q_cids . ')'));
                 $query->group('c.id');
             }
             $database->setQuery($query);

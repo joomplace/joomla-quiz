@@ -50,7 +50,7 @@ class JoomlaquizTableQuiz extends JTable
 			}
 
             if (!(int)$jform['c_id']) {
-                $this->c_created_time = JHtml::_('date','now', 'Y-m-d');
+                $this->c_created_time = JHtml::_('date', 'now', 'Y-m-d', false);
 			}
 
             if ((int)$jform['c_id']) {

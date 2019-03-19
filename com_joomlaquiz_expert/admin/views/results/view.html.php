@@ -33,8 +33,17 @@ class JoomlaquizViewResults extends JViewLegacy
 
 			$submenu = 'stu_report';
 			JoomlaquizHelper::showTitle($submenu);			
-			$this->addStureportToolBar();			
-			$this->items = $this->get('Items');						$model = $this->getModel();			foreach($this->items as &$row){				$row->c_point += $model->getItemSum($row);			}									$pagination = new JPagination($this->get('Total'), $this->get('Start'), $model->getState('list.limit'),'stu_');			//$pagination = $this->get('Pagination');			
+			$this->addStureportToolBar();
+
+			$this->items = $this->get('Items');
+			$model = $this->getModel();
+			foreach($this->items as &$row){
+			    $row->c_point += $model->getItemSum($row);
+			}
+
+			$pagination = new JPagination($this->get('Total'), $this->get('Start'), $model->getState('list.limit'),'stu_');
+
+			//$pagination = $this->get('Pagination');
 			//$this->items = $model->getReportItems($cid, $pagination);
 			
 			if (!empty($errors = $this->get('Errors')))

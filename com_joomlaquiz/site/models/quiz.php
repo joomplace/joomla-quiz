@@ -46,7 +46,7 @@ class JoomlaquizModelQuiz extends JModelList
 		$rel_id 		= $jinput->get( 'rel_id', 0, 'INT');
 		$package_id 	= $jinput->get( 'package_id', 0, 'INT');
 		$vm 			= $package_id < 1000000000;
-		
+
 		if ($package_id && $rel_id && !$vm) {
 			$payment_query = "SELECT user_id, id, pid"
 				. "\n FROM `#__quiz_payments`"
@@ -110,7 +110,7 @@ class JoomlaquizModelQuiz extends JModelList
 				->from($db->qn('#__quiz_lpath_quiz', 'a'))
 				->where($db->qn('a.lid').' = '.$db->q($lid).' AND '.$db->qn('a.order').' > ('.$sub_query.')')
 				->order('a.order ASC');
-			
+
 			$db->setQuery($query,0,1);
 			/* loading next step */
 			$next = $db->loadObject();
@@ -167,6 +167,7 @@ class JoomlaquizModelQuiz extends JModelList
 			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_NOT_AVAILABLE').'</p>';
 			return $quiz_params;
 		}
+
 		/* if one time and already passed - clear data and set message */
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -341,7 +342,8 @@ class JoomlaquizModelQuiz extends JModelList
 				$quiz_params->message = $message;
 				return $quiz_params;
 			}	
-			
+
+			/*
 			if(JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0)){
 				$db = JFactory::getDBO();
 				$query = $db->getQuery(true);
@@ -359,7 +361,8 @@ class JoomlaquizModelQuiz extends JModelList
 					return $quiz_params;
 				}
 			}
-			
+			*/
+
 			$doing_quiz = 1;
 		} else {
 			$doing_quiz = 1;
@@ -377,7 +380,8 @@ class JoomlaquizModelQuiz extends JModelList
 				$quiz_params->message = $message;
 				return $quiz_params;
 			}
-			
+
+			/*
 			if(JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0)){
 				$db = JFactory::getDBO();
 				$query = $db->getQuery(true);
@@ -395,6 +399,7 @@ class JoomlaquizModelQuiz extends JModelList
 					return $quiz_params;
 				}
 			}
+			*/
 
             /* check if has access */
             $category = JTable::getInstance('Category');

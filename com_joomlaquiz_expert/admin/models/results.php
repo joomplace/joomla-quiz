@@ -130,7 +130,8 @@ class JoomlaquizModelResults extends JModelList
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);		
 		$layout = JFactory::getApplication()->input->get('layout');
-        if($layout == 'stu_report'){					
+
+        if($layout == 'stu_report'){
 			$cid = JFactory::getApplication()->input->get('cid');						
 			$query = $this->getSTUQuery($cid, $query);			
 		}else{
@@ -139,8 +140,9 @@ class JoomlaquizModelResults extends JModelList
 			$query->join('LEFT', '`#__users` as `u` ON sq.c_student_id = u.id');
 			$query->join('LEFT', '`#__quiz_q_chain` AS `ch` ON ch.s_unique_id = sq.unique_id');
 			$query->join('LEFT', '`#__quiz_t_quiz` as `q` ON sq.c_quiz_id = q.c_id');
-			$query->where('1=1');
-			
+//			$query->where('1=1');
+
+			/*
 			$sub_query = $db->getQuery(true);
 			$sub_query->select('`rq`.`c_stu_quiz_id`, COUNT(`rq`.`c_id`) AS `q_count`')
 				->from('`#__quiz_r_student_question` AS `rq`')
@@ -153,7 +155,8 @@ class JoomlaquizModelResults extends JModelList
 			
 			$query->join('LEFT', "($sub_query) AS `sqr` ON `sqr`.`c_stu_quiz_id` = `sq`.`c_id`");
 			$query->select('`sqr`.`q_count`');
-			
+			*/
+
 			// Filter by search in title.
 			$search = $this->getState('filter.search');
 			if (!empty($search))
@@ -175,7 +178,6 @@ class JoomlaquizModelResults extends JModelList
 			}
 			
 			$quiz_id = $this->getState('filter.quiz_id');
-			
 			if($quiz_id){
 				$query->where('sq.c_quiz_id = '.$quiz_id);
 			}
@@ -205,9 +207,9 @@ class JoomlaquizModelResults extends JModelList
 		$query->leftJoin("#__quiz_t_qtypes as qt ON q.c_type = qt.c_id");
         $query->leftJoin("`#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = qt.c_type");
 		$query->where("sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'");
-		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-			$query->where('`q`.`c_type` != 9');	
-		}		
+		//if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+		//	$query->where('`q`.`c_type` != 9');
+		//}
 		$query->order("q.ordering, q.c_id");				
 		return $query;	
 	}			
@@ -334,9 +336,9 @@ class JoomlaquizModelResults extends JModelList
 				->where("`c_id` IN ('".implode("','", $questions_arr)."')")
 				->where("`published` = 1")
 				->order("`ordering`, `c_id`");
-			if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-				$query->where('`c_type` != 9');
-			}
+			//if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+			//	$query->where('`c_type` != 9');
+			//}
 			$database->setQuery( $query );
 			$questions = $database->loadObjectList();
 			

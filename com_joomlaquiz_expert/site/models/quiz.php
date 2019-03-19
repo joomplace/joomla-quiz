@@ -342,7 +342,8 @@ class JoomlaquizModelQuiz extends JModelList
 				$quiz_params->message = $message;
 				return $quiz_params;
 			}	
-			
+
+			/*
 			if(JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0)){
 				$db = JFactory::getDBO();
 				$query = $db->getQuery(true);
@@ -360,7 +361,8 @@ class JoomlaquizModelQuiz extends JModelList
 					return $quiz_params;
 				}
 			}
-			
+			*/
+
 			$doing_quiz = 1;
 		} else {
 			$doing_quiz = 1;
@@ -378,7 +380,8 @@ class JoomlaquizModelQuiz extends JModelList
 				$quiz_params->message = $message;
 				return $quiz_params;
 			}
-			
+
+			/*
 			if(JComponentHelper::getParams('com_joomlaquiz')->get('restrict_on_passed',0)){
 				$db = JFactory::getDBO();
 				$query = $db->getQuery(true);
@@ -396,6 +399,7 @@ class JoomlaquizModelQuiz extends JModelList
 					return $quiz_params;
 				}
 			}
+			*/
 
             /* check if has access */
             $category = JTable::getInstance('Category');

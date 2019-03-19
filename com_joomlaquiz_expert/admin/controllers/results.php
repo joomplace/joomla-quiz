@@ -103,9 +103,9 @@ class JoomlaquizControllerResults extends JControllerAdmin
 							->from('`#__quiz_t_question`')
 							->where("`c_id` IN (".implode(',', $qchids).")")
 							->where("`published` = 1");
-						if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-							$query->where('`c_type` != 9');
-						}
+						//if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+						//	$query->where('`c_type` != 9');
+						//}
 						$database->setQuery($query);
 						$question = $database->loadObjectList();
 

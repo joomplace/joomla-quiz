@@ -25,9 +25,27 @@ class plgContentQuizcont extends JPlugin {
 		if ( strpos( $article->text, 'quiz' ) === false ) {
 			return true;
 		}
-	
+
 		// define the regular expression for the bot
-		$regex = '/{quiz\s*.*?}/i';	
+		$regex = '/{quiz\s*.*?}/i';
+
+		//custom614 start
+		$article_parts = explode('<hr class="system-pagebreak" />', $article->text);
+		if(count($article_parts) > 1){
+			$input = JFactory::getApplication()->input;
+			$limitstart = $input->getInt('limitstart', 0);
+			$showall = $input->getInt('showall', 0);
+			if(!$showall){
+				for($i=0; $i<count($article_parts); $i++){
+					if($i == $limitstart){
+						continue;
+					}
+					$article_parts[$i] = preg_replace( $regex, '', $article_parts[$i]);
+				}
+			}
+			$article->text = implode('<hr class="system-pagebreak" />', $article_parts);
+		}
+		//custom614 end
 
 		// perform the replacement
 		$article->text = preg_replace_callback( $regex, array(&$this, 'quizCode_replacer'), $article->text, 1 );
@@ -43,7 +61,7 @@ class plgContentQuizcont extends JPlugin {
 	*/
 	
 	protected function quizCode_replacer( &$matches ) {
-		
+
 		$db = JFactory::getDBO();
 		$text = $matches[0];	
 		$rres[1] = $matches[0];

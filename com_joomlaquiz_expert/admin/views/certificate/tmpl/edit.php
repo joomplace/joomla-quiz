@@ -305,7 +305,7 @@ Joomla.submitbutton = function(task)
 		var inp_text_y = document.createElement("input");
 		inp_text_y.type = "text";
 		inp_text_y.name = "jq_hid_field_y[]";
-		inp_text_y.value = new_x;
+		inp_text_y.value = new_y;
 		inp_text_y.setAttribute('size', 4);
 		cell5.appendChild(inp_text_y);
 			

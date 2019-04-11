@@ -548,7 +548,14 @@ function jq_AnalizeRequest(http_request) {
 						jq_UpdateTaskDiv('next', skip_question);
 					}
 					if (req_user_unique_id && req_stu_quiz_id) {
-					<?php if ($quiz->c_slide) { ?>
+					<?php if ($quiz->c_show_timer) { ?>
+							var past_time = 0;
+							try {
+								past_time = parseInt(response.getElementsByTagName('quiz_past_time')[0].firstChild.data);
+							} catch(e){}
+							jq_Start_TickTack(past_time);
+					<?php }
+					if ($quiz->c_slide) { ?>
 						jq_getObj('jq_quiz_result_container').innerHTML = response.getElementsByTagName('quiz_panel_data')[0].firstChild.data;
 						jq_getObj('jq_panel_link_container').style.visibility = 'visible';
 					<?php } ?>

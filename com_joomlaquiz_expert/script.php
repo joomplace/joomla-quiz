@@ -117,7 +117,8 @@ class com_joomlaquizInstallerScript
 				'c_auto_breaks' => 'TINYINT( 5 ) NOT NULL',
 				'asset_id' => 'INT( 18 ) NOT NULL',
                 'c_quiz_access_message' => 'TEXT NOT NULL',
-                'c_quiz_certificate_access_message' => 'TEXT NOT NULL'
+                'c_quiz_certificate_access_message' => 'TEXT NOT NULL',
+                'email_pdf_certificate' => "INT(3) NOT NULL DEFAULT '0'"
 			),
 			'r_student_quiz' => array(
 				'user_name' => 'VARCHAR(50) NOT NULL',

@@ -755,6 +755,7 @@ function jq_AnalizeRequest(http_request) {
 				<?php } ?>
 
 				case 'email_results':
+                case 'email_pdf_certificate':   //custom551
 					quiz_blocked = 1;
 					setTimeout("jq_releaseBlock()", 1000);
 					var email_msg = response.getElementsByTagName('email_msg')[0].firstChild.data;
@@ -1418,6 +1419,14 @@ function jq_emailResults() {
 		<?php }?>
 	}
 }
+
+//custom551 start
+function jq_emailPdfCertificate() {
+    if (!quiz_blocked) {
+        jq_MakeRequest('&ajax_task=email_pdf_certificate&quiz=<?php echo $quiz->c_id?>&stu_quiz_id='+stu_quiz_id,0);
+    }
+}
+//custom551 end
 
 function jq_startReview() {
 	if (!quiz_blocked) {

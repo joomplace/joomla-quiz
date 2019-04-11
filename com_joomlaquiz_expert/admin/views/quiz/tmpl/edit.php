@@ -354,6 +354,7 @@ window.onload = function (){
 					<?php echo $this->form->getInput('c_email_to'); ?>
 				</div>
 			</div>
+            <?php echo $this->form->renderField('email_pdf_certificate'); ?>
 			<div class="control-group">
 				<div class="control-label">
                     <?php echo $this->form->getLabel('c_email_chk'); ?>

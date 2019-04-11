@@ -19,7 +19,7 @@ class JoomlaquizModelPrintcert extends JModelList
 {	
 	protected $rtl = false;
 
-	public function JQ_printCertificate(){
+	public function JQ_printCertificate($emailPdfCertificate=false){
 		
 		$database = JFactory::getDBO();
 		$my = JFactory::getUser();
@@ -326,6 +326,57 @@ class JoomlaquizModelPrintcert extends JModelList
 						imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
 					}
 				}
+
+				//custom551 start
+                if($emailPdfCertificate)
+                {
+                    $file_name = 'certificate_'.$stu_quiz_id.'_'.time();
+                    imagepng($im, $file_name.'.png');
+
+                    require_once(JPATH_SITE . '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
+                    $pdf_doc = new jq_pdf();
+                    $pdf = &$pdf_doc->_engine;
+                    $pdf->AddPage();
+                    ob_clean();
+                    $pdf->Image($file_name.'.png', 0, 0, 0, 0, '', '', '', false, 300, '', false, false, 1, false, false, false);
+                    $pdf->Output($_SERVER['DOCUMENT_ROOT'] . $file_name.'.pdf', 'F');
+
+                    $email = JFactory::getUser()->email;
+                    $subject = JText::_('COM_QUIZ_EMAIL_PDF_CERTIFICATE_SUBJECT');
+                    $message = JText::_('COM_QUIZ_EMAIL_PDF_CERTIFICATE_MESSAGE');
+
+                    $config = new JConfig();
+                    $mailfrom = $config->mailfrom;
+                    $fromname = $config->fromname;
+                    if ($mailfrom != "" && $fromname != "") {
+                        $adminName2 = $fromname;
+                        $adminEmail2 = $mailfrom;
+                    } else {
+                        $query = "SELECT u.`name`, u.`email`"
+                            . "\n FROM #__users as u"
+                            . "\n LEFT JOIN `#__user_usergroup_map` as um ON um.`user_id` = u.`id`"
+                            . "\n LEFT JOIN `#__usergroups` as ug ON ug.`id` = um.`group_id`"
+                            . "\n WHERE ug.`title` = 'Super Users'"
+                        ;
+                        $database->setQuery( $query );
+                        $rows = $database->loadObjectList();
+                        $row2 			= $rows[0];
+                        $adminName2 	= $row2->name;
+                        $adminEmail2 	= $row2->email;
+                    }
+
+                    $jmail = JFactory::getMailer();
+                    $sendMail = $jmail->sendMail($adminEmail2, $adminName2, $email, $subject, $message, 1, null, null, $file_name.'.pdf', null, null);
+
+                    @ob_end_clean();
+                    imagedestroy($im);
+                    unset($im);
+                    unlink($_SERVER['DOCUMENT_ROOT'] . $file_name.'.pdf');
+                    unlink($_SERVER['DOCUMENT_ROOT'] . $file_name.'.png');
+
+                    return $sendMail;
+                }
+                //custom551 end
 
 				if (preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
 					$UserBrowser = "Opera";

@@ -212,6 +212,16 @@
 			<option value="2">COM_JOOMLAQUIZ_LET_USER_WRITE</option>
 		</field>
 		<field
+			name="email_pdf_certificate"
+			type="list"
+			default="0"
+			label="COM_JOOMLAQUIZ_QUIZ_PDF_CERTIFICATE_TO_EMAIL_LABEL"
+			description="COM_JOOMLAQUIZ_QUIZ_PDF_CERTIFICATE_TO_EMAIL_DESC"
+			labelclass="control-label">
+		  <option value="0">COM_JOOMLAQUIZ_DISABLE_THIS_OPTION</option>
+		  <option value="1">COM_JOOMLAQUIZ_LET_USER_WRITE</option>
+		</field>
+		<field
 				name="c_email_chk"
 				type="radio"
 				class="btn-group"

@@ -15,6 +15,9 @@ $jinput = JFactory::getApplication()->input;
 $reStartOption = $jinput->get('option','');
 $reStartView = $jinput->get('view','');
 $reStartID = $jinput->getInt('id',0);
+//custom
+$reStartStart = $jinput->getInt('start',0);
+$reStartForce = $jinput->getInt('force',0);
 
 //content plugin in article?
 $margin_top = $this->get('_name') == 'quiz' ? $this->margin_top : JComponentHelper::getParams('com_joomlaquiz')->get('margin_top');
@@ -53,6 +56,9 @@ function ScrollToElement(theElement){
 var reStartOption = '<?php echo $reStartOption; ?>';
 var reStartView = '<?php echo $reStartView; ?>';
 var reStartID = '<?php echo $reStartID; ?>';
+//custom
+var reStartStart = '<?php echo $reStartStart; ?>';
+var reStartForce = '<?php echo $reStartForce; ?>';
 
 var penaltyPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_PENALTY_POINT')?>';
 var currentPoint = '<?php echo JText::_('COM_JOOMLAQUIZ_CURRENT_POINT')?>';
@@ -1558,6 +1564,19 @@ function jq_QuizContinueFinish() {
         if(reStartID!=0) {
             reStartString += 'id='+reStartID;
         }
+
+        //custom
+        if(reStartStart){
+            reStartString += '&start='+reStartStart;
+        }
+        if(reStartForce == 0){
+            reStartString += '&force=1';
+        }
+        var reStartHash = window.location.hash.replace("#","");
+        if(reStartHash){
+            reStartString += '#' + reStartHash;
+        }
+
         reStartString = encodeURIComponent(reStartString);
     }
 	jq_MakeRequest('&ajax_task=finish_stop&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id + '&reStartString='+reStartString, 1);

@@ -45,6 +45,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 			case 'prev':			$jq_ret_str = $this->JQ_PrevQuestion();	    	break;
 			case 'check_blank':		$jq_ret_str = $this->JQ_CheckBlank();	        break;
 			case 'ajax_plugin':		$jq_ret_str = $this->JQ_ajaxPlugin();	        break;
+            //custom551 start
+            case 'email_pdf_certificate':	$jq_ret_str = $this->JQ_emailPdfCertificate();	    	break;
+            //custom551 end
 			
 			default:		
 			break;
@@ -1422,6 +1425,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 					if ($quiz->c_email_to == 2) {
 						$footer_ar[3] = "<div class='jq_footer_link jq_email'><a href='javascript:void(0)' onclick=\"jq_emailResults();\">".JText::_('COM_QUIZ_FIN_BTN_EMAIL')."</a></div>";
 					}
+                    //custom 551 start
+                    if ($quiz->email_pdf_certificate == 1) {
+                        $footer_ar[7] = "<div class='jq_footer_link jq_email'><a href='javascript:void(0)' onclick=\"jq_emailPdfCertificate();\">".JText::_('COM_QUIZ_FIN_BTN_EMAIL_PDF_CERTIFICATE')."</a></div>";
+                    }
+                    //custom 551 end
 					if($quiz->c_email_to == 1 /*&& !$c_manual*/){
 						$user = JFactory::getUser($quiz->c_user_id);
 						JoomlaquizHelper::JQ_Email($stu_quiz_id, $user->email);
@@ -3618,5 +3626,27 @@ class JoomlaquizModelAjaxaction extends JModelList
 
 		return $q_data;
 	}
+
+    //custom551 start
+    public function JQ_emailPdfCertificate()
+    {
+        $ret_str = '';
+        $result = false;
+
+        JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_joomlaquiz/models', 'JoomlaquizModel');
+        $modelPrintcert = JModelLegacy::getInstance('Printcert', 'JoomlaquizModel', array('ignore_request' => true));
+        $result = $modelPrintcert->JQ_printCertificate(true);
+
+        $ret_str .= "\t" . '<task>email_pdf_certificate</task>' . "\n";
+        if ($result) {
+            $ret_str .= "\t" . '<email_msg><![CDATA['.JText::_('COM_QUIZ_MES_EMAIL_PDF_CERTIFICATE_OK').']]></email_msg>' . "\n";
+        } else {
+            $ret_str .= "\t" . '<email_msg>'.JText::_('COM_QUIZ_MES_EMAIL_PDF_CERTIFICATE_FAIL').'</email_msg>' . "\n";
+        }
+
+        return $ret_str;
+    }
+    //custom551 end
+
 }
 ?>

@@ -1426,7 +1426,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$footer_ar[3] = "<div class='jq_footer_link jq_email'><a href='javascript:void(0)' onclick=\"jq_emailResults();\">".JText::_('COM_QUIZ_FIN_BTN_EMAIL')."</a></div>";
 					}
                     //custom 551 start
-                    if ($quiz->email_pdf_certificate == 1) {
+                    if ($quiz->email_pdf_certificate == 1 && !$c_manual && $user_passed && $certAccessGranted) {
                         $footer_ar[7] = "<div class='jq_footer_link jq_email'><a href='javascript:void(0)' onclick=\"jq_emailPdfCertificate();\">".JText::_('COM_QUIZ_FIN_BTN_EMAIL_PDF_CERTIFICATE')."</a></div>";
                     }
                     //custom 551 end

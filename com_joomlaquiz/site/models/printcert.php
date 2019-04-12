@@ -339,6 +339,7 @@ class JoomlaquizModelPrintcert extends JModelList
                 unlink($_SERVER['DOCUMENT_ROOT'] . $file_name.'.png');
                 @ob_end_clean();
                 imagedestroy($im);
+                unset($im);
 
                 if($emailPdfCertificate)
                 {
@@ -371,17 +372,17 @@ class JoomlaquizModelPrintcert extends JModelList
                     $jmail = JFactory::getMailer();
                     $sendMail = $jmail->sendMail($adminEmail2, $adminName2, $email, $subject, $message, 1, null, null, $file_name.'.pdf', null, null);
 
-                    @ob_end_clean();
-                    imagedestroy($im);
-                    unset($im);
                     unlink($_SERVER['DOCUMENT_ROOT'] . $file_name.'.pdf');
 
                     return $sendMail;
                 }
                 else {
-                    if(JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')) {
+                    if(JComponentHelper::getParams('com_joomlaquiz')->get('download_certificate')){
+                        $pdf->Output($file_name . '.pdf', 'D');
+                    }else{
                         $pdf->Output($file_name . '.pdf', 'I');
                     }
+
                     exit;
                 }
                 //custom551 end

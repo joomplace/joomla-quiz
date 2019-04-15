@@ -32,9 +32,7 @@ class JoomlaquizViewQuestion extends JViewLegacy
  		$this->state	= $this->get('State');
 		$this->item		= $this->get('Item');
 		$this->form		= $this->get('Form');
-		
 
-		$app = JFactory::getApplication();
 		$filter_quiz_id = $app->getUserStateFromRequest('questions.filter.quiz_id', 'filter_quiz_id', '');
 		
 		$db    = JFactory::getDbo();
@@ -54,7 +52,13 @@ class JoomlaquizViewQuestion extends JViewLegacy
         $db->setQuery($query);
         $ordering_list = $db->loadObjectlist();
 
-        $this->item->ordering_list = JHTML::_("select.genericlist", $ordering_list, 'ordering', 'class="text_area" size="1"', 'value', 'text', $this->item->ordering);
+        foreach ($ordering_list as $key=>$row)
+		{
+			$row->text = strip_tags($row->text);
+		}
+
+        $this->item->ordering_list = JHTML::_("select.genericlist", $ordering_list, 'jform[ordering]', 'class="text_area"
+		 size="1"', 'value', 'text', $this->item->ordering);
 
 		$new_qtype_id = $app->getUserStateFromRequest( "question.new_qtype_id", 'new_qtype_id', 0 );
 		if($this->item->c_id){

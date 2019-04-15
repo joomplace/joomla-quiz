@@ -168,31 +168,40 @@ class JoomlaquizModelQuestions extends JModelList
 		return $items;
 	}
 		
-	public function copyQuestions(){
-		$database = JFactory::getDBO();
+    public function copyQuestions()
+    {
+        $db = JFactory::getDBO();
         $session = JFactory::getSession();
         $cid = $session->get('com_joomlaquiz.copy.questions.cids');
-		$run_from_quiz_copy = 0;
+
 		$quizMove = intval(JFactory::getApplication()->input->get('quizcopy'));
 		$cids = implode( ',', $cid );
 		$total = count( $cid );
 		$query = "SELECT * FROM #__quiz_t_question WHERE c_id IN ( $cids ) ORDER BY ordering";
-		$database->setQuery( $query );
-		$quests_to_copy = $database->loadAssocList();
+        $db->setQuery($query);
+        $quests_to_copy = $db->loadAssocList();
 		$new_order = 0;
 		foreach ($quests_to_copy as $quest2copy) {
 			$old_quest_id = $quest2copy['c_id'];
 			$new_quest = $this->getTable();
 			if (!$new_quest->bind( $quest2copy )) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-			$new_quest->c_id = 0; $new_quest->ordering = $new_order; $new_quest->c_quiz_id = $quizMove;
-			if ($run_from_quiz_copy) { $new_order++; }
+            $new_quest->c_id = 0;
+
+            $query = "SELECT MAX(`ordering`) FROM `#__quiz_t_question` WHERE `c_quiz_id` = '" . $quizMove . "'";
+            $db->setQuery($query);
+            $max_order = $db->loadResult();
+
+            $new_quest->ordering = $max_order + 1;
+            $new_quest->c_quiz_id = $quizMove;
+
 			if (!$new_quest->check()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 			if (!$new_quest->store()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
 			$new_quest_id = $new_quest->c_id;
 			if ( ($quest2copy['c_type'] == 1) || ($quest2copy['c_type'] == 2) || ($quest2copy['c_type'] == 3) || ($quest2copy['c_type'] == 10) ) {
 				$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '".$old_quest_id."'";
-				$database->setQuery( $query );
-				$fields_to_copy = $database->loadAssocList();
+                $db->setQuery($query);
+                $fields_to_copy = $db->loadAssocList();
+
 				foreach ($fields_to_copy as $field2copy) {
 					$new_field = $this->getTable("Choice");
 					if (!$new_field->bind( $field2copy )) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
@@ -205,8 +214,8 @@ class JoomlaquizModelQuestions extends JModelList
 			}
 			if  ($quest2copy['c_type'] == 4 || $quest2copy['c_type'] == 5) {
 				$query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = '".$old_quest_id."'";
-				$database->setQuery( $query );
-				$fields_to_copy = $database->loadAssocList();
+                $db->setQuery($query);
+                $fields_to_copy = $db->loadAssocList();
 				$profile = new stdClass();
 
 				foreach ($fields_to_copy as $field2copy) {
@@ -222,25 +231,27 @@ class JoomlaquizModelQuestions extends JModelList
 					// Insert the object into the user profile table.
 					$result = JFactory::getDbo()->insertObject('#__quiz_t_matching', $profile);
 
-					if (!$result) JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_COPY_ANSWER_TO_QUIZ_ERROR'));
+                    if (!$result) {
+                        JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_COPY_ANSWER_TO_QUIZ_ERROR'));
+                    }
 				}
 			}
 			if ( ($quest2copy['c_type'] == 6)) {
 				$query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id = '".$old_quest_id."'";
-				$database->setQuery( $query );
-				$blanks_to_copy = $database->LoadObjectList();
+                $db->setQuery($query);
+                $blanks_to_copy = $db->LoadObjectList();
 				if (!empty($blanks_to_copy)) {
 					foreach($blanks_to_copy as $blank_to_copy) {
 						$old_blank_id = $blank_to_copy->c_id;
 
 						$query = "SELECT * FROM #__quiz_t_text WHERE c_blank_id = '".$old_blank_id."'";
-						$database->setQuery( $query );
-						$fields_to_copy = $database->loadAssocList();
+                        $db->setQuery($query);
+                        $fields_to_copy = $db->loadAssocList();
 
 						$query = "INSERT INTO #__quiz_t_blank (`c_question_id`, `ordering`, `points`, `css_class`, `c_quiz_id`, `gtype`) VALUES('".(int)$new_quest_id."', '".(int)$blank_to_copy->ordering."', '".$blank_to_copy->points."', '".$blank_to_copy->css_class."', '".(int)$blank_to_copy->c_quiz_id."', '".$blank_to_copy->gtype."')";
-						$database->SetQuery( $query );
-                        $database->execute();
-						$new_blank_id = $database->insertid();
+                        $db->SetQuery($query);
+                        $db->execute();
+                        $new_blank_id = $db->insertid();
 						foreach ($fields_to_copy as $field2copy) {
 							$new_field = $this->getTable("Blanktext");
 							if (!$new_field->bind( $field2copy )) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
@@ -253,22 +264,22 @@ class JoomlaquizModelQuestions extends JModelList
 					}
 				}
                 $query = "SELECT `c_text` FROM `#__quiz_t_faketext` WHERE `c_quest_id` = ".(int)$old_quest_id;
-                $database->SetQuery($query);
-                $faketext_to_copy = $database->loadObjectList();
+                $db->SetQuery($query);
+                $faketext_to_copy = $db->loadObjectList();
                 if (!empty($faketext_to_copy)) {
                     foreach($faketext_to_copy as $faketext) {
                         $query = "INSERT INTO `#__quiz_t_faketext` (`c_id`, `c_quest_id`, `c_text`) VALUES('','".(int)$new_quest_id."','".$faketext->c_text."')";
-                        $database->setQuery($query);
-                        if(!$database->execute()){
-                            echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                        $db->setQuery($query);
+                        if (!$db->execute()) {
+                            echo "<script> alert('" . $db->getErrorMsg() . "'); window.history.go(-1); </script>\n";
                         }
                     }
                 }
 			}
 			if ( ($quest2copy['c_type'] == 7)) {
 				$query = "SELECT * FROM #__quiz_t_ext_hotspot WHERE c_question_id = '".$old_quest_id."'";
-				$database->setQuery( $query );
-				$fields_to_copy = $database->loadAssocList();
+                $db->setQuery($query);
+                $fields_to_copy = $db->loadAssocList();
 				foreach ($fields_to_copy as $field2copy) {
 					$new_field = $this->getTable("Hotspot");
 					if (!$new_field->bind( $field2copy )) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
@@ -276,16 +287,19 @@ class JoomlaquizModelQuestions extends JModelList
 					$new_quest->ordering = 0;
 					$new_field->c_question_id = $new_quest_id;
 					if (!$new_field->check()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-					if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+                    if (!$new_field->store()) {
+                        echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                        exit();
 				}
 			}
 		}
-		if (!$run_from_quiz_copy) {
+        }
+
 			JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($quizMove);
-			$database->setQuery("SELECT `c_title` FROM #__quiz_t_quiz WHERE c_id = '".$quizMove."'");
-			$c_title = $database->loadResult();
+        $db->setQuery("SELECT `c_title` FROM #__quiz_t_quiz WHERE c_id = '" . $quizMove . "'");
+        $c_title = $db->loadResult();
 			$msg = $total ." Questions copied to ". $c_title;
-		}
+
 
         $session->clear('com_joomlaquiz.copy.questions.cids');
 

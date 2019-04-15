@@ -330,12 +330,22 @@ class JoomlaquizModelPrintcert extends JModelList
                 //custom551 start
                 $file_name = 'certificate_'.$stu_quiz_id.'_'.time();
                 imagepng($im, $file_name.'.png');
+                list($certificate_width_px, $certificate_height_px) = getimagesize($_SERVER['DOCUMENT_ROOT'] . '/' . $file_name.'.png');
+
                 require_once(JPATH_SITE . '/components/com_joomlaquiz/assets/tcpdf/jq_pdf.php');
                 $pdf_doc = new jq_pdf();
                 $pdf = &$pdf_doc->_engine;
-                $pdf->AddPage();
+                $certificate_orientation = $certificate_width_px > $certificate_height_px ? 'L' : 'P';
+                $page_x = $certificate_orientation == 'P' ? 595.276 : 841.890;
+                $page_y = $certificate_orientation == 'L' ? 595.276 : 841.890;
+                $pdf->SetMargins(0, 0, 0, true);
+                $pdf->setPageOrientation($certificate_orientation, '', 0); //only for set 'bottommargin'
+                $pdf->setPrintHeader(false);
+                $pdf->setPrintFooter(false);
+                $pdf->AddPage($certificate_orientation, array($page_x, $page_y));
                 ob_clean();
-                $pdf->Image($file_name.'.png', 0, 0, 0, 0, '', '', '', false, 300, '', false, false, 1, false, false, false);
+                $pdf->Image($file_name.'.png', 0, 0, $page_x, $page_y, '', '', '', false, 300, '', false, false, 1, false, false, false);
+
                 unlink($_SERVER['DOCUMENT_ROOT'] . $file_name.'.png');
                 @ob_end_clean();
                 imagedestroy($im);

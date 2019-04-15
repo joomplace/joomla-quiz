@@ -180,11 +180,15 @@ class JoomlaquizModelQuestions extends JModelList
 		$query = "SELECT * FROM #__quiz_t_question WHERE c_id IN ( $cids ) ORDER BY ordering";
         $db->setQuery($query);
         $quests_to_copy = $db->loadAssocList();
-		$new_order = 0;
+
 		foreach ($quests_to_copy as $quest2copy) {
 			$old_quest_id = $quest2copy['c_id'];
 			$new_quest = $this->getTable();
-			if (!$new_quest->bind( $quest2copy )) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+            if (!$new_quest->bind($quest2copy)) {
+                echo "<script> alert('" . $new_quest->getError() . "'); window.history.go(-1); </script>\n";
+                exit();
+            }
+
             $new_quest->c_id = 0;
 
             $query = "SELECT MAX(`ordering`) FROM `#__quiz_t_question` WHERE `c_quiz_id` = '" . $quizMove . "'";
@@ -194,8 +198,14 @@ class JoomlaquizModelQuestions extends JModelList
             $new_quest->ordering = $max_order + 1;
             $new_quest->c_quiz_id = $quizMove;
 
-			if (!$new_quest->check()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-			if (!$new_quest->store()) { echo "<script> alert('".$new_quest->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+            if (!$new_quest->check()) {
+                echo "<script> alert('" . $new_quest->getError() . "'); window.history.go(-1); </script>\n";
+                exit();
+            }
+            if (!$new_quest->store()) {
+                echo "<script> alert('" . $new_quest->getError() . "'); window.history.go(-1); </script>\n";
+                exit();
+            }
 			$new_quest_id = $new_quest->c_id;
 			if ( ($quest2copy['c_type'] == 1) || ($quest2copy['c_type'] == 2) || ($quest2copy['c_type'] == 3) || ($quest2copy['c_type'] == 10) ) {
 				$query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '".$old_quest_id."'";
@@ -204,12 +214,21 @@ class JoomlaquizModelQuestions extends JModelList
 
 				foreach ($fields_to_copy as $field2copy) {
 					$new_field = $this->getTable("Choice");
-					if (!$new_field->bind( $field2copy )) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+                    if (!$new_field->bind($field2copy)) {
+                        echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                        exit();
+                    }
 					$new_field->c_id = 0;
 					$new_quest->ordering = 0;
 					$new_field->c_question_id = $new_quest_id;
-					if (!$new_field->check()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-					if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+                    if (!$new_field->check()) {
+                        echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                        exit();
+                    }
+                    if (!$new_field->store()) {
+                        echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                        exit();
+                    }
 				}
 			}
 			if  ($quest2copy['c_type'] == 4 || $quest2copy['c_type'] == 5) {
@@ -254,12 +273,21 @@ class JoomlaquizModelQuestions extends JModelList
                         $new_blank_id = $db->insertid();
 						foreach ($fields_to_copy as $field2copy) {
 							$new_field = $this->getTable("Blanktext");
-							if (!$new_field->bind( $field2copy )) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+                            if (!$new_field->bind($field2copy)) {
+                                echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                                exit();
+                            }
 							$new_field->c_id = 0;
 							$new_quest->ordering = 0;
 							$new_field->c_blank_id = $new_blank_id;
-							if (!$new_field->check()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
-							if (!$new_field->store()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+                            if (!$new_field->check()) {
+                                echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                                exit();
+                            }
+                            if (!$new_field->store()) {
+                                echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                                exit();
+                            }
 						}
 					}
 				}
@@ -282,11 +310,17 @@ class JoomlaquizModelQuestions extends JModelList
                 $fields_to_copy = $db->loadAssocList();
 				foreach ($fields_to_copy as $field2copy) {
 					$new_field = $this->getTable("Hotspot");
-					if (!$new_field->bind( $field2copy )) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+                    if (!$new_field->bind($field2copy)) {
+                        echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                        exit();
+                    }
 					$new_field->c_id = 0;
 					$new_quest->ordering = 0;
 					$new_field->c_question_id = $new_quest_id;
-					if (!$new_field->check()) { echo "<script> alert('".$new_field->getError()."'); window.history.go(-1); </script>\n"; exit(); }
+                    if (!$new_field->check()) {
+                        echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
+                        exit();
+                    }
                     if (!$new_field->store()) {
                         echo "<script> alert('" . $new_field->getError() . "'); window.history.go(-1); </script>\n";
                         exit();

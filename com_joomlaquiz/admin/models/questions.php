@@ -172,7 +172,7 @@ class JoomlaquizModelQuestions extends JModelList
         $query = "SELECT * FROM #__quiz_t_question WHERE c_id IN ( $cids ) ORDER BY ordering";
         $db->setQuery($query);
         $quests_to_copy = $db->loadAssocList();
-        $new_order = 0;
+
         foreach ($quests_to_copy as $quest2copy) {
             $old_quest_id = $quest2copy['c_id'];
             $new_quest = $this->getTable();

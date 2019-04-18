@@ -45,6 +45,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 			case 'prev':			$jq_ret_str = $this->JQ_PrevQuestion();	    	break;
 			case 'check_blank':		$jq_ret_str = $this->JQ_CheckBlank();	        break;
 			case 'ajax_plugin':		$jq_ret_str = $this->JQ_ajaxPlugin();	        break;
+            //custom626 start
+            case 'ticktack_sum':	$jq_ret_str = $this->JQ_timeSumQuiz();	    break;
+            //custom626 end
 			
 			default:		
 			break;
@@ -389,7 +392,13 @@ class JoomlaquizModelAjaxaction extends JModelList
                 $database->SetQuery($query);
                 list($quiz_time2, $quiz_time1) = $database->loadRow();
 
-                $ret_str .= "\t" . '<quiz_past_time>'.intval(strtotime($quiz_time1)-strtotime($quiz_time2)).'</quiz_past_time>' . "\n";
+                //$ret_str .= "\t" . '<quiz_past_time>'.intval(strtotime($quiz_time1)-strtotime($quiz_time2)).'</quiz_past_time>' . "\n";
+                //custom626 start
+                $query = "SELECT `past_time` FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";
+                $database->SetQuery($query);
+                $past_time = $database->loadResult();
+                $ret_str .= "\t" . '<quiz_past_time>'.intval($past_time).'</quiz_past_time>' . "\n";
+                //custom626 end
 
 				$ret_str .= "\t" . '<task>seek_quest</task>' . "\n";
 				$ret_str .= "\t" . '<stu_quiz_id>'.$stu_quiz_id.'</stu_quiz_id>' . "\n";
@@ -3618,5 +3627,25 @@ class JoomlaquizModelAjaxaction extends JModelList
 
 		return $q_data;
 	}
+
+    //custom626 start
+    public function JQ_timeSumQuiz()
+    {
+        $jinput = JFactory::getApplication()->input;
+        $quiz_id = $jinput->getInt('quiz', 0);
+        $stu_quiz_id = $jinput->getInt('stu_quiz_id', 0);
+
+        $db = JFactory::getDbo();
+        $query = "UPDATE `#__quiz_r_student_quiz` SET `past_time` = `past_time` + 5 WHERE `c_id`='".$stu_quiz_id."' AND `c_quiz_id`='".$quiz_id."' AND `c_student_id`='".(int)JFactory::getUser()->id."'";
+        $db->SetQuery( $query );
+
+        if($db->execute()){
+            return 'ok';
+        } else {
+            return 'error';
+        }
+    }
+    //custom626 end
+
 }
 ?>

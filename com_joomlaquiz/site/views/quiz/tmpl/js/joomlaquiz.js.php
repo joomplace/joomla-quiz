@@ -108,6 +108,7 @@ var limit_time = 0;
 var quest_timer_sec = 0;
 var quest_timer = 0;
 var quest_timer_ticktack = 0;
+var quest_timer_ticktack_ajax = 0;   //custom626
 var circle = null;
 var path_elems = new Array();
 var mes_question_is_misconfigured = '<?php echo JText::_('COM_JOOMLAQUIZ_QUESTION_IS_CONFIGURED');?>';
@@ -1106,6 +1107,7 @@ function jq_Start_Question_TickTack(limit_time)
 
 function jq_Start_TickTack(past_time) {
 	clearInterval(quest_timer_ticktack);
+	clearInterval(quest_timer_ticktack_ajax);   //custom626
 	timer_sec = 1;
 	if (parseInt(past_time)) {
 		timer_sec = past_time;
@@ -1149,7 +1151,27 @@ function jq_Start_TickTack(past_time) {
 	jq_getObj('jq_time_tick_container').style.visibility = "visible";
 	//setTimeout("jq_Continue_TickTack()", 1000);
 	quest_timer_ticktack = setInterval("jq_Continue_TickTack()", 1000);
+	quest_timer_ticktack_ajax = setInterval("tickTack_Sum()", 5000);   //custom626
 }
+
+//custom626 start
+function tickTack_Sum() {
+    var url = jq_clean_amp('/index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
+    jQuery(function($) {
+        $.ajax({
+            type: 'POST',
+            url: url,
+			data: {'ajax_task':'ticktack_sum', 'quiz':'<?php echo $quiz->c_id?>', 'stu_quiz_id':stu_quiz_id}
+        })
+        .done(function (msg) {
+            console.log(msg);
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            //console.log( jqXHR );
+        });
+    });
+}
+//custom626 end
 
 function jq_Continue_TickTack() {
 	if (stop_timer == 1) {

@@ -120,7 +120,8 @@ class com_joomlaquizInstallerScript
 			'r_student_quiz' => array(
 				'user_name' => 'VARCHAR(50) NOT NULL',
 				'user_surname' => 'VARCHAR(100) NOT NULL',
-                'params' => "VARCHAR( 1024 ) NOT NULL DEFAULT '{}'"
+                'params' => "VARCHAR( 1024 ) NOT NULL DEFAULT '{}'",
+                'past_time' => "INT( 10 ) NOT NULL DEFAULT '0'"
 			),
 			'lpath' => array(
 				'asset_id' => 'INT(18) NOT NULL',

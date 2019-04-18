@@ -331,6 +331,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_r_student_quiz` (
   `user_name` varchar(50) NOT NULL,
   `user_surname` varchar(100) NOT NULL,
   `params` varchar(1024) NOT NULL DEFAULT '{}',
+  `past_time` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`),
   KEY `c_student_id` (`c_student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

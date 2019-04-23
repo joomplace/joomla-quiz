@@ -1156,7 +1156,7 @@ function jq_Start_TickTack(past_time) {
 
 //custom626 start
 function tickTack_Sum() {
-    var url = jq_clean_amp('/index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
+    var url = jq_clean_amp('<?php echo JUri::root(true) ?>/index.php?tmpl=component&option=com_joomlaquiz<?php echo JoomlaquizHelper::JQ_GetItemId();?>&task=ajaxaction.procces');
     jQuery(function($) {
         $.ajax({
             type: 'POST',

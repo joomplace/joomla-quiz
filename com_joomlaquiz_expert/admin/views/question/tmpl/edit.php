@@ -200,10 +200,10 @@ $ordering_list = $this->ordering_list;
 			<?php endif;?>
 			<div class="control-group">
                 <div class="control-label">
-				    <?php echo JText::_('COM_JOOMLAQUIZ_ORDERING');?>
+                    <?php echo $this->form->getLabel('ordering'); ?>
                 </div>
 				<div class="controls">
-					<?php echo $this->item->ordering_list;?>
+                    <?php echo $this->form->getInput('ordering'); ?>
 				</div>
 			</div>
 		</fieldset>
@@ -275,6 +275,7 @@ $ordering_list = $this->ordering_list;
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="jform[c_id]" value="<?php echo $this->item->c_id;?>" />
 <input type="hidden" name="c_id" value="<?php echo $this->item->c_id;?>" />
+<input type="hidden" name="old_ordering" value="<?php echo $this->item->ordering;?>" />
 <input type="hidden" name="jform[c_type]" value="<?php echo $this->item->c_type;?>" />
 <input type="hidden" name="return" value="<?php echo $input->getCmd('return');?>" />
 <?php echo JHtml::_('form.token'); ?>

@@ -40,13 +40,7 @@ class JoomlaquizModelQuestion extends JModelAdmin
 
 		return $result;
 	}
-		
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return	mixed	The data for the form.
-	 * @since	1.6
-	 */
+
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -54,8 +48,7 @@ class JoomlaquizModelQuestion extends JModelAdmin
 
 		if (empty($data)) {
 			$data = $this->getItem();
-			
-			$ordering = $this->getOrdering();
+
 			// Prime some default values.
 			if ($this->getState('question.c_id') == 0) {
 				$app = JFactory::getApplication();
@@ -66,7 +59,6 @@ class JoomlaquizModelQuestion extends JModelAdmin
 			$data->set('c_quiz_id', JFactory::getApplication()->getUserState('quizzes.filter.quiz_id'));
 			}
 		}
-		
 		return $data;
 	}
 	
@@ -74,7 +66,6 @@ class JoomlaquizModelQuestion extends JModelAdmin
 	{
 		$new_qtype_id = JFactory::getApplication()->input->get('new_qtype_id');
 		$this->setState('question.new_qtype_id', $new_qtype_id);
-		$ordering = $this->getOrdering();
 		
 		$form = $this->loadForm('com_joomlaquiz.question', 'question', array('control' => 'jform', 'load_data' => $loadData));
 				

@@ -109,22 +109,6 @@ $ordering_list = $this->ordering_list;
 			</div>
 			<div class="control-group">
                 <div class="control-label">
-                    <?php echo $this->form->getLabel('c_show_timer'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_show_timer'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo $this->form->getLabel('c_time_limit'); ?>
-                </div>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_time_limit'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div class="control-label">
 				    <?php echo $this->form->getLabel('c_separator'); ?>
                 </div>
 				<div class="controls">
@@ -198,14 +182,6 @@ $ordering_list = $this->ordering_list;
 				</div>
 			</div>
 			<?php endif;?>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo JText::_('COM_JOOMLAQUIZ_ORDERING');?>
-                </div>
-				<div class="controls">
-					<?php echo $this->item->ordering_list;?>
-				</div>
-			</div>
 		</fieldset>
 	    </div>
 		<?php if($this->options != ''):?>

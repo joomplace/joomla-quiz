@@ -182,14 +182,6 @@ $ordering_list = $this->ordering_list;
 				</div>
 			</div>
 			<?php endif;?>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo JText::_('COM_JOOMLAQUIZ_ORDERING');?>
-                </div>
-				<div class="controls">
-					<?php echo $this->item->ordering_list;?>
-				</div>
-			</div>
 		</fieldset>
 	    </div>
 		<?php if($this->options != ''):?>

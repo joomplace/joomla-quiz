@@ -40,13 +40,7 @@ class JoomlaquizModelQuestion extends JModelAdmin
 
 		return $result;
 	}
-		
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return	mixed	The data for the form.
-	 * @since	1.6
-	 */
+
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -54,8 +48,7 @@ class JoomlaquizModelQuestion extends JModelAdmin
 
 		if (empty($data)) {
 			$data = $this->getItem();
-			
-			$ordering = $this->getOrdering();
+
 			// Prime some default values.
 			if ($this->getState('question.c_id') == 0) {
 				$app = JFactory::getApplication();
@@ -74,7 +67,6 @@ class JoomlaquizModelQuestion extends JModelAdmin
 	{
 		$new_qtype_id = JFactory::getApplication()->input->get('new_qtype_id');
 		$this->setState('question.new_qtype_id', $new_qtype_id);
-		$ordering = $this->getOrdering();
 		
 		$form = $this->loadForm('com_joomlaquiz.question', 'question', array('control' => 'jform', 'load_data' => $loadData));
 				
@@ -83,20 +75,4 @@ class JoomlaquizModelQuestion extends JModelAdmin
 		}
 		return $form;
 	}
-	
-	public function getOrdering(){
-		$db = JFactory::getDBO();
-		$query="SELECT c_id, c_quiz_id, ordering as value, CONCAT(ordering, '. ', c_question) as text FROM #__quiz_t_question";
-		$db->setQuery($query);
-		$ordering_list = $db->loadObjectlist();
-		return $ordering_list;
-	}
-
-    public function getQuizzesList(){
-        $db    = JFactory::getDbo();
-        $query="SELECT DISTINCT(`c_id`) AS `value`, `c_title` AS `text` FROM `#__quiz_t_quiz`";
-        $db->setQuery($query);
-        $quizzes = $db->loadObjectList();
-        return $quizzes;
-    }
 }

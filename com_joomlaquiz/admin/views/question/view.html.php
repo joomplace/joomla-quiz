@@ -19,8 +19,6 @@ class JoomlaquizViewQuestion extends JViewLegacy
 	protected $state;
 	protected $item;
 	protected $form;
-    protected $quizes;
-    protected $ordering_list;
 	
     public function display($tpl = null) 
     {

@@ -15,8 +15,7 @@ JHtml::_('formbehavior.chosen', 'select');
 $app = JFactory::getApplication();
 $input = $app->input;
 $model = $this->getModel('question');
-$quizes_list = $this->quizzes;
-$ordering_list = $this->ordering_list;
+
 ?>
 <?php echo $this->loadTemplate('menu');?>
 <script type="text/javascript">

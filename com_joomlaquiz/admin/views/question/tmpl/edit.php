@@ -15,8 +15,7 @@ JHtml::_('formbehavior.chosen', 'select');
 $app = JFactory::getApplication();
 $input = $app->input;
 $model = $this->getModel('question');
-$quizes_list = $this->quizzes;
-$ordering_list = $this->ordering_list;
+
 ?>
 <?php echo $this->loadTemplate('menu');?>
 <script type="text/javascript">
@@ -182,14 +181,6 @@ $ordering_list = $this->ordering_list;
 				</div>
 			</div>
 			<?php endif;?>
-			<div class="control-group">
-                <div class="control-label">
-				    <?php echo JText::_('COM_JOOMLAQUIZ_ORDERING');?>
-                </div>
-				<div class="controls">
-					<?php echo $this->item->ordering_list;?>
-				</div>
-			</div>
 		</fieldset>
 	    </div>
 		<?php if($this->options != ''):?>

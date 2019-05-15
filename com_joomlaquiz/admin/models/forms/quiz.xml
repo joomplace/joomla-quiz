@@ -479,7 +479,9 @@
 		</fieldset>
 	</fields>
 
-    <field name="c_quiz_access_message" type="editor" class="inputbox" label="COM_JOOMLAQUIZ_ACCESS_MSG" required="false" default="" description="COM_JOOMLAQUIZ_DESC_ACCESS_MSG"/>
-    <field name="c_quiz_certificate_access_message" type="editor" class="inputbox" label="COM_JOOMLAQUIZ_CERTIFICATE_MSG" required="false" default="" description="COM_JOOMLAQUIZ_DESC_CERTIFICATE_MSG"/>
+    <field name="c_quiz_access_message" type="editor" class="inputbox" label="COM_JOOMLAQUIZ_ACCESS_MSG"
+		   required="false" default="" description="COM_JOOMLAQUIZ_DESC_ACCESS_MSG" filter="safehtml"/>
+    <field name="c_quiz_certificate_access_message" type="editor" class="inputbox"
+		   label="COM_JOOMLAQUIZ_CERTIFICATE_MSG" required="false" default="" description="COM_JOOMLAQUIZ_DESC_CERTIFICATE_MSG" filter="safehtml"/>
 
 </form>

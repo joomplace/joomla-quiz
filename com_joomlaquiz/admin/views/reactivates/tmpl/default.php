@@ -95,11 +95,14 @@ $sortFields = $this->getSortFields();
 					<th>
 						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_USER_NAME', 'name', $listDirn, $listOrder); ?>
 					</th>
+                    <th>
+						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_USER_EMAIL', 'email', $listDirn, $listOrder); ?>
+					</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<td colspan="6">
+					<td colspan="7">
 						<?php echo $this->pagination->getListFooter(); ?>
 					</td>
 				</tr>
@@ -161,6 +164,11 @@ $sortFields = $this->getSortFields();
 					<td class="has-context">
                         <div class="pull-left">
                             <?php echo $item->name; ?>
+                        </div>
+					</td>
+                    <td class="has-context">
+                        <div class="pull-left">
+                            <?php echo $item->email ; ?>
                         </div>
 					</td>
 				</tr>

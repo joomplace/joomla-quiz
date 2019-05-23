@@ -105,6 +105,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 	protected function userHasAccess($quiz, $user = null){
 		
 		if(!is_object($quiz)){		
+		    $database = JFactory::getDbo();
 			$query = "SELECT * FROM #__quiz_t_quiz WHERE c_id = '".(int)$quiz."'";
 			$database->SetQuery ($query );
 			$quiz = $database->LoadObject();
@@ -2326,7 +2327,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$quest_id = $quest_ids[$q];
 				$answer = $answers[$q];
 				
-				if ($answer == '~~~') continue;
+				if ($answer == '~~~'|| $answer == '') continue;
 				
 				// get question type
 				$query = "SELECT c_type from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";

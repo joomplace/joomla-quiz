@@ -4,7 +4,7 @@ if(questions[i].cur_quest_type == 11){
 	if(task != 'review_start' && task != 'review_next'){
 		puzzle_cur_id = questions[i].cur_quest_id;
 		SqueezeBox.initialize({});
-		SqueezeBox.fromElement('index.php?option=com_joomlaquiz&task=ajaxaction.procces&ajax_task=ajax_plugin&plg_task=show&quest_type=puzzle', options);
+		SqueezeBox.fromElement('<?php echo JUri::root();?>index.php?option=com_joomlaquiz&task=ajaxaction.procces&ajax_task=ajax_plugin&plg_task=show&quest_type=puzzle', options);
 		jq_jQuery('#sbox-overlay, #sbox-btn-close').click(function(){
 			clearInterval(quest_timer);
 			jq_jQuery.ajax({

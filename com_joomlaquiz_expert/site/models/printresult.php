@@ -469,6 +469,7 @@ class JoomlaquizModelPrintresult extends JModelList
 				$pdf->writeHTML($str, true, 0, true, 0);
 				$pdf->Ln();
 			}
+            $pdf->Ln(5);
 		}
 
 		return $pdf;

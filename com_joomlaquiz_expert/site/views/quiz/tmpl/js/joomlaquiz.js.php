@@ -1007,6 +1007,31 @@ function jq_processFeedback(task, is_preview, skip_question){
                                 }
                             }
 						}
+                        else{
+
+                            if (prev_correct == '1') { // correct answer
+                                <?php if ($quiz->c_slide) { ?>
+                                    <?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
+                                        jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/result_panel_true.png" border=0>';
+                                    <?php } else {?>
+                                        jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/tick.png" border=0>';
+                                    <?php }?>
+                                <?php } ?>
+                            } else { // incorrect answer
+                                <?php if ($quiz->c_slide) { ?>
+                                    <?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
+                                        jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/result_panel_false.png" border=0>';
+                                    <?php } else {?>
+                                        jq_getObj('quest_result_'+feedback_quest_id).innerHTML = '<img src="<?php echo JURI::root(true)?>/components/com_joomlaquiz/assets/images/publish_x.png" border=0>';
+                                    <?php }?>
+                                <?php } ?>
+
+                                allow_attempt = response.getElementsByTagName('quiz_allow_attempt')[0].firstChild.data;
+                                if (allow_attempt == 1) {
+                                    is_allow_attempt++;
+                                }
+                            }
+						}
 					}
 				}
 			}// if do_feedback

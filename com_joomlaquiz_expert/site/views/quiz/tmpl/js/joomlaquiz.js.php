@@ -983,7 +983,7 @@ function jq_processFeedback(task, is_preview, skip_question){
 						feed_task = 'preview_back';
 					} else {
                         /* IE11 fix */
-                        if(jq_getObj('quest_result_'+feedback_quest_id)){
+                        //<if(jq_getObj('quest_result_'+feedback_quest_id)){
                             if (prev_correct == '1') { // correct answer
                                 <?php if ($quiz->c_slide) { ?>
                                     <?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
@@ -1006,7 +1006,8 @@ function jq_processFeedback(task, is_preview, skip_question){
                                     is_allow_attempt++;
                                 }
                             }
-						}
+						//}
+
 					}
 				}
 			}// if do_feedback

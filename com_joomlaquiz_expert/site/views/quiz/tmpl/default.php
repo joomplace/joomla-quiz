@@ -231,7 +231,7 @@ if ($quiz->c_image){
             }
 
             $document->setMetaData('og:url', null);
-            $document->setMetaData('og:url', $url.'&src=sdkpreparse', 'property');
+            $document->setMetaData('og:url', $url, 'property');
 
             if($quiz->c_image){
                 $document->setMetaData('og:image', null);

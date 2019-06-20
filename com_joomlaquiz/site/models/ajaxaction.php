@@ -1238,7 +1238,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$user_score_replaced = sprintf($sshare_message, number_format($user_score, 2, '.', ' '), number_format($max_score, 2, '.', ' ')).$quiz->c_title;
 
 						$social_buttons = '<div id="jq_share"><ul>';
-                        $social_buttons .= '<li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer.php?u='.$share_link.'&amp;src=sdkpreparse \', \'_blank\');"></div></li>';
+                        $social_buttons .= '<li><div class="jq_facebook" onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u='.$share_link.'\', \'_blank\');"></div></li>';
                         $social_buttons .= '<li><div class="jq_twitter" onclick="window.open(\'http://twitter.com/share?text='.$user_score_replaced.'&url='.$share_link.'\', \'_blank\');"><!--x--></div></li>';
                         //$social_buttons .= '<li><div class="jq_linkedin" onclick="window.open(\'http://www.linkedin.com/shareArticle?mini=true&url='.$share_link.'&title='.$user_score_replaced.'\', \'_blank\');"><!--x--></div>';
 						$social_buttons .= '<li><div class="jq_linkedin"<a class="linkedIn" href="javascript:void(0)" onclick="window.open( \'https://www.linkedin.com/sharing/share-offsite/?mini=true&amp;url='.$share_link.'\', \'sharer\', \'toolbar=0, status=0, width=626, height=436\');return false;" title="Linkedin" ></div></li>';

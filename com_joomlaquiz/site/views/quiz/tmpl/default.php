@@ -41,7 +41,10 @@ $document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jque
 $document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
 $document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/assets/css/joomlaquiz.css');
 
-if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_image);
+if ($quiz->c_image){
+    $document->setMetaData('og:image', null);
+    $document->setMetaData( 'og:image', JURI::root().$quiz->c_image, 'property');
+}
 ?>
 
 <noscript>
@@ -209,7 +212,10 @@ if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_im
         if($quiz->c_share_buttons){
             $Itemid = JFactory::getApplication()->input->getInt('Itemid', 0);
             $getItemid = $Itemid ? '&Itemid='.$Itemid : '';
-            $url = JRoute::_(JUri::root().'index.php?option=com_joomlaquiz&view=quiz&quiz_id='.$quiz->c_id.$getItemid);
+
+            $domen = rtrim(JUri::root(), '/');
+            $url = urlencode($domen.JRoute::_('index.php?option=com_joomlaquiz&view=quiz&quiz_id='.$quiz->c_id
+                .$getItemid));
 
             $document->setMetaData('og:type', null);
             $document->setMetaData('og:type', 'website', 'property');

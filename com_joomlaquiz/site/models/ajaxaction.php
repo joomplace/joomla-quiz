@@ -996,15 +996,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$share_id = $database->loadResult();
 					}
 
-                    $uri_root = JUri::root();
-                    $find   = '/';
-                    $pos = strpos($uri_root, $find,-1);
-
-                    if ($pos === false) {
-                        $domen = JUri::root();
-                    } else {
-                        $domen = substr(JUri::root(), 0, -1);
-                    }
+                    $domen = rtrim(JUri::root(), '/');
 					$share_link = urlencode($domen.JRoute::_('index.php?option=com_joomlaquiz&view=quiz&quiz_id='.$quiz_id.JoomlaquizHelper::JQ_GetItemId()));
 				}
 			}

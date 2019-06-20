@@ -50,14 +50,6 @@ if ($quiz->c_image){
 <noscript>
 <?php echo JText::_('COM_JQ_NOSCRIPT');?>
 </noscript>
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));</script>
 
 <script language="JavaScript" src="<?php echo JURI::root(true);?>/components/com_joomlaquiz/assets/js/bits_mycommon.js" type="text/javascript"></script>
 <script language="JavaScript" src="<?php echo JURI::root(true);?>/components/com_joomlaquiz/assets/js/bits_message.js" type="text/javascript"></script>
@@ -221,15 +213,7 @@ if ($quiz->c_image){
             $Itemid = JFactory::getApplication()->input->getInt('Itemid', 0);
             $getItemid = $Itemid ? '&Itemid='.$Itemid : '';
 
-            $uri_root = JUri::root();
-            $find   = '/';
-            $pos = strpos($uri_root, $find,-1);
-
-            if ($pos === false) {
-                $domen = JUri::root();
-            } else {
-                $domen = substr(JUri::root(), 0, -1);
-            }
+            $domen = rtrim(JUri::root(), '/');
             $url = urlencode($domen.JRoute::_('index.php?option=com_joomlaquiz&view=quiz&quiz_id='.$quiz->c_id
                 .$getItemid));
 
@@ -240,26 +224,10 @@ if ($quiz->c_image){
                 $document->setMetaData('og:title', null);
                 $document->setMetaData('og:title', $quiz->c_metatitle, 'property');
             }
-            else{
-                $document->setTitle($quiz->c_title);
-                $document->setMetaData( 'og:title', $document->getTitle(),'property');
-            }
 
             if ($quiz->c_ismetadescr && $quiz->c_metadescr) {
                 $document->setMetaData('og:description', null);
                 $document->setMetaData('og:description', $quiz->c_metadescr, 'property');
-            }
-            else{
-                if(!empty($quiz->c_short_description) ||!empty($quiz->c_description) ){
-                    if(!empty($quiz->c_short_description)){
-                        $document->setDescription(strip_tags($quiz->c_short_description));
-                    }
-                    elseif(!empty($quiz->c_description)){
-                        $document->setDescription(strip_tags($quiz->c_description));
-                    }
-                    $document->setMetaData('og:description', null);
-                    $document->setMetaData('og:description', $document->getDescription(), 'property');
-                }
             }
 
             $document->setMetaData('og:url', null);

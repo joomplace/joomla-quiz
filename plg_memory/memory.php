@@ -511,14 +511,14 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 		
 		$lists = array();
 		
-		$lists['c_width']['input'] = '<input type="text" size="35" name="c_width" value="'.(isset($row->c_width) ? $row->c_width : '').'">';
-		$lists['c_width']['label'] = 'Image Width:';
+		$lists['c_width']['input'] = '<input type="text" size="35" name="c_width" value="'.(isset($row->c_width) ? $row->c_width : '').'" required>';
+		$lists['c_width']['label'] = 'Image Width: *';
 		
-		$lists['c_height']['input'] = '<input type="text" size="35" name="c_height" value="'.(isset($row->c_height) ? $row->c_height : '').'">';
-		$lists['c_height']['label'] = 'Image Height:';
+		$lists['c_height']['input'] = '<input type="text" size="35" name="c_height" value="'.(isset($row->c_height) ? $row->c_height : '').'" required>';
+		$lists['c_height']['label'] = 'Image Height: *';
 		
-		$lists['c_column']['input'] = '<input type="text" size="35" name="c_column" value="'.(isset($row->c_column) ? $row->c_column : '').'">';
-		$lists['c_column']['label'] = 'Number of columns:';
+		$lists['c_column']['input'] = '<input type="text" size="35" name="c_column" value="'.(isset($row->c_column) ? $row->c_column : '').'" required>';
+		$lists['c_column']['label'] = 'Number of columns: *';
 		
 		$lists['c_sec_penalty']['input'] = '<input type="text" size="35" name="c_sec_penalty" value="'.(isset($row->c_sec_penalty) ? $row->c_sec_penalty : '').'">';
 		$lists['c_sec_penalty']['label'] = 'Seconds of penalty:';

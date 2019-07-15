@@ -39,6 +39,9 @@ if ($quiz->template_name) {
 $document = JFactory::getDocument();
 $document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
 $document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
+if(JBrowser::getInstance()->isMobile()) {
+    $document->addScript(JURI::root(true) . "/components/com_joomlaquiz/assets/js/DragDropTouch.js");
+}
 $document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/assets/css/joomlaquiz.css');
 
 if ($quiz->c_image){

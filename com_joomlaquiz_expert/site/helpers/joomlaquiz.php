@@ -303,7 +303,7 @@ class JoomlaquizHelper
 				$html = '<div style="clear:both;"></div>';
 				foreach($answers as $answer){
 					if ($answer != '[empty]')
-					$html .= '<div class="jq_draggable_answer '.$qdata->c_image.'" xid="dd_blk_id_'.$n++.'">'.$answer.'</div>';
+					$html .= '<div class="jq_draggable_answer '.$qdata->c_image.'" xid="dd_blk_id_'.$n++.'" draggable="true">'.$answer.'</div>';
 				}
 				$html .= '<div style="clear:both;"></div>';
 			}

@@ -131,7 +131,10 @@ class com_joomlaquizInstallerScript
 			),
 			'certificates' => array(
 				'text_font' => 'VARCHAR(255) NOT NULL'
-			)
+			),
+            'cert_fields' => array(
+                'text_x_center' =>"TINYINT(1) NOT NULL DEFAULT '0'"
+            )
 		);
 
 		$db = JFactory::getDbo();

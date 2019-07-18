@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_cert_fields` (
   `text_h` int(11) NOT NULL DEFAULT '0',
   `shadow` tinyint(4) NOT NULL DEFAULT '0',
   `font` varchar(255) DEFAULT 'arial.ttf',
+  `text_x_center` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 

@@ -3322,7 +3322,13 @@ class JoomlaquizModelAjaxaction extends JModelList
                                 $qoption .= "\t" . '<div class="jq_question_feedback">' . $begin_center . '<strong>' . JText::_('COM_QUIZ_FEEDBACK_QUESTION') . ':</strong><br/><br/>' . $c_right_message . $end_center . '</div>' . "\n";
                             }
                         } else {
+                            if($is_correct){
+                                $qoption .= "\t" . '<div class="jq_question_feedback">' . $begin_center . '<strong>' . JText::_('COM_QUIZ_FEEDBACK_QUESTION') . ':</strong><br/><br/>' . $c_right_message . $end_center . '</div>' . "\n";
+                            }
+                            else{
                             $qoption .= "\t" . '<div class="jq_question_feedback">' . $begin_center . '<strong>' . JText::_('COM_QUIZ_FEEDBACK_QUESTION') . ':</strong><br/><br/>' . $c_wrong_message . $end_center . '</div>' . "\n";
+                        }
+
                         }
                     }
 				}

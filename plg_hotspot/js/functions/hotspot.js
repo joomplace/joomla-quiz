@@ -32,8 +32,8 @@ var img_width_init = 0,
 	paper = null,
 	getNewPath = null,
 	landscape = false;
-	prev_it_width = 0;
-	prev_it_height = 0;
+var prev_it_width = 0;
+var prev_it_height = 0;
 
 window.onresize = function(){
 	setTimeout(_recalculateSize, 10);
@@ -59,6 +59,10 @@ function _recalculateSize(){
 			if(!src || src=='undefined'){
 				src = img.attr('href');
 			}
+
+            prev_it_width = img.width();
+            prev_it_height = img.height();
+
 			// need to be removed after drawPolygons() will be refactored
 			viewport_width = foo.width();
 			var nimg = new Image();
@@ -79,7 +83,7 @@ function _recalculateSize(){
 					}
 			}
 
-			nwidth = svg_width;
+            var nwidth = svg_width;
 			
 			var ratio = img_height_init/img_width_init;
 			var nheight = nwidth * ratio;
@@ -102,8 +106,8 @@ function _recalculateSize(){
 				drawPolygons();
 			}
 			
-			prev_it_width = nwidth;
-			prev_it_height = nheight;
+			// prev_it_width = nwidth;
+			// prev_it_height = nheight;
 
 			initial = 0;
 		});

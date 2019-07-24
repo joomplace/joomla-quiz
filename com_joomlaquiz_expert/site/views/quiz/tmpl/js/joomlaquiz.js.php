@@ -1986,6 +1986,7 @@ function jq_UpdateTaskDiv(task, skip_question) {
 		var obj_plc = jq_getObj('jq_panel_link_container');
 		if (obj_plc) obj_plc.style.visibility = 'hidden';
 	}
+    jq_updateHotspot();
 }
 
 function jq_NextButton(task, text) {

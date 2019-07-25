@@ -37,7 +37,7 @@ class JoomlaquizViewFeedbackHotspot
 					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" id="canvas_'.$feedback_data['qdata']['quest_id'].'">
 					<image x="0" y="0" preserveAspectRatio="none" xlink:href="'.JURI::root().'images/joomlaquiz/images/'.$feedback_data['qdata']['c_image'].'" id="img_'.$feedback_data['qdata']['quest_id'].'"/>
 					
-					<circle cx="'.$feedback_data['qdata']['c_select_x'].'" cy="'.$feedback_data['qdata']['c_select_y'].'" r="5" fill="#ffa500" stroke="#ff0000" style=""/>
+					<circle data-scale="initial" cx="'.$feedback_data['qdata']['c_select_x'].'" cy="'.$feedback_data['qdata']['c_select_y'].'" r="5" fill="#ffa500" stroke="#ff0000" style=""/>
 					</svg>
 				</div>';
 
@@ -49,7 +49,7 @@ class JoomlaquizViewFeedbackHotspot
 					<svg height="'.$feedback_data['qdata']['height'].'" version="1.1" width="'.$feedback_data['qdata']['width'].'" xmlns="http://www.w3.org/2000/svg">
 					<image x="0" y="0" width="'.$feedback_data['qdata']['width'].'" height="'.$feedback_data['qdata']['height'].'" preserveAspectRatio="none" xlink:href="'.JURI::root().'images/joomlaquiz/images/'.$feedback_data['qdata']['c_image'].'"/>
 					'.$path_str.'
-					<circle cx="'.$feedback_data['qdata']['c_select_x'].'" cy="'.$feedback_data['qdata']['c_select_y'].'" r="5" fill="#ffa500" stroke="#ff0000" style=""/>
+					<circle data-scale="initial" cx="'.$feedback_data['qdata']['c_select_x'].'" cy="'.$feedback_data['qdata']['c_select_y'].'" r="5" fill="#ffa500" stroke="#ff0000" style=""/>
 					</svg>
 				</div>';
 		}

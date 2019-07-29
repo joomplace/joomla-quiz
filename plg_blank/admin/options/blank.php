@@ -16,6 +16,7 @@ for ($z = 0; $z < count($blank_data); $z++) {
     $database->SetQuery( $query );
     $ans_row = $database->loadObjectList();
 ?>
+    <div class="blank-wrapper">
 		<table cellpadding="10" cellspacing="10" style="margin-top:15px;">
 			<tr>
 				<td><strong><?php echo JText::_('COM_JOOMLAQUIZ_BLANK');?><strong/><span id="blnk_num_<?php echo $z?>"><?php echo $z+1?></span><?php echo JText::_('COM_JOOMLAQUIZ_CODE_FORQUESTION');?> {blank<?php echo $z+1?>}</td>
@@ -68,7 +69,8 @@ for ($z = 0; $z < count($blank_data); $z++) {
 						</div>
 						</td></tr></table>
 						<hr/>
-					<?php 
+    </div>
+					<?php
 					} ?>
 					<table id="id_before">
 					</table>

@@ -374,19 +374,22 @@ defined('_JEXEC') or die;
 			
 			var id_before = document.getElementById('id_before');
 			var td_insert = id_before.parentNode;
-			td_insert.insertBefore(rem_tbl, id_before);
 				
-			td_insert.insertBefore(points_label, id_before);
-			td_insert.insertBefore(input_hidden_p, id_before);
-			td_insert.insertBefore(css_label, id_before);
-			td_insert.insertBefore(input_hidden_css, id_before);
+			var wrapElement = jQuery('<div class="blank-wrapper">')[0];
+			td_insert.insertBefore(wrapElement, id_before);
+            wrapElement.appendChild(rem_tbl);
+            wrapElement.appendChild(points_label);
+            wrapElement.appendChild(input_hidden_p);
+            wrapElement.appendChild(css_label);
+            wrapElement.appendChild(input_hidden_css);
 			
-			td_insert.insertBefore(input_check2, id_before);
-			td_insert.insertBefore(label2, id_before);
-			td_insert.insertBefore(input_hidden_check2, id_before);
+            wrapElement.appendChild(input_check2);
+            wrapElement.appendChild(label2);
+            wrapElement.appendChild(input_hidden_check2);
 			
-			td_insert.insertBefore(tbl_new, id_before);
-			td_insert.insertBefore(tbl_add, id_before);
+            wrapElement.appendChild(tbl_new);
+            wrapElement.appendChild(tbl_add);
+
 			re_number_blnk();
 		}
 		
@@ -434,19 +437,8 @@ defined('_JEXEC') or die;
 		}
 		
 		function Delete_blnk_row(element){
-			var table = element.parentNode.parentNode.parentNode.parentNode;
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).next().remove();
-			jQuery(table).remove();
+			var wrap = jQuery(element).closest('.blank-wrapper');
+            wrap.remove();
 			re_number_blnk();
 		}
 		

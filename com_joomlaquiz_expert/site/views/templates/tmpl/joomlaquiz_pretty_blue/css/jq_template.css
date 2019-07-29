@@ -420,8 +420,14 @@ input:focus,
 	border-collapse:collapse;
 }
 
+.quest_pos_td p{
+	margin-bottom: 0px;
+}
+
 .jq_input_pos{
 	text-align:left;
+	display: flex;
+	margin-top: 0px;
 }
 
 .jq_input_pos input{
@@ -438,7 +444,7 @@ input:focus,
 .jq_mresponse td:not(#foo)  > input[type='checkbox'] {
 	opacity: 0; 
 	float: left;
-	width: 18px;
+	width: 5px;
 }
 
 .jq_mquestions td:not(#foo) > input[type='radio'] + label,

@@ -153,6 +153,11 @@ class JoomlaquizHelper
                 'index.php?option=com_joomlaquiz&view=usercategories',
                 $vName == 'usercategories'
             );
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_USERQUIZ'),
+                'index.php?option=com_joomlaquiz&view=userquiz',
+                $vName == 'userquiz'
+            );
             //custom586 end
 		}
 
@@ -188,6 +193,11 @@ class JoomlaquizHelper
                 'index.php?option=com_joomlaquiz&view=usercategories',
                 $vName == 'usercategories'
             );
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_USERQUIZ'),
+                'index.php?option=com_joomlaquiz&view=userquiz',
+                $vName == 'userquiz'
+            );
             //custom586 end
 		}
 		
@@ -217,6 +227,11 @@ class JoomlaquizHelper
                 JText::_('COM_JOOMLAQUIZ_SUBMENU_USERCATEGORIES'),
                 'index.php?option=com_joomlaquiz&view=usercategories',
                 $vName == 'usercategories'
+            );
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_USERQUIZ'),
+                'index.php?option=com_joomlaquiz&view=userquiz',
+                $vName == 'userquiz'
             );
             //custom586 end
 		}
@@ -273,6 +288,11 @@ class JoomlaquizHelper
                 JText::_('COM_JOOMLAQUIZ_SUBMENU_USERCATEGORIES'),
                 'index.php?option=com_joomlaquiz&view=usercategories',
                 $vName == 'usercategories'
+            );
+            JHtmlSidebar::addEntry(
+                JText::_('COM_JOOMLAQUIZ_SUBMENU_USERQUIZ'),
+                'index.php?option=com_joomlaquiz&view=userquiz',
+                $vName == 'userquiz'
             );
             //custom586 end
 		}

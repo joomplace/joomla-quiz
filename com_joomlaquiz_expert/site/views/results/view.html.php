@@ -15,9 +15,19 @@ jimport('joomla.application.component.view');
  */
 class JoomlaquizViewResults extends JViewLegacy
 {
-    public function display($tpl = null) 
+    protected $state;
+
+    public function display($tpl = null)
     {
-		$this->results = $this->get('Results');
+        $this->state = $this->get('State');
+
+        if($this->state->get('filter.quizstartstate') == -1){
+            $this->results = $this->get('NotStarted');
+            $tpl = 'notstarted';
+        } else {
+            $this->results = $this->get('Results');
+        }
+
 		// Check for errors.
 		if (!empty($errors = $this->get('Errors'))) {
             JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');

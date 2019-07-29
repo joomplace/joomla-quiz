@@ -665,3 +665,12 @@ CREATE TABLE IF NOT EXISTS `#__quiz_usercategories` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_usercat` (`user_id`,`category_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `#__quiz_userquiz` (
+    `id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
+    `user_id` INT(11) unsigned NOT NULL DEFAULT '0',
+    `quiz_id` INT(11) unsigned NOT NULL DEFAULT '0',
+    `notified` INT(3) unsigned NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_userquiz` (`user_id`,`quiz_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

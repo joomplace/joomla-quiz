@@ -12,7 +12,8 @@ JHtml::_('script', 'system/core.js', true, true);
 ?>
 <div class="jq_results_container">
 	<form name="adminForm" id="adminForm" action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=results'.JoomlaquizHelper::JQ_GetItemId());?>" method="post">
-	<table class="jq_results_container_table table-striped" cellpadding="10" cellspacing="10" border="0" width="100%">
+    <?php echo $displayData->filter; ?>
+    <table class="jq_results_container_table table-striped" cellpadding="10" cellspacing="10" border="0" width="100%">
 	<tr>	
 		<td class="sectiontableheader">#</td>
 		<td class="sectiontableheader"><?php echo JText::_('COM_QUIZ_MAIL_MESSAGE_USER'); ?></td>

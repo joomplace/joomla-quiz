@@ -27,6 +27,13 @@ if($share_id != ''){
 	$is_share = $database->loadResult();
 }
 
+//filter
+$javascript = 'onchange="document.adminForm.submit();"';
+$filter_start_state = array();
+$filter_start_state[] = JHTML::_('select.option', '0', JText::_('COM_JOOMLAQUIZ_VIEW_RESULTS_OPTION_STARTED') );
+$filter_start_state[] = JHTML::_('select.option', '-1', JText::_('COM_JOOMLAQUIZ_VIEW_RESULTS_OPTION_NOTSTARTED') );
+$filter_start_state_output = JHTML::_('select.genericlist', $filter_start_state, 'filter_quizstart_state', 'class="text_area" style="max-width: 300px;" size="1" '. $javascript, 'value', 'text', $this->escape($this->state->get('filter.quizstartstate', 0)) );
+
 if(!$my->id && !$is_share) {
 	echo JText::_('COM_RESULTS_FOR_REGISTERED');
 } elseif(empty($rows)) {
@@ -34,10 +41,14 @@ if(!$my->id && !$is_share) {
 	<div class="contentpane joomlaquiz">
 		<h1 class="componentheading"><?php echo JText::_('COM_SHOW_RESULTS_TITLE'); ?></h1>
 		<br/>
-		<?php
-			echo JText::_('COM_NO_RESULTS');
-			echo JoomlaquizHelper::poweredByHTML();
-		?>
+        <form name="adminForm" id="adminForm" action="<?php echo htmlspecialchars(JUri::getInstance()->toString()); ?>" method="post">
+            <?php echo $filter_start_state_output; ?>
+            <input type="hidden" name="option" value="com_joomlaquiz" />
+            <input type="hidden" name="view" value="results" />
+            <input type="hidden" name="Itemid" value="<?php echo JFactory::getApplication()->input->getInt('Itemid', 0); ?>" />
+        </form>
+        <?php echo JText::_('COM_NO_RESULTS'); ?>
+        <?php echo JoomlaquizHelper::poweredByHTML(); ?>
 	</div>
 	<?php
 } else {
@@ -55,11 +66,11 @@ if(!$my->id && !$is_share) {
 	</div>
 	<br />
 	<?php
-		
+
 	$layout = new JLayoutFile('joomlaquiz.results');
 	$layout->setComponent('com_joomlaquiz');
-	$html = $layout->sublayout($my->authorise('core.managefe','com_joomlaquiz')?'manager':'user',(object)array('items'=>$rows,'pagination'=>$pagination));
-	if(!$html) $html = $layout->render((object)array('items'=>$rows,'pagination'=>$pagination));
+	$html = $layout->sublayout($my->authorise('core.managefe','com_joomlaquiz')?'manager':'user',(object)array('items'=>$rows,'pagination'=>$pagination,'filter'=>$filter_start_state_output));
+	if(!$html) $html = $layout->render((object)array('items'=>$rows,'pagination'=>$pagination,'filter'=>$filter_start_state_output));
 	echo $html;
 	
 	?>

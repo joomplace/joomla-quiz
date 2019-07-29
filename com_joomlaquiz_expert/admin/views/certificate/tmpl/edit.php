@@ -133,34 +133,50 @@ else
 			<div class="control-group form-inline">
 				<table class="table table-striped" id="qfld_tbl">
 					<tr>
-						<th class="center"><?php echo JText::_('COM_JOOMLAQUIZ_TEXT_FIELD');?></th>
-						<th class="center">&nbsp;&nbsp;</th>
-						<th class="center"><?php echo JText::_('COM_JOOMLAQUIZ_SHADOW');?></th>
-						<th class="center"><?php echo JText::_('COM_JOOMLAQUIZ_TEXT_X');?></th>
-						<th class="center"><?php echo JText::_('COM_JOOMLAQUIZ_TEXT_Y');?></th>
-						<th class="center"><?php echo JText::_('COM_JOOMLAQUIZ_FONT_SIZE');?></th>
-						<th class="center"><?php echo JText::_('COM_JOOMLAQUIZ_FONT');?></th>
+						<th class="center" style="width: 250px"><?php echo JText::_('COM_JOOMLAQUIZ_TEXT_FIELD');?></th>
+						<th class="center" style="width: 50px">&nbsp;&nbsp;</th>
+						<th class="center" style="width: 100px"><?php echo JText::_('COM_JOOMLAQUIZ_SHADOW');?></th>
+						<th class="center" style="width: 100px"><?php echo JText::_('COM_JOOMLAQUIZ_TEXT_X_ALIGN_CENTER');?></th>
+						<th class="center" style="width: 50px"><?php echo JText::_('COM_JOOMLAQUIZ_TEXT_X');?></th>
+						<th class="center" style="width: 50px"><?php echo JText::_('COM_JOOMLAQUIZ_TEXT_Y');?></th>
+						<th class="center" style="width: 50px"><?php echo JText::_('COM_JOOMLAQUIZ_FONT_SIZE');?></th>
+						<th class="center" style="width: 250px"><?php echo JText::_('COM_JOOMLAQUIZ_FONT');?></th>
 						<th class="center">&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					</tr>
 					<?php
 					$k = 0; $ii = 1;
 					foreach ($this->lists['fields'] as $field) { ?>
 					<tr class="<?php echo "row$k"; ?>">
-						<td align="left">
+						<td class="center" style="width: 250px">
 							<input size="30" type="text" name="jq_hid_fields[]" value="<?php echo htmlspecialchars(stripslashes($field->f_text))?>" />
 							<input type="hidden" name="jq_hid_fields_ids[]" value="<?php echo $field->c_id?>" />
 						</td>
-						<td>
+						<td class="center" style="width: 50px">
 							<a href="javascript: void(0);" onClick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a>
 						</td>
-						<td>
+						<td class="center" style="width: 100px">
 							<input type="checkbox" name="dummy[]"  <?php echo ($field->shadow?'checked="checked"':'')?> value="1" onchange="javascript: if(this.checked){getObj('jq_fields_shadow_<?php echo $field->c_id?>').value=1} else{getObj('jq_fields_shadow_<?php echo $field->c_id?>').value=0}" />
 							<input type="hidden" id="jq_fields_shadow_<?php echo $field->c_id?>" name="jq_fields_shadow[]" value="<?php echo $field->shadow?>"  />
 						</td>
-						<td><input type="text" name="jq_hid_field_x[]" value="<?php echo $field->text_x?>" size="4" /></td>
-						<td><input type="text" name="jq_hid_field_y[]" value="<?php echo $field->text_y?>" size="4" /></td>
-						<td><input type="text" name="jq_hid_field_h[]" value="<?php echo $field->text_h?>" size="4" /></td>
-						<td align="left"><?php echo JHTML::_('select.genericlist', $this->lists['fonts'], 'jq_hid_field_font[]', 'class="text_area" style="max-width: 300px;" size="1" ', 'value', 'text', $field->font );?></td>
+                        <td class="center" style="width: 100px">
+                            <input type="checkbox" name="x_center[]" style="width: 50px" <?php echo ($field->text_x_center?'checked="checked"':'')?>
+                                                       value="1" onchange="javascript: if(this.checked){getObj
+                                    ('jq_fields_text_x_center_<?php echo $field->c_id?>').value=1} else{getObj('jq_fields_text_x_center_<?php echo $field->c_id?>').value=0}" />
+                            <input type="hidden" id="jq_fields_text_x_center_<?php echo $field->c_id?>" name="jq_fields_x_center[]" value="<?php echo $field->text_x_center?>"  />
+                        </td>
+						<td class="center" style="width: 50px">
+                            <input type="text" name="jq_hid_field_x[]" style="width: 50px" value="<?php echo
+                            $field->text_x?>" size="4" />
+                        </td>
+						<td class="center" style="width: 50px"><input type="text" name="jq_hid_field_y[]"
+                                                                      style="width: 50px"
+                                                   value="<?php echo
+                            $field->text_y?>" size="4" /></td>
+						<td class="center" style="width: 50px"><input type="text" name="jq_hid_field_h[]"
+                                                                      style="width: 50px"
+                                                   value="<?php echo
+                            $field->text_h?>" size="4" /></td>
+						<td class="center" style="width: 250px"><?php echo JHTML::_('select.genericlist', $this->lists['fonts'], 'jq_hid_field_font[]', 'class="text_area" style="max-width: 300px;" size="1" ', 'value', 'text', $field->font );?></td>
 						<td></td>
 					</tr>
 					<?php
@@ -170,16 +186,29 @@ else
 					<br />
 				<table class="table table-striped">
 					<tr>
-						<td>	
+						<td class="center" style="width: 250px">
 							<input size="30" id="new_text" class="text_area" type="text" name="new_text" />
 						</td>
-						<td align="center"  width="7%">
-							<label for="new_shadow"><input type="checkbox" name="new_shadow" id="new_shadow"   value="1" />&nbsp;<?php echo JText::_('COM_JOOMLAQUIZ_SHADOW');?></label>
+                        <td class="center" style="width: 50px"></td>
+						<td class="center"  style="width: 100px">
+                                <input type="checkbox" name="new_shadow" id="new_shadow"   value="1" />
 						</td>
-							<td><input type="text" name="new_x" id="new_x" value="" size="4" /></td>
-							<td><input type="text" name="new_y" id="new_y" value="" size="4" /></td>
-							<td><input type="text" name="new_h" id="new_h" value="" size="4" /></td>
-							<td><?php echo JHTML::_('select.genericlist', $this->lists['fonts'], 'new_font', 'class="text_area" style="max-width: 300px;" size="1" ', 'value', 'text', null );?></td>
+                        <td class="center" style="width: 100px">
+                            <input type="checkbox" name="new_x_center" id="new_x_center" style="width: 50px"
+                                   value="" onClick="javascript:TextX_switch_input(this);"/>
+						</td>
+							<td class="center" style="width: 50px"><input style="width: 50px" type="text" name="new_x" id="new_x"
+                                                       value="" size="4"
+                                /></td>
+							<td class="center" style="width: 50px"><input style="width: 50px" type="text" name="new_y" id="new_y"
+                                                       value="" size="4"
+                                /></td>
+							<td class="center" style="width: 50px"><input style="width: 50px"type="text" name="new_h"
+                                                                          id="new_h"
+                                                       value="" size="4" /></td>
+							<td class="center" style="width: 250px"><?php echo JHTML::_('select.genericlist',
+                                    $this->lists['fonts'],
+                                    'new_font', 'class="text_area" style="max-width: 300px;" size="1" ', 'value', 'text', null );?></td>
 							<td>
 							<input class="btn" type="button" name="add_new_field" style="width:70px " value="Add" onClick="javascript:Add_new_tbl_field();" />
 						</td>
@@ -234,6 +263,7 @@ Joomla.submitbutton = function(task)
 	function Add_new_tbl_field() {
 		var new_text = getObj('new_text').value;
 		var new_shadow = (getObj('new_shadow').checked? 1: 0);
+		var new_x_center = (getObj('new_x_center').checked? 1: 0);
 		var new_x = getObj('new_x').value;
 		var new_y = getObj('new_y').value;
 		var new_h = getObj('new_h').value;
@@ -246,6 +276,7 @@ Joomla.submitbutton = function(task)
 			
 		getObj('new_text').value = '';
 		getObj('new_shadow').checked = false;
+		getObj('new_x_center').checked = false;
 		getObj('new_x').value = '';
 		getObj('new_y').value = '';
 		getObj('new_h').value = '';
@@ -261,6 +292,30 @@ Joomla.submitbutton = function(task)
 		var cell7 = document.createElement("td");
 		var cell8 = document.createElement("td");
 			
+		cell1.setAttribute('class', 'center');
+		cell1.setAttribute('style', 'width:250px');
+
+		cell2.setAttribute('class', 'center');
+		cell2.setAttribute('style', 'width:50px');
+
+		cell3.setAttribute('class', 'center');
+		cell3.setAttribute('style', 'width:100px');
+
+		cell4.setAttribute('class', 'center');
+		cell4.setAttribute('style', 'width:100px');
+
+		cell5.setAttribute('class', 'center');
+		cell5.setAttribute('style', 'width:50px');
+
+        cell6.setAttribute('class', 'center');
+        cell6.setAttribute('style', 'width:50px');
+
+        cell7.setAttribute('class', 'center');
+        cell7.setAttribute('style', 'width:50px');
+
+        cell8.setAttribute('class', 'center');
+        cell8.setAttribute('style', 'width:250px');
+
 		var input_text = document.createElement("input");
 		input_text.type = "text";
 		input_text.name = 'jq_hid_fields[]';
@@ -295,33 +350,56 @@ Joomla.submitbutton = function(task)
 		cell3.appendChild(input_check);
 		cell3.appendChild(input_hidden_check);
 			
+        var input_check_center = document.createElement("input");
+
+        input_check_center.type = "checkbox";
+        input_check_center.setAttribute('name','x_center[]');
+
+        input_check_center.checked = (new_x_center==1);
+        input_check_center.id = 'jq_fields_x_center_' + number;
+        input_check_center.setAttribute('onchange','javascript: if(this.checked){getObj("jq_fields_x_center_'+number+'").value=1} else{getObj("jq_fields_x_center_'+number+'").value=0}');
+
+        var input_hidden_check_center = document.createElement("input");
+        input_hidden_check_center.type = "hidden";
+        input_hidden_check_center.setAttribute('name','jq_fields_x_center[]');
+        input_hidden_check_center.value = new_x_center;
+
+        cell4.appendChild(input_check_center);
+        cell4.appendChild(input_hidden_check_center);
+
 		var inp_text_x = document.createElement("input");
 		inp_text_x.type = "text";
 		inp_text_x.name = "jq_hid_field_x[]";
 		inp_text_x.value = new_x;
 		inp_text_x.setAttribute('size', 4);
-		cell4.appendChild(inp_text_x);
+		inp_text_x.setAttribute('style', 'width:50px');
+		if(input_check_center.checked){
+            inp_text_x.setAttribute('disabled', 'disabled');
+        }
+		cell5.appendChild(inp_text_x);
 			
 		var inp_text_y = document.createElement("input");
 		inp_text_y.type = "text";
 		inp_text_y.name = "jq_hid_field_y[]";
 		inp_text_y.value = new_y;
 		inp_text_y.setAttribute('size', 4);
-		cell5.appendChild(inp_text_y);
+		inp_text_y.setAttribute('style', 'width:50px');
+		cell6.appendChild(inp_text_y);
 			
 		var inp_text_h = document.createElement("input");
 		inp_text_h.type = "text";
 		inp_text_h.name = "jq_hid_field_h[]";
 		inp_text_h.value = new_h;
 		inp_text_h.setAttribute('size', 4);
-		cell6.appendChild(inp_text_h);
+		inp_text_h.setAttribute('style', 'width:50px');
+		cell7.appendChild(inp_text_h);
 			
 		var input_select = document.createElement("select");
 		input_select.name = 'jq_hid_field_font[]';
 		input_select.className = 'inputbox';
 		copyOptions(getObj('new_font'), input_select);
 		
-		cell7.appendChild(input_select);
+		cell8.appendChild(input_select);
 			
 		row.appendChild(cell1);
 		row.appendChild(cell2);
@@ -330,5 +408,53 @@ Joomla.submitbutton = function(task)
 		row.appendChild(cell5);
 		row.appendChild(cell6);
 		row.appendChild(cell7);
+		row.appendChild(cell8);
+
+        var new_x_obj = getObj('new_x');
+        new_x_obj.removeAttribute('disabled');
 	}
+
+	function TextX_switch_input(obj) {
+        var new_x = getObj('new_x');
+
+        if(obj.checked){
+            new_x.setAttribute('disabled','disabled');
+        }
+        else{
+            new_x.removeAttribute('disabled');
+        }
+        // console.log(new_x);
+
+    }
+
+jQuery(function ($) {
+
+    $('#qfld_tbl').on('change', '[name^=x_center]', function(){
+        var next_input = $(this).parent().next().children();
+        if ($(this).is(':checked')) {
+            next_input.attr('disabled','disabled');
+	}
+        else{
+            next_input.removeAttr('disabled');
+        }
+    });
+
+
+    var list_x_center = $('[name^=x_center]');
+
+    list_x_center.each(function () {
+        if(this.checked){
+            var next_input = $(this).parent().next().children();
+            next_input.attr('disabled','disabled');
+            console.log(this);
+        }
+    });
+
+    // Для передачи данных задисэйбленных элементов
+    $('form').submit(function(e) {
+        $(':disabled').each(function(e) {
+            $(this).removeAttr('disabled');
+        })
+    });
+});
 </script>

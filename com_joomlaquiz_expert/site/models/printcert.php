@@ -321,10 +321,26 @@ class JoomlaquizModelPrintcert extends JModelList
 						}
 			
 						$font = JPATH_SITE . "/media/".(isset($field->font)? $field->font: 'arial.ttf');
-						if ($field->shadow) imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2, $grey, $font, $field->f_text);
-						
+						if($field->text_x_center){
+                            $box_text =imagettfbbox($field->text_h, 0,$font,$field->f_text);
+                            if ($field->shadow)
+                            {
+                                imagettftext($im, $field->text_h, 0,  $im_fullsize[0]/2 - ($box_text[2]/2) + $ad+2,
+                                    $field->text_y+2,$grey, $font, $field->f_text);
+                            }
+                            imagettftext($im, $field->text_h, 0,  $im_fullsize[0]/2 - ($box_text[2]/2) , $field->text_y,
+                                $black, $font,
+                                $field->f_text);
+                        }
+						else
+                        {
+                            if ($field->shadow)
+                            {imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2,
+                                    $grey, $font, $field->f_text);
+                            }
 						imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
 					}
+				}
 				}
 
 				if (preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {

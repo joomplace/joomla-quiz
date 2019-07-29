@@ -147,7 +147,9 @@ object{
 .quest_pos {
 	padding-right: 15px;
 
-}.jq_mquestions .quest_pos p{
+}
+
+.jq_mquestions .quest_pos p{
 	margin: 0px;
 }
 

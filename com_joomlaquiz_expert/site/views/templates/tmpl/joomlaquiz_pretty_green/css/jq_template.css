@@ -701,7 +701,11 @@ td.jq_match_image_element{
 /* checkbox and radio questions */
 .quest_pos_td
 {
-	padding-right:15px;
+	padding-right:5px;
+}
+
+.quest_pos_td p{
+	margin-bottom: 0px;
 }
 
 .jq_mquestions,
@@ -711,6 +715,8 @@ td.jq_match_image_element{
 }
 .jq_input_pos{
 	text-align:left;
+	display: flex;
+	margin-top: 0px;
 }
 .jq_input_pos input{
 	margin:0;
@@ -725,7 +731,7 @@ td.jq_match_image_element{
 .jq_mresponse td:not(#foo)  > input[type='checkbox'] {
 	opacity: 0; 
 	float: left;
-	width: 18px;
+	width: 5px;
 }
 		
 .jq_mchoice .msq_option

@@ -3320,7 +3320,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$max_points = (floatval($database->LoadResult()) + $q_data->c_point);
 			$q_data->c_point = $q_data->c_point.' - '.$max_points;
 
-            $query = "SELECT `c_score`, `is_correct` FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$stu_quiz_id."' AND c_question_id = '".$q_data->c_id."'";
+            $query = "SELECT `c_id`,`c_score`, `is_correct` FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$stu_quiz_id."' AND c_question_id = '".$q_data->c_id."'";
             $database->SetQuery( $query );
             $data_qrsq = $database->loadObject();
             $score = $data_qrsq->c_score;
@@ -3343,13 +3343,28 @@ class JoomlaquizModelAjaxaction extends JModelList
                     if($q_data->c_type == 1){       //Multiple Choice
                         $database->SetQuery("SELECT * FROM `#__quiz_t_choice` WHERE `c_question_id` = '".(int)$q_data->c_id."'");
                         $q_choices = $database->LoadObjectList();
+
+                        $database->SetQuery("SELECT * FROM `#__quiz_r_student_choice` WHERE `c_sq_id` = '".$data_qrsq->c_id."' ");
+                        $qrsc = $database->loadObject();
+
                         if($q_choices && is_array($q_choices)) {
                             foreach ($q_choices as $choice) {
+                                if((int)$is_correct){
                                 if ((int)$choice->c_right == (int)$is_correct) {
-                                    $feedback_message = $choice->c_incorrect_feed;
+                                        $feedback_message = $q_data->c_right_message;
+                                        $feedback_message.= $choice->c_incorrect_feed;
+                                        break;
+                                    }
+                                }
+                                else{
+                                    $feedback_message = $q_data->c_wrong_message;
+                                    $feedback_message .= $q_data->c_detailed_feedback;
+                                    if($qrsc->c_choice_id == $choice->c_id ){
+                                        $feedback_message .= $choice->c_incorrect_feed;
                                     break;
                                 }
                             }
+                        }
                         }
                         $qoption .= "\t" . '<div class="jq_question_feedback"><strong>'.JText::_('COM_QUIZ_FEEDBACK_QUESTION').':</strong><br/><br/>'.$feedback_message.'</div>' . "\n";
                     }

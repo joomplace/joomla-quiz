@@ -3,18 +3,16 @@ stages:
 
 build:regular:
   stage: build
-  image: php:7.0-apache
+  image: busybox
   before_script:
     - apt-get update -qq && apt-get install -y -qq zip
-    - zip -v
   script:
     - if grep -rn './' -e "\xEF\xBB\xBF"; then exit 1; fi
     - grep -E -o '<version>(.*?)</version>' ./pkg_quiz.xml | sed -E 's/<version>|<\/version>//g' | while read version; do find ./com_joomlaquiz/admin/sql/updates/ -maxdepth 2 -name "*.sql" -print |  sed -E 's/.*\/|\.sql//g' | while read sqin; do if [ "$sqin" \> "$version" ]; then exit 1; fi; done; done
-# delete updater temporary
+    # delete updater temporary
     - sed -E -i 's/<file.*?_joomplaceupdater.zip<\/file>//g' ./pkg_quiz.xml
     - mkdir packages
-    - grep -E -o '<file.*>(.*?)</file>' ./pkg_quiz.xml |  sed -E 's/<file[^>]+>|.zip<\/file>//g' | while read in; do if [ "$in" != 'plg_installer_joomplaceupdater' ]; then cd ./"$in"; zip -r ./../packages/"$in".zip ./*; cd ./../; fi; done
-    - pwd
+    - sh pack.sh
   artifacts:
     paths:
     - packages/

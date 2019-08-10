@@ -2,8 +2,7 @@ stages:
   - build
 
 before_script:
-  - apk update
-  - apk add -y zip
+  - aptitude install -y zip
 
 build:regular:
   stage: build

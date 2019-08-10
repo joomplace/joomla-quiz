@@ -10,6 +10,7 @@ while read in;
 do
 if [ "$in" != 'plg_installer_joomplaceupdater' ]; then
     echo "---------------";
+    echo "$PWD";
     pwd;
     ls -la;
     ls -la "$in";
@@ -18,6 +19,6 @@ if [ "$in" != 'plg_installer_joomplaceupdater' ]; then
     echo "Packed $in";
     pwd;
     echo "---------------";
-    cd $PWD;
+    cd "$PWD";
 fi;
 done

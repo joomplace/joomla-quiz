@@ -2,8 +2,8 @@ stages:
   - build
 
 before_script:
-  - apt-get update
-  - apt-get install -y zip
+  - apk update
+  - apk add -y zip
 
 build:regular:
   stage: build

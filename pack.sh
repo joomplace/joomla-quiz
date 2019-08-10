@@ -10,15 +10,11 @@ while read in;
 do
 if [ "$in" != 'plg_installer_joomplaceupdater' ]; then
     echo "---------------";
-    echo "$STARTING_PATH";
-    pwd;
-    ls -la;
-    ls -la "$in";
-    cd ./"$in";
-#    zip -r $STARTING_PATH/"$in".zip ./*;
-    echo "Packed $in";
-    pwd;
+    echo "Packing $in";
     echo "---------------";
+    cd ./"$in";
+    zip -r $STARTING_PATH/"$in".zip ./*;
+    echo "Packed $in ✔";
     cd "$STARTING_PATH";
 fi;
 done

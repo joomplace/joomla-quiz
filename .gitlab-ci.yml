@@ -14,16 +14,16 @@ build:regular:
     - sed -E -i 's/<file.*?_joomplaceupdater.zip<\/file>//g' ./pkg_quiz.xml
     - mkdir packages
     - sh pack.sh
-    - ls -la packages/
-    - ls -la packages/module
-    - ls -la packages/plugin
-#  artifacts:
-#    paths:
-#    - packages/
-#    - pkg_quiz.xml
-#    name: "pkg_quiz_${CI_BUILD_REF_NAME}"
-#    when: on_success
-#    expire_in: 1 day
+#    - ls -la packages/
+#    - ls -la packages/module
+#    - ls -la packages/plugin
+  artifacts:
+    paths:
+    - packages/
+    - pkg_quiz.xml
+    name: "pkg_quiz_${CI_BUILD_REF_NAME}"
+    when: on_success
+    expire_in: 1 day
 
 #build:expert:
 #  stage: build

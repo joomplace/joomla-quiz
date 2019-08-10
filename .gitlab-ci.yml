@@ -1,9 +1,6 @@
 stages:
   - build
 
-before_script:
-  - aptitude install -y zip
-
 build:regular:
   stage: build
   image: busybox

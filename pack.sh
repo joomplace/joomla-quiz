@@ -7,6 +7,10 @@ while read in;
 do
 if [ "$in" != 'plg_installer_joomplaceupdater' ]; then
     cd ./"$in";
+    if [ ! -f "$STARTING_PATH/packages/$in".zip ]; then
+        mkdir -p "$STARTING_PATH/packages/$in";
+        rm -rf "$STARTING_PATH/packages/$in";
+    fi
     zip -qr "$STARTING_PATH/packages/$in".zip ./*;
     echo "✔ $in";
     cd "$STARTING_PATH";

@@ -1,6 +1,10 @@
 stages:
   - build
 
+before_script:
+  - apk update
+  - apk install -y zip
+
 build:regular:
   stage: build
   image: busybox

@@ -36,8 +36,8 @@
     <file type="plugin" id="surveys" group="joomlaquiz">plugin/questions/surveys.zip</file>
     <file type="plugin" id="truefalse" group="joomlaquiz">plugin/questions/truefalse.zip</file>
 
-    <file type="plugin" id="quiz_content" group="content">quiz_content_plugin.zip</file>
-    <file type="plugin" id="quiz-xtd-button" group="content">quiz-xtd-button.zip</file>
+    <file type="plugin" id="quiz_content" group="content">plugin/quiz_content_plugin.zip</file>
+    <file type="plugin" id="quiz-xtd-button" group="content">plugin/quiz-xtd-button.zip</file>
 
     <file type="plugin" id="updater" group="installer">plg_installer_joomplaceupdater.zip</file>
   </files>

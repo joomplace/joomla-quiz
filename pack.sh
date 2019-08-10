@@ -11,7 +11,7 @@ if [ "$in" != 'plg_installer_joomplaceupdater' ]; then
         mkdir -p "$STARTING_PATH/packages/$in";
         rm -rf "$STARTING_PATH/packages/$in";
     fi
-    zip -qr "$STARTING_PATH/packages/$in".zip ./*;
+    zip -qtr "$STARTING_PATH/packages/$in".zip ./*;
     echo "✔ $in";
     cd "$STARTING_PATH";
 fi;

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PWD=`pwd`
+STARTING_PATH=`pwd`
 ls -la
 ls -la ./module
 ls -la ./plugin
@@ -10,15 +10,15 @@ while read in;
 do
 if [ "$in" != 'plg_installer_joomplaceupdater' ]; then
     echo "---------------";
-    echo "$PWD";
+    echo "$STARTING_PATH";
     pwd;
     ls -la;
     ls -la "$in";
     cd ./"$in";
-#    zip -r $PWD/"$in".zip ./*;
+#    zip -r $STARTING_PATH/"$in".zip ./*;
     echo "Packed $in";
     pwd;
     echo "---------------";
-    cd "$PWD";
+    cd "$STARTING_PATH";
 fi;
 done

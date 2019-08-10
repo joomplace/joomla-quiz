@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 STARTING_PATH=`pwd`
-grep -E -o '<file.*>(.*?)</file>' ./pkg_quiz.xml | \
+grep -E -o '<file.*>(.*?)</file>' ./${1} | \
 sed -E 's/<file[^>]+>|.zip<\/file>//g' | \
 while read in;
 do

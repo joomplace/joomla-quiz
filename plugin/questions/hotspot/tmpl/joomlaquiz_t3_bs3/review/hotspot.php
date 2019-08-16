@@ -33,7 +33,7 @@ class JoomlaquizViewReviewHotspot
 				<svg height="'.$review_data['height'].'" version="1.1" width="'.$review_data['width'].'" xmlns="http://www.w3.org/2000/svg">
 				<image x="0" y="0" width="'.$review_data['width'].'" height="'.$review_data['height'].'" preserveAspectRatio="none" xlink:href="'.JURI::root().'images/joomlaquiz/images/'.$review_data['c_image'].'"/>
 				'.$path_str.'
-				<circle data-scale="initial" cx="'.$review_data['c_select_x'].'" cy="'.$review_data['c_select_y'].'" r="5" fill="#ffa500" stroke="#ff0000" style=""/>
+				<circle cx="'.$review_data['c_select_x'].'" cy="'.$review_data['c_select_y'].'" r="5" fill="#ffa500" stroke="#ff0000" style=""/>
 				</svg>
 			</div>';
 		

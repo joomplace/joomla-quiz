@@ -522,12 +522,10 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		
 		$db->setQuery("SELECT `c_partially_message` FROM #__quiz_t_question WHERE `c_id` = '".$data['question_id']."'");
 		$row = $db->loadObject();
-
-		$part_message = !empty($row) ? $row->c_partially_message : '';
-
+		
 		$editor = JFactory::getEditor();
 		ob_start();
-		echo $editor->display( 'c_partially_message', $part_message, '100%', 250, 0, 0, array('pagebreak', 'readmore') ) ;
+		echo $editor->display( 'c_partially_message', $row->c_partially_message, '100%', 250, 0, 0, array('pagebreak', 'readmore') ) ;
 		$c_partially_message = ob_get_contents();
 		ob_get_clean();
 		

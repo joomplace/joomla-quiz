@@ -92,7 +92,7 @@ if($editor->get('_name') == 'none'){
                 if($editor->get('_name') == 'none'){
                     echo $editor->display('jq_hid_fields[' . $ii . ']', $frow->c_choice, 300, 170, '20', '10', false);
                 } else {
-                    echo $editor->display('jq_hid_fields[' . $ii . ']', $frow->c_choice, 300, 170, '20', '10', true, 'editor'. $ii, null, null, array('pagebreak', 'readmore'));
+                    echo $editor->display('jq_hid_fields[' . $ii . ']', $frow->c_choice, 300, 170, '20', '10', true, null, null, null, array('pagebreak', 'readmore'));
                 }
                 ?>
                 <input type="hidden" name="jq_hid_fields_ids[]" value="<?php echo $frow->c_id ?>"/>
@@ -186,9 +186,7 @@ if($editor->get('_name') == 'none'){
                     if($editor->get('_name') == 'none'){
                         echo $editor->display('jq_incorrect_feed[' . $ii . ']', $frow->c_incorrect_feed, 500, 170, '20', '10', false);
                     } else {
-                        // fix Tinymce: add prefix '0' to key
-                        // see explanation in /plugins/joomlaquiz/choice/choice.php in onAdminSaveOptions()
-                        echo $editor->display('jq_incorrect_feed[0' . $ii . ']', $frow->c_incorrect_feed, 500, 170, '20', '10', true, 'feed'. $ii, null, null, $config);
+                        echo $editor->display('jq_incorrect_feed[' . $ii . ']', $frow->c_incorrect_feed, 500, 170, '20', '10', true, null, null, null, $config);
                     }
                     ?>
                 </td>

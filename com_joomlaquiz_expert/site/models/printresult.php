@@ -60,10 +60,11 @@ class JoomlaquizModelPrintresult extends JModelList
 		$appsLib = JqAppPlugins::getInstance();
 		$database = JFactory::getDBO();
 
-        $query = "SELECT q.c_id c_id, c_question, is_correct, c_point, c_type, c_score, q.c_right_message, q.c_wrong_message, a.c_feedback_pdf, a.c_right_message as quiz_right_message, a.c_wrong_message as quiz_wrong_message
+        $query = "SELECT q.c_id AS c_id, c_question, is_correct, c_point, c_type, c_score, q.c_right_message, q.c_wrong_message, a.c_feedback_pdf, a.c_right_message as quiz_right_message, a.c_wrong_message as quiz_wrong_message
             FROM #__quiz_r_student_question AS sq
             LEFT JOIN #__quiz_t_question AS q ON sq.c_question_id = q.c_id
-            LEFT JOIN #__quiz_t_quiz AS a ON q.c_quiz_id = a.c_id 
+            LEFT JOIN #__quiz_r_student_quiz AS qzr ON sq.c_stu_quiz_id = qzr.c_id
+            LEFT JOIN #__quiz_t_quiz AS a ON qzr.c_quiz_id = a.c_id 
             WHERE sq.c_id =  '".$id."' AND q.published = 1";
 		$database->setQuery( $query );
 		$info = $database->LoadAssocList();
@@ -87,6 +88,8 @@ class JoomlaquizModelPrintresult extends JModelList
             $info['c_wrong_message'] = JText::_('COM_QUIZ_INCORRECT');
         }
         unset($info['quiz_wrong_message']);
+
+
 
 		$type = JoomlaquizHelper::getQuestionType($type_id);
 		$data = array();

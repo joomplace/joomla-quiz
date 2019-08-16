@@ -254,11 +254,10 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 		
 		$ans_array = explode('```', $answer);
 		if (!empty($ddd2) && !empty($ddd)) {
-            $data['is_correct'] = 1;
-            $rr_num = 0;
+			$is_correct = 1; $rr_num = 0;
 			foreach ($ddd2 as $right_row) {
 				if (md5(intval($right_row->c_id).'answer') != $ans_array[$rr_num]) {
-                    $data['is_correct'] = 0;
+					$is_correct = 0; 
 				}
 				$rr_num ++;
 			}
@@ -504,13 +503,13 @@ class plgJoomlaquizDropdown extends plgJoomlaquizQuestion
 		$c_id = JFactory::getApplication()->input->get('c_id');
 		
 		$db->setQuery("SELECT `c_random` FROM #__quiz_t_question WHERE `c_id` = '".$c_id."'");
-		$field_random = (int)$db->loadResult();
+		$row = $db->loadObject();
 		
 		$lists = array();		
 		$c_random = array();
 		$c_random[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_NO'));
 		$c_random[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_YES'));
-		$c_random = JHTML::_('select.genericlist', $c_random, 'jform[c_random]', 'class="text_area" size="1" ', 'value', 'text',  $field_random);
+		$c_random = JHTML::_('select.genericlist', $c_random, 'jform[c_random]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_layout) ? intval( $row->c_random ) : 0));
 		$lists['c_random']['input'] = $c_random;
 		$lists['c_random']['label'] = JText::_('COM_JOOMLAQUIZ_RANDOMIZE_ANSWERS');
 		

@@ -19,18 +19,18 @@ require_once( JPATH_ROOT .'/components/com_joomlaquiz/libraries/apps.php' );
 class JoomlaquizModelPrintresult extends JModelList
 {
 	public function JQ_PrintResult(){
-		
+
 		$database = JFactory::getDBO();
 		$my = JFactory::getUser();
-		
+
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get('stu_quiz_id', 0 ) );
 		$user_unique_id = JFactory::getApplication()->input->get( 'user_unique_id', '', 'STRING');
 		$unique_pass_id = JFactory::getApplication()->input->get( 'unique_pass_id', '', 'STRING');
-		
+
 		$query = "SELECT c_quiz_id, c_student_id, unique_id, unique_pass_id FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 		$database->SetQuery($query);
 		$st_quiz_data = $database->LoadObjectList();
-		
+
 		if (!empty($st_quiz_data)) {
 			$st_quiz_data = $st_quiz_data[0];
             if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id || $unique_pass_id == $st_quiz_data->unique_pass_id))  ||  $my->authorise('core.managefe','com_joomlaquiz')) {
@@ -43,9 +43,9 @@ class JoomlaquizModelPrintresult extends JModelList
 
 	public function JQ_PrintPDF($sid){
 
-		$pdf = $this->generatePDF($sid);
+        $pdf = $this->generatePDF($sid);
 
-		$data = $pdf->Output('', 'S');
+        $data = $pdf->Output('', 'S');
 
 		@ob_end_clean();
 		header("Content-type: application/pdf");
@@ -54,9 +54,9 @@ class JoomlaquizModelPrintresult extends JModelList
 		echo $data;
 		die;
 	}
-	
+
 	public static function JQ_GetResults($id) {
-		
+
 		$appsLib = JqAppPlugins::getInstance();
 		$database = JFactory::getDBO();
 
@@ -79,7 +79,7 @@ class JoomlaquizModelPrintresult extends JModelList
             $info['c_right_message'] = JText::_('COM_QUIZ_CORRECT');
         }
         unset($info['quiz_right_message']);
-        
+
         if(empty($info['c_wrong_message']))
         if(!empty($info['quiz_wrong_message'])) {
             $info['c_wrong_message'] = $info['quiz_wrong_message'];
@@ -87,28 +87,26 @@ class JoomlaquizModelPrintresult extends JModelList
             $info['c_wrong_message'] = JText::_('COM_QUIZ_INCORRECT');
         }
         unset($info['quiz_wrong_message']);
-        
-        
-        
+
 		$type = JoomlaquizHelper::getQuestionType($type_id);
 		$data = array();
 		$data['quest_type'] = $type;
 		$data['id'] = $id;
 		$data['qid'] = $qid;
 		$data['info'] = $info;
-		
+
 		$appsLib->triggerEvent( 'onGetResult' , $data );
 		$info = $data['info'];
-		
+
 		return $info;
-	}	
+	}
 
 	public static function JQ_PrintResultForMail($sid) {
-		
+
 		$appsLib = JqAppPlugins::getInstance();
 		$plugins = $appsLib->loadApplications();
 		$database = JFactory::getDBO();
-		
+
 		$str = "";
 		$query = "SELECT sq.*, q.*, u.*, q.c_id AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq LEFT JOIN #__users AS u ON sq.c_student_id = u.id"
 		. "\n WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
@@ -116,19 +114,19 @@ class JoomlaquizModelPrintresult extends JModelList
 		$info = $database->LoadAssocList();
 		$info = $info[0];
 		JoomlaquizHelper::JQ_GetJoomFish($info['c_title'], 'quiz_t_quiz', 'c_title', $info['quiz_id']);
-		
+
 		$quiz_id = $info['c_quiz_id'];
 		$query = "SELECT q_chain FROM #__quiz_q_chain "
 				. "\n WHERE s_unique_id = '".$info['unique_id']."'";
 		$database->SetQuery($query);
 		$qch_ids = $database->LoadResult();
 		$qch_ids = str_replace('*',',',$qch_ids);
-				
+
 		$total = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
-		
+
 		$str .= "\n";
 		$str .= JText::_('COM_QUIZ_PDF_QTITLE')." ".$info['c_title']."\n";
-		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?$info['username']:JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
+		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?($info['username']):JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
 		$str .= JText::_('COM_QUIZ_PDF_NAME')." ".(($info['name'])?$info['name']:$info['user_name'].' '.(!empty($info['user_surname'])? $info['user_surname'] : ''))."\n";
         $user_email = '';
         if(!empty($info['email'])) {
@@ -149,42 +147,42 @@ class JoomlaquizModelPrintresult extends JModelList
 		}
 		else {
 			$str .= $info['name']." ".JText::_('COM_QUIZ_PDF_NPASSQUIZ')." "."\n";
-		}		
+		}
 		$str .= " \n";
-		
+
 		$query = $database->getQuery(true);
 		$query->select('`rq`.`c_id`, `rq`.`remark`')
 			->from('`#__quiz_r_student_question` AS `rq`')
 			->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
 			->order('`c_id`');
-		//if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-		//	$query->where('`tq`.`c_type` != 9');
-		//}
+		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+			$query->where('`tq`.`c_type` != 9');
+		}
 		$query->where('`rq`.`c_stu_quiz_id` = "'.$sid.'"');
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
 		$total = count($info);
-		
+
 		for($i=0;$i < $total;$i++) {
 			$data = array();
 			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
 			$str .= "".($i+1).".[".number_format($data['c_score'],1).'/'.number_format($data['c_point'],1)."] ".$data['c_question']."\n";
 			$type = JoomlaquizHelper::getQuestionType($data['c_type']);
 			$answer = '';
-			
+
 			$email_data = array();
 			$email_data['quest_type'] = $type;
 			$email_data['data'] = $data;
 			$email_data['str'] = $str;
 			$email_data['answer'] = $answer;
-			
+
 			$appsLib->triggerEvent( 'onSendEmail' , $email_data );
 			$str = $email_data['str'];
-			
+
 			$str .= "\n";
 		}
 		$str .= " ";
-		
+
 		return nl2br($str);
 	}
 
@@ -253,7 +251,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		$pdf_doc = new jq_pdf();
 		$pdf = &$pdf_doc->_engine;
 
-        if(in_array($lang, $alt_lang)){
+		if(in_array($lang, $alt_lang)){
             $pdf->SetFont('javiergb');
         } else {
             $pdf->SetFont('dejavusans');
@@ -403,14 +401,14 @@ class JoomlaquizModelPrintresult extends JModelList
 		}
 		$query = $database->getQuery(true);
 		$query->select('`rq`.`c_id`')->from(
-			'`#__quiz_r_student_question` AS `rq`'
-		)->join(
-			'LEFT',
-			'`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`'
-		)->order('`c_id`');
-		//if (JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-		//	$query->where('`tq`.`c_type` != 9');
-		//}
+				'`#__quiz_r_student_question` AS `rq`'
+			)->join(
+				'LEFT',
+				'`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`'
+			)->order('`c_id`');
+        if (JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')) {
+            $query->where('`tq`.`c_type` != 9');
+        }
 		$query->where('`rq`.`c_stu_quiz_id` = "' . $sid . '"');
 		$database->SetQuery($query);
 		$info  = $database->LoadObjectList();
@@ -479,4 +477,3 @@ class JoomlaquizModelPrintresult extends JModelList
 		return $pdf;
 	}
 }
-?>

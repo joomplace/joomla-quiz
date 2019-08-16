@@ -1,11 +1,11 @@
 <?php
 /**
-* Joomlaquiz Deluxe Component for Joomla 3
-* @package Joomlaquiz Deluxe
-* @author JoomPlace Team
-* @copyright Copyright (C) JoomPlace, www.joomplace.com
-* @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
-*/
+ * Joomlaquiz Deluxe Component for Joomla 3
+ * @package Joomlaquiz Deluxe
+ * @author JoomPlace Team
+ * @copyright Copyright (C) JoomPlace, www.joomplace.com
+ * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
+ */
 
 defined('_JEXEC') or die('Restricted access');
 
@@ -25,7 +25,7 @@ class JoomlaquizViewFeedbackChoice
 								<td class='jq_feedback_question_content_col_wide'>".JText::_('COM_JQ_POSSIBLE_ANSWERS')."</td>
 								<td class='jq_feedback_question_content_col_narrow'>".JText::_('COM_QUIZ_CORRECT')."</td>
 								<td class='jq_feedback_question_content_col_narrow'>".JText::_('COM_JQ_YOUR_CHOICE')."</td>
-								<td class='jq_feedback_question_content_col_narrow'>".JText::_('COM_JQ_PEOPLE_STATISTIC')."</td>
+								<!-- <td class='jq_feedback_question_content_col_narrow'>".JText::_('COM_JQ_PEOPLE_STATISTIC')."</td> -->
 							</tr>" . "\n";
 		$k = 2;
 		foreach ($feedback_data['choice_data'] as $qone) {
@@ -48,7 +48,7 @@ class JoomlaquizViewFeedbackChoice
 //		}
 		$jq_tmpl_html .= "<tr>
 							<td colspan='4' valign='top'><br /><strong>".JText::_('COM_QUIZ_RES_MES_SCORE')." ".$feedback_data['choice_data'][0]->score."</strong><br /></td>" . "\n";
-		$jq_tmpl_html .= "</tr>
+        $jq_tmpl_html .= "</tr>
 						</table></div>" . "\n";
 
 		return $jq_tmpl_html;

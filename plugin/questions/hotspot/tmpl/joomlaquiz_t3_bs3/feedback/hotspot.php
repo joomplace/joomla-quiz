@@ -33,7 +33,7 @@ class JoomlaquizViewFeedbackHotspot
 				<svg height="'.$feedback_data['qdata']['height'].'" version="1.1" width="'.$feedback_data['qdata']['width'].'" xmlns="http://www.w3.org/2000/svg">
 				<image x="0" y="0" width="'.$feedback_data['qdata']['width'].'" height="'.$feedback_data['qdata']['height'].'" preserveAspectRatio="none" xlink:href="'.JURI::root().'images/joomlaquiz/images/'.$feedback_data['qdata']['c_image'].'"/>
 				'.$path_str.'
-				<circle data-scale="initial" cx="'.$feedback_data['qdata']['c_select_x'].'" cy="'.$feedback_data['qdata']['c_select_y'].'" r="5" fill="#ffa500" stroke="#ff0000" style=""/>
+				<circle cx="'.$feedback_data['qdata']['c_select_x'].'" cy="'.$feedback_data['qdata']['c_select_y'].'" r="5" fill="#ffa500" stroke="#ff0000" style=""/>
 				</svg>
 			</div>';
 				

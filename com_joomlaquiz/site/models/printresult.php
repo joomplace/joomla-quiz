@@ -43,6 +43,10 @@ class JoomlaquizModelPrintresult extends JModelList
 
 	public function JQ_PrintPDF($sid){
 
+        $pdf = $this->generatePDF($sid);
+
+        $data = $pdf->Output('', 'S');
+
 		@ob_end_clean();
 		header("Content-type: application/pdf");
 		header("Content-Length: ".strlen(ltrim($data)));

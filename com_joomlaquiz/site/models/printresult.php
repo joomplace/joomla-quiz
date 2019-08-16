@@ -19,18 +19,18 @@ require_once( JPATH_ROOT .'/components/com_joomlaquiz/libraries/apps.php' );
 class JoomlaquizModelPrintresult extends JModelList
 {
 	public function JQ_PrintResult(){
-		
+
 		$database = JFactory::getDBO();
 		$my = JFactory::getUser();
-		
+
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get('stu_quiz_id', 0 ) );
 		$user_unique_id = JFactory::getApplication()->input->get( 'user_unique_id', '', 'STRING');
 		$unique_pass_id = JFactory::getApplication()->input->get( 'unique_pass_id', '', 'STRING');
-		
+
 		$query = "SELECT c_quiz_id, c_student_id, unique_id, unique_pass_id FROM #__quiz_r_student_quiz WHERE c_id = '".$stu_quiz_id."'";
 		$database->SetQuery($query);
 		$st_quiz_data = $database->LoadObjectList();
-		
+
 		if (!empty($st_quiz_data)) {
 			$st_quiz_data = $st_quiz_data[0];
             if ( (($user_unique_id == $st_quiz_data->unique_id) && ($my->id == $st_quiz_data->c_student_id || $unique_pass_id == $st_quiz_data->unique_pass_id))  ||  $my->authorise('core.managefe','com_joomlaquiz')) {
@@ -54,16 +54,17 @@ class JoomlaquizModelPrintresult extends JModelList
 		echo $data;
 		die;
 	}
-	
+
 	public static function JQ_GetResults($id) {
-		
+
 		$appsLib = JqAppPlugins::getInstance();
 		$database = JFactory::getDBO();
 
-        $query = "SELECT q.c_id c_id, c_question, is_correct, c_point, c_type, c_score, q.c_right_message, q.c_wrong_message, a.c_feedback_pdf, a.c_right_message as quiz_right_message, a.c_wrong_message as quiz_wrong_message
+        $query = "SELECT q.c_id AS c_id, c_question, is_correct, c_point, c_type, c_score, q.c_right_message, q.c_wrong_message, a.c_feedback_pdf, a.c_right_message as quiz_right_message, a.c_wrong_message as quiz_wrong_message
             FROM #__quiz_r_student_question AS sq
             LEFT JOIN #__quiz_t_question AS q ON sq.c_question_id = q.c_id
-            LEFT JOIN #__quiz_t_quiz AS a ON q.c_quiz_id = a.c_id 
+            LEFT JOIN #__quiz_r_student_quiz AS qzr ON sq.c_stu_quiz_id = qzr.c_id
+            LEFT JOIN #__quiz_t_quiz AS a ON qzr.c_quiz_id = a.c_id 
             WHERE sq.c_id =  '".$id."' AND q.published = 1";
 		$database->setQuery( $query );
 		$info = $database->LoadAssocList();
@@ -79,7 +80,7 @@ class JoomlaquizModelPrintresult extends JModelList
             $info['c_right_message'] = JText::_('COM_QUIZ_CORRECT');
         }
         unset($info['quiz_right_message']);
-        
+
         if(empty($info['c_wrong_message']))
         if(!empty($info['quiz_wrong_message'])) {
             $info['c_wrong_message'] = $info['quiz_wrong_message'];
@@ -87,26 +88,26 @@ class JoomlaquizModelPrintresult extends JModelList
             $info['c_wrong_message'] = JText::_('COM_QUIZ_INCORRECT');
         }
         unset($info['quiz_wrong_message']);
-        
+
 		$type = JoomlaquizHelper::getQuestionType($type_id);
 		$data = array();
 		$data['quest_type'] = $type;
 		$data['id'] = $id;
 		$data['qid'] = $qid;
 		$data['info'] = $info;
-		
+
 		$appsLib->triggerEvent( 'onGetResult' , $data );
 		$info = $data['info'];
-		
+
 		return $info;
-	}	
+	}
 
 	public static function JQ_PrintResultForMail($sid) {
-		
+
 		$appsLib = JqAppPlugins::getInstance();
 		$plugins = $appsLib->loadApplications();
 		$database = JFactory::getDBO();
-		
+
 		$str = "";
 		$query = "SELECT sq.*, q.*, u.*, q.c_id AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq LEFT JOIN #__users AS u ON sq.c_student_id = u.id"
 		. "\n WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
@@ -114,16 +115,16 @@ class JoomlaquizModelPrintresult extends JModelList
 		$info = $database->LoadAssocList();
 		$info = $info[0];
 		JoomlaquizHelper::JQ_GetJoomFish($info['c_title'], 'quiz_t_quiz', 'c_title', $info['quiz_id']);
-		
+
 		$quiz_id = $info['c_quiz_id'];
 		$query = "SELECT q_chain FROM #__quiz_q_chain "
 				. "\n WHERE s_unique_id = '".$info['unique_id']."'";
 		$database->SetQuery($query);
 		$qch_ids = $database->LoadResult();
 		$qch_ids = str_replace('*',',',$qch_ids);
-				
+
 		$total = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
-		
+
 		$str .= "\n";
 		$str .= JText::_('COM_QUIZ_PDF_QTITLE')." ".$info['c_title']."\n";
 		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?($info['username']):JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
@@ -147,9 +148,9 @@ class JoomlaquizModelPrintresult extends JModelList
 		}
 		else {
 			$str .= $info['name']." ".JText::_('COM_QUIZ_PDF_NPASSQUIZ')." "."\n";
-		}		
+		}
 		$str .= " \n";
-		
+
 		$query = $database->getQuery(true);
 		$query->select('`rq`.`c_id`, `rq`.`remark`')
 			->from('`#__quiz_r_student_question` AS `rq`')
@@ -162,27 +163,27 @@ class JoomlaquizModelPrintresult extends JModelList
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
 		$total = count($info);
-		
+
 		for($i=0;$i < $total;$i++) {
 			$data = array();
 			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
 			$str .= "".($i+1).".[".number_format($data['c_score'],1).'/'.number_format($data['c_point'],1)."] ".$data['c_question']."\n";
 			$type = JoomlaquizHelper::getQuestionType($data['c_type']);
 			$answer = '';
-			
+
 			$email_data = array();
 			$email_data['quest_type'] = $type;
 			$email_data['data'] = $data;
 			$email_data['str'] = $str;
 			$email_data['answer'] = $answer;
-			
+
 			$appsLib->triggerEvent( 'onSendEmail' , $email_data );
 			$str = $email_data['str'];
-			
+
 			$str .= "\n";
 		}
 		$str .= " ";
-		
+
 		return nl2br($str);
 	}
 

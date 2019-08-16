@@ -43,9 +43,9 @@ class JoomlaquizModelPrintresult extends JModelList
 
 	public function JQ_PrintPDF($sid){
 
-		$pdf = $this->generatePDF($sid);
+        $pdf = $this->generatePDF($sid);
 
-		$data = $pdf->Output('', 'S');
+        $data = $pdf->Output('', 'S');
 
 		@ob_end_clean();
 		header("Content-type: application/pdf");
@@ -156,9 +156,9 @@ class JoomlaquizModelPrintresult extends JModelList
 			->from('`#__quiz_r_student_question` AS `rq`')
 			->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
 			->order('`c_id`');
-		//if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-		//	$query->where('`tq`.`c_type` != 9');
-		//}
+		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+			$query->where('`tq`.`c_type` != 9');
+		}
 		$query->where('`rq`.`c_stu_quiz_id` = "'.$sid.'"');
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
@@ -407,9 +407,9 @@ class JoomlaquizModelPrintresult extends JModelList
 				'LEFT',
 				'`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`'
 			)->order('`c_id`');
-        //if (JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-        //	$query->where('`tq`.`c_type` != 9');
-        //}
+        if (JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')) {
+            $query->where('`tq`.`c_type` != 9');
+        }
 		$query->where('`rq`.`c_stu_quiz_id` = "' . $sid . '"');
 		$database->SetQuery($query);
 		$info  = $database->LoadObjectList();

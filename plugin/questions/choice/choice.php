@@ -603,22 +603,8 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         $arr_jq_checked = $jinput->get('jq_checked', array(), 'ARRAY');
         $jq_hid_fields_ids = $jinput->get('jq_hid_fields_ids', array(), 'ARRAY');
         $jq_hid_fields = $jinput->get('jq_hid_fields', array(), 'ARRAY');
+        $jq_incorrect_feed = $jinput->get('jq_incorrect_feed', array(), 'ARRAY');
         $jq_a_points = $jinput->get('jq_a_points', array(), 'ARRAY');
-
-        // fix Tinymce: /plugins/editors/tinymce/tinymce.php | onDisplay() | $btns = $this->tinyButtons($id, $buttons);
-        //
-        // The key of the array of fields 'jq_incorrect_feed' has the prefix '0', it must be removed.
-        // This key is added in /plugins/joomlaquiz/choice/admin/options/choice.php
-        // to ensure that the fields of one 'choice' - 'jq_hid_fields' and 'jq_incorrect_feed' - do not have one key ($ii).
-        // Otherwise, in the Tinymce-plugin they will belong to one 'group',
-        // and 'own buttons' will not be formed for the second field ('jq_incorrect_feed').
-        // Then if you try to insert a picture in 'jq_incorrect_feed', it will be inserted in the first field of this group - 'jq_hid_fields'.
-        $jq_incorrect_feed_prefix = $jinput->get('jq_incorrect_feed', array(), 'ARRAY');
-        $jq_incorrect_feed = array();
-        foreach ($jq_incorrect_feed_prefix as $key=>$value){
-            $jq_incorrect_feed[(int)$key] = $value;
-        }
-        // end fix
 
         if (!empty($arr_jq_checked)) {
             foreach ($arr_jq_checked as $sss) {

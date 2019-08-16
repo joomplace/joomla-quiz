@@ -43,9 +43,9 @@ class JoomlaquizModelPrintresult extends JModelList
 
 	public function JQ_PrintPDF($sid){
 
-		$pdf = $this->generatePDF($sid);
+        $pdf = $this->generatePDF($sid);
 
-		$data = $pdf->Output('', 'S');
+        $data = $pdf->Output('', 'S');
 
 		@ob_end_clean();
 		header("Content-type: application/pdf");
@@ -129,7 +129,7 @@ class JoomlaquizModelPrintresult extends JModelList
 
 		$str .= "\n";
 		$str .= JText::_('COM_QUIZ_PDF_QTITLE')." ".$info['c_title']."\n";
-		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?$info['username']:JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
+		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?($info['username']):JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
 		$str .= JText::_('COM_QUIZ_PDF_NAME')." ".(($info['name'])?$info['name']:$info['user_name'].' '.(!empty($info['user_surname'])? $info['user_surname'] : ''))."\n";
         $user_email = '';
         if(!empty($info['email'])) {
@@ -158,9 +158,9 @@ class JoomlaquizModelPrintresult extends JModelList
 			->from('`#__quiz_r_student_question` AS `rq`')
 			->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
 			->order('`c_id`');
-		//if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-		//	$query->where('`tq`.`c_type` != 9');
-		//}
+		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+			$query->where('`tq`.`c_type` != 9');
+		}
 		$query->where('`rq`.`c_stu_quiz_id` = "'.$sid.'"');
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
@@ -254,7 +254,7 @@ class JoomlaquizModelPrintresult extends JModelList
 		$pdf_doc = new jq_pdf();
 		$pdf = &$pdf_doc->_engine;
 
-        if(in_array($lang, $alt_lang)){
+		if(in_array($lang, $alt_lang)){
             $pdf->SetFont('javiergb');
         } else {
             $pdf->SetFont('dejavusans');
@@ -404,14 +404,14 @@ class JoomlaquizModelPrintresult extends JModelList
 		}
 		$query = $database->getQuery(true);
 		$query->select('`rq`.`c_id`')->from(
-			'`#__quiz_r_student_question` AS `rq`'
-		)->join(
-			'LEFT',
-			'`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`'
-		)->order('`c_id`');
-		//if (JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-		//	$query->where('`tq`.`c_type` != 9');
-		//}
+				'`#__quiz_r_student_question` AS `rq`'
+			)->join(
+				'LEFT',
+				'`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`'
+			)->order('`c_id`');
+        if (JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')) {
+            $query->where('`tq`.`c_type` != 9');
+        }
 		$query->where('`rq`.`c_stu_quiz_id` = "' . $sid . '"');
 		$database->SetQuery($query);
 		$info  = $database->LoadObjectList();

@@ -41,6 +41,9 @@ defined('_JEXEC') or die;
 		var stu_quiz_id;
 		var c_image;
 		var c_quiz_id;
+
+        var _sourceImageWidth,
+            _sourceImageHeight;
 		
 		function addEvent(elem, type, handler){
 			if (elem.addEventListener){
@@ -106,6 +109,14 @@ defined('_JEXEC') or die;
 			
         }
         function onImage(e){
+            var w = _img.width,
+                h = _img.height,
+                ratio = w / h;
+            _sourceImageWidth = _img.width;
+            _sourceImageHeight = _img.height;
+            _img.width = (window.innerWidth - 20) * 0.5 < w ? (window.innerWidth - 20) * 0.5 : w;
+            _img.height = _img.width / ratio;
+
             _pieceWidth = Math.floor(_img.width / PUZZLE_DIFFICULTY);
             _pieceHeight = Math.floor(_img.height / PUZZLE_DIFFICULTY);
             _puzzleWidth = _pieceWidth * PUZZLE_DIFFICULTY;
@@ -125,7 +136,12 @@ defined('_JEXEC') or die;
             _mouse = {x:0,y:0};
             _currentPiece = null;
             _currentDropPiece = null;
-            _stage.drawImage(_img, 0, 0, _puzzleWidth, _puzzleHeight, 0, 0, _puzzleWidth, _puzzleHeight);
+
+            //_stage.drawImage(_img, 0, 0, _puzzleWidth, _puzzleHeight, 0, 0, _puzzleWidth, _puzzleHeight);
+            _stage.drawImage(_img, 0, 0, Math.floor(_sourceImageWidth / PUZZLE_DIFFICULTY) * PUZZLE_DIFFICULTY, Math.floor(_sourceImageHeight / PUZZLE_DIFFICULTY) * PUZZLE_DIFFICULTY, 0, 0, _puzzleWidth, _puzzleHeight);
+            _img = new Image();
+            _img.src = _canvas.toDataURL('image/jpeg');
+
             createTitle("<?php echo JText::_('COM_QUIZ_CLICK_TO_START_PUZZLE');?>");
             buildPieces();
         }
@@ -137,7 +153,8 @@ defined('_JEXEC') or die;
             _stage.globalAlpha = 1;
             _stage.textAlign = "center";
             _stage.textBaseline = "middle";
-            _stage.font = "20px Arial";
+            //_stage.font = "20px Arial";
+            _stage.font = "1.25em Arial";
             if(!jq_jQuery.browser.msie){
 				_stage.fillText(msg,_puzzleWidth / 2,_puzzleHeight - 20);
 			}
@@ -378,51 +395,89 @@ defined('_JEXEC') or die;
             for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
             return o;
         }
-		
-		function mouseGetCoords(e){
-	    e = e || window.event
-	 
-	    if (e.pageX == null && e.clientX != null ) {
-	        var html = document.documentElement
-	        var body = document.body
-	     
-	        e.pageX = e.clientX + (html && html.scrollLeft || body && body.scrollLeft || 0) - (html.clientLeft || 0)
-	        e.pageY = e.clientY + (html && html.scrollTop || body && body.scrollTop || 0) - (html.clientTop || 0)
-	    }
-	 
-	    return {mx:e.pageX, my:e.pageY};
-		}
-		
-		function jq_Start_Question_TickTack()
-		{
-			
-			if(quest_timer_sec <= 0 ){
-				clearInterval(quest_timer);
-				jq_jQuery('#jq_message_box').fadeIn();
-				setTimeout("jq_Close_PuzzleWindow()", 1500);			
-				return;
-			}
-		
-			if (quest_timer_sec > 0) {
-				var quest_timer_sec_tmp = quest_timer_sec;
-				var quest_timer_min = parseInt(quest_timer_sec_tmp/60);
-				var plus_sec = quest_timer_sec_tmp - (quest_timer_min*60);
-				if (quest_timer_min < 0) { quest_timer_min = quest_timer_min*(-1); }
-				if (plus_sec < 0) { plus_sec = plus_sec*(-1); }
-				var time_str = quest_timer_min + '';
-				if (time_str.length == 1) time_str = '0'+time_str;
-				quest_time_str2 = plus_sec + '';
-				if (quest_time_str2.length == 1) quest_time_str2 = '0'+quest_time_str2;
-				jq_jQuery('#jq_quest_time_past').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + time_str + ':' + quest_time_str2);
-				quest_timer_sec--;
-			}
-		}
-		
-		function jq_Close_PuzzleWindow()
-		{
-			parent.jq_QuizNextOn();
-			parent.SqueezeBox.close();
-		}
+
+        function mouseGetCoords(e){
+            e = e || window.event;
+
+            if (e.pageX == null && e.clientX != null ) {
+                var html = document.documentElement;
+                var body = document.body;
+                e.pageX = e.clientX + (html && html.scrollLeft || body && body.scrollLeft || 0) - (html.clientLeft || 0);
+                e.pageY = e.clientY + (html && html.scrollTop || body && body.scrollTop || 0) - (html.clientTop || 0);
+            }
+
+            return {mx:e.pageX, my:e.pageY};
+        }
+
+        function jq_Start_Question_TickTack() {
+            if(quest_timer_sec <= 0 ){
+                clearInterval(quest_timer);
+                jq_jQuery('#jq_message_box').fadeIn();
+                setTimeout("jq_Close_PuzzleWindow()", 1500);
+                return;
+            }
+
+            if (quest_timer_sec > 0) {
+                var quest_timer_sec_tmp = quest_timer_sec;
+                var quest_timer_min = parseInt(quest_timer_sec_tmp/60);
+                var plus_sec = quest_timer_sec_tmp - (quest_timer_min*60);
+                if (quest_timer_min < 0) { quest_timer_min = quest_timer_min*(-1); }
+                if (plus_sec < 0) { plus_sec = plus_sec*(-1); }
+                var time_str = quest_timer_min + '';
+                if (time_str.length == 1) time_str = '0'+time_str;
+                quest_time_str2 = plus_sec + '';
+                if (quest_time_str2.length == 1) quest_time_str2 = '0'+quest_time_str2;
+                jq_jQuery('#jq_quest_time_past').html('<strong><?php echo JText::_('COM_QUIZ_TIME_LEFT');?></strong>&nbsp;' + time_str + ':' + quest_time_str2);
+                quest_timer_sec--;
+            }
+        }
+
+        function jq_Close_PuzzleWindow() {
+            parent.jq_QuizNextOn();
+            parent.SqueezeBox.close();
+        }
+
+        function addListenerMulti(element, eventNames, listener) {
+            eventNames.split(' ').forEach(function(i){
+                //element.addEventListener(i, listener, false);
+                addEvent(element, i, listener); //custom function
+            });
+        }
+        addListenerMulti(window, 'touchstart touchmove touchend touchcancel', onTouchTriggerMouseEvent);
+
+        function onTouchTriggerMouseEvent(e) {
+            e.preventDefault();
+            if (e.touches.length > 1 || (e.type == 'touchend' && e.touches.length > 0)){
+                return;
+            }
+
+            var newEvt = document.createEvent('MouseEvent'),
+                type = null,
+                touch = null;
+
+            switch (e.type) {
+                case 'touchstart':
+                    type = 'mousedown';
+                    touch = e.changedTouches[0];
+                    break;
+                case 'touchmove':
+                    type = 'mousemove';
+                    touch = e.changedTouches[0];
+                    break;
+                case 'touchend':
+                case 'touchcancel':
+                    type = 'mouseup';
+                    touch = e.changedTouches[0];
+                    break;
+            }
+
+            newEvt.initMouseEvent(type, true, true, window, 0,
+                touch.screenX, touch.screenY, touch.clientX, touch.clientY,
+                e.ctrlKey, e.altKey, e.shiftKey, e.metaKey, 0, null);
+
+            document.dispatchEvent(newEvt);
+        }
+
     </script>
 </head>
 

@@ -34,8 +34,11 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 			$c_width = $img_data[0] * 2 + 20;
 			$c_height = $img_data[1] + 150;
 		}
-		
-		$data['ret_add_script'] .= "options = {handler: 'iframe', size: {x: ".$c_width.", y: ".$c_height.", closable: 0, closeBtn: 0}};";
+
+        //$data['ret_add_script'] .= "options = {handler: 'iframe', size: {x: ".$c_width.", y: ".$c_height.", closable: 0, closeBtn: 0}};";
+        $data['ret_add_script'] .= "var puzzleWidth = window.innerWidth * 0.8 < ".$c_width." ? window.innerWidth * 0.8 : ".$c_width.";
+            var puzzleHeight = puzzleWidth / (". $c_width / $c_height .");
+            options = {handler:'iframe', size:{x: puzzleWidth, y: puzzleHeight}, closable: true, closeBtn: false};";
 		
 		return $data;
 	}

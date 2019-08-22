@@ -54,16 +54,18 @@ function dToH(dN) {
 	return hexNum;
 }   
 
-function ShowMessage(msg_obj,stat,mes) { 
+function ShowMessage(msg_obj,stat,mes) {
 	var mes_span = jq_getObj(msg_obj);
 	if (stat == 1) {
-		mes_span.innerHTML = mes;
+		mes_span.innerHTML = mes ? mes : '';
 		mes_span.style.display = "block";
 		mes_span.style.visibility = "visible";		
 		startFadeDec_mes(msg_obj,'','','color',fd_startR,fd_startG,fd_startB,fd_endR,fd_endG,fd_endB,30);
 	} else {
-		mes_span.innerHTML = '<!-- x -->';
-		mes_span.style.display = "none";
-		mes_span.style.visibility = "hidden";		
+		if(typeof mes_span === 'object' && mes_span !== null) {
+			mes_span.innerHTML = '<!-- x -->';
+			mes_span.style.display = "none";
+			mes_span.style.visibility = "hidden";
+		}
 	}
 }

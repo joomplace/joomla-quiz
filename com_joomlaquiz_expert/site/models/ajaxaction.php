@@ -567,30 +567,28 @@ class JoomlaquizModelAjaxaction extends JModelList
 					
 					$quest_id = $quest_ids[$q];
 					$answer = $answers[$q];
-					
-					// get question type
-					$query = "SELECT c_type from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";
-					$database->SetQuery( $query );
-					$qtype = $database->LoadResult();
-					
-					$query = "SELECT c_penalty from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";
-					$database->SetQuery( $query );
-					$c_penalty = (int)$database->LoadResult();
 
-					$query = "SELECT c_time_limit from #__quiz_t_question WHERE c_id = '".$quest_id."' AND published = 1";
-					$database->SetQuery( $query );
-					$c_penalty = (int)$database->LoadResult();
-										
-					$quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
-					$database->setQuery("SELECT `c_time_limit` FROM `#__quiz_t_question` WHERE `c_id` = '".$quest_id."'");
-					$limit_time = $database->loadResult();
+                    $qtype = $c_penalty = $limit_time = '';
+                    $query = $database->getQuery(true);
+                    $query->select($database->qn(array('c_type', 'c_penalty', 'c_time_limit')))
+                        ->from($database->qn('#__quiz_t_question'))
+                        ->where($database->qn('c_id') .'='. $database->q((int)$quest_id))
+                        ->where($database->qn('published') .'='. $database->q(1));
+                    $database->setQuery($query);
+                    $resultQRQ = $database->loadObject();
+                    if($resultQRQ){
+                        $qtype = $resultQRQ->c_type;
+                        $c_penalty = $resultQRQ->c_penalty;
+                        $limit_time = $resultQRQ->c_time_limit;
+                    }
+
+                    $quiz_time1 = strtotime(JHtml::_('date',time(),'Y-m-d H:i:s'));
 					$quiz_time2a = strtotime($quiz_time2);
 					$user_time = $quiz_time1 - $quiz_time2a;
 					if($limit_time != 0 && $user_time > $limit_time * 60) {
-						$user_time = $limit_time * 60;
+						$user_time = $limit_time * 60;      // what is it and why?
 					}
-					
-					
+
 					$is_avail = null;
 					$is_correct = 0;
 					$is_no_attempts = 0;

@@ -674,14 +674,18 @@ class JoomlaquizModelAjaxaction extends JModelList
                     $quest_id = $quest_ids[$q];
                     $answer = $answers[$q];
 
-                    // get question type
-                    $query = "SELECT c_type from #__quiz_t_question WHERE c_id = '" . $quest_id . "' AND published = 1";
-                    $database->SetQuery($query);
-                    $qtype = $database->LoadResult();
-
-                    $query = "SELECT c_penalty from #__quiz_t_question WHERE c_id = '" . $quest_id . "' AND published = 1";
-                    $database->SetQuery($query);
-                    $c_penalty = (int)$database->LoadResult();
+                    $qtype = $c_penalty = '';
+                    $query = $database->getQuery(true);
+                    $query->select($database->qn(array('c_type', 'c_penalty')))
+                        ->from($database->qn('#__quiz_t_question'))
+                        ->where($database->qn('c_id') .'=' . $database->q((int)$quest_id ))
+                        ->where($database->qn('published') .'='. $database->q(1));
+                    $database->setQuery($query);
+                    $resultQRQ = $database->loadObject();
+if($resultQRQ){
+                    $qtype = $resultQRQ->c_type;
+                        $c_penalty = $resultQRQ->c_penalty;
+                    }
 
                     // insert results to the Database
 

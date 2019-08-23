@@ -49,12 +49,13 @@ function ScrollToElement(theElement){
 	} catch(e){}
 
 }
+var explicitFinishCalled = false;
 
 var reStartOption = '<?php echo $reStartOption; ?>';
 var reStartView = '<?php echo $reStartView; ?>';
 var reStartID = '<?php echo $reStartID; ?>';
 
-var quiz_id = <?php echo $quiz->c_id;?>;
+var quiz_id = parseInt('<?php echo $quiz->c_id;?>');
 var stu_quiz_id = 0;
 var error_call_code = '';
 var kol_drag_elems = 0;
@@ -1455,6 +1456,9 @@ function jq_QuizNextOn() { // Two steps CHECK (delete this func in the future)
 }
 
 function jq_QuizContinue() {
+	if(explicitFinishCalled){
+		jq_QuizContinueFinish();
+	}
 
 	<?php if($quiz->c_flag):?>
 	jq_jQuery('#c_flag').unbind('click');
@@ -1639,6 +1643,7 @@ function setFlag(qid){
 
 function jq_QuizNextFinish() { //send 'TASK = next'
 <?php if($quiz->c_enable_skip==2){ ?>
+	explicitFinishCalled = true;
     <?php if ($is_preview) { ?>
 	var jq_task = 'next_preview';
 	<?php } else { ?>

@@ -50,8 +50,19 @@ class JoomlaquizModelQuiz extends JModelAdmin
 				if ($id) $data->set('c_id', JFactory::getApplication()->input->getInt('c_id', $id));
 			}
 		}
-		
-		return $data;
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select($db->qn('tags'))
+            ->from('#__quiz_pool')
+            ->where($db->qn('q_id') .'='. $db->q((int)$data->c_id));
+        $db->setQuery($query);
+        $tags = $db->loadResult();
+        if($tags){
+            $data->by_tags = $tags;
+        }
+
+        return $data;
 	}
 	
 	public function getForm($data = array(), $loadData = true)
@@ -61,11 +72,23 @@ class JoomlaquizModelQuiz extends JModelAdmin
 		if (empty($form)) {
 			return false;
 		}
+
+        $this->preprocessForm($form, $data);
+
 		return $form;
 	}
-	
-	public function getCategories(){
-		$db = JFactory::getDBO();
+
+    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    {
+        if(JFactory::getUser()->authorise('core.create', 'com_joomlaquiz')){
+            $form->setFieldAttribute('c_category_id', 'allowAdd', 'true');
+        }
+        parent::preprocessForm($form, $data, $group);
+    }
+
+    public function getCategories(){
+
+        $db = JFactory::getDBO();
 		
 		$query = "SELECT * FROM #__quiz_t_category order by c_category";
 		$db->setQuery( $query );

@@ -200,10 +200,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 ->where($database->qn('c.published') .' IN ('.$database->q(0).','.$database->q(1).')');
             if($cid != -1) {
                 $query->leftJoin($database->qn('#__quiz_t_question', 'qn') . ' ON ' . $database->qn('qn.c_ques_cat') .'='. $database->qn('c.id'));
-                $query->leftJoin($database->qn('#__quiz_pool', 'qp') . ' ON ' . $database->qn('qp.q_cat')
-                    .'='. $database->qn('c.id'));
-                $query->andWhere(array($database->qn('qn.c_quiz_id') . ' IN (' . $q_cids . ')', $database->qn('qp.q_id')
-                    . ' IN (' . $q_cids . ')'));
+                $query->where($database->qn('qn.c_quiz_id') . ' IN (' . $q_cids . ')');
                 $query->group('c.id');
             }
             $database->setQuery($query);
@@ -297,7 +294,6 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_image><![CDATA[".$pool->c_image."]]></question_image>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_rmess><![CDATA[".$pool->c_right_message."]]></question_rmess>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_wmess><![CDATA[".$pool->c_wrong_message."]]></question_wmess>";
-                    $quiz_xml .= "\n\t\t\t\t\t\t<question_dfmess><![CDATA[".$pool->c_detailed_feedback."]]></question_dfmess>";
                     $quiz_xml .= "\n\t\t\t\t\t</quiz_question>";
                     if($pool->c_image)
                     {
@@ -467,6 +463,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t\t<quiz_pool_option>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<quiz_q_cat><![CDATA[".$pool_option->q_cat."]]></quiz_q_cat>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<quiz_q_count><![CDATA[".$pool_option->q_count."]]></quiz_q_count>";
+                    $quiz_xml .= "\n\t\t\t\t\t\t<quiz_tags><![CDATA[".$pool_option->tags."]]></quiz_tags>";
                     $quiz_xml .= "\n\t\t\t\t\t</quiz_pool_option>";
                 }
                 $quiz_xml .= "\n\t\t\t\t</quiz_pool_options>";
@@ -501,6 +498,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $quiz_xml .= "\n\t\t\t\t<quiz_pool><![CDATA[".$quiz->c_pool."]]></quiz_pool>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_auto_breaks>".$quiz->c_auto_breaks."</quiz_auto_breaks>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_resbycat>".$quiz->c_resbycat."</quiz_resbycat>";
+                $quiz_xml .= "\n\t\t\t\t<quiz_resbycat>".$quiz->c_resbytags."</quiz_resbycat>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_feed_option>".$quiz->c_feed_option."</quiz_feed_option>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_paid_check>".$quiz->paid_check."</quiz_paid_check>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_pagination>".$quiz->c_pagination."</quiz_pagination>";
@@ -528,7 +526,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_image><![CDATA[".$quest->c_image."]]></question_image>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_rmess><![CDATA[".$quest->c_right_message."]]></question_rmess>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_wmess><![CDATA[".$quest->c_wrong_message."]]></question_wmess>";
-                    $quiz_xml .= "\n\t\t\t\t\t\t<question_dfmess><![CDATA[".$quest->c_detailed_feedback."]]></question_dfmess>";
+
 
                     if (array_search($quest->c_id, $pbreaks) === false) $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[0]]></question_pbeaks>";
                     else $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[1]]></question_pbeaks>";
@@ -631,13 +629,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_xml .= "\n\t\t</quizess>";
             $quiz_xml .= "\n\t\t</course_backup>";
 
-            if (JFolder::exists(JPATH_SITE.'/tmp') !== false) {
-                $filename_xml = JPATH_SITE.'/tmp/export.xml';
-            } else {
-                $tmp_dir = JFactory::getConfig()->get('tmp_path');
-                $filename_xml = $tmp_dir.'/export.xml';
-            }
-
+            $filename_xml = JPATH_SITE.'/tmp/export.xml';
             $handle = fopen($filename_xml, 'w+');
 
             // try to write in XML file our xml-contents.
@@ -648,7 +640,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             fclose($handle);
 
             $uniq = strtotime(JFactory::getDate());
-            $dir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
+            $dir = JPATH_SITE."/tmp/";
             $backup_zip = $dir.'course_export_'.$uniq.'.zip';
             $pz = new PclZip($backup_zip);
             //----insert into database-----//
@@ -657,7 +649,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $database->setQuery($query);
             $database->execute();
             //add _lms_course_files_ catalog
-            $pz->create($filename_xml, PCLZIP_OPT_REMOVE_PATH, $filename_xml = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/');
+            $pz->create($filename_xml, PCLZIP_OPT_REMOVE_PATH, $filename_xml = JPATH_SITE.'/tmp/');
 
             if(!empty($all_images))
                 foreach($all_images as $quiz_image){
@@ -691,7 +683,6 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
     }
 	
 	function extractBackupArchive($archivename , $extractdir) {
-        //ToDo delete this path
 		$base_Dir = JPATH_SITE . '/tmp/';
 		
 		if (preg_match( '/.zip$/i', $archivename )) {
@@ -711,7 +702,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
 		
-		$baseDir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
+		$baseDir = JPATH_SITE . '/tmp/';
 		if (file_exists( $baseDir )) {
 			if (is_writable( $baseDir )) {
 				if (JFile::move( $filename, $baseDir . $userfile_name )) {
@@ -788,7 +779,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		return $category;
 	}
 	
-	public function import_quizzes() {
+	public function import_quizzes(){
         $database = JFactory::getDBO();
 
         $quiz_images = array();
@@ -800,25 +791,33 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         $backupfile = JFactory::getApplication()->input->files->get('importme', array(), 'array');
 
-        if (empty($backupfile['name'])) {
+        if (!$backupfile) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SELECT_FILE'), 'error');
+            return false;
+        }
+        $backupfile_name = $backupfile['name'];
+        $filename = explode(".", $backupfile_name);
+        if (empty($backupfile_name)) {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SELECT_FILE'), 'error');
             return false;
         }
 
-
-        if (strcmp($this->jq_substr($backupfile['name'],-4,1),".")) {
+        if (strcmp($this->jq_substr($backupfile_name,-4,1),".")) {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
             return false;
         }
-
-        if (!file_exists($backupfile['tmp_name'])) {
+        if (strcmp($this->jq_substr($backupfile_name,-4),".zip")) {
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
+            return false;
+        }
+        $tmp_name = $backupfile['tmp_name'];
+        if (!file_exists($tmp_name)) {
             JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SIZE_ERROR'), 'error');
             return false;
         }
+        if (preg_match("/.zip$/", strtolower($backupfile_name))) {
 
-        if (preg_match("/.zip$/", strtolower($backupfile['name']))) {
-
-            $zipFile = new pclZip($backupfile['tmp_name']);
+            $zipFile = new pclZip($tmp_name);
             $zipContentArray = $zipFile->listContent();
             $exp_xml_file = false;
             foreach($zipContentArray as $thisContent) {
@@ -826,7 +825,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_READ_PACKAGE_ERROR'), 'error');
                     return false;
                 }
-                if ($thisContent['filename'] == 'export.xml') {
+                if ($thisContent['filename'] == 'export.xml'){
                     $exp_xml_file = true;
                 }
             }
@@ -842,9 +841,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         //copy upload file to /tmp
         $this->uploadFile( $backupfile['tmp_name'], $backupfile['name'], $msg );
-        $tmp_dir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
-        $extract_dir = $tmp_dir."course_backup_".uniqid(rand(), true)."/";
-        $archive = $tmp_dir.$backupfile['name'];
+
+        $extract_dir = JPATH_SITE."/tmp/course_backup_".uniqid(rand(), true)."/";
+        $archive = JPATH_SITE."/tmp/".$backupfile['name'];
         //exstract archive in uniqfolder tmp
         $this->extractBackupArchive( $archive, $extract_dir);
 
@@ -856,8 +855,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         $db = JFactory::getDbo();
         $categories_relations_quiz = array();
-        if (!empty($quiz_cat)) {
-            foreach ($quiz_cat as &$qcat) {
+        if(!empty($quiz_cat))
+            foreach($quiz_cat as &$qcat)
+            {
                 $query = $db->getQuery(true);
                 $query->select('`id`')
                     ->from('`#__categories`')
@@ -866,7 +866,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     ->where('`published` = 1 OR `published` = 0');
                 $qcat->new_id = $db->setQuery($query)->loadResult();
 
-                if (empty($qcat->new_id)) {
+                if(!$qcat->new_id){
                     $extension = 'com_joomlaquiz';
                     $title     = $qcat->c_category;
                     $desc      = $qcat->c_instruction;
@@ -877,15 +877,13 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
                 $categories_relations_quiz[$qcat->c_id] = $qcat->new_id;
             }
-        }
-
 
         $quest_cat = $xmlReader->quest_categories();
 
         $categories_relations_questions = array();
-
-        if (!empty($quest_cat)) {
-            foreach ($quest_cat as $qcat) {
+        if(!empty($quest_cat))
+            foreach($quest_cat as $qcat)
+            {
                 $query = $db->getQuery(true);
                 $query->select('`id`')
                     ->from('`#__categories`')
@@ -894,7 +892,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     ->where('`published` = 1 OR `published` = 0');
                 $qcat->new_id = $db->setQuery($query)->loadResult();
 
-                if (empty($qcat->new_id)) {
+                if(!$qcat->new_id){
                     $extension = 'com_joomlaquiz.questions';
                     $title     = ($qcat->qc_category)?$qcat->qc_category:$qcat->c_category;
                     $desc      = $qcat->instruction;
@@ -906,26 +904,27 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $categories_relations_questions[$qcat->c_id] = $qcat->new_id;
 
             }
-        }
-
 
         $certificates = $xmlReader->certificates();
 
-        if (!empty($certificates)) {
-            foreach($certificates as $qcat) {
-
+        if(!empty($certificates))
+            foreach($certificates as $qcat)
+            {
                 $query = "SELECT * FROM #__quiz_certificates WHERE id=".$qcat->id;
                 $database->setQuery($query);
                 $dubl_row = $database->LoadObjectList();
-
-                if (!empty($dubl_row)) {
-                    if($dubl_row[0]->cert_name != $qcat->cert_name || $dubl_row[0]->cert_file != $qcat->cert_file) {
+                if(!empty($dubl_row))
+                {
+                    if($dubl_row[0]->cert_name != $qcat->cert_name || $dubl_row[0]->cert_file != $qcat->cert_file)
+                    {
                         $query = "INSERT INTO #__quiz_certificates VALUES('',".$db->quote($qcat->cert_name).",".$db->quote($qcat->cert_file).",".$db->quote($qcat->crtf_align).",".$db->quote($qcat->crtf_shadow).",".$db->quote($qcat->text_x).",".$db->quote($qcat->text_y).",".$db->quote($qcat->text_size).", ".$db->quote($qcat->crtf_text)." ,".$db->quote($qcat->text_font)." ,".$db->quote($qcat->cert_offset).")";
                         $database->setQuery($query);
                         $database->execute();
                         if($qcat->cert_file) $quiz_images[] = $qcat->cert_file;
                     }
-                } else {
+                }
+                else
+                {
                     $query = "INSERT INTO #__quiz_certificates VALUES(".$db->quote($qcat->id).",".$db->quote($qcat->cert_name).",".$db->quote($qcat->cert_file).",".$db->quote($qcat->crtf_align).",".$db->quote($qcat->crtf_shadow).",".$db->quote($qcat->text_x).",".$db->quote($qcat->text_y).",".$db->quote($qcat->text_size).",".$db->quote($qcat->crtf_text).",".$db->quote($qcat->text_font)." ,".$db->quote($qcat->cert_offset).")";
                     $database->setQuery($query);
                     $database->execute();
@@ -933,25 +932,25 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 }
 
             }
-        }
 
-
-        if ( $xmlReader->isDomit ) {
+        if ( $xmlReader->isDomit )
             $quizzes = $xmlReader->quizess();
-        } else {
+        else
             $quizzes = 1;
-        }
 
         $quizis_titles = array();
 
-        if (!empty($quizzes)) {
-            while (!empty($quizzes)) {
-                if (!$xmlReader->isDomit) {
+        if( !empty($quizzes))
+            while ( !empty($quizzes) )
+            {
+                if ( !$xmlReader->isDomit )
+                {
                     $qcat = $xmlReader->quizess_get_one();
-                    if (empty($qcat)) {
+                    if ( empty($qcat) )
                         break;
-                    }
-                } else {
+                }
+                else
+                {
                     $qcat = array_shift($quizzes);
                 }
                 $quizis_titles[] = $qcat->quiz_title;
@@ -964,10 +963,22 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $free_id =  $database->loadResult()+1;
 
 
-                if (!empty($dubl_row)) {
-                    if($dubl_row[0]->c_title != $qcat->quiz_title || $dubl_row[0]->c_created_time != $qcat->quiz_createtime) {
+                if(!empty($dubl_row))
+                {
+                    if($dubl_row[0]->c_title != $qcat->quiz_title || $dubl_row[0]->c_created_time != $qcat->quiz_createtime)
+                    {
+
                         foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
-                            $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
+                            $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage)
+                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
+                            $database->setQuery($query);
+                            $database->execute();
+                        }
+
+                        foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
+                            $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count, tags)
+                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) . "," . $db->quote($quiz_pool_option->quiz_tags) .")";
+
                             $database->setQuery($query);
                             $database->execute();
                         }
@@ -993,7 +1004,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
-								c_resbycat,	c_feed_option, paid_check, c_pagination)  ";
+								c_resbycat,	c_resbytags,c_feed_option, paid_check, c_pagination)  ";
                         $query .= "VALUES(".
                             $db->quote($free_id). ",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_show_author).",".$db->quote($qcat->quiz_autostart).",".$db->quote($qcat->quiz_timer_style).",".$db->quote($qcat->quiz_one_time).",
@@ -1011,10 +1022,10 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
 								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
-								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote(@$qcat->quiz_resbycat).",
+								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote(@$qcat->quiz_resbycat).",".$db->quote(@$qcat->c_resbytags).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
                         $database->setQuery($query);
-                        if (!$database->execute()) {
+                        if(!$database->execute()){
                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                             exit();
                         }
@@ -1048,79 +1059,92 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     . ($qcat->quiz_guest ? 'enabled' : 'disabled') . ')');
                         }
 
-                        if ($qcat->quiz_image) {
-                            $quiz_images[] = $qcat->quiz_image;
-                        }
+                        if($qcat->quiz_image) $quiz_images[] = $qcat->quiz_image;
                         $query = "SELECT max(c_id) FROM #__quiz_t_quiz";
                         $database->setQuery($query);
                         $new_quiz_id = $database->loadResult();
-                        if (!empty(@$qcat->quiz_questions)) {
-                            foreach ($qcat->quiz_questions as $q_quest) {
+                        if(!empty(@$qcat->quiz_questions))
+                        {
+                            foreach($qcat->quiz_questions as $q_quest)
+                            {
                                 $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$q_quest->id;
                                 $database->setQuery($query);
                                 $dubl_rowq = $database->LoadObjectList();
-                                if (!empty($dubl_rowq)) {
-                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
-                                    $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                                if(!empty($dubl_rowq))
+                                {
+                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
+                                    $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                     $database->setQuery($query);
-                                    if (!$database->execute()) {
+                                    if(!$database->execute())
+                                    {
                                         echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                         exit();
                                     }
-                                    if ($q_quest->question_image) {
-                                        $quiz_images[] = $q_quest->question_image;
-                                    }
+                                    if($q_quest->question_image) $quiz_images[] = $q_quest->question_image;
                                     $new_quest_id = $database->insertid();
-                                } else {
-                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
-                                    $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                                }
+                                else
+                                {
+                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
+                                    $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                     $database->setQuery($query);
-                                    if (!$database->execute()) {
+                                    if(!$database->execute())
+                                    {
                                         echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                         exit();
                                     }
-                                    if ($q_quest->question_image) {
-                                        $quiz_images[] = $q_quest->question_image;
-                                    }
+                                    if($q_quest->question_image) $quiz_images[] = $q_quest->question_image;
                                     $new_quest_id = $q_quest->id;
                                 }
-                                if (!empty(@$qcat->choice_data)) {
-                                    foreach ($qcat->choice_data as $ch_data) {
-                                        if ($ch_data->c_question_id == $q_quest->id) {
+                                if(!empty(@$qcat->choice_data))
+                                {
+                                    foreach($qcat->choice_data as $ch_data)
+                                    {
+                                        if($ch_data->c_question_id == $q_quest->id)
+                                        {
                                             $query = "INSERT INTO #__quiz_t_choice(c_id, c_choice, c_right, c_question_id, ordering, c_incorrect_feed, a_point) ";
                                             $query .= " VALUES('',".$db->quote($ch_data->choice_text).",".$db->quote($ch_data->c_right).",".$db->quote($new_quest_id).",".$db->quote($ch_data->ordering).",".$db->quote($ch_data->choice_feed).", ".$db->quote($ch_data->choice_point).")";
                                             $database->setQuery($query);
-                                            if (!$database->execute()) {
+                                            if(!$database->execute())
+                                            {
                                                 echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                                 exit();
                                             }
                                         }
                                     }
                                 }
-                                if (!empty(@$qcat->match_data)) {
-                                    foreach ($qcat->match_data as $ch_data) {
-                                        if ($ch_data->c_question_id == $q_quest->id) {
+                                if(!empty(@$qcat->match_data))
+                                {
+                                    foreach($qcat->match_data as $ch_data)
+                                    {
+                                        if($ch_data->c_question_id == $q_quest->id)
+                                        {
                                             $query = "INSERT INTO #__quiz_t_matching(c_id,c_question_id,c_left_text,c_right_text,ordering,a_points) ";
                                             $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->match_text_left).",".$db->quote($ch_data->match_text_right).",".$db->quote($ch_data->ordering).", ".$db->quote($ch_data->match_points).")";
                                             $database->setQuery($query);
-                                            if (!$database->execute()) {
+                                            if(!$database->execute())
+                                            {
                                                 echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                                 exit();
                                             }
                                         }
                                     }
                                 }
-                                if (!empty(@$qcat->blank_data)) {
+                                if(!empty(@$qcat->blank_data))
+                                {
                                     $c_blank_id = 0;
                                     $new_blank_id = 0;
-                                    foreach ($qcat->blank_data as $ch_data) {
-                                        if ($ch_data->c_question_id == $q_quest->id) {
+                                    foreach($qcat->blank_data as $ch_data)
+                                    {
+                                        if($ch_data->c_question_id == $q_quest->id)
+                                        {
                                             if ($c_blank_id != $ch_data->c_blank_id) {
                                                 $c_blank_id = $ch_data->c_blank_id;
                                                 $query = "INSERT INTO #__quiz_t_blank(c_id, c_question_id, points, css_class) ";
                                                 $query .= " VALUES('',".$db->quote($new_quest_id).", ".$db->quote($ch_data->points).", ".$db->quote($ch_data->css_class).")";
                                                 $database->setQuery($query);
-                                                if (!$database->execute()) {
+                                                if(!$database->execute())
+                                                {
                                                     echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                                     exit();
                                                 }
@@ -1132,7 +1156,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                                 $query = "INSERT INTO #__quiz_t_text(c_id,c_blank_id,c_text,ordering) ";
                                                 $query .= " VALUES('',".$db->quote($new_blank_id).",".$db->quote($ch_data->blank_text).",".$db->quote($ch_data->ordering).")";
                                                 $database->setQuery($query);
-                                                if (!$database->execute()) {
+                                                if(!$database->execute())
+                                                {
                                                     echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                                     exit();
                                                 }
@@ -1141,13 +1166,17 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
 
-                                if (!empty(@$qcat->blank_distr_data)) {
-                                    foreach ($qcat->blank_distr_data as $ch_data) {
-                                        if ($ch_data->c_question_id == $q_quest->id) {
+                                if(!empty(@$qcat->blank_distr_data))
+                                {
+                                    foreach($qcat->blank_distr_data as $ch_data)
+                                    {
+                                        if($ch_data->c_question_id == $q_quest->id)
+                                        {
                                             $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text) ";
                                             $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).")";
                                             $database->setQuery($query);
-                                            if (!$database->execute()) {
+                                            if(!$database->execute())
+                                            {
                                                 echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                                 exit();
                                             }
@@ -1155,13 +1184,18 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
 
-                                if (!empty(@$qcat->hotspot_data)) {
-                                    foreach ($qcat->hotspot_data as $ch_data) {
-                                        if ($ch_data->c_question_id == $q_quest->id) {
+                                if(!empty(@$qcat->hotspot_data))
+                                {
+                                    foreach($qcat->hotspot_data as $ch_data)
+                                    {
+                                        if($ch_data->c_question_id == $q_quest->id)
+                                        {
+
                                             $query = "INSERT INTO #__quiz_t_hotspot (c_id, c_question_id, c_start_x, c_start_y, c_width, c_height) ";
                                             $query .= " VALUES ('', ".$db->quote($new_quest_id).", ".$db->quote($ch_data->hs_start_x).", ".$db->quote($ch_data->hs_start_y).", ".$db->quote($ch_data->hs_width).", ".$db->quote($ch_data->hs_height).")";
                                             $database->setQuery($query);
-                                            if (!$database->execute()) {
+                                            if(!$database->execute())
+                                            {
                                                 echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                                 exit();
                                             }
@@ -1173,9 +1207,20 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         }
                     }
 
-                } else {
+                }
+                else
+                {
                     foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
-                        $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
+                        $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage)
+                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
+                        $database->setQuery($query);
+                        $database->execute();
+                    }
+
+                    foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
+                        $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count, tags)
+                                      VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_pool_option->quiz_q_cat) . "," . $db->quote($quiz_pool_option->quiz_q_count) . "," . $db->quote($quiz_pool_option->quiz_tags) .")";
+
                         $database->setQuery($query);
                         $database->execute();
                     }
@@ -1201,7 +1246,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
-								c_resbycat, c_feed_option, paid_check, c_pagination)  ";
+								c_resbycat, c_resbytags, c_feed_option, paid_check, c_pagination) ";
                     $query .= "VALUES(
 								".$db->quote($free_id).",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_show_author).",".$db->quote($qcat->quiz_autostart).",".$db->quote($qcat->quiz_timer_style).",".$db->quote($qcat->quiz_one_time).",
@@ -1219,10 +1264,11 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_enable_print).",".$db->quote($qcat->quiz_enable_sertif).",".$db->quote($qcat->quiz_skin).",
 								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
-								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote($qcat->quiz_resbycat).",
+								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote($qcat->quiz_resbycat).",".$db->quote($qcat->c_resbytags).",
 								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
                     $database->setQuery($query);
-                    if (!$database->execute()) {
+                    if(!$database->execute())
+                    {
                         echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                         exit();
                     }
@@ -1257,24 +1303,26 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 . ($qcat->quiz_guest ? 'enabled' : 'disabled') . ')');
                     }
 
-                    if ($qcat->quiz_image) {
-                        $quiz_images[] = $qcat->quiz_image;
-                    }
+                    if($qcat->quiz_image) $quiz_images[] = $qcat->quiz_image;
                     //$new_quiz_id = $qcat->id;
                     $query = "SELECT max(c_id) FROM #__quiz_t_quiz";
                     $database->setQuery($query);
                     $new_quiz_id = $database->loadResult();
 
-                    if (!empty(@$qcat->quiz_questions)) {
-                        foreach ($qcat->quiz_questions as $q_quest) {
+                    if(!empty(@$qcat->quiz_questions))
+                    {
+                        foreach($qcat->quiz_questions as $q_quest)
+                        {
                             $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$q_quest->id;
                             $database->setQuery($query);
                             $dubl_rowq = $database->LoadObjectList();
-                            if (!empty($dubl_rowq)) {
-                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
-                                $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                            if(!empty($dubl_rowq))
+                            {
+                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
+                                $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                 $database->setQuery($query);
-                                if (!$database->execute()) {
+                                if(!$database->execute())
+                                {
                                     echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                     exit();
                                 }
@@ -1290,15 +1338,16 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
 
-                                if ($q_quest->question_image) {
-                                    $quiz_images[] = $q_quest->question_image;
-                                }
+                                if($q_quest->question_image) $quiz_images[] = $q_quest->question_image;
                                 $new_quest_id = $database->insertid();
-                            } else {
-                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
-                                $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                            }
+                            else
+                            {
+                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
+                                $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                 $database->setQuery($query);
-                                if (!$database->execute()) {
+                                if(!$database->execute())
+                                {
                                     echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                     exit();
                                 }
@@ -1313,44 +1362,54 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
 
-                                if ($q_quest->question_image) {
-                                    $quiz_images[] = $q_quest->question_image;
-                                }
+                                if($q_quest->question_image) $quiz_images[] = $q_quest->question_image;
                                 $new_quest_id = $q_quest->id;
                             }
-                            if (!empty($qcat->choice_data)) {
-                                foreach ($qcat->choice_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->choice_data))
+                            {
+                                foreach($qcat->choice_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_choice(c_id,c_choice,c_right,c_question_id,ordering,c_incorrect_feed, a_point) ";
                                         $query .= " VALUES('',".$db->quote($ch_data->choice_text).",".$db->quote($ch_data->c_right).",".$db->quote($new_quest_id).",".$db->quote($ch_data->ordering).",".$db->quote($ch_data->choice_feed).", ".$db->quote($ch_data->choice_point).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
                                     }
                                 }
                             }
-                            if (!empty($qcat->match_data)) {
-                                foreach ($qcat->match_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->match_data))
+                            {
+                                foreach($qcat->match_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_matching(c_id,c_question_id,c_left_text,c_right_text,ordering,a_points) ";
                                         $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->match_text_left).",".$db->quote($ch_data->match_text_right).",".$db->quote($ch_data->ordering).",".$db->quote($ch_data->match_points).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
                                     }
                                 }
                             }
-                            if (!empty($qcat->blank_data)) {
-                                foreach ($qcat->blank_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->blank_data))
+                            {
+                                foreach($qcat->blank_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_blank(c_id, c_question_id, points, css_class) ";
                                         $query .= " VALUES('',".$db->quote($new_quest_id).", ".$db->quote($ch_data->points).", ".$db->quote($ch_data->css_class).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script>alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
@@ -1369,26 +1428,34 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                     }
                                 }
                             }
-                            if (!empty($qcat->blank_distr_data)) {
-                                foreach ($qcat->blank_distr_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->blank_distr_data))
+                            {
+                                foreach($qcat->blank_distr_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text)";
                                         $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
                                     }
                                 }
                             }
-                            if (!empty($qcat->hotspot_data)) {
-                                foreach ($qcat->hotspot_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->hotspot_data))
+                            {
+                                foreach($qcat->hotspot_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_hotspot(c_id, c_question_id, c_start_x, c_start_y, c_width, c_height) ";
                                         $query .= " VALUES ('', ".$db->quote($new_quest_id).", ".$db->quote($ch_data->hs_start_x).", ".$db->quote($ch_data->hs_start_y).", ".$db->quote($ch_data->hs_width).", ".$db->quote($ch_data->hs_height).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
@@ -1399,102 +1466,112 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         }
                     }
                 }
-                foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
-                    $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count) VALUES (" . $db->quote($free_id)
-                        . "," . $db->quote($categories_relations_questions[$quiz_pool_option->quiz_q_cat]) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
-                    $database->setQuery($query);
-                    $database->execute();
-                }
             }
-        }
 
-
-        $jform = JFactory::getApplication()->input->get('jform', array(), 'ARRAY');
-        if (!empty($jform['imp_pool'])) {
+        if(JFactory::getApplication()->input->getInt('imp_pool', 0))
+        {
             $quizzes_poolk = $xmlReader->quizess_pool();
 
-            if (!empty($quizzes_poolk)) {
-                foreach ($quizzes_poolk as $qcat) {
+            if(!empty($quizzes_poolk))
+                foreach($quizzes_poolk as $qcat)
+                {
                     $qcat->id = 0;
 
                     $new_quiz_id = 0;
 
-                    if (!empty($qcat->quizzes_question_pool)) {
-                        foreach ($qcat->quizzes_question_pool as $q_quest) {
+                    if(!empty($qcat->quizzes_question_pool))
+                    {
+                        foreach($qcat->quizzes_question_pool as $q_quest)
+                        {
                             $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$db->quote($q_quest->id)."";
                             $database->setQuery($query);
                             $dubl_rowq = $database->LoadObjectList();
 
-                            if (!empty($dubl_rowq)) {
-                                if ($dubl_rowq[0]->c_question != $q_quest->question_text) {
-                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
-                                    $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
+                            if(!empty($dubl_rowq))
+                            {
+                                if($dubl_rowq[0]->c_question != $q_quest->question_text)
+                                {
+                                    $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
+                                    $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                     $database->setQuery($query);
-                                    if (!$database->execute()) {
+                                    if(!$database->execute())
+                                    {
                                         echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                         exit();
                                     }
-                                    if ($qcat->c_image) {
-                                        $quiz_images[] = $qcat->c_image;
-                                    }
+                                    if($qcat->c_image) $quiz_images[] = $qcat->c_image;
                                     $new_quest_id = $database->insertid();
-                                } else {
-                                    $new_quest_id = $dubl_rowq[0]->c_id;
                                 }
-                            } else {
-                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
-                                $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote(@$q_quest->c_qform).")";
+                                else
+                                    $new_quest_id = $dubl_rowq[0]->c_id;
+                            }
+                            else
+                            {
+                                $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
+                                $query .= " VALUES (".$db->quote($q_quest->id).",".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote(@$q_quest->c_qform).")";
                                 $database->setQuery($query);
-                                if (!$database->execute()) {
+                                if(!$database->execute())
+                                {
                                     echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                     exit();
                                 }
-                                if (@$qcat->c_image) {
-                                    $quiz_images[] = $qcat->c_image;
-                                }
+                                if(@$qcat->c_image) $quiz_images[] = $qcat->c_image;
                                 $new_quest_id = $q_quest->id;
+
                             }
 
-                            if (!empty($qcat->choice_data)) {
-                                foreach($qcat->choice_data as $ch_data) {
-                                    if($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->choice_data))
+                            {
+                                foreach($qcat->choice_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_choice(c_id,c_choice,c_right,c_question_id,ordering,c_incorrect_feed,a_point) ";
                                         $query .= " VALUES('',".$db->quote($ch_data->choice_text).",".$db->quote($ch_data->c_right).",".$db->quote($new_quest_id).",".$db->quote($ch_data->ordering).",".$db->quote($ch_data->choice_feed).",".$db->quote(@$ch_data->choice_point).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
                                     }
                                 }
                             }
-                            if (!empty($qcat->match_data)) {
-                                foreach ($qcat->match_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->match_data))
+                            {
+                                foreach($qcat->match_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_matching(c_id,c_question_id,c_left_text,c_right_text,ordering,a_points) ";
                                         $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->match_text_left).",".$db->quote($ch_data->match_text_right).",".$db->quote($ch_data->ordering).",".$db->quote($ch_data->match_points).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
                                     }
                                 }
                             }
-                            if (!empty($qcat->blank_data)) {
-                                foreach ($qcat->blank_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->blank_data))
+                            {
+                                foreach($qcat->blank_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_blank(c_id, c_question_id, points, css_class) ";
                                         $query .= " VALUES('',".$db->quote($new_quest_id).", ".$db->quote($ch_data->points).", ".$db->quote($ch_data->css_class).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert(".$db->quote($database->getErrorMsg())."); window.history.go(-1); </script>\n";
                                             exit();
                                         }
                                         $query = "SELECT max(c_id) FROM #__quiz_t_blank";
                                         $database->setQuery($query);
                                         $new_blank_id = $database->loadResult();
-                                        if ($new_blank_id) {
+                                        if($new_blank_id) {
                                             $query = "INSERT INTO #__quiz_t_text(c_id,c_blank_id,c_text,ordering) ";
                                             $query .= " VALUES(''," . $db->quote($new_blank_id) . "," . $db->quote($ch_data->blank_text) . "," . $db->quote($ch_data->ordering) . ")";
                                             $database->setQuery($query);
@@ -1507,26 +1584,34 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 }
                             }
 
-                            if (!empty(@$qcat->blank_distr_data)) {
-                                foreach ($qcat->blank_distr_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty(@$qcat->blank_distr_data))
+                            {
+                                foreach($qcat->blank_distr_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_faketext(c_id, c_quest_id, c_text) ";
                                         $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->distr_text).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
                                     }
                                 }
                             }
-                            if (!empty($qcat->hotspot_data)) {
-                                foreach ($qcat->hotspot_data as $ch_data) {
-                                    if ($ch_data->c_question_id == $q_quest->id) {
+                            if(!empty($qcat->hotspot_data))
+                            {
+                                foreach($qcat->hotspot_data as $ch_data)
+                                {
+                                    if($ch_data->c_question_id == $q_quest->id)
+                                    {
                                         $query = "INSERT INTO #__quiz_t_hotspot(c_id,c_question_id,c_start_x,c_start_y,c_width,c_height) ";
                                         $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->hs_start_x).",".$db->quote($ch_data->hs_start_y).",".$db->quote($ch_data->hs_width).",".$db->quote($ch_data->hs_height).")";
                                         $database->setQuery($query);
-                                        if (!$database->execute()) {
+                                        if(!$database->execute())
+                                        {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                                             exit();
                                         }
@@ -1537,8 +1622,6 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     }
 
                 }
-            }
-
 
         }
 
@@ -1547,9 +1630,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $fromDir = $extract_dir."quiz_images/";
             $toDir   = JPATH_SITE."/images/joomlaquiz/images/";
             $i = 0;
-            while ($i < count($quiz_images)) {
+            while( $i < count($quiz_images) ){
                 if (file_exists($fromDir.$quiz_images[$i])) {
-                    if (!JFile::move($fromDir.$quiz_images[$i], $toDir.$quiz_images[$i])) {
+                    if(!JFile::move($fromDir.$quiz_images[$i], $toDir.$quiz_images[$i])){
                         move_uploaded_file($fromDir.$quiz_images[$i], $toDir.$quiz_images[$i]);
                     }
                 }
@@ -1559,16 +1642,18 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         // delete temporary files
         //$this->deldir_my($extract_dir);
-        $this->delzip($tmp_dir);
+        $this->delzip(JPATH_SITE.'/tmp/');
 
         $msg2 = '';
         $count_import_total = 0;
-        for($i=0; $i<count($quizis_titles);$i++) {
+        for($i=0; $i<count($quizis_titles);$i++)
+        {
             $query = "SELECT COUNT(*) FROM #__quiz_t_quiz WHERE c_title=".$db->quote($quizis_titles[$i])."";
             $database->setQuery($query);
             $count_import = (int)$database->loadResult();
             $count_import_total += $count_import;
-            if($count_import > 1) {
+            if($count_import > 1)
+            {
                 $msg2 .= " ".$count_import.JText::_('COM_JOOMLAQUIZ_QUIZES_QUIZZES').$quizis_titles[$i].JText::_('COM_JOOMLAQUIZ_AFTER_IMPORT');
             }
         }

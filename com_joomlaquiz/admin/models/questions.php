@@ -53,7 +53,7 @@ class JoomlaquizModelQuestions extends JModelList
         $search = $this->getUserStateFromRequest('questions.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-		$quiz_id = $this->getUserStateFromRequest('questions.filter.quiz_id', 'quiz_id', 0);
+        $quiz_id = $this->getUserStateFromRequest('questions.filter.quiz_id', 'filter_quiz_id');
         $this->setState('filter.quiz_id', $quiz_id);
 
         $qtype_id = $this->getUserStateFromRequest('questions.filter.qtype_id', 'filter_qtype_id');
@@ -61,6 +61,9 @@ class JoomlaquizModelQuestions extends JModelList
 
         $ques_cat = $this->getUserStateFromRequest('questions.filter.ques_cat', 'filter_ques_cat');
         $this->setState('filter.ques_cat', $ques_cat);
+
+        $ques_tag = $this->getUserStateFromRequest('questions.filter.ques_tag', 'filter_ques_tag');
+        $this->setState('filter.ques_tag', $ques_tag);
 
         $enabled = $this->getUserStateFromRequest('questions.filter.enabled', 'filter_enabled');
         $this->setState('filter.enabled', $enabled);
@@ -162,17 +165,17 @@ class JoomlaquizModelQuestions extends JModelList
 
     public function copyQuestions()
     {
-        $db = JFactory::getDBO();
+        $database = JFactory::getDBO();
         $session = JFactory::getSession();
         $cid = $session->get('com_joomlaquiz.copy.questions.cids');
-
+        $run_from_quiz_copy = 0;
         $quizMove = intval(JFactory::getApplication()->input->get('quizcopy'));
         $cids = implode(',', $cid);
         $total = count($cid);
         $query = "SELECT * FROM #__quiz_t_question WHERE c_id IN ( $cids ) ORDER BY ordering";
-        $db->setQuery($query);
-        $quests_to_copy = $db->loadAssocList();
-
+        $database->setQuery($query);
+        $quests_to_copy = $database->loadAssocList();
+        $new_order = 0;
         foreach ($quests_to_copy as $quest2copy) {
             $old_quest_id = $quest2copy['c_id'];
             $new_quest = $this->getTable();
@@ -180,16 +183,12 @@ class JoomlaquizModelQuestions extends JModelList
                 echo "<script> alert('" . $new_quest->getError() . "'); window.history.go(-1); </script>\n";
                 exit();
             }
-
             $new_quest->c_id = 0;
-
-            $query = "SELECT MAX(`ordering`) FROM `#__quiz_t_question` WHERE `c_quiz_id` = '" . $quizMove . "'";
-            $db->setQuery($query);
-            $max_order = $db->loadResult();
-
-            $new_quest->ordering = $max_order + 1;
+            $new_quest->ordering = $new_order;
             $new_quest->c_quiz_id = $quizMove;
-
+            if ($run_from_quiz_copy) {
+                $new_order++;
+            }
             if (!$new_quest->check()) {
                 echo "<script> alert('" . $new_quest->getError() . "'); window.history.go(-1); </script>\n";
                 exit();
@@ -201,9 +200,8 @@ class JoomlaquizModelQuestions extends JModelList
             $new_quest_id = $new_quest->c_id;
             if (($quest2copy['c_type'] == 1) || ($quest2copy['c_type'] == 2) || ($quest2copy['c_type'] == 3) || ($quest2copy['c_type'] == 10)) {
                 $query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = '" . $old_quest_id . "'";
-                $db->setQuery($query);
-                $fields_to_copy = $db->loadAssocList();
-
+                $database->setQuery($query);
+                $fields_to_copy = $database->loadAssocList();
                 foreach ($fields_to_copy as $field2copy) {
                     $new_field = $this->getTable("Choice");
                     if (!$new_field->bind($field2copy)) {
@@ -225,8 +223,8 @@ class JoomlaquizModelQuestions extends JModelList
             }
             if ($quest2copy['c_type'] == 4 || $quest2copy['c_type'] == 5) {
                 $query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = '" . $old_quest_id . "'";
-                $db->setQuery($query);
-                $fields_to_copy = $db->loadAssocList();
+                $database->setQuery($query);
+                $fields_to_copy = $database->loadAssocList();
                 $profile = new stdClass();
 
                 foreach ($fields_to_copy as $field2copy) {
@@ -249,20 +247,20 @@ class JoomlaquizModelQuestions extends JModelList
             }
             if (($quest2copy['c_type'] == 6)) {
                 $query = "SELECT * FROM #__quiz_t_blank WHERE c_question_id = '" . $old_quest_id . "'";
-                $db->setQuery($query);
-                $blanks_to_copy = $db->LoadObjectList();
+                $database->setQuery($query);
+                $blanks_to_copy = $database->LoadObjectList();
                 if (!empty($blanks_to_copy)) {
                     foreach ($blanks_to_copy as $blank_to_copy) {
                         $old_blank_id = $blank_to_copy->c_id;
 
                         $query = "SELECT * FROM #__quiz_t_text WHERE c_blank_id = '" . $old_blank_id . "'";
-                        $db->setQuery($query);
-                        $fields_to_copy = $db->loadAssocList();
+                        $database->setQuery($query);
+                        $fields_to_copy = $database->loadAssocList();
 
                         $query = "INSERT INTO #__quiz_t_blank (`c_question_id`, `ordering`, `points`, `css_class`, `c_quiz_id`, `gtype`) VALUES('" . (int)$new_quest_id . "', '" . (int)$blank_to_copy->ordering . "', '" . $blank_to_copy->points . "', '" . $blank_to_copy->css_class . "', '" . (int)$blank_to_copy->c_quiz_id . "', '" . $blank_to_copy->gtype . "')";
-                        $db->SetQuery($query);
-                        $db->execute();
-                        $new_blank_id = $db->insertid();
+                        $database->SetQuery($query);
+                        $database->execute();
+                        $new_blank_id = $database->insertid();
                         foreach ($fields_to_copy as $field2copy) {
                             $new_field = $this->getTable("Blanktext");
                             if (!$new_field->bind($field2copy)) {
@@ -284,22 +282,22 @@ class JoomlaquizModelQuestions extends JModelList
                     }
                 }
                 $query = "SELECT `c_text` FROM `#__quiz_t_faketext` WHERE `c_quest_id` = " . (int)$old_quest_id;
-                $db->SetQuery($query);
-                $faketext_to_copy = $db->loadObjectList();
+                $database->SetQuery($query);
+                $faketext_to_copy = $database->loadObjectList();
                 if (!empty($faketext_to_copy)) {
                     foreach ($faketext_to_copy as $faketext) {
                         $query = "INSERT INTO `#__quiz_t_faketext` (`c_id`, `c_quest_id`, `c_text`) VALUES('','" . (int)$new_quest_id . "','" . $faketext->c_text . "')";
-                        $db->setQuery($query);
-                        if (!$db->execute()) {
-                            echo "<script> alert('" . $db->getErrorMsg() . "'); window.history.go(-1); </script>\n";
+                        $database->setQuery($query);
+                        if (!$database->execute()) {
+                            echo "<script> alert('" . $database->getErrorMsg() . "'); window.history.go(-1); </script>\n";
                         }
                     }
                 }
             }
             if (($quest2copy['c_type'] == 7)) {
                 $query = "SELECT * FROM #__quiz_t_ext_hotspot WHERE c_question_id = '" . $old_quest_id . "'";
-                $db->setQuery($query);
-                $fields_to_copy = $db->loadAssocList();
+                $database->setQuery($query);
+                $fields_to_copy = $database->loadAssocList();
                 foreach ($fields_to_copy as $field2copy) {
                     $new_field = $this->getTable("Hotspot");
                     if (!$new_field->bind($field2copy)) {
@@ -320,12 +318,12 @@ class JoomlaquizModelQuestions extends JModelList
                 }
             }
         }
-
-        JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($quizMove);
-        $db->setQuery("SELECT `c_title` FROM #__quiz_t_quiz WHERE c_id = '" . $quizMove . "'");
-        $c_title = $db->loadResult();
-        $msg = $total . " Questions copied to " . $c_title;
-
+        if (!$run_from_quiz_copy) {
+            JoomlaquizHelper::JQ_Calculate_Quiz_totalScore($quizMove);
+            $database->setQuery("SELECT `c_title` FROM #__quiz_t_quiz WHERE c_id = '" . $quizMove . "'");
+            $c_title = $database->loadResult();
+            $msg = $total . " Questions copied to " . $c_title;
+        }
 
         $session->clear('com_joomlaquiz.copy.questions.cids');
 
@@ -414,6 +412,14 @@ class JoomlaquizModelQuestions extends JModelList
             $query->where("a.c_ques_cat = $ques_cat");
         }
 
+        $ques_tag = $this->getState('filter.ques_tag');
+        if ($ques_tag) {
+            $query->leftJoin($db->qn('#__contentitem_tag_map',
+                    'tmap') . ' ON ' . $db->qn('tmap.content_item_id') . '=' . $db->qn('a.c_id'))
+                ->where($db->qn('tmap.tag_id') . '=' . $db->q((int)$ques_tag))
+                ->where($db->qn('tmap.type_alias') . '=' . $db->q('com_joomlaquiz.question'));
+        }
+
         $orderCol = $this->state->get('list.ordering', 'a.c_question, a.c_id');
         $orderDirn = $this->state->get('list.direction', 'ASC');
         $query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -450,12 +456,26 @@ class JoomlaquizModelQuestions extends JModelList
     public function getQuestionCategories()
     {
         $db = JFactory::getDBO();
-
         $query = "SELECT id AS value, title as text FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `published` = 1 order by lft";
         $db->setQuery($query);
         $jq_qcat = $db->loadObjectList();
-
         return $jq_qcat;
+    }
+
+    public function getQuestionTags()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select($db->qn(array('t.id', 't.title')))
+            ->from($db->qn('#__tags', 't'))
+            ->leftJoin($db->qn('#__contentitem_tag_map',
+                    'tmap') . ' ON ' . $db->qn('tmap.tag_id') . '=' . $db->qn('t.id'))
+            ->where($db->qn('tmap.type_alias') . '=' . $db->q('com_joomlaquiz.question'))
+            ->group('t.id')
+            ->order('t.title');
+        $db->setQuery($query);
+        $result = $db->loadObjectList();
+        return $result ? $result : array();
     }
 
     public function getPageBreaks()
@@ -477,53 +497,42 @@ class JoomlaquizModelQuestions extends JModelList
 
     public function uploadQuestions()
     {
-        $database = JFactory::getDBO();
+
+        $app = JFactory::getApplication();
+        $jinput = $app->input;
+
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+
         @set_time_limit(0);
 
-        $userfile = JFactory::getApplication()->input->files->get('importme', array(), 'array');
-
-        if (empty($userfile)) {
-            $this->setRedirect("index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions",
-                JText::_('COM_JOOMLAQUIZ_NO_FILE_SELECTED'));
+        $quiz_id = $jinput->getInt('filter_quiz_id', 0);
+        $userfile = $jinput->files->get('importme', array(), 'array');
+        if (!$userfile['tmp_name']) {
+            $app->enqueueMessage(JText::_('COM_JOOMLAQUIZ_NO_FILE_SELECTED'), 'error');
+            $app->setRedirect(JRoute::_('index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions',
+                false));
         }
-        $userfileTempName = (!empty($userfile) ? $userfile['tmp_name'] : '');
-        $userfileName = (!empty($userfile) ? $userfile['name'] : '');
-
-        $quiz_id = JFactory::getApplication()->input->getInt('filter_quiz_id', 0);
 
         JLoader::register('JoomlaquizControllerQuizzes', JPATH_COMPONENT_ADMINISTRATOR . '/controllers/quizzes.php');
         $quiz_controller = new JoomlaquizControllerQuizzes();
 
         $ii = 0;
-        $qcat_id = 0;
-        $quest_id = 0;
         $opt_ordering = 0;
 
-        if (!$userfileTempName) {
-
-            $app = JFactory::getApplication();
-
-            $app->enqueueMessage('File is not selected.', 'Warning');
-
-            JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions');
-        }
-
         /*******************PARSE CSV FILE***********************/
-
-        $csv = file_get_contents($userfileTempName);
+        $csv = file_get_contents($userfile['tmp_name']);
         $rows = explode("\r", str_replace("\n", "\r", $csv));
         $rows = array_filter($rows);
+        if (!$rows) {
+            $app->enqueueMessage(JText::_('COM_JOOMLAQUIZ_UPLOAD_FAILED'), 'error');
+            $app->setRedirect(JRoute::_('index.php?option=com_joomlaquiz&view=questions&layout=uploadquestions',
+                false));
+        }
 
         $rowsAssoc = array();
         $keys = array();
-
         $i = 0;
-
-        if (!$rows) {
-            $msg = JText::_('COM_JOOMLAQUIZ_UPLOAD_FAILED');
-            echo "<script> alert('" . $msg . "'); window.history.go(-1); </script>\n";
-            exit();
-        }
 
         foreach ($rows as $row) {
             $row = str_getcsv($row);
@@ -535,38 +544,41 @@ class JoomlaquizModelQuestions extends JModelList
                     $rowAssoc[$keys[$i]] = $row[$i];
                 }
                 array_push($rowsAssoc, $rowAssoc);
+
             }
             $i++;
         }
-
         $rows = $rowsAssoc;
         /*********************************************************/
 
+        $quest_id = 0;
         foreach ($rows as $values) {
+
             if (!$values['question/answer text']) {
                 continue;
             }
 
             if ($values['question category']) {
-                $query = $database->getQuery(true);
+                $query->clear();
                 $query->select('*')
-                    ->from('`#__categories`')
-                    ->where('`extension` = "com_joomlaquiz.questions"')
-                    ->where('`title` = "' . $values['question category'] . '"');
-                $category = $database->setQuery($query)->loadObject();
+                    ->from($db->qn('#__categories'))
+                    ->where($db->qn('extension') . '=' . $db->q('com_joomlaquiz.questions'))
+                    ->where($db->qn('title') . '=' . $db->q($values['question category']));
+                $category = $db->setQuery($query)->loadObject();
 
-                if (!$category->id) {
+                if (!$category || !$category->id) {
                     $extension = 'com_joomlaquiz.questions';
                     $title = $values['question category'];
                     $desc = '';
                     $parent_id = 1;
                     $category = $quiz_controller->createCategory($extension, $title, $desc, $parent_id,
                         'upload ' . $values['question category']);
+
                 }
             }
 
             if ($values['question category'] && !$values['is correct'] && $values['question/answer text']) {
-                $question = $this->getTable('questions');
+                $question = $this->getTable('question');
                 $question->c_question = $values['question/answer text'];
                 $question->c_type = ($values['question type'] == 'mchoice' ? 1 : 2);
                 $question->c_ques_cat = $category->id;
@@ -574,25 +586,81 @@ class JoomlaquizModelQuestions extends JModelList
                 $question->c_point = isset($values['points']) ? $values['points'] : 0;
                 $question->c_attempts = isset($values['attempts']) ? $values['attempts'] : 0;
                 $question->c_random = isset($values['random']) ? $values['random'] : 0;
-
                 $question->c_feedback = isset($values['is feedback']) ? (strpos(strtolower($values['is feedback']),
                     'true') !== false ? 1 : 0) : 0;
                 $question->c_right_message = isset($values['correct feedback text']) ? $values['correct feedback text'] : '';
                 $question->c_wrong_message = isset($values['incorrect feedback text']) ? $values['incorrect feedback text'] : '';
+
+                //add tags
+                $question->tags = array();     //existing tags
+                $question->newTags = array();  //new tags
+                if ($values['question tags']) {
+                    $question_tags = explode('|', $values['question tags']);
+                    foreach ($question_tags as $question_tag) {
+                        $query->clear();
+                        $query->select($db->qn('id'))
+                            ->from($db->qn('#__tags'))
+                            ->where($db->qn('title') . '=' . $db->q($question_tag));
+                        $tag_id = $db->setQuery($query)->loadResult();
+
+                        if ((int)$tag_id) {
+                            $question->tags[] = (int)$tag_id;
+                        } else {
+                            $question->newTags[] = '#new#' . $question_tag;
+                        }
+                    }
+                }
+
 
                 if (!$question->store()) {
                     $quest_id = 0;
                     continue;
                 }
 
+
                 $quest_id = $question->c_id;
                 $opt_ordering = 0;
                 $ii++;
+
+                //existing tags: add tag rows to mapping table
+                if ((int)$question->c_id) {
+                    $query->clear();
+                    $query->select($db->qn('type_id'))
+                        ->from($db->qn('#__content_types'))
+                        ->where($db->qn('type_alias') . '=' . $db->q('com_joomlaquiz.question'));
+                    $type_id = $db->setQuery($query)->loadResult();
+
+                    $tags = array_unique($question->tags);
+                    foreach ($tags as $tag) {
+                        $query->clear();
+                        $columns = array(
+                            'type_alias',
+                            'core_content_id',
+                            'content_item_id',
+                            'tag_id',
+                            'tag_date',
+                            'type_id'
+                        );
+                        $values = array(
+                            $db->q('com_joomlaquiz.question')
+                            . ', ' . (int)$question->c_id
+                            . ', ' . (int)$question->c_id
+                            . ', ' . $db->q($tag)
+                            . ', ' . $query->currentTimestamp()
+                            . ', ' . (int)$type_id
+                        );
+                        $query->insert('#__contentitem_tag_map')
+                            ->columns($db->qn($columns))
+                            ->values(implode(',', $values));
+                        $db->setQuery($query)->execute();
+                    }
+                }
+
             }
 
             if ($quest_id && !$values['question category'] && !$values['question type'] && $values['is correct'] && $values['question/answer text']) {
                 $opt_ordering++;
-                $choice = $this->getTable('choice');
+                $choice = $this->getTable('Choice');
                 $choice->c_choice = $values['question/answer text'];
                 $choice->c_quiz_id = $quiz_id;
                 $choice->c_right = strtolower($values['is correct']) == 'true' ? 1 : 0;
@@ -600,7 +668,6 @@ class JoomlaquizModelQuestions extends JModelList
                 $choice->ordering = $opt_ordering;
                 $choice->a_point = isset($values['points']) ? $values['points'] : 0;
                 $choice->c_incorrect_feed = isset($values['correct feedback text']) ? $values['correct feedback text'] : '';
-
                 $choice->store();
             }
         }

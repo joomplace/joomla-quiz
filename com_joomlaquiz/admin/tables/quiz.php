@@ -50,7 +50,9 @@ class JoomlaquizTableQuiz extends JTable
 			}
 
             if (!(int)$jform['c_id']) {
-                $this->c_created_time = JHtml::_('date', 'now', 'Y-m-d', false);
+				$date = strtotime(JFactory::getDate());
+				$s_day = mktime(0,0,0,JHtml::_('date',strtotime($date), 'm'), JHtml::_('date',strtotime($date), 'd'), JHtml::_('date',strtotime($date), 'Y'));
+				$this->c_created_time = JHtml::_('date',strtotime($s_day), 'Y-m-d');
 			}
 
             if ((int)$jform['c_id']) {
@@ -87,10 +89,34 @@ class JoomlaquizTableQuiz extends JTable
 				$this->setRules($rules);
 			}
 
-			$this->c_category_id = (int)$jform['c_category_id'];
-			$this->c_skin = $jform['c_skin'];
-			$this->c_certificate = $jform['c_certificate'];
-			$res = parent::store($updateNulls);			
+            JLoader::register('CategoriesHelper', JPATH_ADMINISTRATOR . '/components/com_categories/helpers/categories.php');
+
+            // Cast catid to integer for comparison
+            $catid = (int) $jform['c_category_id'];
+            $cat_extension = 'com_joomlaquiz';
+
+            // Check if New Category exists
+            if ($catid > 0)
+            {
+                $catid = CategoriesHelper::validateCategoryId($jform['c_category_id'], $cat_extension);
+            }
+
+            // Save New Categoryg
+            if ($catid == 0 && JFactory::getUser()->authorise('core.create', 'com_joomlaquiz'))
+            {
+                $table = array();
+                $table['title'] = $jform['c_category_id'];
+                $table['parent_id'] = 1;
+                $table['extension'] = $cat_extension;
+                $table['language'] = $jform['language']?$jform['language']:'*';
+                $table['published'] = 1;
+
+                // Create new category and get catid back
+                $jform['c_category_id'] = CategoriesHelper::createCategory($table);
+            }
+
+            $this->bind($jform);
+            $res = parent::store($updateNulls);
 			// -- add pool ----//
 
 			$query = "DELETE FROM #__quiz_pool WHERE q_id=".$this->c_id;
@@ -124,7 +150,24 @@ class JoomlaquizTableQuiz extends JTable
                             }
                         }
                     }
-				default : break;
+                    break;
+                case 3:
+                    if(isset($jform['by_tags'])){
+                        $db = \JFactory::getDbo();
+                        $query = $db->getQuery(true);
+                        $columns = array('q_id', 'q_cat', 'q_count', 'tags');
+                        $values = array($db->q((int)$this->c_id), '0', '1', $db->q(json_encode($jform['by_tags'])));
+                        $query->insert($db->qn('#__quiz_pool'))
+                            ->columns($db->qn($columns))
+                            ->values(implode(',', $values));
+                        $db->setQuery($query);
+                        if(!$db->execute()){
+                            $this->setError($db->getErrorMsg());
+                        }
+                    }
+                    break;
+
+                default : break;
 				
 			}	
 			

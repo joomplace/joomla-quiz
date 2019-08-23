@@ -65,23 +65,22 @@
 		</field>
 		
 		<!-- Customizations settings -->
-		<!--<field name="restrict_on_passed" type="hidden"	default="0"
+		<field name="restrict_on_passed" type="hidden"	default="0"	
 			class="btn-group"
 			label="Restrict when passed(customization)" 
 			>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-
-		<field name="hide_boilerplates"
-			type="hidden"
-			default="0"
+		<field name="hide_boilerplates" 
+			type="hidden"	
+			default="0"	
 			class="btn-group"
-			label="Hide boilerplates"
+			label="Hide boilerplates" 
 			description="Hide boilerplates in reports">
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
-		</field>-->
+		</field>
 
 		<field
 				name="margin_top"

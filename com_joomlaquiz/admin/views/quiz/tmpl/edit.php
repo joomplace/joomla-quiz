@@ -59,6 +59,20 @@ jQuery("#jform_c_ismetatitle0").click(function () {
     });
 });
 
+jQuery(function($){
+    'use strict';
+    if($('#jform_c_pool0').prop('checked') || $('#jform_c_pool3').prop('checked')){
+        $('#hide_if_tags').hide();
+    }
+    $('input[name="jform[c_pool]"]').on('click', function(){
+        if( $.inArray($(this).val()*1, [0, 3]) != -1 ){
+            $('#hide_if_tags').hide('slow');
+        } else {
+            $('#hide_if_tags').show('slow');
+        }
+    });
+});
+
 window.onload = function (){
 	var checked1 = document.getElementById('jform_c_email_chk1').getAttribute('checked');
     var checked2 = document.getElementById('jform_c_pool0').getAttribute('checked');
@@ -379,7 +393,15 @@ window.onload = function (){
 					<?php echo $this->form->getInput('c_resbycat'); ?>
 				</div>
 			</div>
-            <?php echo $this->form->renderField('c_show_quest_pos'); ?>
+        <?php echo $this->form->renderField('c_resbytags'); ?>
+			<div class="control-group">
+				<div class="control-label"">
+                    <?php echo $this->form->getLabel('c_show_quest_pos'); ?>
+                </div>
+				<div class="controls">
+					<?php echo $this->form->getInput('c_show_quest_pos'); ?>
+				</div>
+			</div>
 			<div class="control-group">
 				<div class="control-label">
                     <?php echo $this->form->getLabel('c_show_quest_points'); ?>
@@ -590,48 +612,52 @@ window.onload = function (){
 					<?php echo $this->form->getInput('c_auto_breaks'); ?>
 				</div>
 			</div>
-			<div class="control-group">
-				<div class="control-label">
-                    <?php echo $this->form->getLabel('pool_rand'); ?>
-                </div>
-				<div class="controls">
-					<input type="text" size="10" value="<?php echo $this->item->c_pool==1 ? $this->q_count : '';?>" id="jform_pool_rand" name="jform[pool_rand]" class="" aria-invalid="false">
-				</div>
-			</div>
-			<div class="control-group">
-                <label data-content="<?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES_DESC');?>" data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES_DESC');?>" class="control-label hasPopover" for="head_cat" id="jform_pool_rand-lbl" aria-invalid="false"><?php echo JText::_('COM_JOOMLAQUIZ_TEMPLATE_LABEL');?></label>
-                <div class="controls">
-					<?php echo $this->head_cat;?>
-				</div>
-			</div>
-			<div class="control-group">
-                <div id="cat_pool_with_head">
-				<?php
-					foreach ($this->jq_pool_cat as $listcat)
-					{
-						$is_num_cat = '';
-						if( $this->item->c_pool==2 && isset($this->if_pool))
-						{
-							foreach($this->if_pool as $poolz)
-							{
-								if ( $poolz->q_cat == $listcat->value )
-								{
-									$is_num_cat = $poolz->q_count;
-								}
-							}
-						}
-						echo '<div style="display:hidden" class="head_category_' . $listcat->head_category . '">';
-						echo '<table width="100%"><tr>';
-						echo '<div class="control-label"><td align="left" style="width:24%">'.$listcat->text.'</td></div>';
-                        echo '<br/>';
-						echo '<div class="controls"><td><input type="hidden" name="pool_cats[]" value="'.$listcat->value.'"><input id="cat_field_'.$listcat->value.'" type="text" name="pnumber_'.$listcat->value.'" value="'.$is_num_cat.'"></td></div>';
-						echo '</tr></table>';
-						echo '</div>';
-					}
-				?>
+            <div id="hide_if_tags">
+                <div class="control-group">
+                    <div class="control-label">
+                        <?php echo $this->form->getLabel('pool_rand'); ?>
                     </div>
-			</div>
-		</fieldset>
+                    <div class="controls">
+                        <input type="text" size="10" value="<?php echo $this->q_count;?>" id="jform_pool_rand" name="jform[pool_rand]" class="" aria-invalid="false">
+                    </div>
+
+                </div>
+                <div class="control-group">
+                    <label data-content="<?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES_DESC');?>" data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES_DESC');?>" class="control-label hasPopover" for="head_cat" id="jform_pool_rand-lbl" aria-invalid="false"><?php echo JText::_('COM_JOOMLAQUIZ_TEMPLATE_LABEL');?></label>
+                    <div class="controls">
+                        <?php echo $this->head_cat;?>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div id="cat_pool_with_head">
+                        <?php
+                        foreach ($this->jq_pool_cat as $listcat)
+                        {
+                            $is_num_cat = '';
+                            if( $this->item->c_pool==2 && isset($this->if_pool))
+                            {
+                                foreach($this->if_pool as $poolz)
+                                {
+                                    if ( $poolz->q_cat == $listcat->value )
+                                    {
+                                        $is_num_cat = $poolz->q_count;
+                                    }
+                                }
+                            }
+                            echo '<div style="display:hidden" class="head_category_' . $listcat->head_category . '">';
+                            echo '<table width="100%"><tr>';
+                            echo '<div class="control-label"><td align="left" style="width:24%">'.$listcat->text.'</td></div>';
+                            echo '<br/>';
+                            echo '<div class="controls"><td><input type="hidden" name="pool_cats[]" value="'.$listcat->value.'"><input id="cat_field_'.$listcat->value.'" type="text" name="pnumber_'.$listcat->value.'" value="'.$is_num_cat.'"></td></div>';
+                            echo '</tr></table>';
+                            echo '</div>';
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <?php echo $this->form->renderField('by_tags'); ?>
+        </fieldset>
 	    </div>
 		<div class="tab-pane" id="metadata-information">
 		<fieldset class="adminform">

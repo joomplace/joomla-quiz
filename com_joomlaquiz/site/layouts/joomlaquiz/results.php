@@ -90,6 +90,6 @@ JHtml::_('script', 'system/core.js', true, true);
 		</table>
 		<input type="hidden" name="option" value="com_joomlaquiz" />
 		<input type="hidden" name="view" value="results" />
-		<input type="hidden" name="Itemid" value="<?php echo JFactory::getApplication()->input->getInt('Itemid', 0); ?>" />
+		<input type="hidden" name="Itemid" value="<?php echo $Itemid;?>" />
 	</form>
 </div>

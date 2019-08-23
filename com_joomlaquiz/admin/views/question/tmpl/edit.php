@@ -11,12 +11,20 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
+JHtml::_('formbehavior.chosen', '#jform_c_ques_cat', null, array('disable_search_threshold' => 0 ));
 JHtml::_('formbehavior.chosen', 'select');
 $app = JFactory::getApplication();
 $input = $app->input;
 $model = $this->getModel('question');
-
+$quizes_list = $this->quizzes;
+$ordering_list = $this->ordering_list;
 ?>
+<style>
+    #jform_c_question_ifr{
+        height: 195px!important;
+    }
+</style>
+
 <?php echo $this->loadTemplate('menu');?>
 <script type="text/javascript">
     
@@ -153,7 +161,16 @@ $model = $this->getModel('question');
 					<?php echo $this->form->getInput('c_ques_cat'); ?>
 				</div>
 			</div>
-			<?php if($this->is_points):?>
+            <div class="control-group">
+                <div class="control-label">
+                    <?php echo $this->form->getLabel('tags'); ?>
+                </div>
+                <div class="controls">
+                    <?php echo $this->form->getInput('tags'); ?>
+                </div>
+            </div>
+
+            <?php if($this->is_points):?>
 			<div class="control-group">
                 <div class="control-class">
 				    <?php echo $this->form->getLabel('c_point'); ?>
@@ -181,6 +198,14 @@ $model = $this->getModel('question');
 				</div>
 			</div>
 			<?php endif;?>
+			<div class="control-group">
+                <div class="control-label">
+				    <?php echo JText::_('COM_JOOMLAQUIZ_ORDERING');?>
+                </div>
+				<div class="controls">
+					<?php echo $this->item->ordering_list;?>
+				</div>
+			</div>
 		</fieldset>
 	    </div>
 		<?php if($this->options != ''):?>

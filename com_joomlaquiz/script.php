@@ -115,8 +115,9 @@ class com_joomlaquizInstallerScript
 				'c_share_buttons' => 'TINYINT( 3 ) NOT NULL',
 				'asset_id' => 'INT( 18 ) NOT NULL',
                 'c_quiz_access_message' => 'TEXT NOT NULL',
-                'c_quiz_certificate_access_message' => 'TEXT NOT NULL'
-			),
+                'c_quiz_certificate_access_message' => 'TEXT NOT NULL',
+                'c_resbytags' => "INT( 3 ) NOT NULL DEFAULT '0' AFTER `c_resbycat`"
+            ),
 			'r_student_quiz' => array(
 				'user_name' => 'VARCHAR(50) NOT NULL',
 				'user_surname' => 'VARCHAR(100) NOT NULL',
@@ -129,11 +130,11 @@ class com_joomlaquizInstallerScript
 			),
 			'certificates' => array(
 				'text_font' => 'VARCHAR(255) NOT NULL'
-			),
-            'cert_fields' => array(
-                'text_x_center' =>"TINYINT(1) NOT NULL DEFAULT '0'"
+            ),
+            'pool' => array(
+                'tags' => 'TEXT NOT NULL'
             )
-		);
+        );
 
 		$db = JFactory::getDbo();
 		foreach ($newColumns as $table => $fields)

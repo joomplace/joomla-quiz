@@ -63,6 +63,7 @@ Joomla.submitbutton = function(task)
 						<td><strong><?php echo JText::_('COM_JOOMLAQUIZ_FIRST_LINE');?></strong></td>
 						<td></td>
 						<td><?php echo 'question category';?></td>
+                        <td><?php echo 'question tags';?></td>
 						<td><?php echo 'question type';?></td>
 						<td><?php echo 'is correct';?></td>
 						<td><?php echo 'question/answer text';?></td>
@@ -77,6 +78,7 @@ Joomla.submitbutton = function(task)
 						<td><strong><?php echo JText::_('COM_JOOMLAQUIZ_FOLLOWING_LINES');?></strong></td>
 						<td></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_CATEGORY1');?></td>
+                        <td><?php echo JText::_('COM_JOOMLAQUIZ_QUESTIONS_UPLOADQUESTIONS_CSV_TAG1');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_MCHOICE');?></td>
 						<td></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_MULTIPLE_CHOICE_QUESTION');?></td>
@@ -91,6 +93,7 @@ Joomla.submitbutton = function(task)
 						<td></td>
 						<td></td>
 						<td></td>
+                        <td></td>
 						<td></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_FALSE');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_ANSWER11');?></td>
@@ -104,6 +107,7 @@ Joomla.submitbutton = function(task)
 					<tr>
 						<td></td>
 						<td></td>
+                        <td></td>
 						<td></td>
 						<td></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_FALSE');?></td>
@@ -120,6 +124,7 @@ Joomla.submitbutton = function(task)
 						<td></td>
 						<td></td>
 						<td></td>
+                        <td></td>
 						<td><?php echo JText::_('COM_JOOMALQUIZ_TRUE');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_ANSWER13');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_2');?></td>
@@ -134,6 +139,7 @@ Joomla.submitbutton = function(task)
 						<td></td>
 						<td></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_CATEGORY2');?></td>
+                        <td><?php echo JText::_('COM_JOOMLAQUIZ_QUESTIONS_UPLOADQUESTIONS_CSV_TAG2');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_MRESPONSE');?></td>
 						<td></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_MULTIPLE_RESPONSE_TEXT2');?></td>
@@ -148,6 +154,7 @@ Joomla.submitbutton = function(task)
 						<td></td>
 						<td></td>
 						<td></td>
+                        <td></td>
 						<td></td>
 						<td><?php echo JText::_('COM_JOOMALQUIZ_TRUE');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_ANSWER21');?></td>
@@ -163,6 +170,7 @@ Joomla.submitbutton = function(task)
 						<td></td>
 						<td></td>
 						<td></td>
+                        <td></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_FALSE');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_ANSWER22');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_1');?></td>
@@ -177,6 +185,7 @@ Joomla.submitbutton = function(task)
 						<td></td>
 						<td></td>
 						<td></td>
+                        <td></td>
 						<td><?php echo JText::_('COM_JOOMALQUIZ_TRUE');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_ANSWER23');?></td>
 						<td><?php echo JText::_('COM_JOOMLAQUIZ_2');?></td>

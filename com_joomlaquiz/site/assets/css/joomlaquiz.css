@@ -144,15 +144,6 @@ object{
 /* ------------bottom_container end--------------- */
 	
 /*------------questions-------------*/	
-.quest_pos {
-	padding-right: 15px;
-
-}
-
-.jq_mquestions .quest_pos p{
-	margin: 0px;
-}
-
 .jq_question_caption > div{
 	display:inline-block;
 	*zoom:1;
@@ -170,8 +161,7 @@ object{
 	margin:20px 0;
 }
 .jq_question_answers_cont input[type="radio"]{
-	/*margin-right: 3px;*/
-	margin: 5px;
+	margin-right: 3px;
 }
 
 .jq_quiz_align{
@@ -580,7 +570,6 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
 .jq_input_pos label
 {
 	display:inline;
-	margin-right: 7px;
 }
 
 .jq_puzzle_img

@@ -104,11 +104,11 @@ class JoomlaquizViewQuestions extends JViewLegacy
 
 				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
 
-				$quizzesFields = JHTML::_('select.options', $quizzes, 'value', 'text', $state->get('filter.quiz_id'));
+				$quizzesFields = JHTML::_('select.options', $quizzes, 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id', JFactory::getApplication()->input->get('quiz_id','')));
 				
 				JHtmlSidebar::addFilter(
 					JText::_('COM_JOOMLAQUIZ_SELECT_QUIZ'),
-					'quiz_id',
+					'filter_quiz_id',
 					$quizzesFields
 				);
 				
@@ -127,8 +127,18 @@ class JoomlaquizViewQuestions extends JViewLegacy
 					'filter_ques_cat',
 					$qcategoriesFields
 				);
-				
-				$this->pbreaks = $this->get("PageBreaks");
+
+                $questionTags = $this->get("QuestionTags");
+                if(!empty($questionTags)){
+                    $questionTagsOptions = JHTML::_('select.options', $questionTags, 'id', 'title', $app->getUserStateFromRequest('quizzes.filter.ques_tag', 'filter_ques_tag'));
+                    JHtmlSidebar::addFilter(
+                        JText::_('COM_JOOMLAQUIZ_NO_TAG'),
+                        'filter_ques_tag',
+                        $questionTagsOptions
+                    );
+                }
+
+                $this->pbreaks = $this->get("PageBreaks");
 			}
 		
 		$this->sidebar = JHtmlSidebar::render();

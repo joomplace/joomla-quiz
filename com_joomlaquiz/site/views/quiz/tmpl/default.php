@@ -39,15 +39,9 @@ if ($quiz->template_name) {
 $document = JFactory::getDocument();
 $document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-1.9.1.min.js");
 $document->addScript(JURI::root(true)."/components/com_joomlaquiz/assets/js/jquery-ui-1.9.2.custom.min.js");
-if(JBrowser::getInstance()->isMobile()) {
-    $document->addScript(JURI::root(true) . "/components/com_joomlaquiz/assets/js/DragDropTouch.js");
-}
 $document->addStyleSheet(JURI::root(true).'/components/com_joomlaquiz/assets/css/joomlaquiz.css');
 
-if ($quiz->c_image){
-    $document->setMetaData('og:image', null);
-    $document->setMetaData( 'og:image', JURI::root().$quiz->c_image, 'property');
-}
+if ($quiz->c_image) $document->setMetaData( 'og:image', JURI::root().$quiz->c_image);
 ?>
 
 <noscript>
@@ -79,6 +73,7 @@ if ($quiz->c_image){
 		<?php
 		} else if(@$quiz->rel_id && $quiz->rel_data && $quiz->rel_data->c_passed && $quiz->rel_data->c_finished && !$quiz->force) {
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');
+            JFactory::getSession()->set('jq_result_mode', array(@$quiz->rel_id, @$quiz->rel_data->c_quiz_id, @$quiz->package_id));
 		?>
 		<script language="javascript" type="text/javascript">
 		<!--//--><![CDATA[//><!--
@@ -97,7 +92,9 @@ if ($quiz->c_image){
 		</div>
 		<?php
 		} else if(@$quiz->lid && isset($quiz->lid_data) && $quiz->lid_data->c_passed && $quiz->lid_data->c_finished  && !$quiz->force) {
+
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');
+            JFactory::getSession()->set('jq_result_mode_lid', array(@$quiz->lid, @$quiz->lid_data->c_quiz_id));
 		?>
 		<script language="javascript" type="text/javascript">
 		<!--//--><![CDATA[//><!--
@@ -116,7 +113,9 @@ if ($quiz->c_image){
 		</div>
 		<?php
 		} else if(isset($quiz->result_data)) {
+
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');
+            JFactory::getSession()->set('jq_result_mode_5', array($quiz->result_data, $quiz->result_data->c_quiz_id));
 		?>
 		<script language="javascript" type="text/javascript">
 		<!--//--><![CDATA[//><!--
@@ -211,39 +210,10 @@ if ($quiz->c_image){
 		if ($quiz->c_ismetatitle && $quiz->c_metatitle) {
 			$document->setTitle($quiz->c_metatitle);
 		}
-
-        if($quiz->c_share_buttons){
-            $Itemid = JFactory::getApplication()->input->getInt('Itemid', 0);
-            $getItemid = $Itemid ? '&Itemid='.$Itemid : '';
-
-            $domen = rtrim(JUri::root(), '/');
-            $url = urlencode($domen.JRoute::_('index.php?option=com_joomlaquiz&view=quiz&quiz_id='.$quiz->c_id
-                .$getItemid));
-
-            $document->setMetaData('og:type', null);
-            $document->setMetaData('og:type', 'website', 'property');
-
-            if ($quiz->c_ismetatitle && $quiz->c_metatitle) {
-                $document->setMetaData('og:title', null);
-                $document->setMetaData('og:title', $quiz->c_metatitle, 'property');
-            }
-
-            if ($quiz->c_ismetadescr && $quiz->c_metadescr) {
-                $document->setMetaData('og:description', null);
-                $document->setMetaData('og:description', $quiz->c_metadescr, 'property');
-            }
-
-            $document->setMetaData('og:url', null);
-            $document->setMetaData('og:url', $url, 'property');
-
-            if($quiz->c_image){
-                $document->setMetaData('og:image', null);
-                $document->setMetaData('og:image', JUri::root().$quiz->c_image, 'property');
-            }
-        }
 	}
 	
 	echo JoomlaquizHelper::poweredByHTML();
 }
 
 ?>
+

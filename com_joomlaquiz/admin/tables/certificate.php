@@ -44,7 +44,6 @@ class JoomlaquizTableCertificate extends JTable
         $jq_hid_field_y = JFactory::getApplication()->input->get('jq_hid_field_y', array(), '');
         $jq_hid_field_h = JFactory::getApplication()->input->get('jq_hid_field_h', array(), '');
         $jq_hid_field_font = JFactory::getApplication()->input->get('jq_hid_field_font', array(), '');
-        $jq_fields_x_center = JFactory::getApplication()->input->get('jq_fields_x_center', array(), '');
 
         if (is_array($jq_hid_fields_ids ) && !empty($jq_hid_fields_ids )) {
             foreach($jq_hid_fields_ids as $i=>$jq_hid_fields_id) {
@@ -54,8 +53,7 @@ class JoomlaquizTableCertificate extends JTable
 								`text_y` = '".intval($jq_hid_field_y[$i])."', 
 								`text_h` = '".intval($jq_hid_field_h[$i])."',
 								`shadow` = '".intval($jq_fields_shadow[$i])."',
-								`font` = '".$jq_hid_field_font[$i]."',						
-								`text_x_center` = '".$jq_fields_x_center[$i]."'						
+								`font` = '".$jq_hid_field_font[$i]."'						
 								";
                 $database->setQuery($query);
                 $database->execute();

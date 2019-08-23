@@ -2,6 +2,7 @@
 <form>
 	<fieldset name="quiz_details"
 		label="COM_JOOMLAQUIZ_SETTINGS_GLOBAL"
+		addfieldpath="/administrator/components/com_categories/models/fields"
 		>
 		
 		<field name="asset_id" type="hidden" filter="unset" />
@@ -22,9 +23,9 @@
 		</field>
 		<field 
 			name="c_category_id" 
-			type="category" 
+			type="categoryedit" 
 			extension="com_joomlaquiz" 
-			label="COM_JOOMLAQUIZ_CATEGORY2"
+			label="COM_JOOMLAQUIZ_CATEGORY"
 			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUIZCAT" 
 		/>
 		<field name="c_author" type="text" default="" size="30"
@@ -249,13 +250,23 @@
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field
+			name="c_resbytags"
+			type="radio"
+			class="btn-group"
+			label="COM_JOOMLAQUIZ_RESULTS_BY_TAGS_LABEL"
+			description="COM_JOOMLAQUIZ_RESULTS_BY_TAGS_DESC"
+			labelclass="control-label"
+			default="0">
+		  <option value="0">COM_JOOMLAQUIZ_NO</option>
+		  <option value="1">COM_JOOMLAQUIZ_YES</option>
+		</field>
+		<field
 				name="c_show_quest_pos"
 				type="radio"
 				class="btn-group"
 				label="COM_JOOMLAQUIZ_SHOW_QUESTION_X_LABEL"
 				description="COM_JOOMLAQUIZ_SHOW_QUESTION_X_DESC"
 				labelclass="control-label"
-				showon="c_pagination:0"
 				default="0">
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
@@ -409,6 +420,7 @@
 			<option value="0">COM_JOOMLAQUIZ_DONT_USE</option>
 			<option value="1">COM_JOOMLAQUIZ_RANDOM_QUESTIONS</option>
 			<option  value="2">COM_JOOMLAQUIZ_BY_CATEGORIES</option>
+			<option value="3">COM_JOOMLAQUIZ_BY_TAGS</option>
 		</field>
 		<field 
 			name="c_auto_breaks" 
@@ -423,6 +435,14 @@
 				label="COM_JOOMLAQUIZ_NUMBER_OF_QUESTIONS" 
 				labelclass="control-label" description="COM_JOOMLAQUIZ_POOL_RAND_DESCR">
 		</field>
+		<field
+			name="by_tags"
+			type="subform"
+			formsource="administrator/components/com_joomlaquiz/models/forms/quiz_pool_tags.xml"
+			multiple="true"
+			label="COM_JOOMLAQUIZ_QUIZ_POOL_BY_TAGS_LABEL"
+			description="COM_JOOMLAQUIZ_QUIZ_POOL_BY_TAGS_DESC"
+			showon="c_pool:3" />
 	</fieldset>
 	<fieldset name="quiz_metadata_information"
 		label="COM_JOOMLAQUIZ_METADATA_INFORMATION"

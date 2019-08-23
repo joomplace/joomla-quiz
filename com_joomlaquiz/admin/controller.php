@@ -108,12 +108,11 @@ class JoomlaquizController extends JControllerLegacy
             $asset       = JTable::getInstance('Asset');
             $rule        = "core.view";
             $user        = JFactory::getUser(0);
-            $user_groups = $user->getAuthorisedGroups();
-            $guest_group = array_pop($user_groups);
+            $guest_group = array_pop($user->getAuthorisedGroups());
             foreach ($rows as $row) {
                 $asset_name = 'com_joomlaquiz.quiz.' . $row->c_id;
                 $asset->loadByName($asset_name);
-                $rules = !empty($asset->rules) ? json_decode($asset->rules) : new stdClass();
+                $rules = json_decode($asset->rules);
                 if (isset($rules->$rule) && !is_array($rules->$rule)) {
                     if (!$rules->$rule->$guest_group) {
                         $rules->$rule->$guest_group = $row->c_guest;

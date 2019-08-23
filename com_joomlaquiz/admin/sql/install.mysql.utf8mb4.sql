@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS `#__quiz_cert_fields` (
   `text_h` int(11) NOT NULL DEFAULT '0',
   `shadow` tinyint(4) NOT NULL DEFAULT '0',
   `font` varchar(255) DEFAULT 'arial.ttf',
-  `text_x_center` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`c_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=6 ;
 
@@ -179,6 +178,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_pool` (
   `q_id` int(11) NOT NULL DEFAULT '0',
   `q_cat` int(11) NOT NULL DEFAULT '0',
   `q_count` int(11) NOT NULL DEFAULT '0',
+  `tags` text NOT NULL,
   PRIMARY KEY (`q_id`,`q_cat`,`q_count`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -580,6 +580,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_feedback` int(11) NOT NULL DEFAULT '0',
   `c_pool` int(11) NOT NULL DEFAULT '0',
   `c_resbycat` char(1) NOT NULL DEFAULT '0',
+  `c_resbytags` int(3) NOT NULL DEFAULT '0',
   `c_feed_option` char(1) NOT NULL DEFAULT '0',
   `c_show_quest_pos` tinyint(4) NOT NULL DEFAULT '1',
   `c_show_quest_points` tinyint(4) NOT NULL DEFAULT '1',

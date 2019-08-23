@@ -19,6 +19,8 @@ class JoomlaquizViewQuestion extends JViewLegacy
 	protected $state;
 	protected $item;
 	protected $form;
+    protected $quizes;
+    protected $ordering_list;
 	
     public function display($tpl = null) 
     {
@@ -30,6 +32,29 @@ class JoomlaquizViewQuestion extends JViewLegacy
  		$this->state	= $this->get('State');
 		$this->item		= $this->get('Item');
 		$this->form		= $this->get('Form');
+		
+
+		$app = JFactory::getApplication();
+		$filter_quiz_id = $app->getUserStateFromRequest('questions.filter.quiz_id', 'filter_quiz_id', '');
+		
+		$db    = JFactory::getDbo();
+		if(!$filter_quiz_id){
+			$c_id = $app->input->get('c_id', 0);
+			if($c_id){
+				$db->setQuery("SELECT `c_quiz_id` FROM #__quiz_t_question WHERE `c_id` = '".$c_id."'");
+				$c_quiz_id = $db->loadResult();
+			} else {
+				$c_quiz_id = 0;
+			}
+			
+			$filter_quiz_id = $c_quiz_id;
+		}
+	
+        $query="SELECT `ordering` as value, CONCAT(`ordering`, '. ', `c_question`) as text FROM #__quiz_t_question WHERE `c_quiz_id` = '".$filter_quiz_id."' ORDER BY `ordering`";
+        $db->setQuery($query);
+        $ordering_list = $db->loadObjectlist();
+
+        $this->item->ordering_list = JHTML::_("select.genericlist", $ordering_list, 'ordering', 'class="text_area" size="1"', 'value', 'text', $this->item->ordering);
 
 		$new_qtype_id = $app->getUserStateFromRequest( "question.new_qtype_id", 'new_qtype_id', 0 );
 		if($this->item->c_id){
@@ -44,7 +69,10 @@ class JoomlaquizViewQuestion extends JViewLegacy
 		$className = 'plgJoomlaquiz'.ucfirst($type);
 		$appsLib = JqAppPlugins::getInstance();
 		$appsLib->loadApplications();
-
+		
+        $this->quizzes		= $this->get('QuizzesList');
+        $this->ordering_list = $this->get('Ordering');
+				
 		$get_options = (method_exists($className, 'onGetAdminOptions')) ? $appsLib->triggerEvent( 'onGetAdminOptions' , $data ) : array('');
 		$this->options = $get_options[0];
 		

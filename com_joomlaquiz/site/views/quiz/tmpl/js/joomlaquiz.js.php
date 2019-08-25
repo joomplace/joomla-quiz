@@ -117,7 +117,7 @@ setReactiveLogging(window, [
 			console.trace('questions count is attempted to be set');
 		}
 	});
-
+	
 	Object.defineProperty(window, 'quest_timer_sec', {
 		configurable: false,
 		get: function() {
@@ -125,7 +125,7 @@ setReactiveLogging(window, [
 		},
 		set: function(value) {
 			if(value < 0){
-				value *= (-1);
+				value *= (-1);				
 				console.error('Should not be less then 0 when set');
 				console.trace(value);
 			}
@@ -1120,7 +1120,7 @@ function jq_Start_Question_TickTack(limit_time) {
 	if(limit_time){
 		console.warn('limit_time is passed but never used');
 	}
-
+		
 	if(quest_timer_sec <= 0 ){
 		alert('Time for answering this question has run out');
 		setErrorMessage('Time for answering this question has run out');
@@ -1130,16 +1130,16 @@ function jq_Start_Question_TickTack(limit_time) {
 		questions.map(function(question){
 			disableQuestion(question);
 		});
-
+		
 		setTimeout('jq_QuizNextOn', 300);
-
+		
 		ensureQuestionsRemoved();
 		return;
 	} else {
 		var timer = formatSecondsToTime(quest_timer_sec);
-
+		
 		jq_jQuery('.jq_quest_time_past').html('<strong>Time left to answer this question:</strong>&nbsp;' + timer);
-
+		
 		quest_timer_sec--;
 	}
 
@@ -1149,16 +1149,16 @@ function formatSecondsToTime(time){
 	if(time<0){
 		time*=(-1);
 	}
-
+	
 	var hours = parseInt(time/(60*60));
 	var minutes = minutes - hours*60;
 	var seconds = time - minutes*60 - hours*(60*60);
-
+	
 	var timer = [('0' + minutes).slice(-2), ('0' + seconds).slice(-2)];
 	if(hours){
 		timer.unshift(('0' + hours).slice(-2));
 	}
-
+	
 	return timer.join(':');
 }
 
@@ -1180,7 +1180,7 @@ function styleTimerString(past, max, style){
 function jq_Start_TickTack(past_time) {
 	clearInterval(quest_timer_ticktack);
 	timer_sec = past_time = parseInt(past_time) || 1;
-
+	
 	if (max_quiz_time < past_time) {
 		jq_getObj('jq_time_tick_container').innerHTML = mes_time_is_up;
 		jq_getObj('jq_time_tick_container').style.visibility = "visible";
@@ -1188,10 +1188,10 @@ function jq_Start_TickTack(past_time) {
 		return;
 	}else{
 		var timer = styleTimerString(past_time, parseInt(max_quiz_time), timer_style);
-
+		
 		jq_getObj('jq_time_tick_container').innerHTML = timer;
 		jq_getObj('jq_time_tick_container').style.visibility = "visible";
-
+		
 		quest_timer_ticktack = setInterval(jq_Continue_TickTack, 1000);
 	}
 }
@@ -1204,15 +1204,15 @@ function jq_Continue_TickTack() {
 	} else {
 		jq_getObj('jq_time_tick_container').style.textDecoration = "none";
 		timer_sec++;
-
+		
 		<?php
-if ($quiz->c_pagination) {
-?>
+		if ($quiz->c_pagination) {
+		?>
 		if (timer_sec > max_quiz_time - 3) {
 			setTimeout(jq_QuizSaveNext, 1000);
 		}
 		<?php } ?>
-
+		
 		if (timer_sec > max_quiz_time) {
 			jq_getObj('jq_time_tick_container').innerHTML = mes_time_is_up;
 			setTimeout("jq_QuizContinueFinish()", 1000);
@@ -1230,51 +1230,78 @@ function jq_QuizSaveNext() {
 	<?php } else { ?>
 	var jq_task = 'next';
 	<?php } ?>
-	var answer = '';
-	var url = '&ajax_task=' + jq_task + '&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id;
-	for(var n=0; n < quest_count; n++) {
-		answer = '';
-		if (!questions[n].disabled) {
-			switch (questions[n].cur_quest_type) {
+	
+	var pairs = [['ajax_task',jq_task],['quiz',quiz.quiz_id],['stu_quiz_id',stu_quiz_id]];
+	var answers = [];
+	function setAnswer(id, answer){
+		answers.push({
+			id: id,
+			answer: answer,
+		});
+	}
+	
+	questions.map(function(question, n){
+		var answer = '';
+		if (!question.disabled) {
+			switch (question.cur_quest_type) {
 				<?php JoomlaquizHelper::getJavascriptIncludes('savenext');?>
 				case '9':
 					answer = 0;
 				break;
 			}
-			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]='+answer;
-		} else {
-			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]=';
 		}
-	}
+		setAnswer(question.cur_quest_id, answer || '');
+	});
+
+	answers.map(function(answer){
+		pairs.push(['quest_id[]',answer.id],['answer[]',answer]);
+	})
+	
+	url += '&' + joinUrlPairs(pairs);
+		
 	jq_MakeRequest(url, 1);
 }
 
-function jq_validateEmail(){
-	var email = document.getElementById('jq_user_email').value;
+function jq_validateEmail(email){
 	var re = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/;
 	return re.test(email);
 }
 
+function notEmpty(value){
+	return value != '';
+}
+	
+var elementsToValidate = [
+	{
+		id: 'jq_user_name',
+		url_key: 'uname',
+		callback: notEmpty,
+		message: '<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_USERNAME_PLEASE', true);?>',
+		default_value: '',
+	},
+	{
+		id: 'jq_user_surname',
+		url_key: 'usurname',
+		callback: notEmpty,
+		message: '<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_USERNAME_PLEASE', true);?>',
+		default_value: '',
+	},
+	{
+		id: 'jq_user_email',
+		url_key: 'uemail',
+		callback: function(value){
+			return notEmpty(value) && jq_validateEmail(value);
+		},
+		message: '<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_EMAIL', true);?>',
+		default_value: '',
+	},
+];
+
 function jq_StartQuizOn() {
 
-	if(document.getElementById('jq_user_name') && document.getElementById('jq_user_name').value == ''){
-		alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_USERNAME_PLEASE', true);?>');
-		return false;
-	}
-
-	if(document.getElementById('jq_user_surname') && document.getElementById('jq_user_surname').value == ''){
-		alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_USERSURNAME_PLEASE');?>');
-		return false;
-	}
-
-	if(document.getElementById('jq_user_email') && document.getElementById('jq_user_email').value == ''){
-		alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_EMAIL');?>');
-		return false;
-	}
-
-	if(document.getElementById('jq_user_email') && document.getElementById('jq_user_email').value != ''){
-		if(!jq_validateEmail()){
-			alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_VALID_EMAIL');?>');
+	for(element in elementsToValidate){		
+		if(document.getElementById(element.id) && !element.callback(document.getElementById(element.id).value)){
+			alert(element.message);
 			return false;
 		}
 	}
@@ -1284,46 +1311,48 @@ function jq_StartQuizOn() {
 		jq_jQuery('#jq_quiz_container1').addClass('jq_ajax_loader');
 		timerID = setTimeout("jq_StartQuiz()", 300);
 	} else {
-		<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-		var qid = jq_jQuery('.error_messagebox_quest').attr('id');
-		ShowMessage(qid, 1, mes_please_wait);
-		<?php } else { ?>
-		ShowMessage('error_messagebox', 1, mes_please_wait);
-		<?php } ?>
+		setErrorMessage(mes_please_wait);
 	}
 }
+
 function jq_StartQuiz() {
 
-	var uname = (document.getElementById('jq_user_name') && document.getElementById('jq_user_name').value != '') ? document.getElementById('jq_user_name').value : '';
-	var usurname = (document.getElementById('jq_user_surname') && document.getElementById('jq_user_surname').value != '') ? document.getElementById('jq_user_surname').value : '';
-	var uemail = (document.getElementById('jq_user_email') && document.getElementById('jq_user_email').value != '') ? document.getElementById('jq_user_email').value : '';
+	var url_pairs = [['ajax_task','start'],['quiz',quiz.quiz_id]];
+	elementsToValidate.map(function(element){
+		var dom_element = document.getElementById(element.id);
+		if(dom_element && dom_element.value){
+			url_pairs.push([element.url_key,encodeURIComponent(dom_element.value)]);
+		}else{
+			url_pairs.push([element.url_key,'']);
+		}
+	})
+	
 	var custom_info = '';
 	<?php
-JPluginHelper::importPlugin('content');
-$dispatcher = JEventDispatcher::getInstance();
-$dispatcher->trigger('onQuizCustomFieldsRenderJS');
-?>
-
-	uname = encodeURIComponent(uname);
-	usurname = encodeURIComponent(usurname);
-	uemail = encodeURIComponent(uemail);
-
+	JPluginHelper::importPlugin('content');
+	$dispatcher = JEventDispatcher::getInstance();
+	$dispatcher->trigger('onQuizCustomFieldsRenderJS');
+	?>
+	
 	if (qs) {
 		custom_info = custom_info+'&qs='+qs;
 	}
 
-	jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + custom_info, 1);
+	jq_MakeRequest('&' + joinUrlPairs(url_pairs) + custom_info, 1);
+	
+}
+
+function joinUrlPairs(pairs){
+	return pairs.map(function(pair){
+		return Array.isArray(pair)?pair.join('='):pair;
+	}).joing('&')
 }
 
 function JQ_gotoQuestionOn(qid) {
 
 	clearInterval(quest_timer);
 	jq_jQuery('.jq_quest_time_past').html('');
-	if(jq_jQuery('#jq_total_memory_point')){
-		jq_jQuery('#jq_total_memory_point').remove();
-		jq_jQuery('#jq_current_memory_point').remove();
-		jq_jQuery('#jq_penalty_memory_point').remove();
-	}
+	ensureQuestionsRemoved();
 
 	if (!quiz_blocked) {
 		jq_jQuery('#jq_quiz_container1').css('opacity', 0.7);

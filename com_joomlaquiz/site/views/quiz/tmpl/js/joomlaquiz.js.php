@@ -1997,110 +1997,132 @@ function jq_UpdateTaskDiv(task, skip_question) {
 
 	jq_jQuery('.jq_quiz_task_container').html(task_container);
 
-	<?php if ($quiz->c_slide) { ?>
-	if (result_is_shown == 1) { jq_ShowPanel(); }
-	<?php } ?>
+	if(quiz.slide){
+		if (result_is_shown == 1){ 
+			jq_ShowPanel(); 
+		}
+	}
+	
 	if (task == 'finish') {
 		var obj_plc = jq_getObj('jq_panel_link_container');
-		if (obj_plc) obj_plc.style.visibility = 'hidden';
+		if (obj_plc){	
+			obj_plc.style.visibility = 'hidden';
+		} 
 	}
 }
 
 function jq_NextButton(task, text) {
-	<?php if(!preg_match("/pretty_green/", $quiz->template_name) && !preg_match("/pretty_blue/", $quiz->template_name)){?>
-	return "<div id=\"jq_next_link_container\" onClick=\""+task+"\"><div class=\"jq_back_button\" id=\"jq_quiz_task_link_container\"><"+"a class=\"btn btn-primary\" href=\"javascript: void(0)\" title=\""+text+"\">"+text+"</a></div></div>";
-	<?php } else {?>
-	return "<a class=\"jq_next_link\" title=\""+text+"\" onclick=\""+task+"\" id=\"jq_next_link\" href=\"javascript: void(0)\">"+text+"<i class=\"jq_next_arrow\">&rsaquo;</i></a>";
-	<?php }?>
+	return getAndProcessTemplateForButtons('template_next_button', task, text);
 }
 
 function jq_SubmitButton(task, text) {
-	<?php if(!preg_match("/pretty_green/", $quiz->template_name) && !preg_match("/pretty_blue/", $quiz->template_name)){?>
-	return "<div id=\"jq_submit_link_container\" onClick=\""+task+"\"><div class=\"jq_back_button\" id=\"jq_quiz_task_link_container\"><"+"a class=\"btn btn-primary\" href=\"javascript: void(0)\" title=\""+text+"\">"+text+"</a></div></div>";
-	<?php } else {?>
-	return "<a class=\"jq_submit_link_container\" title=\""+text+"\" onclick=\""+task+"\" id=\"jq_submit_link_container\" href=\"javascript: void(0)\">"+text<?php if($quiz->template_name != 'joomlaquiz_pretty_blue'){?>+"<i class=\"jq_next_arrow\"></i>"<?php }?> +"</a>";
-	<?php }?>
+	return getAndProcessTemplateForButtons('template_submit_button', task, text);
 }
 
 function jq_ContinueButton(task, text) {
-	<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
-	return "<a title='" + text + "' onclick='"+task+"' id='jq_skip_link' href='javascript: void(0)'>"+text+"</a>";
-	<?php } else {?>
-	return "<div id=\"jq_continue_link_container\" onClick=\""+task+"\"><div class=\"jq_back_button\" id=\"jq_quiz_task_link_container\"><"+"a class=\"btn btn-primary\" href=\"javascript: void(0)\" title=\""+text+"\">"+text+"</a></div></div>";
-	<?php }?>
+	return getAndProcessTemplateForButtons('template_continue_button', task, text);
 }
 
 function jq_StartButton(task, text) {
-	<?php if(!preg_match("/pretty_green/", $quiz->template_name)){?>
-	return "<div id=\"jq_start_link_container\" onClick=\""+task+"\"><div class=\"jq_back_button\" id=\"jq_quiz_task_link_container\"><"+"a class=\"btn btn-primary\" href=\"javascript: void(0)\" title=\""+text+"\">"+text+"</a></div></div>";
-	<?php } else {?>
-	return "<a class=\"jq_start_link_container\" title=\""+text+"\" onclick=\""+task+"\" id=\"jq_start_link_container\" href=\"javascript: void(0)\">"+text+"<i class=\"jq_start_arrow\"></i></a>";
-	<?php }?>
+	return getAndProcessTemplateForButtons('template_start_button', task, text);
 }
 
 function jq_PrevButton(task, text) {
-	<?php if(!preg_match("/pretty_green/", $quiz->template_name) && !preg_match("/pretty_blue/", $quiz->template_name)){?>
-	return "<div id=\"jq_back_link_container\" onClick=\""+task+"\"><div class=\"jq_back_button\" id=\"jq_quiz_task_link_container\"><"+"a class=\"btn btn-primary\" href=\"javascript: void(0)\" title=\""+text+"\">"+text+"</a></div></div>";
-	<?php } else {?>
-	return "<a class=\"jq_back_link\" title=\""+text+"\" onclick=\""+task+"\" id=\"jq_back_link\" href=\"javascript: void(0)\"><i class=\"jq_back_arrow\">&lsaquo;</i>"+text+"</a>";
-	<?php }?>
+	return getAndProcessTemplateForButtons('template_previous_button', task, text);
+}
+
+function getAndProcessTemplateForButtons(id, task, text){
+	return getAndProcessTemplate(id,[
+		{key: 'text', value: text},
+		{key: 'task', value: task},
+	]);
+}
+
+function getAndProcessTemplate(id, replacements){
+	var template = document.getElementById(id);
+	replacements.map(function(replacement){
+		template = template.replace(new RegExp('{{'+replacement.key+'}}','g'),replacement.value);
+	});
+	return template;
+	
 }
 
 function check_Blank(id, value){
-	if (questions[0].im_check) {
-		var answer = '&bid='+id+'&text='+value;
-		if(!value || !id) {
-			return;
-		}
-		removePopupText(questions[0].cur_quest_id);
-
-		jq_MakeRequest('&ajax_task=check_blank&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id+'&='+answer, 1, 1);
+	if(!value || !id) {
+		return;
+	}
+	var question = questions[0];
+	// Seems im_check target should be changed
+	if (question.im_check) {
+		removePopupText(question.cur_quest_id);
+		jq_MakeRequest('&'+joinUrlPairs([['ajax_task','check_blank'],['quiz',quiz.quiz_id],['stu_quiz_id',stu_quiz_id],['bid',id],['text',value]]), 1, 1);
 	}
 }
 
 function jq_ShowPanel_go() {
 	var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
-	if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'hidden'; jq_quiz_c_cont.style.display = 'none';}
+	if (jq_quiz_c_cont) { 
+		jq_quiz_c_cont.style.visibility = 'hidden'; 
+		jq_quiz_c_cont.style.display = 'none';
+	}
 	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
-	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'visible'; jq_quiz_r_c.style.display = 'block';}
+	if (jq_quiz_r_c) { 
+		jq_quiz_r_c.style.visibility = 'visible'; 
+		jq_quiz_r_c.style.display = 'block';
+	}
 }
 
 function jq_HidePanel_go() {
 	var jq_quiz_r_c = jq_getObj('jq_quiz_result_container');
-	if (jq_quiz_r_c) { jq_quiz_r_c.style.visibility = 'hidden'; jq_quiz_r_c.style.display = 'none';}
+	if (jq_quiz_r_c) { 
+		jq_quiz_r_c.style.visibility = 'hidden'; 
+		jq_quiz_r_c.style.display = 'none';
+	}
 	var jq_quiz_c_cont = jq_getObj('jq_quiz_container');
-	if (jq_quiz_c_cont) { jq_quiz_c_cont.style.visibility = 'visible'; jq_quiz_c_cont.style.display = 'block';}
+	if (jq_quiz_c_cont) { 
+		jq_quiz_c_cont.style.visibility = 'visible'; 
+		jq_quiz_c_cont.style.display = 'block';
+	}
+}
+
+function scrollToTitle(){
+	return ScrollToElement(jq_getObj('jq_quiz_container_title'));
 }
 
 function jq_ShowPanel() {
-<?php if ($quiz->c_slide) { ?>
-	try{ ScrollToElement(jq_getObj('jq_quiz_container_title'));} catch(e) {
-				// TODO: add error handling
+	if(quiz.slide){
+		scrollToTitle()
+		togglePanel();
 	}
-	if (result_is_shown == 1) { jq_HidePanel_go(); result_is_shown = 0;	}
-	else { jq_ShowPanel_go();	result_is_shown = 1; }
-<?php } ?>
 }
 
-<?php if ($is_preview) { ?>
+function togglePanel(state){
+	result_is_shown = state || !result_is_shown;
+	result_is_shown ? jq_ShowPanel_go() : jq_HidePanel_go();
+}
+
 function JQ_previewQuest() {
 	jq_jQuery('#jq_quiz_container1').css('opacity', 0.7);
 	jq_jQuery('#jq_quiz_container1').addClass('jq_ajax_loader');
-	jq_MakeRequest('&ajax_task=preview_quest&quiz=<?php echo $quiz->c_id?>'+'&preview_id=<?php echo $preview_id?>&quest_id=<?php echo $preview_quest?>', 1);
+	jq_MakeRequest('&'+joinUrlPairs([
+		['ajax_task','preview_quest'],
+		['quiz',quiz.quiz_id],
+		['preview_id',parseInt('<?= $preview_id ?>')],
+		['quest_id',parseInt('<?= $preview_quest ?>')]
+	]), 1);
 }
-<?php } ?>
 
+var url_params = null;
 function getParameter(paramName) {
-	var searchString = window.location.search.substring(1),
-	i, val, params = searchString.split("&");
-
-	for (i=0;i<params.length;i++) {
-		val = params[i].split("=");
-		if (val[0] == paramName) {
-			return val[1];
-		}
+	if(!url_params){
+		var searchString = window.location.search.substring(1), i, val, params = searchString.split("&");
+		url_params = {};
+		params.map(function(param){
+			val = param.split('=');
+			url_params[val[0]] = val[1];
+		});
 	}
-	return null;
+	return url_params[paramName] || null;
 }
 
 (function(quiz, $){
@@ -2109,6 +2131,81 @@ function getParameter(paramName) {
 
 //--><!]]>
 </script>
+<template id="template_start_button">
+	<?php if(!preg_match("/pretty_green/", $quiz->template_name)){?>
+	<div id="jq_start_link_container" onClick="{{task}}">
+		<div class="jq_back_button" id="jq_quiz_task_link_container">
+			<a class="btn btn-primary" href="javascript:void(0);" title="{{text}}">
+				{{text}}
+			</a>
+		</div>
+	</div>
+	<?php } else {?>
+	<a class="jq_start_link_container" title="{{text}}" onclick="{{task}}" id="jq_start_link_container" href="javascript:void(0);">
+		{{text}}<i class="jq_start_arrow"></i>
+	</a>
+	<?php }?>
+</template>
+<template id="template_previous_button">
+	<?php if(!preg_match("/pretty_green/", $quiz->template_name) && !preg_match("/pretty_blue/", $quiz->template_name)){?>
+	<div id="jq_back_link_container" onClick="{{task}}">
+		<div class="jq_back_button" id="jq_quiz_task_link_container">
+			<a class="btn btn-primary" href="javascript:void(0);" title="{{text}}">
+				{{text}}
+			</a>
+		</div>
+	</div>
+	<?php } else {?>
+	<a class="jq_back_link" title="{{text}}" onclick="{{task}}" id="jq_back_link" href="javascript:void(0);">
+		<i class="jq_back_arrow">&lsaquo;</i>{{text}}
+	</a>
+	<?php }?>
+</template>
+<template id="template_continue_button">
+	<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
+	<a title="{{text}}" onclick="{{task}}" id="jq_skip_link" href="javascript:void(0);">
+		{{text}}
+	</a>
+	<?php } else {?>
+	<div id="jq_continue_link_container" onClick="{{task}}">
+		<div class="jq_back_button" id="jq_quiz_task_link_container">
+			<a class="btn btn-primary" href="javascript:void(0);" title="{{text}}">
+				{{text}}
+			</a>
+		</div>
+	</div>
+	<?php }?>
+</template>
+<template id="template_submit_button">
+	<?php if(!preg_match("/pretty_green/", $quiz->template_name) && !preg_match("/pretty_blue/", $quiz->template_name)){?>
+	<div id="jq_submit_link_container" onClick="{{task}}">
+		<div class="jq_back_button" id="jq_quiz_task_link_container">
+			<a class="btn btn-primary" href="javascript:void(0);" title="{{text}}">
+				{{text}}
+			</a>
+		</div>
+	</div>
+	<?php } else {?>
+	<a class="jq_submit_link_container" title="{{text}}" onclick="{{task}}" id="jq_submit_link_container" href="javascript:void(0);">
+		{{text}} <i class="jq_next_arrow"></i>
+	</a>
+	<?php }?>
+</template>
+<template id="template_next_button">
+	<?php if(!preg_match("/pretty_green/", $quiz->template_name) && !preg_match("/pretty_blue/", $quiz->template_name)){?>
+	<div id="jq_next_link_container" onClick="{{task}}">
+		<div class="jq_back_button" id="jq_quiz_task_link_container">
+			<a class="btn btn-primary" href="javascript:void(0);" title="{{text}}">
+				{{text}}
+			</a>
+		</div>
+	</div>
+	<?php } else {?>
+	<a class="jq_next_link" title="{{text}}" onclick="{{task}}" id="jq_next_link" href="javascript:void(0);">
+		{{text}} <i class="jq_next_arrow">&rsaquo;</i>
+	</a>
+	<?php }?>
+</template>
 <?php
 $paths = JoomlaquizHelper::getJavascriptFunctions();
 if (!empty($paths)) {

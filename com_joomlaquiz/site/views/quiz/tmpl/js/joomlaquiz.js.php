@@ -98,7 +98,7 @@ function setReactiveLogging(object, keys, holder){
 	});
 }
 setReactiveLogging(window, [
-		'reStartOption','reStartView','reStartID','quiz_id','stu_quiz_id','error_call_code','kol_drag_elems','drag_array','coord_left','coord_top','ids_in_cont','cont_for_ids','answ_ids','cont_index','last_drag_id','last_drag_id_drag','last_drag_quest_n','kol_main_elems','main_ids_array','mes_complete_this_part','mes_failed','mes_please_wait','mes_time_is_up','mes_quest_number','mes_quest_points','user_email_to','user_unique_id','cur_quest_type','saved_prev_quest_exec_quiz_script','saved_prev_quest_exec_quiz_script_data','saved_prev_quest_data','saved_prev_res_data','saved_prev_quest_id','saved_prev_quest_type','saved_prev_quest_score','cur_quest_id','cur_quest_score','cur_quest_num','quiz_count_quests','cur_impscale_ex','quest_type','prev_correct','allow_attempt','timer_sec','stop_timer','result_is_shown','max_quiz_time','timer_style','quiz_blocked','url_prefix','limit_time','quest_timer_sec','quest_timer','quest_timer_ticktack','circle','path_elems','mes_question_is_misconfigured','margin_top','qs','live_url','questions',
+		'reStartOption','reStartView','reStartID','quiz_id','stu_quiz_id','error_call_code','kol_drag_elems','drag_array','coord_left','coord_top','ids_in_cont','cont_for_ids','answ_ids','cont_index','last_drag_id','last_drag_id_drag','last_drag_quest_n','kol_main_elems','main_ids_array','mes_complete_this_part','mes_failed','mes_please_wait','mes_time_is_up','mes_quest_number','mes_quest_points','user_email_to','user_unique_id','cur_quest_type','saved_prev_quest_exec_quiz_script','saved_prev_quest_exec_quiz_script_data','saved_prev_quest_data','saved_prev_res_data','saved_prev_quest_id','saved_prev_quest_type','saved_prev_quest_score','cur_quest_id','cur_quest_score','cur_quest_num','quiz_count_quests','cur_impscale_ex','quest_type','prev_correct','allow_attempt','timer_sec','stop_timer','result_is_shown','max_quiz_time','timer_style','quiz_blocked','url_prefix','limit_time','quest_timer','quest_timer_ticktack','circle','path_elems','mes_question_is_misconfigured','margin_top','qs','live_url','questions',
 		'show_timer','slide'
 ], quiz);
 
@@ -115,6 +115,21 @@ setReactiveLogging(window, [
 		set: function(value) {
 			console.error('Should not set this property');
 			console.trace('questions count is attempted to be set');
+		}
+	});
+
+	Object.defineProperty(window, 'quest_timer_sec', {
+		configurable: false,
+		get: function() {
+			return quiz.quest_timer_sec;
+		},
+		set: function(value) {
+			if(value < 0){
+				value *= (-1);
+				console.error('Should not be less then 0 when set');
+				console.trace(value);
+			}
+			quiz.quest_timer_sec = value;
 		}
 	});
 	/** STOP **/
@@ -664,6 +679,15 @@ function stopTimer(state){
 	stop_timer = state;
 }
 
+function ensureQuestionsRemoved(){
+	/** ensure rendered questions are removed **/
+	if(jq_jQuery('#jq_total_memory_point')){
+		jq_jQuery('#jq_total_memory_point').remove();
+		jq_jQuery('#jq_current_memory_point').remove();
+		jq_jQuery('#jq_penalty_memory_point').remove();
+	}
+}
+
 function jq_AnalizeRequest() {
 	if (this.readyState != 4) {
 		return ;
@@ -758,14 +782,6 @@ function jq_AnalizeRequest() {
 			ensureQuestionsRemoved();
 		}
 
-		function ensureQuestionsRemoved(){
-			/** ensure rendered questions are removed **/
-			if(jq_jQuery('#jq_total_memory_point')){
-				jq_jQuery('#jq_total_memory_point').remove();
-				jq_jQuery('#jq_current_memory_point').remove();
-				jq_jQuery('#jq_penalty_memory_point').remove();
-			}
-		}
 		function processFeedback(task, is_preview){
 			is_preview = is_preview || 0;
 			// TODO: change to getKeyDataFromXML(response,'skip_question');
@@ -1100,127 +1116,110 @@ function jq_releaseBlock() {
 	quiz_blocked = 0;
 }
 
-function jq_Start_Question_TickTack(limit_time)
-{
-		if(quest_timer_sec <= 0 ){
-			ShowMessage('error_messagebox', 1, 'Time for answering this question has run out');
-			quest_count = response.getElementsByTagName('quest_count')[0].firstChild.data;
-			for(var n=0; n < quest_count; n++) {
-				questions[n].disabled = true;
-			}
-			alert('Time for answering this question has run out');
-			setTimeout("jq_QuizNextOn()", 300);
-			clearInterval(quest_timer);
-			jq_jQuery('.jq_quest_time_past').html('');
-			if(jq_jQuery('#jq_total_memory_point')){
-				jq_jQuery('#jq_total_memory_point').remove();
-				jq_jQuery('#jq_current_memory_point').remove();
-				jq_jQuery('#jq_penalty_memory_point').remove();
-			}
-			return;
-		} else {
-			var quest_timer_sec_tmp = quest_timer_sec;
-			var quest_timer_min = parseInt(quest_timer_sec_tmp/60);
-			var plus_sec = quest_timer_sec_tmp - (quest_timer_min*60);
-			if (quest_timer_min < 0) { quest_timer_min = quest_timer_min*(-1); }
-			if (plus_sec < 0) { plus_sec = plus_sec*(-1); }
-			var time_str = quest_timer_min + '';
-			if (time_str.length == 1) time_str = '0'+time_str;
-			quest_time_str2 = plus_sec + '';
-			if (quest_time_str2.length == 1) quest_time_str2 = '0'+quest_time_str2;
-			jq_jQuery('.jq_quest_time_past').html('<strong>Time left to answer this question:</strong>&nbsp;' + time_str + ':' + quest_time_str2);
-			quest_timer_sec--;
+function jq_Start_Question_TickTack(limit_time) {
+	if(limit_time){
+		console.warn('limit_time is passed but never used');
+	}
+
+	if(quest_timer_sec <= 0 ){
+		alert('Time for answering this question has run out');
+		setErrorMessage('Time for answering this question has run out');
+		clearInterval(quest_timer);
+		jq_jQuery('.jq_quest_time_past').html('');
+
+		questions.map(function(question){
+			disableQuestion(question);
+		});
+
+		setTimeout('jq_QuizNextOn', 300);
+
+		ensureQuestionsRemoved();
+		return;
+	} else {
+		var timer = formatSecondsToTime(quest_timer_sec);
+
+		jq_jQuery('.jq_quest_time_past').html('<strong>Time left to answer this question:</strong>&nbsp;' + timer);
+
+		quest_timer_sec--;
+	}
+
+}
+
+function formatSecondsToTime(time){
+	if(time<0){
+		time*=(-1);
+	}
+
+	var hours = parseInt(time/(60*60));
+	var minutes = minutes - hours*60;
+	var seconds = time - minutes*60 - hours*(60*60);
+
+	var timer = [('0' + minutes).slice(-2), ('0' + seconds).slice(-2)];
+	if(hours){
+		timer.unshift(('0' + hours).slice(-2));
+	}
+
+	return timer.join(':');
+}
+
+function styleTimerString(past, max, style){
+	if(style == 1){
+		return formatSecondsToTime(max - past);
+	}
+	string = formatSecondsToTime(past);
+	if(style == 2){
+		if(max){
+			string += ' <?php echo JText::_('COM_QUIZ_TIME_OF');?> '+ formatSecondsToTime(max);
+		}else{
+			console.error('Style with limit should be rendered, but max time is not provided');
 		}
+	}
+	return string;
 }
 
 function jq_Start_TickTack(past_time) {
 	clearInterval(quest_timer_ticktack);
-	timer_sec = 1;
-	if (parseInt(past_time)) {
-		timer_sec = past_time;
-	}
-	if (max_quiz_time < timer_sec) {
+	timer_sec = past_time = parseInt(past_time) || 1;
+
+	if (max_quiz_time < past_time) {
 		jq_getObj('jq_time_tick_container').innerHTML = mes_time_is_up;
 		jq_getObj('jq_time_tick_container').style.visibility = "visible";
-		setTimeout("jq_QuizContinueFinish()", 1000);
+		setTimeout(jq_QuizContinueFinish, 1000);
 		return;
-	}
+	}else{
+		var timer = styleTimerString(past_time, parseInt(max_quiz_time), timer_style);
 
-	if (timer_style == 2 && max_quiz_time > 0 && max_quiz_time != 3600000) {
-		jq_getObj('jq_time_tick_container').innerHTML = '00:01'+ ' <?php echo JText::_('COM_QUIZ_TIME_OF');?> ' + max_quiz_time/60 + ':00';
-	} else if (timer_style == 1 && max_quiz_time > 0 && max_quiz_time != 3600000) {
-		jq_getObj('jq_time_tick_container').innerHTML = max_quiz_time/60 + ':00';
-	} else {
-		jq_getObj('jq_time_tick_container').innerHTML = '00:01';
-	}
+		jq_getObj('jq_time_tick_container').innerHTML = timer;
+		jq_getObj('jq_time_tick_container').style.visibility = "visible";
 
-	if (timer_sec > 1) {
-		if (timer_style == 1 && max_quiz_time > 0 && max_quiz_time != 3600000) {
-			var timer_sec_tmp = max_quiz_time-timer_sec;
-		} else {
-			var timer_sec_tmp = timer_sec;
-		}
-		var timer_min = parseInt(timer_sec_tmp/60);
-		var plus_sec = timer_sec_tmp - (timer_min*60);
-		if (timer_min < 0) { timer_min = timer_min*(-1); }
-		if (plus_sec < 0) { plus_sec = plus_sec*(-1); }
-		var time_str = timer_min + '';
-		if (time_str.length == 1) time_str = '0'+time_str;
-		time_str2 = plus_sec + '';
-		if (time_str2.length == 1) time_str2 = '0'+time_str2;
-		if (timer_style == 2 && max_quiz_time > 0 && max_quiz_time != 3600000) {
-			jq_getObj('jq_time_tick_container').innerHTML = time_str + ':' + time_str2 + ' <?php echo JText::_('COM_QUIZ_TIME_OF');?> ' + max_quiz_time/60 + ':00';
-		} else {
-			jq_getObj('jq_time_tick_container').innerHTML = time_str + ':' + time_str2;
-		}
+		quest_timer_ticktack = setInterval(jq_Continue_TickTack, 1000);
 	}
-
-	jq_getObj('jq_time_tick_container').style.visibility = "visible";
-	//setTimeout("jq_Continue_TickTack()", 1000);
-	quest_timer_ticktack = setInterval("jq_Continue_TickTack()", 1000);
 }
 
 function jq_Continue_TickTack() {
 	if (stop_timer == 1) {
 		jq_getObj('jq_time_tick_container').style.visibility = "hidden";
 	} else if (stop_timer == 2) {
-	//pause
 		jq_getObj('jq_time_tick_container').style.textDecoration = "blink";
-		//setTimeout("jq_Continue_TickTack()", 1000);
 	} else {
 		jq_getObj('jq_time_tick_container').style.textDecoration = "none";
-		timer_sec ++;
+		timer_sec++;
+
 		<?php
 if ($quiz->c_pagination) {
 ?>
 		if (timer_sec > max_quiz_time - 3) {
-			setTimeout("jq_QuizSaveNext()", 1000);
+			setTimeout(jq_QuizSaveNext, 1000);
 		}
 		<?php } ?>
+
 		if (timer_sec > max_quiz_time) {
 			jq_getObj('jq_time_tick_container').innerHTML = mes_time_is_up;
 			setTimeout("jq_QuizContinueFinish()", 1000);
 			return;
 		} else {
-			if (timer_style == 1 && max_quiz_time > 0 && max_quiz_time != 3600000) {
-				var timer_sec_tmp = max_quiz_time-timer_sec;
-			} else {
-				var timer_sec_tmp = timer_sec;
-			}
-			var timer_min = parseInt(timer_sec_tmp/60);
-			var plus_sec = timer_sec_tmp - (timer_min*60);
-			if (timer_min < 0) { timer_min = timer_min*(-1); }
-			if (plus_sec < 0) { plus_sec = plus_sec*(-1); }
-			var time_str = timer_min + '';
-			if (time_str.length == 1) time_str = '0'+time_str;
-			time_str2 = plus_sec + '';
-			if (time_str2.length == 1) time_str2 = '0'+time_str2;
-			if (timer_style == 2 && max_quiz_time > 0 && max_quiz_time != 3600000) {
-				jq_getObj('jq_time_tick_container').innerHTML = time_str + ':' + time_str2 + ' <?php echo JText::_('COM_QUIZ_TIME_OF');?> ' + max_quiz_time/60 + ':00';
-			} else {
-				jq_getObj('jq_time_tick_container').innerHTML = time_str + ':' + time_str2;
-			}
-			//setTimeout("jq_Continue_TickTack()", 1000);
+			var timer = styleTimerString(timer_sec, parseInt(max_quiz_time), timer_style);
+			jq_getObj('jq_time_tick_container').innerHTML = timer;
 		}
 	}
 }

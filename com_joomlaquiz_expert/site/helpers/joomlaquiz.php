@@ -29,7 +29,7 @@ class JoomlaquizHelper
 				$quest_cats[] =  $cat->q_cat;
 			}
 			
-			$query = "SELECT id AS qc_id,title AS qc_category FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `id` IN (".implode(',',$quest_cats).") ORDER BY `lft` ASC";
+			$query = "SELECT id AS qc_id,title AS qc_category FROM #__categories WHERE `extension` = 'com_joomlaquiz.questions' AND `id` IN (".str_replace(',',implode($database->q(','),$quest_cats),$database->q(',')).") ORDER BY `lft` ASC";
 			$database->SetQuery( $query );
 			$quest_cats = $database->LoadObjectList();
 								

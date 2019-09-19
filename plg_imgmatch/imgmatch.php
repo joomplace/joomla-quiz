@@ -16,9 +16,9 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 {
 	var $name		= 'Imgmatch';
 	var $_name		= 'imgmatch';
-	
+
 	public function onCreateQuestion(&$data) {
-		
+
 		$database = JFactory::getDBO();
 		$script_arr = array();
 		$dd_c = 1;
@@ -26,13 +26,13 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$query .=  "\n ORDER BY ordering";
 		$database->SetQuery( $query );
 		$match_data = $database->LoadObjectList();
-		
+
 		$shuffle_match = $match_data;
 		if ($data['qrandom']) shuffle($shuffle_match);
-		
+
 		$database->setQuery("SELECT `c_timer` FROM #__quiz_t_question WHERE `c_id` = '".$data['q_data']->c_id."'");
 		$quest_limit_time = $database->loadResult();
-		
+
 		$data['ret_str'] .= "\t" . '<quest_limit_time>'.$quest_limit_time.'</quest_limit_time>';
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div style="overflow-x: auto;"><table id="dd_table" style="border-collapse:separate;">';
         if(!$data['q_data']->c_width){
@@ -51,7 +51,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
                 $data['ret_str'] .= "\t" .'<div style="width:'.$data['q_data']->c_width.'px;">&nbsp;</div>';
 				$data['ret_str'] .= "\t" .'<input type="hidden" class="jq_complete" name="complete[]" value="false" /></td>';
 				$data['ret_str'] .= "\t" .'<td id="gw_'.($dd_c+1).'" width="'.$data['q_data']->c_width.'" height="'.$data['q_data']->c_height.'" style="padding:10px 0;">';
-				
+
 				$data['ret_str'] .= "\t" .'<div class="groupItem" style="background-repeat: no-repeat;cursor:move;float:left;width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;background-image:url('.JURI::root().'images/joomlaquiz/images/resize/'.$shuffle_match[$ii]->c_right_text.');"><div class="headerItem" style="width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;" draggable="true"><input type="hidden" class="jq_right_text" name="rights[]" value="'.$shuffle_match[$ii]->c_right_text.'" /><!--x--></div></div>';
 				$data['ret_str'] .= "\t" .'</td>';
 				$data['ret_str'] .= "\t" .'</tr>';
@@ -60,34 +60,34 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 				$dd_c = $dd_c + 2;
 			}
 		}
-		
+
 		$data['ret_add_script'] = 'els = ['.implode(',', $script_arr).'];';
-		
+
 		$data['ret_str'] .= "\t" . '</table></div>';
 		$data['ret_str'] .= '<form onsubmit=\'javascript: return false;\' name=\'quest_form'.$data['q_data']->c_id.'\'></form></div>]]></quest_data_user>' . "\n";
-		
+
 		return $data['ret_str'];
 	}
-	
+
 	public function onPointsForAnswer(&$data){
 		$database = JFactory::getDBO();
-		
+
 		$query = "SELECT SUM(a_points) FROM #__quiz_t_matching WHERE c_question_id = '".$data['q_data']->c_id."'";
 		$database->SetQuery( $query );
 		$tmp_pointz = $database->LoadResult();
 		if(floatval($tmp_pointz))
 			$data['q_data']->c_point = $data['q_data']->c_point.' - '.(floatval($tmp_pointz) + $data['q_data']->c_point);
-		
+
 		return $data['q_data'];
 	}
-	
+
 	public function onSaveQuestion(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$database->setQuery("SELECT `c_timer` FROM `#__quiz_t_question` WHERE `c_id` = '".$data['quest_id']."'");
 		$c_timer = $database->loadResult();
 		$c_elapsed_time = ($c_timer && $data['timer']) ? $c_timer - $data['timer'] : 0;
-		
+
 		$query = "SELECT a.c_point, a.c_attempts FROM #__quiz_t_question as a WHERE a.c_id = '".$data['quest_id']."' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd = $database->LoadObjectList();
@@ -100,28 +100,28 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 
 		$answer = urldecode($data['answer']);
 		$ans_array = explode('```',$answer);
-		
+
 		if (!empty($ddd2) && !empty($ddd)) {
-			$data['is_correct'] = 1; 
+			$data['is_correct'] = 1;
 			$rr_num = 0;
 			foreach ($ddd2 as $right_row) {
 				$ans = explode('|||', $ans_array[$rr_num]);
 				$ans_left = explode('***', $ans[0]);
-				
-				if ($right_row->c_id == $ans_left[0]) {									
+
+				if ($right_row->c_id == $ans_left[0]) {
 					if($right_row->c_right_text != $ans[1]){
 						$data['is_correct'] = 0;
 					} else {
 						$c_quest_score += $right_row->a_points;
-					}						
+					}
 				} else {
-					
+
 				}
 				$rr_num ++;
 			}
 			if ($data['is_correct'])
 				$c_quest_score += $ddd[0]->c_point;
-				
+
 			if ($ddd[0]->c_attempts) {
 				$data['c_all_attempts'] = $ddd[0]->c_attempts; }
 		}
@@ -147,8 +147,8 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		if ($data['is_avail']) {
 			if ($data['c_quest_cur_attempt'] && $data['c_penalty']) {
 				if (((100-$data['c_penalty']*$data['c_quest_cur_attempt'])/100) < 0)
-					$c_quest_score = 0;								
-				else 
+					$c_quest_score = 0;
+				else
 					$c_quest_score = $c_quest_score * ((100-$data['c_penalty']*$data['c_quest_cur_attempt'])/100) ;
 			}
 
@@ -166,62 +166,62 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 				$i ++;
 			}
 		}
-		
+
 		$data['score'] = $c_quest_score;
-		
+
 		return true;
 	}
-	
+
 	public function onTotalScore(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT `c_id` FROM #__quiz_t_question WHERE `c_type` = 12 AND `c_id` IN (".$data['qch_ids'].") AND published = 1";
 		$database->SetQuery( $query );
 		$qch_ids_type_12 = $database->LoadColumn();
-		
+
 		if(!empty($qch_ids_type_12)) {
 			$query = "SELECT SUM(a_points) FROM #__quiz_t_matching WHERE c_question_id IN (".implode(',', $qch_ids_type_12).")";
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
 		}
-		
+
 		return true;
 	}
-	
+
 	public function onScoreByCategory(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$database->setQuery("SELECT SUM(a_points) FROM #__quiz_t_matching WHERE `c_question_id` = '".$data['score_bycat']->c_id."'");
 		$data['score'] = $database->loadResult();
-		
+
 		return true;
 	}
-	
+
 	public function onFeedbackQuestion(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$user_ans = '';
 		$query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = '".$data['q_data']->c_id."'"
 		. "\n ORDER BY ordering";
-		$database->SetQuery( $query );				
+		$database->SetQuery( $query );
 		$match_data = $database->LoadObjectList();
-		
+
 		$query = "SELECT c_id FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' AND c_question_id = '".$data['q_data']->c_id."'";
 		$database->SetQuery( $query );
-		$sid = $database->loadResult( );			
+		$sid = $database->loadResult( );
 
 		$query = "SELECT *, m.c_id AS id FROM #__quiz_t_matching AS m LEFT JOIN #__quiz_r_student_matching AS sm"
 		. "\n ON m.c_id = sm.c_matching_id AND sm.c_sq_id = '".$sid."' WHERE m.c_question_id = '".$data['q_data']->c_id."' ORDER BY m.ordering";
 		$database->SetQuery( $query );
 		$qdata = $database->LoadAssocList();
-		
+
 		$qdata[0]['score'] = $data['score'];
-							
+
 		$query = "SELECT c_id, c_right_text, c_left_text FROM #__quiz_t_matching WHERE c_question_id = '".$data['q_data']->c_id."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$tmp2 = $database->LoadObjectList();
-		
-		for($i=0, $n=count($qdata); $i<$n; $i++) {			
+
+		for($i=0, $n=count($qdata); $i<$n; $i++) {
 				if ($tmp2[$i]->c_id.'***'.$tmp2[$i]->c_left_text.'|||'.$tmp2[$i]->c_right_text == base64_decode($qdata[$i]['c_sel_text'])) {
 					$qdata[$i]['c_correct'] = 1;
 					$qdata[$i]['c_sel_text']= $tmp2[$i]->c_right_text;
@@ -230,9 +230,9 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 					$user_ans = base64_decode($qdata[$i]['c_sel_text']);
 					$ans = explode('|||', $user_ans);
 					$qdata[$i]['c_sel_text'] = $ans[1];
-				}			
-		}		
-		
+				}
+		}
+
 		$qhtml = JoomlaQuiz_template_class::JQ_createFeedback($qdata, $data);
 		if(preg_match("/pretty_green/", $data['cur_template'])){
 			$data['qoption'] = "\t" . $qhtml. "\n";
@@ -241,50 +241,50 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		}
 		return $data['qoption'];
 	}
-	
+
 	public function onNextPreview($data){
 		$database = JFactory::getDBO();
-		
+
 		$database->setQuery("SELECT c_id, c_left_text, c_right_text FROM #__quiz_t_matching WHERE c_question_id = '".$data['quest_id']."'");
 		$images_match = $database->loadObjectList();
-		
+
 		$match_str = '';
 		$match_array = array();
 		if(!empty($images_match)){
 			foreach($images_match as $image_match){
 				$match_array[] = $image_match->c_id."***".$image_match->c_left_text."|||".$image_match->c_right_text;
 			}
-			
+
 			$match_str = implode('```', $match_array);
-		}				
-		
+		}
+
 		$data['is_correct'] = ($match_str == $answer) ? 1 : 0;
 		return true;
 	}
-	
+
 	public function onReviewQuestion(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$user_ans = '';
 		$query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = '".$data['q_data']->c_id."'"
 		. "\n ORDER BY ordering";
-		$database->SetQuery( $query );				
+		$database->SetQuery( $query );
 		$match_data = $database->LoadObjectList();
-	
+
 		$query = "SELECT c_id FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' AND c_question_id = '".$data['q_data']->c_id."'";
 		$database->SetQuery( $query );
-		$sid = $database->loadResult( );			
+		$sid = $database->loadResult( );
 
 		$query = "SELECT *, m.c_id AS id FROM #__quiz_t_matching AS m LEFT JOIN #__quiz_r_student_matching AS sm"
 		. "\n ON m.c_id = sm.c_matching_id AND sm.c_sq_id = '".$sid."' WHERE m.c_question_id = '".$data['q_data']->c_id."' ORDER BY m.ordering";
 		$database->SetQuery( $query );
 		$qdata = $database->LoadAssocList();
-										
+
 		$query = "SELECT c_id, c_right_text, c_left_text FROM #__quiz_t_matching WHERE c_question_id = '".$data['q_data']->c_id."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$tmp2 = $database->LoadObjectList();
-	
-		for($i=0, $n=count($qdata); $i<$n; $i++) {			
+
+		for($i=0, $n=count($qdata); $i<$n; $i++) {
 				if ($tmp2[$i]->c_id.'***'.$tmp2[$i]->c_left_text.'|||'.$tmp2[$i]->c_right_text == base64_decode($qdata[$i]['c_sel_text'])) {
 					$qdata[$i]['c_correct'] = 1;
 					$qdata[$i]['c_sel_text']= $tmp2[$i]->c_right_text;
@@ -293,16 +293,16 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 					$user_ans = base64_decode($qdata[$i]['c_sel_text']);
 					$ans = explode('|||', $user_ans);
 					$qdata[$i]['c_sel_text'] = $ans[1];
-				}			
-		}		
-		
+				}
+		}
+
 		$qhtml = JoomlaQuiz_template_class::JQ_createReview($qdata, $data);
-		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div><form onsubmit=\'javascript: return false;\' name=\'quest_form\'>'. $qhtml .'</form></div>]]></quest_data_user>' . "\n";	
-		return $data;		
+		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div><form onsubmit=\'javascript: return false;\' name=\'quest_form\'>'. $qhtml .'</form></div>]]></quest_data_user>' . "\n";
+		return $data;
 	}
-	
+
 	public function onGetResult(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT * FROM #__quiz_t_question AS q, #__quiz_t_matching AS m"
 		. "\n WHERE q.c_id = '".$data['qid']."' AND q.c_id = m.c_question_id AND q.published = 1";
@@ -314,20 +314,20 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		while(list($key,$value) = each($tmp)) {
 			$data['info']['c_imgmatch'][$key] = $value;
 		}
-		
+
 		return true;
 	}
-	
+
 	public function onGetPdf(&$data){
 
 		//$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
-		
-		if($data['data']['c_score']) 
+
+		if($data['data']['c_score'])
 			$answer = $data['data']['c_score'];
-		else 
+		else
 			$answer = 0;
-					
+
 		$data['pdf']->Ln();
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
@@ -338,56 +338,56 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		//$data['pdf']->setStyle('b', false);
 		$str = $answer;
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
-				
-		return $data['pdf'];		
+
+		return $data['pdf'];
 	}
-	
+
 	public function onSendEmail(&$data){
-		
+
 		if($data['data']['c_score']) $answer = $data['data']['c_score'];
 		else $answer = 0;
-		$data['str'] .= "  Scores: ".$answer."\n";		
+		$data['str'] .= "  Scores: ".$answer."\n";
 		return $data['str'];
 	}
-	
+
 	public function onGetStatistic(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT *, c_right_text as c_val FROM #__quiz_t_matching WHERE c_question_id = '".$data['question']->c_id."' ORDER BY ordering";
-		$database->SetQuery( $query );				
+		$database->SetQuery( $query );
 		$match_data = $database->LoadObjectList();
-		
+
 		$query = "SELECT COUNT(*) FROM #__quiz_r_student_question WHERE c_question_id = '".$data['question']->c_id."'";
 		$database->setQuery($query);
 		$past_this = $database->LoadResult();
 		$past_this += 0.0000000000001;
-		
+
 		for($i=0; $i<count($match_data); $i++) {
 				$match_data[$i]->match_data = array();
-				
+
 				for($j=0; $j<count($match_data); $j++) {
 					$query = "SELECT COUNT(*) FROM #__quiz_r_student_matching AS a, #__quiz_r_student_question AS b WHERE b.c_question_id = '".$data['question']->c_id."' AND b.c_id=a.c_sq_id AND  a.c_matching_id  = '".$match_data[$i]->c_id."' AND a.c_sel_text = '".base64_encode($match_data[$j]->c_id."***".$match_data[$j]->c_left_text."|||".$match_data[$j]->c_right_text)."'";
 					$database->setQuery($query);
-					
+
 					$choice_this = $database->LoadResult();
-					
+
 					$match_data[$i]->match_data[] = array('c_right_text'=>$match_data[$j]->c_right_text, 'statistic'=>round(($choice_this*100)/$past_this).'%', 'count'=>$choice_this, 'c_right'=>$match_data[$i]->c_right_text==$match_data[$j]->c_right_text);
 				}
 		}
-		
+
 		$data['question']->match_data = $match_data;
 		return $data['question'];
-		
+
 	}
-	
+
 	public function onStatisticContent(&$data){
-		
+
 		if (is_array($data['question']->match_data))
 		foreach($data['question']->match_data as $mdata) {?>
 			<tr>
 				<td colspan="4"><?php echo '<img src="'.JURI::root().'images/joomlaquiz/images/resize/'.$mdata->c_left_text.'" height="50"/><br/>'; ?>
 					<table>
-					<?php 
+					<?php
 					$color = 1;
 					if (is_array($mdata->match_data))
 					foreach($mdata->match_data as $sdata){?>
@@ -397,41 +397,41 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 							<td width="100"><?php echo $sdata['statistic'];?></td>
 							<td width="300"><div style="width:100%; border:1px solid #cccccc;"><div style="height: 5px; width: <?php echo ($sdata['statistic']+1)?>%;" class="jq_color_<?php echo $color;?>">&nbsp;</div></div></td>
 						</tr>
-						<?php 
-						$color++; 
+						<?php
+						$color++;
 						if ($color > 7) $color = 1;
 					} ?>
 					</table>
 				</td>
-			</tr>												
+			</tr>
 		<?php
 		}
-		
+
 	}
-	
+
 	//Administration part
-	
+
 	public function onCreateDatabase(&$data){
-		
+
 		jimport( 'joomla.filesystem.folder' );
 		jimport( 'joomla.filesystem.file' );
-		
+
 		$db = JFactory::getDBO();
 		$db->setQuery("SELECT `c_type` FROM `#__quiz_t_qtypes` WHERE `c_id` = 12");
 		$exists = $db->loadResult();
-		
+
 		if (!$exists) {
 			if (!JFolder::exists(JPATH_SITE . '/images/joomlaquiz/images/resize') ) {
 				JFolder::create( JPATH_SITE . '/images/joomlaquiz/images/resize');
 			}
-			
+
 			if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg')) {
-				JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg');		
+				JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg');
 			}
-			
+
 			$db->setQuery("INSERT INTO #__quiz_t_qtypes (c_id, c_qtype, c_type) VALUES (12, 'Image Match', 'imgmatch');");
 			$db->query();
-						
+
 			$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_matching` (
 			`c_id` int(10) unsigned NOT NULL auto_increment,
 			`c_question_id` int(10) unsigned NOT NULL default '0',
@@ -443,7 +443,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 			PRIMARY KEY  (`c_id`),
 			KEY `c_question_id` (`c_question_id`) ) DEFAULT CHARSET=utf8;");
 			$db->query();
-			
+
 			$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_r_student_matching` (
 			`c_id` int(10) unsigned NOT NULL auto_increment,
 			`c_sq_id` int(10) unsigned NOT NULL default '0',
@@ -453,45 +453,45 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 			KEY `c_sq_id` (`c_sq_id`),
 			KEY `c_matching_id` (`c_matching_id`) ) DEFAULT CHARSET=utf8;");
 			$db->query();
-			
+
 			$db->setQuery("ALTER TABLE `#__quiz_r_student_question` ADD `c_elapsed_time` INT( 10 ) NOT NULL;");
 			$db->query();
 			$db->setQuery("SELECT `c_type` FROM `#__quiz_t_qtypes` WHERE `c_id` = 11 OR `c_id` = 13");
 			$pzl_exists = $db->loadResult();
-			
+
 			if(!$pzl_exists){
 				$db->setQuery("ALTER TABLE `#__quiz_t_question` ADD `c_width` INT( 10 ) NOT NULL DEFAULT '150';");
 				$db->query();
 			}
-			
+
 			$db->setQuery("SELECT `c_type` FROM `#__quiz_t_qtypes` WHERE `c_id` = 11");
 			$pzl_exists = $db->loadResult();
-			
+
 			if(!$pzl_exists){
 				$db->setQuery("ALTER TABLE `#__quiz_t_question` ADD `c_timer` INT( 10 ) NOT NULL;");
 				$db->query();
 			}
-			
+
 			$db->setQuery("SELECT `c_type` FROM `#__quiz_t_qtypes` WHERE `c_id` = 13");
 			$pzl_exists = $db->loadResult();
-			
+
 			if(!$pzl_exists){
 				$db->setQuery("ALTER TABLE `#__quiz_t_question` ADD `c_height` INT( 10 ) NOT NULL DEFAULT '150';");
 				$db->query();
 			}
 		}
 	}
-	
+
 	public function onGetAdminOptions($data)
 	{
 		$database = JFactory::getDBO();
 		$query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = '".$data['question_id']."' ORDER BY ordering";
 		$database->SetQuery( $query );
-		
+
 		$row = new stdClass;
 		$row->matching = array();
 		$row->matching = $database->LoadObjectList();
-		
+
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
 
@@ -502,7 +502,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
         if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg')) {
             JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg');
         }
-		
+
 		$resize_dir = JPATH_SITE.'/images/joomlaquiz/images/resize';
 		if(!file_exists($resize_dir)){
 			JFolder::create($resize_dir, 0757);
@@ -518,7 +518,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		}
 		$files = $tmp_files;
 		$images = array_merge(array(JHTML::_('select.option', '', '-- Select picture --' )), $files);
-		
+
 		$imagelist_left = JHTML::_('select.genericlist', $images, 'picture_left', ' class="inputbox" size="1" onchange="javascript:if (document.getElementById(\'picture_left\').options[selectedIndex].value != \'\') 
 		{
 			document.getElementById(\'imagelib_left\').src=\''.JURI::root().'images/joomlaquiz/images/resize/\' + document.getElementById(\'picture_left\').options[selectedIndex].value;
@@ -534,35 +534,35 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$lists = array();
 		$lists['imagelist_left'] = $imagelist_left;
 		$lists['imagelist_right'] = $imagelist_right;
-		
+
 		ob_start();
 		require_once(JPATH_SITE."/plugins/joomlaquiz/imgmatch/admin/options/imgmatch.php");
 		$options = ob_get_contents();
 		ob_get_clean();
-		
+
 		return $options;
 	}
-	
+
 	public function onGetAdminJavaScript(&$data){
-		
+
 		$c_id = $data['question_id'];
 		$q_om_type = 12;
 		ob_start();
 		require_once(JPATH_SITE."/plugins/joomlaquiz/imgmatch/admin/js/imgmatch.js.php");
 		$script = ob_get_contents();
 		ob_get_clean();
-		
+
 		return $script;
 	}
-	
+
 	public function onGetAdminForm(&$data)
 	{
 		$db = JFactory::getDBO();
 		$c_id = JFactory::getApplication()->input->get('c_id');
-		
+
 		$db->setQuery("SELECT `c_random`, `c_height`, `c_width`, `c_timer` FROM #__quiz_t_question WHERE `c_id` = '".$c_id."'");
 		$row = $db->loadObject();
-		
+
 		$lists = array();
 
 		$c_random = array();
@@ -571,35 +571,35 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$c_random = JHTML::_('select.genericlist', $c_random, 'jform[c_random]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_random) ? intval( $row->c_random ) : 0));
 		$lists['c_random']['input'] = $c_random;
 		$lists['c_random']['label'] = JText::_('COM_JOOMLAQUIZ_RANDOMIZE_ANSWERS');
-		
+
 		$lists['c_width']['input'] = '<input type="text" size="35" name="c_width" value="'.(isset($row->c_width) ? $row->c_width : '').'">';
 		$lists['c_width']['label'] = 'Image Width:';
-		
+
 		$lists['c_height']['input'] = '<input type="text" size="35" name="c_height" value="'.(isset($row->c_height) ? $row->c_height : '').'">';
 		$lists['c_height']['label'] = 'Image Height:';
-		
+
 		$lists['c_timer']['input'] = '<input type="text" size="35" name="c_timer" value="'.(isset($row->c_timer) ? $row->c_timer : '').'">';
 		$lists['c_timer']['label'] = 'Time Limit:';
-				
+
 		return $lists;
 	}
-	
+
 	public function onAdminIsFeedback(&$data){
 		return false;
 	}
-	
+
 	public function onAdminIsPoints(&$data){
 		return true;
 	}
-	
+
 	public function onAdminIsPenalty(&$data){
 		return true;
 	}
-	
+
 	public function onAdminIsReportName(){
 		return false;
 	}
-	
+
 	function _uploadResizeImg(){
 		$mainframe = JFactory::getApplication();
 		$database = JFactory::getDBO();
@@ -654,17 +654,17 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 				parent.jQuery(\'#picture_right\').trigger(\'liszt:updated\');
 				
 				</script>';
-				
+
 				echo $javascript;
 				$mainframe->close();
 			}
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public function onAdminSaveOptions(&$data){
 		$jinput = JFactory::getApplication()->input;
 		$jform_data = $jinput->get('jform', array(), 'ARRAY');
@@ -679,18 +679,18 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 			die;
 		}
 
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_height` = '".$jinput->get('c_height',0, 'ALNUM')."',  `c_width` = '".$jinput->get('c_width',0, 'ALNUM')."', `c_random` = '".$jform_data['c_random']."', c_timer = '".$jinput->get('c_timer',0, 'ALNUM')."' WHERE c_id = '".$data['qid']."'");
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_height` = '".$jinput->get('c_height',0, 'ALNUM')."',  `c_width` = '".$jinput->get('c_width',0, 'ALNUM')."', c_timer = '".$jinput->get('c_timer',0, 'ALNUM')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
-		
+
 		$field_order = 0;
 		$mcounter = 0;
-		$fids_arr = array();		
+		$fids_arr = array();
 		if (!empty($jq_hid_fields_left)) {
 			foreach ($jq_hid_fields_left as $f_row) {
 					$new_field = new stdClass;
 					if(intval($jq_hid_fields_ids[$mcounter]))
 					$new_field->c_id = intval($jq_hid_fields_ids[$mcounter]);
-					
+
 					$new_field->c_question_id = $data['qid'];
 					$new_field->c_left_text = stripslashes($f_row);
 					$new_field->c_right_text = (!empty($jq_hid_fields_right[$field_order])?stripslashes($jq_hid_fields_right[$field_order]):'');
@@ -705,10 +705,10 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 						$database->insertObject('#__quiz_t_matching', $new_field);
 						$new_field->c_id = $database->insertid();
 					}
-					
-					$fids_arr[] = $new_field->c_id;					
+
+					$fids_arr[] = $new_field->c_id;
 					$field_order ++ ;
-					$mcounter ++ ;					
+					$mcounter ++ ;
 			}
 			$fieldss = implode(',',$fids_arr);
 			$query = "DELETE FROM #__quiz_t_matching WHERE c_question_id = '".$data['qid']."' AND c_id NOT IN (".$fieldss.")";
@@ -720,13 +720,13 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 			$query = "DELETE FROM #__quiz_t_matching WHERE c_question_id = '".$data['qid']."'";
 			$database->setQuery( $query );
 			$database->execute();
-			$msg .= JText::_('COM_JOOMLAQUIZ_QUESTION_NOT_COMPLETE2');		
-		}	
-		
+			$msg .= JText::_('COM_JOOMLAQUIZ_QUESTION_NOT_COMPLETE2');
+		}
+
 	}
-	
+
 	public function onGetAdminAddLists(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT m.*, sm.c_sel_text FROM #__quiz_t_matching as m LEFT JOIN #__quiz_r_student_matching as sm"
 			. "\n ON m.c_id = sm.c_matching_id and sm.c_sq_id = '".$data['id']."'"
@@ -739,15 +739,15 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$lists['id'] = $data['id'];
 		$lists['qid'] = $data['q_id'];
 		$lists['answer'] = $answer;
-		
+
 		return $lists;
-		
+
 	}
-	
+
 	public function onGetAdminReportsHTML(&$data){
 		$rows = $data['lists']['answer'];
-		
-		ob_start();	
+
+		ob_start();
 		?>
 		<table class="adminlist">
 		<tr>
@@ -762,7 +762,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 			?>
 			<tr class="<?php echo "row$k"; ?>">
 				<td align="center" width="75px">
-					<?php 
+					<?php
 					$c_sel_text = base64_decode($row->c_sel_text);
 					$c_right = explode('|||', $c_sel_text);
 					$c_right = $c_right[1];
@@ -785,50 +785,50 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		}?>
 		</table>
 		<?php
-		
+
 		$content = ob_get_contents();
 		ob_clean();
 		return $content;
 	}
-	
+
 	public function onGetAdminQuestionData(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT *, c_right_text as c_val FROM #__quiz_t_matching WHERE c_question_id = '".$data['question']->c_id."' ORDER BY ordering";
-		$database->SetQuery( $query );				
+		$database->SetQuery( $query );
 		$match_data = $database->LoadObjectList();
-		
+
 		$query = "SELECT COUNT(*) FROM #__quiz_r_student_question WHERE c_question_id = '".$data['question']->c_id."'";
 		$database->setQuery($query);
 		$past_this = $database->LoadResult();
 		$past_this += 0.0000000000001;
-		
+
 		for($i=0; $i<count($match_data); $i++) {
 				$match_data[$i]->match_data = array();
-				
+
 				for($j=0; $j<count($match_data); $j++) {
 					$query = "SELECT COUNT(*) FROM #__quiz_r_student_matching AS a, #__quiz_r_student_question AS b WHERE b.c_question_id = '".$data['question']->c_id."' AND b.c_id=a.c_sq_id AND  a.c_matching_id  = '".$match_data[$i]->c_id."' AND a.c_sel_text = '".base64_encode($match_data[$j]->c_id."***".$match_data[$j]->c_left_text."|||".$match_data[$j]->c_right_text)."'";
 					$database->setQuery($query);
-					
+
 					$choice_this = $database->LoadResult();
-					
+
 					$match_data[$i]->match_data[] = array('c_right_text'=>$match_data[$j]->c_right_text, 'statistic'=>round(($choice_this*100)/$past_this).'%', 'count'=>$choice_this, 'c_right'=>$match_data[$i]->c_right_text==$match_data[$j]->c_right_text);
 				}
-				
+
 		}
-		
+
 		$data['question']->match_data = $match_data;
 		return $data['question'];
 	}
-	
+
 	public function onGetAdminStatistic(&$data){
-		
+
 		if (is_array($data['question']->match_data))
 		foreach($data['question']->match_data as $mdata) {?>
 			<tr>
 				<td colspan="4"><?php echo '<img src="'.JURI::root().'images/joomlaquiz/images/resize/'.$mdata->c_left_text.'" height="50"/><br/>'; ?>
 					<table>
-					<?php 
+					<?php
 					$color = 1;
 					if (is_array($mdata->match_data))
 					foreach($mdata->match_data as $sdata){?>
@@ -838,28 +838,28 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 							<td width="100"><?php echo $sdata['statistic'];?></td>
 							<td width="300"><div style="width:100%; border:1px solid #cccccc;"><div style="height: 5px; width: <?php echo ($sdata['statistic']+1)?>%;" class="jq_color_<?php echo $color;?>">&nbsp;</div></div></td>
 						</tr>
-						<?php 
-						$color++; 
+						<?php
+						$color++;
 						if ($color > 7) $color = 1;
 					} ?>
 					</table>
 				</td>
-			</tr>												
+			</tr>
 		<?php
 		}
 	}
-	
+
 	public function onGetAdminCsvData(&$data){
-		
+
 		$database = JFactory::getDBO();
-		
+
 		$data['answer'] = '';
 		$query = "SELECT `a`.`c_score` FROM `#__quiz_r_student_question` AS `a` WHERE `a`.`c_stu_quiz_id` = '{$data['result']->c_id}' AND `a`.`c_question_id` = '{$data['question']->c_id}'";
 		$database->setQuery( $query );
 		$score = $database->loadResult();
 		if ($score != null)
 			$data['answer'] = 'Score - '.$score;
-			
-		return $data['answer'];	
+
+		return $data['answer'];
 	}
 }

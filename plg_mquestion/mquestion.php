@@ -16,9 +16,9 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 {
 	var $name		= 'Mquestion';
 	var $_name		= 'mquestion';
-	
+
 	public function onCreateQuestion(&$data) {
-		
+
 		$tag = JFactory::getLanguage()->getTag();
 		$lang = JFactory::getLanguage();
 		$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);
@@ -65,35 +65,35 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 
 		return $data;
 	}
-	
+
 	public function onPointsForAnswer(&$data){
 		$database = JFactory::getDBO();
-		
+
 		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."' AND c_right = 1";
 		$database->SetQuery( $query );
 		$tmp_pointz = $database->LoadResult();
 		if(floatval($tmp_pointz))
 			$data['q_data']->c_point = $data['q_data']->c_point.' - '.(floatval($tmp_pointz) + $data['q_data']->c_point);
-		
+
 		return $data['q_data'];
 	}
-	
+
 	public function onSaveQuestion(&$data){
-		
+
 		$database = JFactory::getDBO();
-		
+
 		$query = "SELECT a.c_point, a.c_attempts FROM #__quiz_t_question as a WHERE a.c_id = '".$data['quest_id']."' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd = $database->LoadObjectList();
-		
+
 		$query = "SELECT b.c_id, b.a_point FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' AND b.c_question_id = a.c_id AND b.c_right = '1' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd2 = $database->LoadObjectList();
-		
+
 		$query = "SELECT b.c_id, b.a_point FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' AND b.c_question_id = a.c_id AND b.c_right <> '1' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd3 = $database->LoadObjectList();
-		
+
 		$count_all = count($ddd2) + count($ddd3);
 		$c_quest_score = 0;
 		$c_dop_points = 0;
@@ -102,7 +102,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$c_temp_incor = 0;
 		$data['is_avail'] = 1;
 		$ans_array = explode(',', $data['answer']);
-		
+
 		if (!empty($ddd) && (!empty($ddd2) || !empty($ddd3))) {
 			$c_quest_score = $ddd[0]->c_point;
 			$data['is_correct'] = 1;
@@ -151,7 +151,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$query = "SELECT c_id, c_attempts FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' and c_question_id = '".$data['quest_id']."'";
 		$database->SetQuery( $query );
 		$c_tmp = $database->LoadObjectList();
-		
+
 		if (!empty($c_tmp)) {
 			$data['c_quest_cur_attempt'] = $c_tmp[0]->c_attempts;
 			if ($data['c_quest_cur_attempt'] >= $data['c_all_attempts']) {
@@ -171,15 +171,15 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$c_quest_score = ($c_quest_score+$c_dop_points);
 			if ($data['c_quest_cur_attempt'] && $data['c_penalty']) {
 				if (((100-$data['c_penalty']*$data['c_quest_cur_attempt'])/100) < 0)
-					$c_quest_score = 0;								
-				else 
+					$c_quest_score = 0;
+				else
 					$c_quest_score = $c_quest_score * ((100-$data['c_penalty']*$data['c_quest_cur_attempt'])/100) ;
 			}
 
 			$query = "INSERT INTO #__quiz_r_student_question (c_stu_quiz_id, c_question_id, c_score, c_attempts, is_correct)"
 			. "\n VALUES('".$data['stu_quiz_id']."', '".$data['quest_id']."', '".($c_quest_score)."', '".($data['c_quest_cur_attempt'] + 1)."', '".$data['is_correct']."')";
 			$database->SetQuery($query);
-			
+
 			$database->execute();
 			$c_sq_id = $database->insertid();
 			$i = 0;
@@ -191,14 +191,14 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 				$i ++;
 			}
 		}
-		
+
 		$data['score'] = $c_quest_score;
-		
+
 		return true;
 	}
-	
+
 	public function onTotalScore(&$data){
-		
+
 		$data['max_score'] = 0;
 		$database = JFactory::getDBO();
 		$query = "SELECT c_id FROM #__quiz_t_question WHERE c_type = 10 AND c_id IN (".$data['qch_ids'].")";
@@ -210,28 +210,28 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$database->SetQuery( $query );
 			$data['max_score'] += $database->LoadResult();
 		}
-		
+
 		return true;
 	}
-	
+
 	public function onScoreByCategory(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$database->setQuery("SELECT SUM(a_point) FROM #__quiz_t_choice WHERE `c_question_id` = '".$data['score_bycat']->c_id."'");
 		$data['score'] = $database->loadResult();
-		
+
 		return true;
 	}
-	
+
 	public function onFeedbackQuestion(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT c_id as value, c_choice as text, c_right, '1' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$choice_data = $database->LoadObjectList();
-		
+
 		$choice_data[0]->score = $data['score'];
-		
+
 		foreach($choice_data as $t=>$cd) {
 			JoomlaquizHelper::JQ_GetJoomFish($choice_data[$t]->text, 'quiz_t_choice', 'c_choice', $choice_data[$t]->value);
 		}
@@ -243,7 +243,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$query = "SELECT count(*) FROM #__quiz_r_student_choice as sch, #__quiz_r_student_question as qst WHERE sch.c_sq_id=qst.c_id AND qst.c_question_id='".$data['q_data']->c_id."'";
 			$database->setQuery($query);
 			$choice_this_one = $database->LoadResult();
-			
+
 			for($i=0;$i<count($choice_data);$i++)
 			{
 				$query = "SELECT count(*) FROM #__quiz_r_student_choice as sch, #__quiz_r_student_question as qst WHERE sch.c_choice_id = '".$choice_data[$i]->value."' AND sch.c_sq_id=qst.c_id AND qst.c_question_id='".$data['q_data']->c_id."'";
@@ -264,7 +264,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		. "\n WHERE c.c_question_id = '".$data['q_data']->c_id."' ORDER BY c.ordering";
 		$database->SetQuery( $query );
 		$tmp = $database->LoadAssocList();
-		
+
 		foreach($tmp as $t=>$cd) {
 			JoomlaquizHelper::JQ_GetJoomFish($tmp[$t]['c_choice'], 'quiz_t_choice', 'c_choice', $tmp[$t]['c_choice_id']);
 		}
@@ -274,11 +274,11 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		foreach($tmp as $t) {
 			if($t['c_choice_id']) {
 				$uanswer[] = $t['c_choice_id'];
-			} 
+			}
 		}
 		$choice_data[0]->c_title_true = $data['q_data']->c_title_true;
 		$choice_data[0]->c_title_false = $data['q_data']->c_title_false;
-		
+
 		$feedback_data = array();
 		$feedback_data['choice_data'] = $choice_data;
 		$feedback_data['user_answer'] = $uanswer;
@@ -304,22 +304,22 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		}
 		return $data['qoption'];
 	}
-	
+
 	public function onNextPreviewQuestion(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT a.c_point, a.c_attempts FROM #__quiz_t_question as a WHERE a.c_id = '".$data['quest_id']."' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd = $database->LoadObjectList();
-		
+
 		$query = "SELECT b.c_id FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' AND b.c_question_id = a.c_id AND b.c_right = '1' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd2 = $database->LoadObjectList();
-		
+
 		$query = "SELECT b.c_id FROM #__quiz_t_question as a, #__quiz_t_choice as b WHERE a.c_id = '".$data['quest_id']."' AND b.c_question_id = a.c_id AND b.c_right <> '1' AND a.published = 1";
 		$database->SetQuery( $query );
 		$ddd3 = $database->LoadObjectList();
-		
+
 		$ans_array = explode(',',$data['answer']);
 		if ((!empty($ddd2) || !empty($ddd3)) && !empty($ddd)) {
 			$data['is_correct'] = 1;
@@ -330,20 +330,20 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 				if (in_array($not_right_row->c_id, $ans_array)) { $data['is_correct'] = 0; }
 			}
 		}
-		
+
 		return $data;
 	}
-	
+
 	public function onReviewQuestion(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT c_id as value, c_choice as text, c_right, '1' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['q_data']->c_id."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$choice_data = $database->LoadObjectList();
-		
+
 		$choice_data[0]->title_true = $data['q_data']->c_title_true;
 		$choice_data[0]->title_false = $data['q_data']->c_title_false;
-		
+
 		foreach($choice_data as $t=>$cd) {
 			JoomlaquizHelper::JQ_GetJoomFish($choice_data[$t]->text, 'quiz_t_choice', 'c_choice', $choice_data[$t]->value);
 		}
@@ -357,13 +357,13 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$query = "SELECT count(*) FROM #__quiz_r_student_choice as sch, #__quiz_r_student_question as qst WHERE sch.c_sq_id=qst.c_id AND qst.c_question_id='".$data['q_data']->c_id."'";
 			$database->setQuery($query);
 			$choice_this_one = $database->LoadResult();
-				
-			for($i=0;$i<count($choice_data);$i++) {					
+
+			for($i=0;$i<count($choice_data);$i++) {
 				$query = "SELECT count(*) FROM #__quiz_r_student_choice as sch, #__quiz_r_student_question as qst WHERE sch.c_choice_id = '".$choice_data[$i]->value."' AND sch.c_sq_id=qst.c_id AND qst.c_question_id='".$data['q_data']->c_id."'";
 				$database->setQuery($query);
 				$choice_this = $database->LoadResult();
 				$temp_stat = round(($choice_this*100)/$choice_this_one);
-				
+
 				$choice_data[$i]->statistic_true = ' '.$temp_stat.'%';
 				$choice_data[$i]->statistic_false = ' '.(100 - $temp_stat).'%';
 			}
@@ -389,40 +389,40 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 				$answer .= $t['c_choice']." - ".$data['q_data']->c_title_false."; ";
 			}
 		}
-		
+
 		$choice_data[0]->answer = $answer;
 
 		$qhtml = JoomlaQuiz_template_class::JQ_createReview($choice_data, $data);
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div><form onsubmit=\'javascript: return false;\' name=\'quest_form\'>'. $qhtml .'</form></div>]]></quest_data_user>' . "\n";
-		return $data;		
+		return $data;
 	}
-	
+
 	public function onGetResult(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT *, c.c_id AS id FROM (#__quiz_t_choice AS c, #__quiz_t_question AS q) LEFT JOIN #__quiz_r_student_choice AS sc"
 		. "\n ON c.c_id = sc.c_choice_id AND sc.c_sq_id = '".$data['id']."'"
 		. "\n WHERE c.c_question_id = '".$data['qid']."' AND q.c_id = c.c_question_id ORDER BY c.ordering";
 		$database->SetQuery( $query );
 		$tmp = $database->LoadAssocList();
-			
+
 		foreach($tmp as $t=>$cd) {
 			JoomlaquizHelper::JQ_GetJoomFish($tmp[$t]['c_choice'], 'quiz_t_choice', 'c_choice', $tmp[$t]['id']);
 		}
 		$data['info']['c_choice'] = $tmp;
-			
+
 		$query = "SELECT SUM(a_point) FROM #__quiz_t_choice WHERE c_question_id = ".$data['qid']." ";
 		$database->SetQuery( $query );
 		$data['info']['c_point'] += $database->LoadResult();
-		
+
 		return true;
 	}
-	
+
 	public function onGetPdf(&$data){
 
 		//$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
-		
+
 		$data['pdf']->Ln();
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
@@ -432,16 +432,16 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$data['pdf']->Ln();
-				
+
 		for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {
 			if($data['data']['c_choice'][$j]['c_choice_id']) {
 				$data['answer'] .= $k." ";
 			}
-					
+
 			if ($data['data']['c_choice'][$j]['c_right']) {
 				$correct_answer .= $k." ";
 			}
-					
+
 			$data['pdf']->Ln();
 			$data['pdf']->setFont($fontFamily);
 			//$data['pdf']->setStyle('b', true);
@@ -453,12 +453,12 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$str = $data['data']['c_choice'][$j]['c_choice'] . ' - ' . ($data['data']['c_choice'][$j]['c_choice_id']? $data['data']['c_choice'][$j]['c_title_true']: $data['data']['c_choice'][$j]['c_title_false']);
 			$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
 		}
-				
-		return $data['pdf'];		
+
+		return $data['pdf'];
 	}
-	
+
 	public function onSendEmail(&$data){
-	
+
 		$data['str'] .= "  ".JText::_('COM_QUIZ_PDF_ANSWER')." \n";
 		for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {
 
@@ -467,14 +467,14 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$data['str'] .= "<hr />";
 		return $data['str'];
 	}
-	
+
 	public function onGetStatistic(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT c_id as value, c_choice as text, c_right, '1' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['question']->c_id."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$choice_data = $database->LoadObjectList();
-		
+
 		$query = "SELECT count(*) FROM #__quiz_r_student_question WHERE c_question_id = '".$data['question']->c_id."'";
 		$database->setQuery($query);
 		$past_this = $database->LoadResult();
@@ -482,24 +482,24 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$query = "SELECT count(*) FROM #__quiz_r_student_choice as sch, #__quiz_r_student_question as qst WHERE sch.c_sq_id=qst.c_id AND qst.c_question_id='".$data['question']->c_id."'";
 		$database->setQuery($query);
 		$choice_this_one = $database->LoadResult();
-		
+
 		for($i=0;$i<count($choice_data);$i++)
 		{
 			$query = "SELECT count(*) FROM #__quiz_r_student_choice as sch, #__quiz_r_student_question as qst WHERE sch.c_choice_id = '".$choice_data[$i]->value."' AND sch.c_sq_id=qst.c_id AND qst.c_question_id='".$data['question']->c_id."'";
 			$database->setQuery($query);
 			$choice_this = $database->LoadResult();
 			$temp_stat = round(($choice_this*100)/$past_this);
-			
+
 			$choice_data[$i]->statistic1 = $temp_stat.'%';
 			$choice_data[$i]->statistic2 = (intval($past_this)?(100 - $temp_stat):0).'%';
 			$choice_data[$i]->count = (int)$past_this;
-		}		
-		$data['question']->choice_data = $choice_data;		
-		return $data['question'];	
+		}
+		$data['question']->choice_data = $choice_data;
+		return $data['question'];
 	}
 
 	public function onStatisticContent(&$data){
-		
+
 		$data['question']->c_title_true = $data['question']->c_title_true? $data['question']->c_title_true: JText::_('COM_QUIZ_SIMPLE_TRUE');
 		$data['question']->c_title_false = $data['question']->c_title_false? $data['question']->c_title_false: JText::_('COM_QUIZ_SIMPLE_FALSE');
 		if (isset($data['question']->choice_data) && is_array($data['question']->choice_data))
@@ -517,11 +517,11 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			</tr>
 			<?php
 		}
-		
+
 	}
 
 	//Administration part
-	
+
 	public function onGetAdminOptions($data)
 	{
 		$q_om_type = 10;
@@ -535,57 +535,57 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$db->SetQuery( $query );
 			$choices = $db->LoadObjectList();
 		}
-		
+
 		$return['choices'] = $choices;
 		ob_start();
 		require_once(JPATH_SITE."/plugins/joomlaquiz/mquestion/admin/options/mquestion.php");
 		$options = ob_get_contents();
 		ob_get_clean();
-		
+
 		return $options;
 	}
-	
+
 	public function onGetAdminForm(&$data)
 	{
 		$db = JFactory::getDBO();
 		$c_id = JFactory::getApplication()->input->get('c_id');
-		
+
 		$db->setQuery("SELECT `c_random`, `c_partial`, `c_qform`, `c_title_true`, `c_title_false` FROM #__quiz_t_question WHERE `c_id` = '".$c_id."'");
 		$row = $db->loadObject();
-		
+
 		$lists = array();
 		$c_qform = array();
 		$c_qform[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_RADIO_BUTTONS'));
 		$c_qform[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_DROP_DOWN'));
-		$c_qform = JHTML::_('select.genericlist', $c_qform, 'jform[c_qform]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_qform) ? intval( $row->c_qform ) : 0)); 
+		$c_qform = JHTML::_('select.genericlist', $c_qform, 'jform[c_qform]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_qform) ? intval( $row->c_qform ) : 0));
 		$lists['c_qform']['input'] = $c_qform;
 		$lists['c_qform']['label'] = JText::_('COM_JOOMLAQUIZ_DISPLAY_STYLE');
-		
+
 		$c_partial = array();
 		$c_partial[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_NO'));
 		$c_partial[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_YES'));
-		$c_partial = JHTML::_('select.genericlist', $c_partial, 'jform[c_partial]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_partial) ? intval( $row->c_partial ) : 0)); 
+		$c_partial = JHTML::_('select.genericlist', $c_partial, 'jform[c_partial]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_partial) ? intval( $row->c_partial ) : 0));
 		$lists['c_partial']['input'] = $c_partial;
 		$lists['c_partial']['label'] = JText::_('COM_JOOMLAQUIZ_PARTIAL_SCORE');
-		
+
 		$c_random = array();
 		$c_random[] = JHTML::_('select.option',0, JText::_('COM_JOOMLAQUIZ_NO'));
 		$c_random[] = JHTML::_('select.option',1, JText::_('COM_JOOMLAQUIZ_YES'));
 		$c_random = JHTML::_('select.genericlist', $c_random, 'jform[c_random]', 'class="text_area" size="1" ', 'value', 'text',  (isset($row->c_random) ? intval( $row->c_random ) : 0));
 		$lists['c_random']['input'] = $c_random;
 		$lists['c_random']['label'] = JText::_('COM_JOOMLAQUIZ_RANDOMIZE_ANSWERS');
-		
+
 		$c_title_true = (isset($row->c_title_true)) ? $row->c_title_true : 'true';
 		$lists['c_title_true']['input'] = "<input type='text' size='30' name='c_title_true' value='".$c_title_true."' />";
 		$lists['c_title_true']['label'] = JText::_('COM_JOOMLAQUIZ_TITLE_FOR_TRUE');
-		
+
 		$c_title_false = (isset($row->c_title_false)) ? $row->c_title_false : 'false';
 		$lists['c_title_false']['input'] = "<input type='text' size='30' name='c_title_false' value='".$c_title_false."' />";
 		$lists['c_title_false']['label'] = JText::_('COM_JOOMLAQUIZ_TITLE_FOR_FALSE');
-		
+
 		return $lists;
 	}
-	
+
 	public function onGetAdminJavaScript(&$data){
 
 		$q_om_type = 10;
@@ -595,26 +595,26 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		require_once(JPATH_SITE."/plugins/joomlaquiz/mquestion/admin/js/mquestion.js.php");
 		$script = ob_get_contents();
 		ob_get_clean();
-		
+
 		return $script;
 	}
-	
+
 	public function onAdminIsFeedback(&$data){
 		return true;
 	}
-	
+
 	public function onAdminIsPoints(&$data){
 		return true;
 	}
-	
+
 	public function onAdminIsPenalty(&$data){
 		return true;
 	}
-	
+
 	public function onAdminIsReportName(){
 		return true;
 	}
-	
+
 	public function onAdminSaveOptions(&$data){
 
         $jinput = JFactory::getApplication()->input;
@@ -622,9 +622,9 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
         $task = $jinput->getCmd('task', '');
 
 		$database = JFactory::getDBO();
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '".$jform['c_qform']."', `c_partial` = '" .$jform['c_partial']."', `c_random` = '".$jform['c_random']."', `c_title_true` = '".$jinput->get('c_title_true','','STRING')."', `c_title_false` = '".$jinput->get('c_title_false','','STRING')."' WHERE c_id = '".$data['qid']."'");
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '".$jform['c_qform']."', `c_partial` = '" .$jform['c_partial']."', `c_title_true` = '".$jinput->get('c_title_true','','STRING')."', `c_title_false` = '".$jinput->get('c_title_false','','STRING')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
-		
+
 		$field_order = 0;
 		$ans_right = array();
 
@@ -647,7 +647,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$mcounter = 0;
 			$fids_arr = array();
 			foreach ($jq_hid_fields as $f_row) {
-					
+
 					$new_field = new stdClass;
 					if(intval($jq_hid_fields_ids[$mcounter])) {
                         $new_field->c_id = ($task == 'save2copy') ? 0 : intval($jq_hid_fields_ids[$mcounter]);
@@ -656,7 +656,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 					$new_field->c_choice = stripslashes($f_row);
 					$new_field->c_incorrect_feed = !empty($jq_incorrect_feed[$mcounter]) ? stripslashes($jq_incorrect_feed[$mcounter]) : '';
 					$new_field->c_right = $jq_checked[$mcounter];
-					
+
 					$new_field->ordering = $field_order;
 					$new_field->a_point = floatval($jq_a_points[$mcounter]);
 					$new_field->c_quiz_id	= intval($jform['c_quiz_id']);
@@ -668,7 +668,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 						$database->insertObject('#__quiz_t_choice', $new_field);
 						$new_field->c_id = $database->insertid();
 					}
-					$fids_arr[] = $new_field->c_id;					
+					$fids_arr[] = $new_field->c_id;
 					$field_order ++ ;
 					$mcounter ++ ;
 			}
@@ -676,7 +676,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$query = "DELETE FROM #__quiz_t_choice WHERE c_question_id = '".$data['qid']."' AND c_id NOT IN (".$fieldss.")";
 			$database->setQuery( $query );
 			$database->execute();
-			
+
 		}
 		else
 		{
@@ -686,11 +686,11 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			$database->query();
 		}
 	}
-	
+
 	public function onGetAdminAddLists(&$data){
-		
+
 		$database = JFactory::getDBO();
-		
+
 		$query = "SELECT c.*, sc.c_id as sc_id FROM #__quiz_t_choice as c LEFT JOIN #__quiz_r_student_choice as sc ON c.c_id = sc.c_choice_id"
 		. "\n and sc.c_sq_id = '".$data['id']."'"
 		. "\n WHERE c.c_question_id = '".$data['q_id']."'"
@@ -698,17 +698,17 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		;
 		$database->SetQuery( $query );
 		$answer = $database->LoadObjectList();
-		
+
 		$lists['answer'] = $answer;
 		$lists['id'] = $data['id'];
-				
+
 		return $lists;
-		
+
 	}
-	
+
 	public function onGetAdminReportsHTML(&$data){
 		$rows = $data['lists']['answer'];
-		
+
 		ob_start();
 		?>
 		<table class="table table-striped">
@@ -740,20 +740,20 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 					}?>
 					</table>
 		<?php
-		
+
 		$content = ob_get_contents();
 		ob_clean();
 		return $content;
 	}
-	
+
 	public function onGetAdminQuestionData(&$data){
-	
+
 		$database = JFactory::getDBO();
-		
+
 		$query = "SELECT c_id as value, c_choice as text, c_right, '1' as c_review FROM #__quiz_t_choice WHERE c_question_id = '".$data['question']->c_id."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$choice_data = $database->LoadObjectList();
-				
+
 		$query = "SELECT count(*) FROM #__quiz_r_student_question WHERE c_question_id = '".$data['question']->c_id."'";
 		$database->setQuery($query);
 		$past_this = $database->LoadResult();
@@ -761,24 +761,24 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 		$query = "SELECT count(*) FROM #__quiz_r_student_choice as sch, #__quiz_r_student_question as qst WHERE sch.c_sq_id=qst.c_id AND qst.c_question_id='".$data['question']->c_id."'";
 		$database->setQuery($query);
 		$choice_this_one = $database->LoadResult();
-					
+
 		for($i=0;$i<count($choice_data);$i++)
 		{
 			$query = "SELECT count(*) FROM #__quiz_r_student_choice as sch, #__quiz_r_student_question as qst WHERE sch.c_choice_id = '".$choice_data[$i]->value."' AND sch.c_sq_id=qst.c_id AND qst.c_question_id='".$data['question']->c_id."'";
 			$database->setQuery($query);
 			$choice_this = $database->LoadResult();
 			$temp_stat = round(($choice_this*100)/$past_this);
-						
+
 			$choice_data[$i]->statistic1 = $temp_stat.'%';
 			$choice_data[$i]->statistic2 = (intval($past_this)?(100 - $temp_stat):0).'%';
 			$choice_data[$i]->count = (int)$past_this;
 		}
-			
+
 		$data['question']->choice_data = $choice_data;
-				
-		return $data['question'];	
+
+		return $data['question'];
 	}
-	
+
 	public function onGetAdminStatistic(&$data){
 		$data['question']->c_title_true = $data['question']->c_title_true? $data['question']->c_title_true: 'True';
 		$data['question']->c_title_false = $data['question']->c_title_false? $data['question']->c_title_false: 'False';
@@ -786,7 +786,7 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 			foreach($data['question']->choice_data as $cdata){
 				?>
 				<tr>
-					<td><?php echo $cdata->text?></td> 
+					<td><?php echo $cdata->text?></td>
 					<td><?php echo $cdata->count?></td>
 					<td><?php echo ($cdata->c_right? '<font color="#00CC00">'.$data['question']->c_title_true.'</font>':$data['question']->c_title_true).' - '.$cdata->statistic1?><br />
 						<?php echo (!$cdata->c_right? '<font color="#00CC00">'.$data['question']->c_title_false.'</font>':$data['question']->c_title_false).' - '.$cdata->statistic2?>
@@ -795,19 +795,19 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 						<div style="width:100%; border:1px solid #cccccc;"><div style="height: 5px; width: <?php echo $cdata->statistic2+1;?>%;" class="jq_color_2"></div></div>
 					</td>
 				</tr>
-				<?php												
+				<?php
 			}
 	}
-	
+
 	public function onGetAdminCsvData(&$data){
-		
+
 		$database = JFactory::getDBO();
 		$query = "SELECT `a`.`c_score` FROM `#__quiz_r_student_question` AS `a` WHERE `a`.`c_stu_quiz_id` = '".$data['result']->c_id."' AND `a`.`c_question_id` = '".$data['question']->c_id."'";
 		$database->setQuery( $query );
 		$score = $database->loadResult();
 		if ($score != null)
 			$data['answer'] = 'Score - '.$score;
-		
-		return $data['answer'];	
+
+		return $data['answer'];
 	}
 }

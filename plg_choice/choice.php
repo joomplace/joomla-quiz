@@ -594,7 +594,7 @@ class plgJoomlaquizChoice extends plgJoomlaquizQuestion
         $jform = $jinput->get('jform', array(), 'ARRAY');
 
         $database = JFactory::getDBO();
-        $database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '" . $jform['c_qform'] . "', `c_layout` = '" . $jform['c_layout'] . "', `c_random` = '" . $jform['c_random'] . "' WHERE c_id = '" . $data['qid'] . "'");
+        $database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '" . $jform['c_qform'] . "', `c_layout` = '" . $jform['c_layout'] . "' WHERE c_id = '" . $data['qid'] . "'");
         $database->execute();
 
         $field_order = 0;

@@ -138,32 +138,45 @@ class JoomlaquizModelProduct extends JModelAdmin
 		
 		return $lists;
 	}
-	
-	protected function isNotVirtuemart(){
-		
-		$no_virtuemart = false;
-		if (!defined('JPATH_VM_ADMINISTRATOR')) define('JPATH_VM_ADMINISTRATOR', JPATH_BASE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_virtuemart');
-						
-		if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/config.php'))
-			require_once(JPATH_BASE . '/components/com_virtuemart/helpers/config.php');
-		else
-			$no_virtuemart = true;
-			
-		if (file_exists(JPATH_BASE . '/components/com_virtuemart/tables/categories.php'))
-			require_once(JPATH_BASE . '/components/com_virtuemart/tables/categories.php');
-		else
-			$no_virtuemart = true;
-			
-		if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/vmmodel.php'))
-			require_once(JPATH_BASE . '/components/com_virtuemart/helpers/vmmodel.php');
-		else
-			$no_virtuemart = true;
-			
-		if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/shopfunctions.php'))
-			require_once(JPATH_BASE . '/components/com_virtuemart/helpers/shopfunctions.php');
-		else
-			$no_virtuemart = true;
-		
-		return $no_virtuemart;
-	}
+
+    protected function isNotVirtuemart()
+    {
+        $no_virtuemart = false;
+
+        if (!defined('JPATH_VM_ADMINISTRATOR')){
+            define('JPATH_VM_ADMINISTRATOR', JPATH_BASE.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_virtuemart');
+        }
+
+        if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/config.php')) {
+            require_once(JPATH_BASE . '/components/com_virtuemart/helpers/config.php');
+        } else {
+            $no_virtuemart = true;
+        }
+
+        if (file_exists(JPATH_BASE . '/components/com_virtuemart/tables/categories.php')) {
+            if (file_exists(JPATH_ADMINISTRATOR . '/components/com_virtuemart/helpers/vobject.php')) {
+                JLoader::register('vObject', JPATH_ADMINISTRATOR . '/components/com_virtuemart/helpers/vobject.php');
+            }
+            if (file_exists(JPATH_ADMINISTRATOR . '/components/com_virtuemart/helpers/vmtable.php')) {
+                JLoader::register('VmTable', JPATH_ADMINISTRATOR . '/components/com_virtuemart/helpers/vmtable.php');
+            }
+            require_once(JPATH_BASE . '/components/com_virtuemart/tables/categories.php');
+        } else {
+            $no_virtuemart = true;
+        }
+
+        if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/vmmodel.php')) {
+            require_once(JPATH_BASE . '/components/com_virtuemart/helpers/vmmodel.php');
+        } else {
+            $no_virtuemart = true;
+        }
+
+        if (file_exists(JPATH_BASE . '/components/com_virtuemart/helpers/shopfunctions.php')) {
+            require_once(JPATH_BASE . '/components/com_virtuemart/helpers/shopfunctions.php');
+        } else {
+            $no_virtuemart = true;
+        }
+
+        return $no_virtuemart;
+    }
 }

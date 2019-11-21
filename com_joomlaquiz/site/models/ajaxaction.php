@@ -59,7 +59,6 @@ class JoomlaquizModelAjaxaction extends JModelList
         $debug_str = @ob_get_contents();
 
         @ob_end_clean();
-		@ob_end_clean();
 		if ($jq_ret_str != "") {
 			@header ('Expires: Fri, 14 Mar 1980 20:53:00 GMT');
 			@header ('Last-Modified: ' . JHtml::_('date',time(),'D, d M Y H:i:s') . ' GMT');

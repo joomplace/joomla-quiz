@@ -619,10 +619,14 @@ class plgJoomlaquizMquestion extends plgJoomlaquizQuestion
 
         $jinput = JFactory::getApplication()->input;
         $jform = $jinput->get('jform', array(), 'ARRAY');
-        $task = $jinput->getCmd('task', '');
+        $task = $jinput->get('task', '');
+
+        if($task == 'copy_quizzes') {
+            return true;
+        }
 
 		$database = JFactory::getDBO();
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '".$jform['c_qform']."', `c_partial` = '" .$jform['c_partial']."', `c_title_true` = '".$jinput->get('c_title_true','','STRING')."', `c_title_false` = '".$jinput->get('c_title_false','','STRING')."' WHERE c_id = '".$data['qid']."'");
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_qform` = '".$jform['c_qform']."', `c_partial` = '" .$jform['c_partial']."', `c_random` = '".$jform['c_random']."', `c_title_true` = '".$jinput->get('c_title_true','','STRING')."', `c_title_false` = '".$jinput->get('c_title_false','','STRING')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 
 		$field_order = 0;

@@ -581,7 +581,13 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
         $jform = $jinput->get('jform', array(), 'ARRAY');
         $task = $jinput->get('task', '');
 
+        if($task == 'copy_quizzes') {
+            return true;
+        }
+
 		$database = JFactory::getDBO();
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_random` = '".(int)$jform['c_random']."' WHERE c_id = '".$data['qid']."'");
+		$database->execute();
 
 		$field_order = 0;
 		$mcounter = 0;

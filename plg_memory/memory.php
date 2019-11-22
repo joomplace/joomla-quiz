@@ -615,6 +615,11 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 	public function onAdminSaveOptions(&$data){
 
         $jinput = JFactory::getApplication()->input;
+
+        if($jinput->get('task') == 'copy_quizzes') {
+            return true;
+        }
+
         $jform = $jinput->get('jform', array(), 'ARRAY');
 		$plg_task = $jinput->get('plgtask', '');
         $database = JFactory::getDBO();

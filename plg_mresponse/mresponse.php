@@ -588,11 +588,15 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
         $jq_hid_fields_ids = $jinput->get('jq_hid_fields_ids', array(), 'ARRAY');
         $jq_incorrect_feed = $jinput->get('jq_incorrect_feed', array(), 'ARRAY');
         $jq_a_points = $jinput->get('jq_a_points', array(), 'ARRAY');
-        $task = JFactory::getApplication()->input->getCmd('task', '');
-	    $database = JFactory::getDBO();
+        $task = $jinput->get('task', '');
 
-		$database->setQuery("UPDATE `#__quiz_t_question` SET `c_partially_message` = '".$database->escape($jinput->get('c_partially_message','', 'RAW'))."', `c_partial` = '".$jform_data['c_partial']."' WHERE c_id = '".$data['qid']."'");
-		$database->execute();
+        if($task == 'copy_quizzes') {
+            return true;
+        }
+
+        $database = JFactory::getDBO();
+        $database->setQuery("UPDATE `#__quiz_t_question` SET `c_partially_message` = '" . $database->escape($jinput->get('c_partially_message','', 'RAW')) . "', `c_partial` = '" . $jform_data['c_partial'] . "', `c_random` = '" . $jform_data['c_random'] . "' WHERE c_id = '" . $data['qid'] . "'");
+        $database->execute();
 
 		$field_order = 0;
 		$ans_right = array();

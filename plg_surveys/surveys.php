@@ -298,6 +298,11 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 	
 	public function onAdminSaveOptions(&$data){
         $jinput = JFactory::getApplication()->input;
+
+        if($jinput->get('task') == 'copy_quizzes') {
+            return true;
+        }
+
         $jform = $jinput->get('jform', array(), 'ARRAY');
 		$database = JFactory::getDBO();
         $database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->get('c_image','')."', `c_manual` = '" .$jform['c_manual']."' WHERE c_id = '".$data['qid']."'");

@@ -416,8 +416,12 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 	
 	public function onAdminSaveOptions(&$data){
         $jinput = JFactory::getApplication()->input;
-		$database = JFactory::getDBO();
 
+        if($jinput->get('task') == 'copy_quizzes') {
+            return true;
+        }
+
+		$database = JFactory::getDBO();
         $database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->get('c_image','')."', `c_width` = '".$jinput->get('c_width','', 'INT')."', `c_timer` = '".$jinput->get('c_timer','', 'INT')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 		

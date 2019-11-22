@@ -454,25 +454,38 @@ class plgJoomlaquizTruefalse extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminSaveOptions(&$data){
-		
+
+        $jinput = JFactory::getApplication()->input;
+        $jform_data = $jinput->get('jform', array(), 'ARRAY');
+
+        if($jinput->get('task') == 'copy_quizzes') {
+            return true;
+        }
+
 		$database = JFactory::getDBO();
-        $jform_data = JFactory::getApplication()->input->get('jform', array(), 'ARRAY');
 		$query = "SELECT c_id, c_choice FROM #__quiz_t_choice WHERE c_question_id = '".$data['qid']."'";
 		$database->setQuery( $query );
-		$faltrue = $database->LoadObjectList();		
+		$faltrue = $database->LoadObjectList();
+
 		$field_order = 0;
-		$ans_right = JFactory::getApplication()->input->get('znach');
-		$ans_true = 0;$ans_false = 0;
-		if ($ans_right) { $ans_true = 1; } else { $ans_false = 1; }
+		$ans_right = $jinput->get('znach');
+		$ans_true = 0;
+		$ans_false = 0;
+		if ($ans_right) {
+		    $ans_true = 1;
+		} else {
+		    $ans_false = 1;
+		}
+
 		$new_field = new stdClass;
-		if(!empty($faltrue))
-		{
+		if(!empty($faltrue)) {
 			if($faltrue[0]->c_choice == 'true')
 				$new_field->c_id = $faltrue[0]->c_id;
 			else
 			if($faltrue[1]->c_choice == 'true')
 				$new_field->c_id = $faltrue[1]->c_id;
 		}
+
 		$new_field->c_question_id = $data['qid'];
 		$new_field->c_choice = "true";
 		$new_field->c_right = $ans_true;

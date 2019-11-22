@@ -672,14 +672,20 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$jq_hid_fields_points = $jinput->get('jq_hid_fields_points', array(), 'ARRAY');
 		$jq_hid_fields_right = $jinput->get('jq_hid_fields_right', array(), 'ARRAY');
 		$jq_hid_fields_left = $jinput->get('jq_hid_fields_left', array(), 'ARRAY');
+
+        if($jinput->get('task') == 'copy_quizzes') {
+            return true;
+        }
+
 		$database = JFactory::getDBO();
+
 		$plg_task = JFactory::getApplication()->input->get('plgtask', '');
 		if($plg_task == 'upload_resize_img'){
 			$this->_uploadResizeImg();
 			die;
 		}
 
-		$database->setQuery("UPDATE #__quiz_t_question SET `c_height` = '".$jinput->get('c_height',0, 'ALNUM')."',  `c_width` = '".$jinput->get('c_width',0, 'ALNUM')."', c_timer = '".$jinput->get('c_timer',0, 'ALNUM')."' WHERE c_id = '".$data['qid']."'");
+		$database->setQuery("UPDATE #__quiz_t_question SET `c_height` = '".$jinput->get('c_height',0, 'ALNUM')."',  `c_width` = '".$jinput->get('c_width',0, 'ALNUM')."', `c_random` = '".$jform_data['c_random']."', c_timer = '".$jinput->get('c_timer',0, 'ALNUM')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 
 		$field_order = 0;

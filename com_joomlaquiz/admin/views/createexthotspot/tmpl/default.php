@@ -47,7 +47,6 @@ if ($hs_task == 'save_hs') {
 
 $query = "SELECT * FROM `#__quiz_t_ext_hotspot` WHERE `c_question_id` = '".$hotspot."'";
 $database->SetQuery( $query );
-$hotspot_data = $database->LoadObjectList();
 $row = $database->loadObject();
 
 if ($row){

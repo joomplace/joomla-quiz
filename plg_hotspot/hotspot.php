@@ -369,8 +369,12 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 	
 	public function onAdminSaveOptions(&$data){
         $jinput = JFactory::getApplication()->input;
-		$database = JFactory::getDBO();
-		
+
+        if($jinput->get('task') == 'copy_quizzes') {
+            return true;
+        }
+
+        $database = JFactory::getDBO();
 		$database->setQuery("UPDATE #__quiz_t_question SET `c_image` = '".$jinput->post->get('c_image','','STRING ')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();
 	}

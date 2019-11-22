@@ -661,6 +661,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
         $jinput = JFactory::getApplication()->input;
         $jform = $jinput->get('jform', array(), 'ARRAY');
 
+        if($jinput->get('task') == 'copy_quizzes') {
+            return true;
+        }
+
 		$database = JFactory::getDBO();
 		$database->setQuery("UPDATE #__quiz_t_question SET `sq_delayed` = '".$jinput->getInt('sq_delayed')."', `c_image` = '".$jinput->get('c_image')."' WHERE c_id = '".$data['qid']."'");
 		$database->execute();

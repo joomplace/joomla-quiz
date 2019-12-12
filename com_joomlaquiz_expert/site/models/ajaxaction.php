@@ -1332,7 +1332,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 
 					if($quiz->c_feed_option) {
 						if($quiz->c_feed_option == 1){
-							$score_perc = round(($user_score/$max_score)*100);
+                            $score_perc = ($max_score) ? (round(($user_score/$max_score)*100)) : 0;
 							$query = "SELECT fmessage FROM #__quiz_feed_option WHERE quiz_id = '".$quiz_id."' AND from_percent<=".$score_perc." AND to_percent>=".$score_perc."";
 						}elseif($quiz->c_feed_option == 2){
 							$query = "SELECT fmessage FROM #__quiz_feed_option WHERE quiz_id = '".$quiz_id."' AND from_percent<=".$user_score." AND to_percent>=".$user_score."";

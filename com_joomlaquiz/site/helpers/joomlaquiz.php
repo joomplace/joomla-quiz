@@ -582,6 +582,7 @@ class JoomlaquizHelper
 					return true;
 				}		
 			} else {
+			    //product
 				if ($order_id < 1000000000) {
 					$query = "SELECT qp.*"
 					. "\n FROM #__virtuemart_orders AS vm_o"
@@ -601,12 +602,15 @@ class JoomlaquizHelper
 				if(empty($rel_check)) {
 					return false;
 				}
-							
-							
+
 				$query = "SELECT attempts FROM `#__quiz_products` WHERE `id` = '{$rel_id}' ";		
 				$database->SetQuery( $query );
 				$product_params_attempts = (int)$database->loadResult();
-				
+
+                if (!$product_params_attempts) {
+                    return true;
+                }
+
 				$product_quantity = 1;
 				if ($order_id < 1000000000) {
 					$query = "SELECT vm_oi.product_quantity"
@@ -615,24 +619,27 @@ class JoomlaquizHelper
 					. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
 					. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $order_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
 					;
-				
 					$database->SetQuery( $query );
 					$product_quantity = ($database->loadResult()) ? (int)$database->loadResult() : 1;
 				}
-				
-				if (!$product_params_attempts)
-					return true;
-				
+
 				if($rel_check[0]->type == 'l') {
-					$query = "SELECT attempts FROM #__quiz_lpath_stage WHERE uid = '{$my->id}' AND oid = '{$order_id}' AND rel_id = '{$rel_id}' AND lpid = '{$rel_check[0]->rel_id}' AND qid = '{$quiz_id}'";
+                    //$query = "SELECT attempts FROM #__quiz_lpath_stage WHERE uid = '{$my->id}' AND oid = '{$order_id}' AND rel_id = '{$rel_id}' AND lpid = '{$rel_check[0]->rel_id}' AND qid = '{$quiz_id}'";
+                    $productUsedAttempts = JoomlaquizHelper::getProductUsedAttempts($rel_id, $product_quantity);
+                    if(isset($productUsedAttempts['quizzes']['left'][$quiz_id]) && $productUsedAttempts['quizzes']['left'][$quiz_id]) {
+                        return true;
+                    }
+
 				} else {
 					$query = "SELECT attempts FROM #__quiz_products_stat WHERE uid = '{$my->id}' AND oid = '{$order_id}' AND qp_id = '{$rel_id}' ";
+                    $database->SetQuery( $query );
+                    $products_stats_attempts = (int)$database->loadResult();
+
+                    if ($products_stats_attempts < $product_params_attempts * $product_quantity){
+                        return true;
+                    }
 				}
-				$database->SetQuery( $query );
-				$products_stats_attempts = (int)$database->loadResult();
-				
-				if ($products_stats_attempts < $product_params_attempts * $product_quantity)
-					return true;
+
 			}
 			
 			return false;
@@ -803,7 +810,7 @@ class JoomlaquizHelper
 			}
 
 			if($rel_check[0]->type == 'q') {
-				$mainframe->redirect(JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$rel_check[0]->rel_id}&force=1"));
+				$mainframe->redirect(JRoute::_(JURI::root()."index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$rel_check[0]->rel_id}&force=1"));
 			}
 			else if($rel_check[0]->type == 'l') {
 				$lpath_id = $rel_check[0]->rel_id;
@@ -898,4 +905,67 @@ class JoomlaquizHelper
 				}
 			}
 		}
+
+        /*
+         * for Learning Paths
+         *
+         * Product's attempts: counting the number of passes of each quiz included in the LP.
+         * Each quiz from LP can be completed as many times as indicated in the product.
+         */
+		public static function getProductUsedAttempts($product_id, $product_quantity=1)
+        {
+            $usedAttempts = array('product'=>array(), 'quizzes'=>array('used'=>array(), 'left'=>array()));
+            $user = JFactory::getUser();
+
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+
+            //$query->clear();
+            $query->select('*')
+                ->from($db->qn('#__quiz_products'))
+                ->where($db->qn('id') .'='. $db->q($product_id));
+            $db->setQuery($query);
+            $product = $db->loadObject();
+
+            if(empty($product->attempts)){
+                return $usedAttempts;
+            }
+
+            $usedAttempts['product']['total'] = $product->attempts;
+
+            if($product->type == 'l'){
+                $query->clear();
+                $query->select($db->qn('qid'))
+                    ->from($db->qn('#__quiz_lpath_quiz'))
+                    ->where($db->qn('lid') .'='. $db->q($product->rel_id))
+                    ->where($db->qn('type') .'='. $db->q('q'));
+                $db->setQuery($query);
+                $quizzes_in_lp = $db->loadColumn();
+
+                $usedAttempts['product']['is_expired'] = true;
+
+                if(!empty($quizzes_in_lp)) {
+                    foreach ($quizzes_in_lp as $quiz_in_lp){
+                        $query->clear();
+                        $query->select('COUNT(`c_id`)')
+                            ->from($db->qn('#__quiz_r_student_quiz', 'qrsq'))
+                            ->where($db->qn('qrsq.c_student_id') .'='. $db->q($user->id))
+                            ->where($db->qn('qrsq.c_rel_id') .'='. $db->q($product->id))
+                            ->where($db->qn('qrsq.c_quiz_id') .'='. $db->q($quiz_in_lp));
+                        $db->setQuery($query);
+                        $quizz_attempts = (int)$db->loadResult();
+
+                        $usedAttempts['quizzes']['used'][$quiz_in_lp] = $quizz_attempts;
+                        $usedAttempts['quizzes']['left'][$quiz_in_lp] = ($usedAttempts['product']['total'] * $product_quantity) - $quizz_attempts;
+                        if((int)$usedAttempts['quizzes']['left'][$quiz_in_lp] > 0){
+                            $usedAttempts['product']['is_expired'] =  false;
+                        }
+                    }
+
+                }
+            }
+
+            return $usedAttempts;
+        }
+
 }

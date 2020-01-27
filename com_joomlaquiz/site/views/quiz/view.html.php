@@ -35,8 +35,9 @@ class JoomlaquizViewQuiz extends JViewLegacy
         if(!$this->is_preview)
         {
             $session = JFactory::getSession();
-            if(@$this->quiz_params->rel_id && $this->quiz_params->rel_data && $this->quiz_params->rel_data->c_passed
-                    && $this->quiz_params->rel_data->c_finished && !$this->quiz_params->force)
+            if(@$this->quiz_params->rel_id
+                && !empty($this->quiz_params->rel_data) && !empty($this->quiz_params->rel_data->c_passed) && !empty($this->quiz_params->rel_data->c_finished)
+                && !$this->quiz_params->force)
             {
                 $session->set('jq_result_mode', array(@$this->quiz_params->rel_id, @$this->quiz_params->rel_data->c_quiz_id, @$this->quiz_params->package_id));
             }

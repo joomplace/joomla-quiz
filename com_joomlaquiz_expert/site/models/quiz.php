@@ -197,7 +197,6 @@ class JoomlaquizModelQuiz extends JModelList
 				
 		if($rel_id) {
 			/* if bought package */
-			
 			$query->clear();
 			$query->select('*')
 				->from($db->qn('#__quiz_products'))
@@ -288,7 +287,7 @@ class JoomlaquizModelQuiz extends JModelList
 					return $quiz_params;
 				}
 			}
-			
+
 			/* Check attempts */
 			$wait_time = '';
 			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $wait_time);
@@ -313,6 +312,7 @@ class JoomlaquizModelQuiz extends JModelList
 			$quiz_params->rel_data = $db->loadObject();
 			
 			$doing_quiz = 1;
+
 		} elseif ($lid) {
 			$query->clear();
 			$query->select('*')

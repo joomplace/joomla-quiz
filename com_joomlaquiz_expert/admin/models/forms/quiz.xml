@@ -482,4 +482,60 @@
     <field name="c_quiz_access_message" type="editor" class="inputbox" label="COM_JOOMLAQUIZ_ACCESS_MSG" required="false" default="" description="COM_JOOMLAQUIZ_DESC_ACCESS_MSG"/>
     <field name="c_quiz_certificate_access_message" type="editor" class="inputbox" label="COM_JOOMLAQUIZ_CERTIFICATE_MSG" required="false" default="" description="COM_JOOMLAQUIZ_DESC_CERTIFICATE_MSG"/>
 
+
+	<field
+		name="limit_by_ip"
+		type="radio"
+		default="0"
+		label="COM_JOOMLAQUIZ_QUIZ_LIMIT_BY_IP_LABEL"
+		description="COM_JOOMLAQUIZ_QUIZ_LIMIT_BY_IP_DESC"
+		class="btn-group btn-group-yesno limitip">
+		  <option value="1">JYES</option>
+		  <option value="0">JNO</option>
+	</field>
+
+	<field
+		name="attempts_from_IP"
+		type="number"
+		default="1"
+		label="COM_JOOMLAQUIZ_QUIZ_ATTEMPTS_FROM_IP_LABEL"
+		description="COM_JOOMLAQUIZ_QUIZ_ATTEMPTS_FROM_IP_DESC"
+		min="1"
+		max="100000"
+		step="1"
+		showon="limit_by_ip:1" />
+
+	<field
+		name="congratulations_email"
+		type="number"
+		default="0"
+		label="COM_JOOMLAQUIZ_QUIZ_CONGRATULATIONS_EMAIL_LABEL"
+		description="COM_JOOMLAQUIZ_QUIZ_CONGRATULATIONS_EMAIL_DESC"
+		min="0"
+		max="100000"
+		step="1" />
+
+	<field
+		name="email_congratulation"
+		type="editor"
+		buttons="true"
+		hide="pagebreak,readmore,testimonial"
+		class="inputbox"
+		filter="raw"
+		label="COM_JOOMLAQUIZ_QUIZ_EMAIL_CONGRATULATION_LABEL"
+		description="COM_JOOMLAQUIZ_QUIZ_EMAIL_CONGRATULATION_DESC"
+		required="false" />
+
+	<field
+		name="email_participant"
+		type="editor"
+		buttons="true"
+		hide="pagebreak,readmore,testimonial"
+		class="inputbox"
+		filter="raw"
+		label="COM_JOOMLAQUIZ_QUIZ_EMAIL_PARTICIPANT_LABEL"
+		description="COM_JOOMLAQUIZ_QUIZ_EMAIL_PARTICIPANT_DESC"
+		required="false" />
+
+
 </form>

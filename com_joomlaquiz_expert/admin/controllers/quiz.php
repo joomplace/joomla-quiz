@@ -62,6 +62,10 @@ class JoomlaquizControllerQuiz extends JControllerForm
 	
 	public function save($key = null, $urlVar = null){
 		$task = JFactory::getApplication()->input->getCmd('task');
+        //custom712
+        JPluginHelper::importPlugin('system');
+        $dispatcher = JEventDispatcher::getInstance();
+        //end
 		if($task=='save2copy'){
 			$data = JFactory::getApplication()->input->get('jform',array(),'array');
             $session = JFactory::getSession();
@@ -69,9 +73,19 @@ class JoomlaquizControllerQuiz extends JControllerForm
 			JFactory::getApplication()->input->set('categorycopy',$data['c_category_id']);
 			$model = $this->getModel('Quizzes');
 			$msg = $model->copyQuizzes();
+
+            //custom712
+            $dispatcher->trigger('onJoomlaquizAfterSave', array('com_joomlaquiz.quiz'));
+            //end
+
 			$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes');
 		}else{
 			parent::save();
+
+			//custom712
+            $dispatcher->trigger('onJoomlaquizAfterSave', array('com_joomlaquiz.quiz'));
+            //end
+
 			if($task == 'apply'){
 		
 			} elseif($task == 'save') {

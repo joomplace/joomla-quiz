@@ -74,7 +74,19 @@ class JoomlaquizModelQuiz extends JModelList
 		}
 
 		$quiz_params = new stdClass;
-		
+
+        //custom712 start
+        $is_available = true;
+        JPluginHelper::importPlugin('system');
+        $dispatcher = JEventDispatcher::getInstance();
+        $dispatcher->trigger('onJoomlaquizStart', array('com_joomlaquiz.quiz.start', $quiz_id, &$is_available));
+        if(!$is_available){
+            $quiz_params->error = 1;
+            $quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_CUSTOM_NOT_AVAILABLE_BY_IP').'</p>';
+            return $quiz_params;
+        }
+        //custom712 end
+
 		/* видимо предпроверка на то куплен ли пакет */
 		if( ( $rel_id && !$user->id ) || ( !$package_id && $rel_id ) || ( $package_id && !$rel_id )	){
 			$quiz_params->error = 1;

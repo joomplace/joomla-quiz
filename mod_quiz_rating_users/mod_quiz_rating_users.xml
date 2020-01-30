@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.1" client="site" method="upgrade">
+	<name>MOD_QUIZ_RATING_USERS</name>
+	<author>JoomPlace Team</author>
+	<creationDate>June 2019</creationDate>
+	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>support@joomplace.com</authorEmail>
+	<authorUrl>www.joomplace.com</authorUrl>
+	<version>3.7.7</version>
+	<description>MOD_QUIZ_RATING_USERS_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_quiz_rating_users">mod_quiz_rating_users.php</filename>
+		<folder>tmpl</folder>
+		<filename>helper.php</filename>
+	</files>
+	<languages >
+		<language tag="en-GB">language/en-GB/en-GB.mod_quiz_rating_users.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_quiz_rating_users.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" >
+
+				<field
+					name="count"
+					type="number"
+					label="MOD_QUIZ_RATING_USERS_FIELD_COUNT_LABEL"
+					description="MOD_QUIZ_RATING_USERS_FIELD_COUNT_DESC"
+					default="5"
+					filter="integer"
+				/>
+
+				<field
+					name="quiz_id"
+					type="sql"
+					default="0"
+					label="MOD_QUIZ_RATING_USERS_FIELD_QUIZ_ID_LABEL"
+					description="MOD_QUIZ_RATING_USERS_FIELD_QUIZ_ID_DESC"
+					query="SELECT c_id, c_title FROM #__quiz_t_quiz as q ORDER BY q.c_title ASC"
+					key_field="c_id"
+					value_field="c_title"
+				>
+					<option value="0">MOD_QUIZ_RATING_USERS_FIELD_QUIZ_ID_OPTION_0</option>
+				</field>
+
+			</fieldset>
+			
+
+			<fieldset name="advanced">
+				<field
+					name="layout"
+					type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL"
+					description="JFIELD_ALT_MODULE_LAYOUT_DESC"
+				/>
+
+				<field
+					name="moduleclass_sfx"
+					type="textarea"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC"
+					rows="3"
+				/>
+
+				<field
+					name="cache"
+					type="list"
+					label="COM_MODULES_FIELD_CACHING_LABEL"
+					description="COM_MODULES_FIELD_CACHING_DESC"
+					default="1"
+					filter="integer"
+					>
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+
+				<field
+					name="cache_time"
+					type="number"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+					description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+					default="900"
+					filter="integer"
+				/>
+
+				<field
+					name="cachemode"
+					type="hidden"
+					default="static"
+					>
+					<option value="static"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

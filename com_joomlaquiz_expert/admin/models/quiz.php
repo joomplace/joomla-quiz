@@ -26,6 +26,13 @@ class JoomlaquizModelQuiz extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		$result = parent::getItem($pk);
+
+        //custom712
+        JPluginHelper::importPlugin('system');
+        $dispatcher = JEventDispatcher::getInstance();
+        $dispatcher->trigger('onJoomlaquizGetItem', array('com_joomlaquiz.quiz', &$result));
+        //end
+
 		return $result;
 	}
 		

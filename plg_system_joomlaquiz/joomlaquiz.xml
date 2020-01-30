@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<extension type="plugin" version="3.7.0" group="system" method="upgrade">
+	<name>plg_system_joomlaquiz</name>
+	<author>JoomPlace Team</author>
+	<creationDate>January 2020</creationDate>
+	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>support@joomplace.com</authorEmail>
+	<authorUrl>www.joomplace.com</authorUrl>
+	<version>3.7.7</version>
+	<description>PLG_SYSTEM_JOOMLAQUIZ_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+	<files>
+		<filename plugin="joomlaquiz">joomlaquiz.php</filename>
+		<filename>script.php</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.plg_system_joomlaquiz.ini</language>
+		<language tag="en-GB">en-GB.plg_system_joomlaquiz.sys.ini</language>
+	</languages>
+</extension>

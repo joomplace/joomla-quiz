@@ -618,6 +618,13 @@ class com_joomlaquizInstallerScript
             $db->execute();
         }
 
+        //custom712 start
+        $db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_custom_quiz` (`id` int(10) unsigned NOT NULL AUTO_INCREMENT, `quiz_id` int(11) unsigned NOT NULL DEFAULT '0', `limit_by_ip` char(1) NOT NULL DEFAULT '0', `attempts_from_IP` int(10) unsigned NOT NULL DEFAULT '1', `congratulations_email` int(10) unsigned NOT NULL DEFAULT '0', `email_congratulation` text, `email_participant` text, `qty_passed` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'qty passes this quiz', PRIMARY KEY (`id`), UNIQUE KEY `quiz_id` (`quiz_id`)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;");
+        $db->execute();
+        $db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_custom_ip_statistics` (`id` int(10) unsigned NOT NULL AUTO_INCREMENT, `ip` int(15) unsigned NOT NULL, `quiz_id` int(11) unsigned NOT NULL DEFAULT '0', `ip_qty_passed` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'qty passes this quiz from this IP', PRIMARY KEY (`id`), UNIQUE KEY `ip_quiz` (`ip`,`quiz_id`)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;");
+        $db->execute();
+        //custom712 end
+
         $this->migrateCategories();
 		$this->defaultCategoryCheck();
 	}

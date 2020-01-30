@@ -125,6 +125,7 @@ window.onload = function (){
 		<li><a href="#question-pool-option" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION_POOL_OPTIONS');?></a></li>
 		<li><a href="#metadata-information" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_METADATA_INFORMATION');?></a></li>
 		<li><a href="#quiz-permission" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_PERMISSION');?></a></li>
+        <li><a href="#quiz-custom" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_EDIT_TAB_CUSTOM'); ?></a></li>
 	</ul>
 	<div class="tab-content">
 	    <div class="tab-pane active" id="quiz-details">
@@ -706,6 +707,15 @@ window.onload = function (){
             </div>
 
 		</div>
+
+        <div class="tab-pane" id="quiz-custom">
+            <?php echo $this->form->renderField('limit_by_ip') ?>
+            <?php echo $this->form->renderField('attempts_from_IP') ?>
+            <?php echo $this->form->renderField('congratulations_email') ?>
+            <?php echo $this->form->renderField('email_congratulation') ?>
+            <?php echo $this->form->renderField('email_participant') ?>
+        </div>
+
 	</div>
 </div>
 <input type="hidden" name="task" value="" />
@@ -825,4 +835,32 @@ window.onload = function (){
 			return initialgetUrlParam.apply(document, arguments);
 		}
 	}
+
+	//custom712
+    jQuery(function ($) {
+        if( $('#jform_limit_by_ip0').prop('checked') && ($('#jform_attempts_from_IP').val() * 1) > 0 ) { //Limit access on the IP address && Qty attempts from each IP
+            resetDefaultAttemps();
+        }
+
+        $('#jform_attempts_from_IP').on('change', function () { //Qty attempts from each IP
+            if($(this).val() > 0){
+                resetDefaultAttemps();
+            }
+        });
+
+        $('#jform_limit_by_ip').on('click', function () {
+            if( $('#jform_limit_by_ip0').prop('checked')){  //Limit access on the IP address
+                resetDefaultAttemps();
+            } else {
+                $('#jform_c_number_times').val(0).closest('.control-group').show();
+            }
+        });
+
+        //field 'Number of attempts'
+        function resetDefaultAttemps(){
+            $('#jform_c_number_times').val(0)
+                .closest('.control-group').hide();
+        }
+    });
+
 </script>

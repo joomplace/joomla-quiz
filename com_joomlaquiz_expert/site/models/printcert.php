@@ -37,7 +37,7 @@ class JoomlaquizModelPrintcert extends JModelList
 		. "\n GROUP BY squ.c_stu_quiz_id";
 		$database->SetQuery( $query );
 		$stu_quiz = $database->LoadObjectList();
-		
+
 		if (!empty($stu_quiz)) {
 			$stu_quiz = $stu_quiz[0];
             if ( (($my->id == $stu_quiz->c_student_id || $unique_pass_id == $stu_quiz->unique_pass_id) || $my->authorise('core.managefe','com_joomlaquiz')) && ($user_unique_id == $stu_quiz->unique_id) ) {
@@ -47,7 +47,37 @@ class JoomlaquizModelPrintcert extends JModelList
 				if (!$stu_quiz->c_certificate) {
 					echo JText::_('COM_QUIZ_MES_NOTAVAIL'); die();
 				}
-				
+
+                //custom 714 start
+                $certificate_number = 0;
+
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query->select('*')
+                    ->from($db->qn('#__quiz_r_student_quiz'))
+                    ->where($db->qn('c_id') .'='. $db->q($stu_quiz_id));
+                $db->setQuery($query);
+                $qrsq = $db->loadObject();
+
+                if(!empty($qrsq->c_order_id) && $qrsq->c_order_id < 1000000000
+                    && file_exists(JPATH_SITE . '/administrator/components/com_virtuemart/helpers/config.php')){ //vm
+
+                    $query = "SELECT vm_o.* "
+                        . "\n FROM #__virtuemart_orders AS vm_o"
+                        . "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
+                        . "\n LEFT JOIN #__virtuemart_order_histories AS vm_oh ON vm_oi.virtuemart_order_id = vm_oh.virtuemart_order_id AND vm_oh.order_status_code IN ('C')"
+                        . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
+                        . "\n WHERE vm_o.virtuemart_user_id = " . $my->id . "  AND vm_o.virtuemart_order_id = $qrsq->c_order_id AND vm_o.order_status IN ('C') AND qp.id = " . $qrsq->c_rel_id
+                    ;
+                    $database->SetQuery( $query );
+                    $rel_check = $database->loadObject();
+
+                    if(!empty($rel_check->order_number)){
+                        $certificate_number = $qrsq->c_quiz_id . $rel_check->order_number;
+                    }
+                }
+                //custom 714 end
+
 				if(file_exists(JPATH_SITE.'/components/com_comprofiler/comprofiler.php')){
 					$query = "SELECT `name` FROM `#__comprofiler_fields` WHERE  `name` NOT IN ( 'password', 'onlinestatus', 'formatname', 'connections', 'forumrank', 'forumposts', 'forumkarma', 'forumsignature', 'forumview', 'forumorder') AND `table` LIKE '%comprofiler'";
 					$database->SetQuery( $query );
@@ -133,7 +163,16 @@ class JoomlaquizModelPrintcert extends JModelList
 				$sc_procent = ($stu_quiz->c_full_score != 0) ? number_format(($stu_quiz->user_score * 100) / $stu_quiz->c_full_score, 2, '.', ' ') : 0;
 				$font_text = $certif->crtf_text;
 				$font_text = JHtml::_('content.prepare',$this->revUni($font_text),$stu_quiz,'');
-				$font_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $font_text);
+
+                //$font_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $font_text);
+				//custom 714 start
+                if($certificate_number){
+                    $font_text = str_replace("#unique_code#", $certificate_number, $font_text);
+                } else {
+                    $font_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $font_text);
+                }
+                //custom 714 end
+
 				$font_text = str_replace("#name#", $this->revUni($u_name), $font_text);
 				$font_text = str_replace("#surname#", $this->revUni($u_surname), $font_text);
 				$font_text = str_replace("#email#", $this->revUni($u_email), $font_text);
@@ -261,7 +300,17 @@ class JoomlaquizModelPrintcert extends JModelList
 					foreach($fields as $field){
 					
 						$field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text),$stu_quiz,'');
-						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
+
+                        //$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
+                        //custom 714 start
+                        if($certificate_number){
+                            $field->f_text = str_replace("#unique_code#", $certificate_number, $field->f_text);
+                        } else {
+                            $field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
+                        }
+                        //custom 714 end
+
+
 						$field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);
 						$field->f_text = str_replace("#surname#", $this->revUni($u_surname), $field->f_text);
 						$field->f_text = str_replace("#email#", $u_email, $field->f_text);

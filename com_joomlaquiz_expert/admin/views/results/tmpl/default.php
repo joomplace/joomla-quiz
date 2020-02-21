@@ -270,7 +270,7 @@ $database = JFactory::getDBO();
                                 $rel_check = $database->loadObject();
 
                                 if(!empty($rel_check->order_number)){
-                                    echo $certificate_number = $item->c_quiz_id . $rel_check->order_number;
+                                    echo $certificate_number = $item->c_quiz_id . '-' . $rel_check->order_number;
                                 }
                             } else {
                                 echo base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$item->c_id.''.$item->c_student_id.''.$item->c_total_score, 10, 36);

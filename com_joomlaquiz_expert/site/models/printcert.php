@@ -73,7 +73,7 @@ class JoomlaquizModelPrintcert extends JModelList
                     $rel_check = $database->loadObject();
 
                     if(!empty($rel_check->order_number)){
-                        $certificate_number = $qrsq->c_quiz_id . $rel_check->order_number;
+                        $certificate_number = $qrsq->c_quiz_id . '-' . $rel_check->order_number;
                     }
                 }
                 //custom 714 end

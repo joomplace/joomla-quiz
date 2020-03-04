@@ -57,8 +57,9 @@ class JoomlaquizViewQuiz extends JViewLegacy
 			$this->user = JFactory::getUser();
 			$viewAccessGranted = $this->user->authorise('core.view', 'com_joomlaquiz.quiz.'.$this->quiz_params->c_id);
 
-            if (!empty($viewAccessGranted) || !empty($this->quiz_params->c_guest))
-			{
+            if (!empty($viewAccessGranted) || !empty($this->quiz_params->c_guest)
+                || ( !empty($this->quiz_params->package_id) && !empty($this->quiz_params->product_data->id) && !empty($this->quiz_params->is_attempts) ) //quiz in product
+            ) {
 				parent::display($tpl);
 
 			} else {

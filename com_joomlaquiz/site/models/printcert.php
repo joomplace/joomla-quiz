@@ -134,8 +134,37 @@ class JoomlaquizModelPrintcert extends JModelList
 				$font_text = $certif->crtf_text;
 				$font_text = JHtml::_('content.prepare',$this->revUni($font_text),$stu_quiz,'');
 				$font_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $font_text);
-				$font_text = str_replace("#name#", $this->revUni($u_name), $font_text);
-				$font_text = str_replace("#surname#", $this->revUni($u_surname), $font_text);
+
+                //custom716 start
+				//$font_text = str_replace("#name#", $this->revUni($u_name), $font_text);
+				//$font_text = str_replace("#surname#", $this->revUni($u_surname), $font_text);
+                if(file_exists(JPATH_SITE . '/administrator/components/com_virtuemart/helpers/config.php')) { //vm
+                    $db = $database;
+                    $query = $db->getQuery(true);
+                    $query->select($db->qn(array('last_name', 'first_name', 'middle_name')))
+                        ->from($db->qn('#__virtuemart_userinfos'))
+                        ->where($db->qn('virtuemart_user_id') .'='. $db->q((int)$stu_quiz->c_student_id));
+                    $db->setQuery($query);
+                    $vm_userinfos = $db->loadObject();
+                }
+
+                if(!empty($vm_userinfos->first_name)){
+                    $font_text = str_replace("#name#", $vm_userinfos->first_name, $font_text);
+                } else {
+                    $font_text = str_replace("#name#", $this->revUni($u_name), $font_text);
+                }
+                if(!empty($vm_userinfos->last_name)){
+                    $font_text = str_replace("#surname#", $vm_userinfos->last_name, $font_text);
+                } else {
+                    $font_text = str_replace("#surname#", $this->revUni($u_surname), $font_text);
+                }
+                if(!empty($vm_userinfos->middle_name)){
+                    $font_text = str_replace("#dni#", $vm_userinfos->middle_name, $font_text);
+                } else {
+                    $font_text = str_replace("#dni#", '', $font_text);
+                }
+                //custom716 end
+
 				$font_text = str_replace("#email#", $this->revUni($u_email), $font_text);
 				$font_text = str_replace("#username#",$this->revUni($u_usrname), $font_text);
 
@@ -260,8 +289,27 @@ class JoomlaquizModelPrintcert extends JModelList
 					foreach($fields as $field){
 						$field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text),$stu_quiz,'');
 						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
-						$field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);
-						$field->f_text = str_replace("#surname#", $this->revUni($u_surname), $field->f_text);
+
+                        //custom716 start
+                        //$field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);
+                        //$field->f_text = str_replace("#surname#", $this->revUni($u_surname), $field->f_text);
+                        if(!empty($vm_userinfos->first_name)){
+                            $field->f_text = str_replace("#name#", $vm_userinfos->first_name, $field->f_text);
+                        } else {
+                            $field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);
+                        }
+                        if(!empty($vm_userinfos->last_name)){
+                            $field->f_text = str_replace("#surname#", $vm_userinfos->last_name, $field->f_text);
+                        } else {
+                            $field->f_text = str_replace("#surname#", $this->revUni($u_surname), $field->f_text);
+                        }
+                        if(!empty($vm_userinfos->middle_name)){
+                            $field->f_text = str_replace("#dni#", $vm_userinfos->middle_name, $field->f_text);
+                        } else {
+                            $field->f_text = str_replace("#dni#", '', $field->f_text);
+                        }
+                        //custom716 end
+
 						$field->f_text = str_replace("#email#", $u_email, $field->f_text);
 						$field->f_text = str_replace("#username#",$this->revUni($u_usrname), $field->f_text);
 

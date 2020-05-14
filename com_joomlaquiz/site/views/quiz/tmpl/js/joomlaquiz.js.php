@@ -18,6 +18,10 @@ $reStartID = $jinput->getInt('id',0);
 
 //content plugin in article?
 $margin_top = $this->get('_name') == 'quiz' ? $this->margin_top : JComponentHelper::getParams('com_joomlaquiz')->get('margin_top');
+
+//custom 730 start
+$question_number_text = (int)$quiz->custom_quiz_type == 1 ? addslashes(JText::_('COM_QUIZ_QUESTION_NUMBER_INTERACTIVE_TEXT')) : addslashes(JText::_('COM_QUIZ_QUESTION_NUMBER'));
+//custom 730 end
 ?>
 <script language="JavaScript" type="text/javascript">
 <!--//--><![CDATA[//><!--
@@ -75,7 +79,10 @@ var mes_complete_this_part = '<?php echo addslashes( JText::_('COM_MES_COMPLETE_
 var mes_failed = '<?php echo addslashes( JText::_('COM_QUIZ_FAILED'))?>';
 var mes_please_wait = '<?php echo addslashes( JText::_('COM_MES_PLEASE_WAIT'))?>';
 var mes_time_is_up = '<?php echo addslashes(JText::_('COM_QUIZ_MES_TIMEOUT'))?>';
-var mes_quest_number = '<?php echo (($quiz->c_show_quest_pos) ? addslashes(JText::_('COM_QUIZ_QUESTION_NUMBER')) : "");?>';
+//custom 730 start
+//var mes_quest_number = '<?php echo (($quiz->c_show_quest_pos) ? addslashes(JText::_('COM_QUIZ_QUESTION_NUMBER')) : "");?>';
+var mes_quest_number = '<?php echo (($quiz->c_show_quest_pos) ? $question_number_text : "");?>';
+//custom 730 end
 var mes_quest_points = '<?php echo (($quiz->c_show_quest_points) ? addslashes(JText::_('COM_QUIZ_QUESTION_POINTS')) : "");?>';
 // *** some script variables ***
 var user_email_to = '';

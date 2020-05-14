@@ -492,4 +492,16 @@
     <field name="c_quiz_access_message" type="editor" class="inputbox" label="COM_JOOMLAQUIZ_ACCESS_MSG" required="false" default="" description="COM_JOOMLAQUIZ_DESC_ACCESS_MSG"/>
     <field name="c_quiz_certificate_access_message" type="editor" class="inputbox" label="COM_JOOMLAQUIZ_CERTIFICATE_MSG" required="false" default="" description="COM_JOOMLAQUIZ_DESC_CERTIFICATE_MSG"/>
 
+	<!-- custom 730 start -->
+	<field
+		name="custom_quiz_type"
+		type="list"
+		default="0"
+		label="COM_JOOMLAQUIZ_QUIZ_CUSTOM_QUIZ_TYPE_LABEL"
+		description="COM_JOOMLAQUIZ_QUIZ_CUSTOM_QUIZ_TYPE_DESC" >
+		  <option value="0">COM_JOOMLAQUIZ_QUIZ_CUSTOM_QUIZ_TYPE_OPTION_0</option>
+		  <option value="1">COM_JOOMLAQUIZ_QUIZ_CUSTOM_QUIZ_TYPE_OPTION_1</option>
+	</field>
+	<!-- custom 730 end -->
+
 </form>

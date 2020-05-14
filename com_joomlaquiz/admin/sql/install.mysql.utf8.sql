@@ -620,6 +620,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_quiz` (
   `c_quiz_certificate_access_message` text NOT NULL,
   `one_time` INT(1) NOT NULL DEFAULT '0',
   `email_pdf_certificate` INT(3) NOT NULL DEFAULT '0',
+  `custom_quiz_type` INT(3) NOT NULL DEFAULT '0', /*custom 730*/
   PRIMARY KEY (`c_id`),
   KEY `c_user_id` (`c_user_id`),
   KEY `c_author` (`c_author`),

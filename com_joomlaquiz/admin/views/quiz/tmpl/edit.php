@@ -125,6 +125,9 @@ window.onload = function (){
 		<li><a href="#question-pool-option" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUESTION_POOL_OPTIONS');?></a></li>
 		<li><a href="#metadata-information" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_METADATA_INFORMATION');?></a></li>
 		<li><a href="#quiz-permission" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_PERMISSION');?></a></li>
+        <!-- custom 730 start -->
+        <li><a href="#quiz-custom" data-toggle="tab"><?php echo  JText::_('COM_JOOMLAQUIZ_QUIZ_CUSTOM_TAB_TITLE'); ?></a></li>
+        <!-- custom 730 end -->
 	</ul>
 	<div class="tab-content">
 	    <div class="tab-pane active" id="quiz-details">
@@ -707,6 +710,13 @@ window.onload = function (){
             </div>
 
 		</div>
+        <!-- custom 730 start -->
+        <div class="tab-pane" id="quiz-custom">
+            <fieldset class="adminform">
+                <?php echo $this->form->renderField('custom_quiz_type'); ?>
+            </fieldset>
+        </div>
+        <!-- custom 730 end -->
 	</div>
 </div>
 <input type="hidden" name="task" value="" />

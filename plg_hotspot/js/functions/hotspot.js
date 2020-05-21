@@ -1,29 +1,30 @@
 function getPosition_x(el){
 	return 10;
-	var  left = 0, top = 0;
-	do {
-		left += el.offsetLeft || 0;
-		top += el.offsetTop || 0;
-		el = el.offsetParent;
-	} while (el);
-	return left;
+	// var  left = 0, top = 0;
+	// do {
+	// 	left += el.offsetLeft || 0;
+	// 	top += el.offsetTop || 0;
+	// 	el = el.offsetParent;
+	// } while (el);
+	// return left;
 }
 
 function getPosition_y(el){
 	return 10;
-	var  left = 0, top = 0;
-	do {
-	left += el.offsetLeft || 0;
-		top += el.offsetTop || 0;
-		el = el.offsetParent;
-	} while (el);
-	return top;
+	// var  left = 0, top = 0;
+	// do {
+	// left += el.offsetLeft || 0;
+	// 	top += el.offsetTop || 0;
+	// 	el = el.offsetParent;
+	// } while (el);
+	// return top;
 }
 
 function getCirclePosition(el){
-    el = jq_jQuery(el[0]);
-    var scale = el.closest('svg').data('scale');
-    return [el.attr('cx')*scale, el.attr('cy')*scale];
+	// el = jq_jQuery(el[0]);
+	// var scale = el.closest('svg').data('scale');
+	// // return [el.attr('cx')*scale, el.attr('cy')*scale];
+	// return [el.attr('cx'), el.attr('cy')];
 }
 
 var img_width_init = 0,
@@ -41,23 +42,23 @@ var img_width_init = 0,
 prev_it_width = 0;
 prev_it_height = 0;
 
-window.onresize = function(){
-	setTimeout(_recalculateSize, 10);
-	landscape = true;
-}
+// window.onresize = function(){
+// 	setTimeout(_recalculateSize, 10);
+// 	landscape = true;
+// }
+//
+// if(!landscape){
+// 	jQuery(window).bind( 'orientationchange', function(e){
+// 		setTimeout(_recalculateSize, 10);
+// 		landscape = true;
+// 	});
+// }
 
-if(!landscape){
-	jQuery(window).bind( 'orientationchange', function(e){
-		setTimeout(_recalculateSize, 10);
-		landscape = true;
-	});
-}
-
-function _recalculateSize(){
+/*function _recalculateSize(){
 	var hotspots = jq_jQuery('#foo > svg, .hotspot > svg');
     // console.log('in');
 
-	if(hotspots.length){	
+	if(hotspots.length){
 
 		jq_jQuery(hotspots).each(function(){
 			var svg = jq_jQuery(this);
@@ -74,13 +75,13 @@ function _recalculateSize(){
             fullscaleimage.onload = function(){
                 img_width_init = fullscaleimage.width;
                 img_height_init = fullscaleimage.height;
-			
+
                 fullscaleimage.remove();
-			
+
                 var prev_svg_width = svg.width();
                 var svg_width = svg.width();
                 var wrapper_width = wrapper.width();
-			
+
                 if(svg_width < wrapper_width){
                     if(wrapper_width > img_width_init)
 					svg_width = img_width_init;
@@ -90,7 +91,7 @@ function _recalculateSize(){
 			}
 
             var nwidth = svg_width;
-			
+
 			var ratio = img_height_init/img_width_init;
 			var nheight = nwidth * ratio;
 
@@ -118,14 +119,14 @@ function _recalculateSize(){
 
                 circle.attr('cx', cx*cursor_adjust);
                 circle.attr('cy', cy*cursor_adjust);
-			
+
 			scaleX = wOrigin / nwidth;
 			scaleY = hOrigin / nheight;
 			if(jq_jQuery('#foo > svg').length){
 				svg.find("path").remove();
 				drawPolygons();
 			}
-			
+
                 prev_it_width = nwidth;
                 prev_it_height = nheight;
 
@@ -134,4 +135,4 @@ function _recalculateSize(){
             fullscaleimage.src = src;
 		});
 	}
-}
+}*/

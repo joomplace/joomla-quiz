@@ -28,7 +28,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$hs_data = $database->loadResult();
 		$data['hs_data_array'] = json_decode($hs_data);
 
-		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div id="foo"></div>';
+		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div id="foo" style="text-align:center"></div>';
 		$data['ret_str'] .= ']]></quest_data_user>' . "\n";
 		$data['ret_add_script'] = JoomlaQuiz_template_class::JQ_createQuestion($hotspot, $data);
 

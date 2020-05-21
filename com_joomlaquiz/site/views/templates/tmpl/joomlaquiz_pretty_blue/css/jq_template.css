@@ -6,7 +6,7 @@ input:focus,
 .jq_mchoice input:focus + label,
 .jq_mresponse input:focus  + label{
 	outline:2px solid #f1ca7f;
-	
+
 }
 button:focus,
 input:focus,
@@ -14,7 +14,7 @@ input:focus,
 .jq_mchoice input:focus,
 .jq_mresponse input:focus {
 	outline:none;
-	
+
 }
 /*--------------quiz_container-------------- */
 .jq_jq_quiz_container_header{
@@ -69,7 +69,7 @@ input:focus,
 	font:13px normal Helvetica, Tahoma, sans-serif;
 	color:#000;
 	margin:25px 20px;
-} 
+}
 	.jq_quiz_container_description h2{
 		color:#666666;
 		font-size:21px;
@@ -83,13 +83,13 @@ input:focus,
 	}
 		figure{
 			margin:0;
-		}	
+		}
 			figure img{
 				padding:1px;
 				border:1px solid #bababa;
 				border-radius:2px;
 				margin-bottom:10px;
-				
+
 			}
 			figcaption{
 				text-align:center;
@@ -136,7 +136,7 @@ input:focus,
 	margin:8px 0 8px 4px;
 }
 
-.jq_quiz_task_container a:active, 
+.jq_quiz_task_container a:active,
 .jq_quiz_task_container a:focus
 {
 	background:#70b0ef !important;
@@ -160,7 +160,7 @@ input:focus,
 	{
 		float:right;
 	}
-	
+
 	a.jq_back_link{
 		padding-left:25px;
 	}
@@ -323,7 +323,7 @@ input:focus,
 	}
 		.jq_question_answers_cont{
 			color:#666666;
-		}	
+		}
 			.jq_question_caption p:first-child,
 			.jq_question_caption span:first-child,
 			.jq_question_caption div,
@@ -355,7 +355,7 @@ input:focus,
 		font-size:13px;
 		font-family: 'Myriad Pro', Arial, Helvetica, sans-serif;
 		margin-bottom: 5px;
-	}	
+	}
 		.dc_button span{
 			border-top:1px solid #f2f1f1;
 			border-left:1px solid #f2f1f1;
@@ -380,8 +380,8 @@ input:focus,
 				text-shadow:none;
 			}
 			/* "who is it" question end*/
-			
-	/* hotspot question */	
+
+	/* hotspot question */
 	.jq_hotspot_align{
 		text-align:center;
 		overflow:auto;/* scroll */
@@ -433,16 +433,16 @@ input:focus,
 .jq_input_pos input{
 	margin:0;
 }
-		
+
 .jq_mchoice .msq_option > input[type='radio']
 {
-	opacity: 0; 
+	opacity: 0;
 }
 
 .jq_mquestions td:not(#foo)  > input[type='radio'],
-.jq_mchoice td:not(#foo)  > input[type='radio'], 
+.jq_mchoice td:not(#foo)  > input[type='radio'],
 .jq_mresponse td:not(#foo)  > input[type='checkbox'] {
-	opacity: 0; 
+	opacity: 0;
 	float: left;
 	width: 5px;
 }
@@ -455,7 +455,7 @@ input:focus,
 	display:block;
 	padding: 4px 0 4px 24px;
 	cursor: pointer;
-	background: url(./../images/check_on.png) left 4px no-repeat; 
+	background: url(./../images/check_on.png) left 4px no-repeat;
 	line-height:14px;
 }
 
@@ -465,16 +465,16 @@ input:focus,
 	float:left;
 	margin:10px;
 }
-		
+
 .msq_option > input[type='radio'] + label{
 	margin: 0;
 	padding: 4px 0 4px 24px;
 	cursor: pointer;
 	background: url(./../images/check_on.png) left 4px no-repeat;
 }
-		
+
 .jq_mchoice  .msq_option > input[type='radio'] + label{
-	background: url(./../images/radio_off.png) left 4px no-repeat; 
+	background: url(./../images/radio_off.png) left 4px no-repeat;
 }
 .jq_mchoice .msq_option > input[type='radio']:checked + label {
 	background-image: url(./../images/radio_on.png);
@@ -483,20 +483,20 @@ input:focus,
 
 .jq_mquestions td:not(#foo) > input[type='radio'] + label,
 .jq_mchoice td:not(#foo) > input[type='radio'] + label{
-	background: url(./../images/radio_off.png) left 4px no-repeat; 
+	background: url(./../images/radio_off.png) left 4px no-repeat;
 }
 
 .jq_mquestions td:not(#foo) > input[type='radio']:checked + label,
 .jq_mchoice td:not(#foo) > input[type='radio']:checked + label {
 	background-image: url(./../images/radio_on.png);
-	
+
 }
 .jq_mresponse td:not(#foo) > input[type='checkbox']:checked + label {
 	background-image: url(./../images/check_off.png);
 	color:#000;
 }
 
-/*--------custom select question---------- */	
+/*--------custom select question---------- */
 .jq_mdropdown td{
 	text-align:left;
 }
@@ -545,7 +545,7 @@ input:focus,
 		.cusel .cuselOptHover{
 			background:#5d97ce;
 			color:#fff;
-		}		
+		}
 /*---------------- result page--------------------- */
 .jq_results_container{
 	border-bottom:1px solid #5f98d0 !important;
@@ -619,7 +619,7 @@ input:focus,
 	.jq_result_bg{
 		background-color:#f5f5f5;
 	}
-/* quiz message */	
+/* quiz message */
 .jq_fmessage_container .sectiontableentry{
 	padding:5px 10px;
 }
@@ -648,12 +648,12 @@ input:focus,
 		}
 		.jq_result_question_stat{
 			font-size:12px;
-			color:#000;		
+			color:#000;
 		}
 /* hidden part of accordion */
 .jq_feedback_question_header_inner{
 	background-color:#e0f0f7;
-}		
+}
 	.jq_feedback_question_content_header td{
 		font-size:12px;
 		color:#000;
@@ -707,7 +707,7 @@ input:focus,
 	.jq_feedback_question_content_dalli_click .jq_feedback_question_content_inner{
 		padding:30px 0;
 	}
-	
+
 /* ---------results panel------------ */
 .jq_results_panel_table{
 	border-bottom:1px solid #b8d5ef !important;
@@ -736,7 +736,7 @@ input:focus,
 		.jq_panel_result_true{
 			color:#6d9f2c;
 		}
-				
+
 	.jq_panel_table_header_points_result{
 		font-size:10px;
 	}
@@ -759,7 +759,7 @@ input:focus,
 		.jq_panel_table_number{
 			color:#ff9900;
 		}
-/*----------------culculus quize statistics----------------------*/		
+/*----------------culculus quize statistics----------------------*/
 .jq_calculus_statistic{
 	font-size:13px;
 }
@@ -769,7 +769,7 @@ input:focus,
 		background-color:#e3f1f8;
 		box-shadow: 2px 0px 0px 0px #e3f1f8,/* = background-color */
 					1px 1px 0px 0px #e5e8e9;
-		font-weight:normal;	
+		font-weight:normal;
 	}
 	.jq_calculus_statistic_custom_caption{
 		color:#5a92c8;
@@ -790,10 +790,10 @@ input:focus,
 			font-weight:bold;
 			font-size:10px;
 		}
-/*----------------- popup ---------------*/	
+/*----------------- popup ---------------*/
 .jq_time_tick_container_popup{
 	font-size:13px;
-}	
+}
 .jq_time_tick_container_popup .dc_time,
 .jq_time_tick_container_popup .q_time-separator{
 	font-weight:bold;
@@ -805,7 +805,7 @@ input:focus,
 }
 .jq_close_popup{
 	margin-left:25px;
-}	
+}
 
 .jq_cont_drag_div_wrap,
 .jq_draggable_div_wrap,
@@ -1177,19 +1177,26 @@ div.incorrect_answer_mini {
 .dc_layout .dc_buttons_container {
 	min-width:120px;
 }
-.dc_pda_ver {
-	display:block;
+@media(max-width: 768px) {
+
+	.dc_layout {
+		display:block;
+	}
+	.dc_layout .dc_cover_container,
+	.dc_layout .dc_buttons_container {
+		display:block;
+		width:100%;
+		text-align:center;
+	}
+	.dc_layout .cover {
+		float:none;
+		margin:auto;
+	}
+	.dc_layout .dc_buttons_container {
+		margin-left: 0;
+	}
 }
-.dc_pda_ver .dc_cover_container,
-.dc_pda_ver .dc_buttons_container {
-	display:block;
-	width:100%;
-	text-align:center;
-}
-.dc_pda_ver .cover {
-	float:none;
-	margin:auto;
-}
+
 .dc_buttons_container .jq_input_pos {
 	padding: 5px 10px;
 }

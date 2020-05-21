@@ -54,7 +54,7 @@ var Base64 = {
 		return output;
 
 	},
-	
+
 	// private method for UTF-8 decoding
 	_utf8_decode : function (utftext) {
 		var string = "";
@@ -106,7 +106,7 @@ function Dalliclick_init()
 	for (var i=1; i<=5; i++){
 		for(var j=1; j<=5; j++){
 			squares.push(dc_c);
-			dc_html += '<div class="square" id="sq_'+dc_c+'" style="width:20%;height:'+(dc_h+1)+'px;"></div>';
+			dc_html += '<div class="square" id="sq_'+dc_c+'"></div>';
 			++dc_c;
 		}
 		dc_html += '<div class="dc_clear"><!--x--></div>';
@@ -145,7 +145,7 @@ function readyCounter()
 		clearInterval(timer_pause);
 		jq_jQuery('.pause').fadeOut();
 		dc_timer = setInterval(clearSquare, sq_delayed * 1000);
-		dc_timer2 = setInterval(calcSeconds, 1000);					
+		dc_timer2 = setInterval(calcSeconds, 1000);
 	}
 }
 
@@ -157,11 +157,11 @@ function calcSeconds()
 
 function clearSquare()
 {
-	var sq_len = squares.length;	
+	var sq_len = squares.length;
 	var rnd = getRandomInt(sq_len-1);
 	var rnd_id = squares[rnd];
 	var sq_id = 'sq_' + rnd_id;
-	jq_jQuery('#'+sq_id).animate({opacity:0}, (sq_delayed * 1000) - 500);	
+	jq_jQuery('#'+sq_id).animate({opacity:0}, (sq_delayed * 1000) - 500);
 	delete squares[rnd];
 	var tmp_squares = new Array();
 	for(var dc_n=0; dc_n <=sq_len-1; dc_n++){
@@ -195,7 +195,7 @@ function clearSquaresStop(element)
 	var qid = parseInt(quest_val.replace(/quest_choice_/, ''));
 	var quest_id = jq_jQuery(response).find('quest_id').text();
 	var open_squares = dc_c - squares.length - 1;
-	
+
 	jq_jQuery.ajax({
 		type: "POST",
 		url: live_url + "index.php?option=com_joomlaquiz&task=ajaxaction.procces",
@@ -206,13 +206,13 @@ function clearSquaresStop(element)
 			dc_answer = 1;
 			jQuery('.square').animate({opacity:0}, 500);
 			if(is_correct == 1){
-				jq_jQuery(element).css('background', '#93C162');	
+				jq_jQuery(element).css('background', '#93C162');
 			} else if(is_correct == 0) {
 				jq_jQuery(element).css('background', '#FF3333');
 			}
 			jq_jQuery(element).css('color', 'white');
 			jq_jQuery('.dc_button').attr('disabled', 'disabled');
-			
+
 			jq_jQuery('#result_point_' + quest_id).html(c_score);
 		}
 	});

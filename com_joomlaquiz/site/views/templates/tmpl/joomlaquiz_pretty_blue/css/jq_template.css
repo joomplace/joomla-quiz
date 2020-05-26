@@ -394,6 +394,29 @@ input:focus,
 		font-size:16px;
 	}
 
+.hotspot__wrapper {
+    border: 1px solid #000;
+    display: inline-block;
+    position: relative;
+}
+.hotspot__canvas {
+    vertical-align: bottom;
+    width: 100%;
+}
+
+.hotspot__circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    background-color: yellow;
+    border: 1px solid red;
+    border-radius: 50%;
+}
+
 /* image match question */
 .jq_image_match-wr{
 	border-spacing:10px;

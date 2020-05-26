@@ -21,6 +21,9 @@ function getPosition_y(el){
 }
 
 function getCirclePosition(el){
+	var el = document.querySelector('.hotspot__circle');
+	alert([el.style.left, el.style.right])
+	return [el.style.left, el.style.right];
 	// el = jq_jQuery(el[0]);
 	// var scale = el.closest('svg').data('scale');
 	// // return [el.attr('cx')*scale, el.attr('cy')*scale];

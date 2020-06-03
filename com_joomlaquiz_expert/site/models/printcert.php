@@ -351,8 +351,12 @@ class JoomlaquizModelPrintcert extends JModelList
 				} else {
 					$UserBrowser = '';
 				}
+                //custom 728 start
 				//$file_name = 'Certificate.png';
-                $file_name = $stu_quiz->c_title . '.png' ;  //custom 728
+                $user_name_in_file = preg_replace('/\s/', '_', $u_name);
+                $quiz_name_in_file = preg_replace('/\s/', '_', $stu_quiz->c_title);
+                $file_name = $user_name_in_file . '.' . $quiz_name_in_file . '.png' ;
+                //custom 728 start end
 				header('Content-Type: image/png');
 				header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 				if ($UserBrowser == 'IE') {

@@ -1079,9 +1079,15 @@ class JoomlaquizModelAjaxaction extends JModelList
 				} else {
 					return '';
 				}
-				if ($user_unique_id != $st_quiz_data[0]->unique_id && !$is_share) { return ''; }
-				if ($my->id != $st_quiz_data[0]->c_student_id && !$is_share) { return ''; }
-				if ($start_quiz != $quiz_id) { return '';}
+				if ($user_unique_id != $st_quiz_data[0]->unique_id && !$is_share) {
+				    return '';
+				}
+    			if ($my->id != (int)$st_quiz_data[0]->c_student_id && !$is_share){
+                    return '';
+                }
+				if ($start_quiz != $quiz_id) {
+				    return '';
+				}
 				
 				$lid = (int)$st_quiz_data[0]->c_lid;
 				$rel_id = (int)$st_quiz_data[0]->c_rel_id;
@@ -1147,19 +1153,24 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$database->execute();
 					
 					if ($rel_id && $my->id) {
-						
+
+                        $query_user_id = $my->id;
+                        if ($my->id != (int)$st_quiz_data[0]->c_student_id && $is_share){
+                            $query_user_id = (int)$st_quiz_data[0]->c_student_id;
+                        }
+
 						if ($package_id < 1000000000) {
 							$query = "SELECT qp.*"
 							. "\n FROM #__virtuemart_orders AS vm_o"
 							. "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
 							. "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
-							. "\n WHERE vm_o.virtuemart_user_id = {$my->id} AND vm_o.virtuemart_order_id = $package_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
+							. "\n WHERE vm_o.virtuemart_user_id = {$query_user_id} AND vm_o.virtuemart_order_id = $package_id AND qp.id = $rel_id AND vm_o.order_status IN ('C')"
 							;
 						} else {
 							$query = "SELECT qp.*"
 							. "\n FROM `#__quiz_payments` AS p"
 							. "\n INNER JOIN `#__quiz_products` AS qp ON qp.pid = p.pid"
-							. "\n WHERE p.user_id = {$my->id} AND p.id = '".($package_id-1000000000)."' AND qp.id = '{$rel_id}' AND p.status IN ('Confirmed') "
+							. "\n WHERE p.user_id = {$query_user_id} AND p.id = '".($package_id-1000000000)."' AND qp.id = '{$rel_id}' AND p.status IN ('Confirmed') "
 							;
 						}
 						$database->SetQuery( $query );

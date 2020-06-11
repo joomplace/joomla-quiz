@@ -227,7 +227,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		
 		$query = "SELECT c_id FROM #__quiz_t_question WHERE c_type = 11 AND c_id IN (".$data['qch_ids'].")";
 		$database->SetQuery( $query );
-		$qch_ids_type_14 = $database->LoadResultArray();
+		$qch_ids_type_14 = $database->loadColumn();
 
 		if(!empty($qch_ids_type_14)) {
 			$query = "SELECT SUM(a_point) FROM #__quiz_t_dalliclick WHERE c_question_id IN (".implode(',', $qch_ids_type_14).") AND c_right = 0";

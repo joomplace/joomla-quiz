@@ -1080,7 +1080,15 @@ class JoomlaquizModelAjaxaction extends JModelList
 					return '';
 				}
 				if ($user_unique_id != $st_quiz_data[0]->unique_id && !$is_share) { return ''; }
-				if ($my->id != $st_quiz_data[0]->c_student_id && !$is_share) { return ''; }
+
+                if ($my->id != (int)$st_quiz_data[0]->c_student_id){
+                    if(!$is_share){
+                        return '';
+                    } else {
+                        $my = JFactory::getUser((int)$st_quiz_data[0]->c_student_id);
+                    }
+                }
+
 				if ($start_quiz != $quiz_id) { return '';}
 				
 				$lid = (int)$st_quiz_data[0]->c_lid;

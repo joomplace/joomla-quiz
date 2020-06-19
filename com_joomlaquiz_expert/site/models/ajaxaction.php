@@ -1111,7 +1111,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$qch_ids = $database->LoadResult();
 
                 if(empty($qch_ids)){
-                    $qch_ids = '0';
+                    return '';
                 }
 				$qch_ids = str_replace('*',',', $qch_ids);
 								

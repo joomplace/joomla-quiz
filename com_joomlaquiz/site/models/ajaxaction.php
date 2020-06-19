@@ -252,7 +252,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						} else {
 							return '';
 						}
-                        /*
+
 						$query = "DELETE FROM `#__quiz_lpath_stage`"
 						. "\n WHERE uid = {$my->id} AND rel_id = {$rel_id}  AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$quiz_id} AND oid = '{$package_id}'"
 						;
@@ -264,12 +264,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						;
 						$database->SetQuery( $query );
 						$database->execute();
-						*/
-                        $query = "UPDATE `#__quiz_lpath_stage` SET `stage` = 0"
-                            . "\n WHERE uid = {$my->id} AND rel_id = {$rel_id}  AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$quiz_id} AND oid = '{$package_id}'"
-                        ;
-                        $database->SetQuery( $query );
-                        $database->execute();
+
 					}
 					
 					$query = "SELECT `id` FROM #__quiz_products_stat WHERE `uid` = $my->id AND `qp_id` = $rel_id AND oid = '{$package_id}'";
@@ -297,7 +292,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					} else {
 						return '';
 					}
-					/*
+
 					$query = "DELETE FROM `#__quiz_lpath_stage`"
 						. "\n WHERE uid = {$my->id} AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$quiz_id} AND oid = 0 AND rel_id = 0 "
 						;
@@ -309,12 +304,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						;
 					$database->SetQuery( $query );
 					$database->execute();
-                    */
-                    $query = "UPDATE `#__quiz_lpath_stage` SET `stage` = 0"
-                        . "\n WHERE uid = {$my->id} AND lpid = {$lpath->id} AND `type` = 'q' AND qid = {$quiz_id} AND oid = 0 AND rel_id = 0 "
-                    ;
-                    $database->SetQuery( $query );
-                    $database->execute();
+
 				}			
 			} else { 
 				$query = "SELECT unique_id  FROM #__quiz_r_student_quiz WHERE c_id = '$stu_quiz_id'";

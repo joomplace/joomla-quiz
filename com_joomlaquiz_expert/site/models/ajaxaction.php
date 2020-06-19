@@ -1109,7 +1109,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 				. "\n WHERE s_unique_id = '".$user_unique_id."'";
 				$database->SetQuery($query);
 				$qch_ids = $database->LoadResult();
-				$qch_ids = str_replace('*',',',$qch_ids);
+
+                if(empty($qch_ids)){
+                    $qch_ids = '0';
+                }
+				$qch_ids = str_replace('*',',', $qch_ids);
 								
 				$max_score = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
 

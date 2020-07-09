@@ -23,6 +23,10 @@ if (questions[i].cur_quest_type == 14) {
 	}
 
 	function setDalliclickImageSize() {
+		if(!jq_jQuery('.dc_layout').length) {
+			return;
+		}
+
 		var w = 184,
 			is_feedback = false;
 
@@ -60,30 +64,6 @@ if (questions[i].cur_quest_type == 14) {
 			jq_jQuery(cover).find('img').width(w).height(h);
 		}
 	}
-
-	//feedback on the page of quiz results
-	var dalliclickObserverTarget = document.getElementById('jq_quiz_container'),
-		dalliclickObserverConfig = {
-			childList: true,
-			subtree: true
-		},
-		dalliclickObserverCallback = function(mutationsList, observer) {
-			for (var mutation of mutationsList) {
-				for(var node of mutation.addedNodes) {
-					if (!(node instanceof HTMLElement)) continue;
-					//if (node.matches('td[id="jq_feed_questions"]')) {
-					//    setDalliclickScreenClass();
-					//    setDalliclickImageSize();
-					//}
-					for(var elem of node.querySelectorAll('td[id="jq_feed_questions"]')) {
-						setDalliclickScreenClass();
-						setDalliclickImageSize();
-					}
-				}
-			}
-		},
-		dalliclickObserverObserver = new MutationObserver(dalliclickObserverCallback);
-	dalliclickObserverObserver.observe(dalliclickObserverTarget, dalliclickObserverConfig);
 
 	setDalliclickScreenClass();
 	setDalliclickImageSize();

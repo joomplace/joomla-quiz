@@ -1737,3 +1737,81 @@ table#quiz_table label {
 .certificateMessage{
     margin-bottom: 20px;
 }
+
+.dc_clear {
+    clear:both;
+}
+.square {
+    display:block;
+    float:left;
+    border:1px solid #cccccc;
+    background:#eeeeee;
+    position:relative;
+    z-index:100;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+}
+.dc_time {
+    margin-top:10px;
+    clear:both;
+}
+.pause {
+    left: 170px;
+    position: absolute;
+    top: 100px;
+    z-index:100;
+}
+.cover {
+    position:relative;
+    float:left;
+}
+.dc_image {
+    display: block;
+    float: left;
+    left: 0;
+    position: absolute;
+    top: 0px;
+    z-index:0;
+}
+.dc_layout {
+    display:table;
+    table-layout:fixed;
+}
+.dc_layout .dc_cover_container,
+.dc_layout .dc_buttons_container {
+    display:table-cell;
+    float:none;
+    vertical-align:top;
+}
+.dc_layout .dc_image {
+    float:none;
+}
+.dc_layout .dc_buttons_container {
+    padding-left: 10px;
+    min-width:120px;
+}
+.dc_layout .dc_button {
+    margin-bottom: 10px;
+}
+.dc_pda_ver {
+    display:block;
+}
+.dc_pda_ver .dc_cover_container,
+.dc_pda_ver .dc_buttons_container {
+    display:block;
+    width:100%;
+    text-align:center;
+}
+.dc_pda_ver .dc_buttons_container {
+    margin: 20px auto;
+    width: 70%;
+}
+.dc_pda_ver .dc_buttons_container>table {
+    margin: 20px 0;
+    width: 100%;
+}
+.dc_pda_ver .cover {
+    float:none;
+    margin:auto;
+}

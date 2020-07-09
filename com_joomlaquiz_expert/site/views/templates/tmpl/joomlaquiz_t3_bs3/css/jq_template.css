@@ -1060,7 +1060,6 @@ td.jq_calculus_custom_empty_cell{
 {
 	clear:both;
 }
-
 .square
 {
 	display:block;
@@ -1073,18 +1072,13 @@ td.jq_calculus_custom_empty_cell{
 	   -moz-box-sizing:border-box;
 	        box-sizing:border-box;
 }
-.lt-ie8 .square {
-	behavior:url(/components/com_joomlaquiz/boxsizing.php);
-}
 .dc_buttons_container {
     margin-left: 10px;
 }
-
 .dc_buttons_container table
 {
 	width:100%;
 }
-
 .pause
 {
 	left: 170px;
@@ -1092,16 +1086,11 @@ td.jq_calculus_custom_empty_cell{
     top: 100px;
 	z-index:100;
 }
-
-.square {border-style:solid;} /* IE6-IE7*/
-html>/**/body .square {border-style:dotted;} /*all normal browsers*/
-
 .dc_time
 {
 	margin-top:10px;
 	clear:both;
 }
-
 .jq_quest_time_title
 {
 	display:block;
@@ -1164,6 +1153,14 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 	display:block;
 	width:100%;
 	text-align:center;
+}
+.dc_pda_ver .dc_buttons_container {
+	margin: 20px auto;
+	width: 70%;
+}
+.dc_pda_ver .dc_buttons_container>table {
+	margin: 20px 0;
+	width: 100%;
 }
 .dc_pda_ver .cover {
 	float:none;

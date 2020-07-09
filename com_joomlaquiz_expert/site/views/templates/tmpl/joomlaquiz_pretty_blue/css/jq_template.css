@@ -886,9 +886,9 @@ div.jq_highlight_drag_div {
 .dc_image {
     display: block;
     float: left;
-    left: 0px;
+    left: 0;
     position: absolute;
-    top: 0px;
+    top: 0;
 	z-index:0;
 }
 
@@ -927,9 +927,7 @@ div.jq_highlight_drag_div {
 	   -moz-box-sizing:border-box;
 	        box-sizing:border-box;
 }
-.lt-ie8 .square {
-	behavior:url(/components/com_joomlaquiz/boxsizing.php);
-}
+
 .dc_buttons_container {
     margin-left: 10px;
 }
@@ -1086,6 +1084,26 @@ div.correct_answer
 	margin:0 25px;
 }
 
+@media(max-width: 380px) {
+	.jq_quiz_task_container {
+		clear: both;
+		display: block;
+		float: none;
+		margin: 60px auto 20px;
+	}
+	.jq_quiz_task_container a {
+		display: block;
+		float: none;
+		margin: 15px auto;
+		text-align: center;
+		width: 70%;
+	}
+	.jq_quiz_task_container a.jq_next_link {
+		float: none;
+		padding-right: 15px;
+	}
+}
+
 .jq_mchoice{
 	width:100%;
 }
@@ -1152,8 +1170,7 @@ div.incorrect_answer_mini {
 	background:#558BBE;
 }
 
-.jq_mchoice_overal .sectiontableheader strong
-{
+.jq_mchoice_overal .sectiontableheader strong {
 	padding:5px;
 }
 
@@ -1181,6 +1198,13 @@ div.incorrect_answer_mini {
 	display:block;
 	width:100%;
 	text-align:center;
+}
+.dc_pda_ver .dc_buttons_container {
+	margin: 20px auto;
+	width: 70%;
+}
+.dc_pda_ver .dc_buttons_container>table {
+	margin: 20px 0;
 }
 .dc_pda_ver .cover {
 	float:none;

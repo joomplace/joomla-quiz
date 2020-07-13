@@ -17,70 +17,61 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	var $name		= 'Dalliclick';
 	var $_name		= 'dalliclick';
 	
-	public function onCreateQuestion(&$data) {
-
-		
+	public function onCreateQuestion(&$data)
+    {
 		$database = JFactory::getDBO();
 		$query = "SELECT c_id as value, c_choice as text, '0' as c_right, '0' as c_review FROM #__quiz_t_dalliclick WHERE c_question_id = '".$data['q_data']->c_id."'";
-		if ($data['qrandom'])
-			$query .=  "\n ORDER BY rand()";
-		else
-			$query .=  "\n ORDER BY ordering";
+		if ($data['qrandom']) {
+            $query .= "\n ORDER BY rand()";
+        } else {
+            $query .= "\n ORDER BY ordering";
+        }
 		$database->SetQuery( $query );
 		$choice_data = $database->LoadObjectList();
-
-
-		foreach($choice_data as $t=>$cd) {
-			JoomlaquizHelper::JQ_GetJoomFish($choice_data[$t]->text, 'quiz_t_dalliclick', 'c_choice', $choice_data[$t]->value);
-		}
 		
-		$width = 390;
-		$height = 570;
+		$width = 184; //based on the screen width 320px
 		
 		$img_data = array();
-		if(file_exists(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image)){
+		if(file_exists(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image)) {
 			$img_data = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
 		}
-		$ratio = 1;
-		if(!empty($img_data)){
-			if($img_data[0] >= $width){
-				if($img_data[0] > $img_data[1]){
-					$ratio = $img_data[1]/$img_data[0];
-					$w = $width;
-					$h = round($width * $ratio);
-				}
-				if($img_data[0] < $img_data[1]) {
-					$ratio = $img_data[0]/$img_data[1];
-					$w = round($height * $ratio);
-					$h = $height;
-				}
-				if($img_data[0] == $img_data[1]){
-					$w = $h = $width;
-				}
-            } else {
+
+		if(!empty($img_data[1])) {
+            $ratio = $img_data[0]/$img_data[1];
+			if($img_data[0] >= $width) {
                 $w = $img_data[0];
-                $h = $img_data[1];
+            } else {
+                $w = $width;
             }
-		}					
+            $h = round($w / $ratio);
+		} else {
+            $ratio = 1;
+            $w = $width;
+            $h = $w * $ratio;
+        }
+
 		$dc_img = base64_encode(JURI::root()."images/joomlaquiz/images/".$data['q_data']->c_image);
-							
-		$qhtml = ($data['q_data']->c_image) ? "<div class='dc_layout'><div class='dc_cover_container'><div class='cover' style='width:".$w."px; height:".$h."px;'><div class='pause'><!--x--></div><canvas id='dc_image' class='dc_image' width='".$w."' height='".$h."'></canvas><input type='hidden' value='".$dc_img."' id='imgSrc' /></div></div> \n" : "";
+
+        $qhtml = ($data['q_data']->c_image) ?
+            "<div class='dc_layout'>
+                <div class='dc_cover_container'>
+                    <div class='cover' style='width:".$w."px; height:".$h."px;'>
+                        <div class='pause'><!--x--></div>
+                        <canvas id='dc_image' class='dc_image' width='".$w."' height='".$h."'></canvas>
+                        <input type='hidden' value='".$dc_img."' id='imgSrc' />
+                    </div>
+                </div> \n"
+            : "";
+
 		$qhtml .= JoomlaQuiz_template_class::JQ_createQuestion($choice_data, $data);
 		$qhtml .= "</div>";
 		$qhtml .= "<div class='dc_time'>".JText::_('COM_QUIZ_RES_MES_TIME')."</div>";
-		if ($data['q_data']->c_layout == 1) $data['ret_add_script'] .= "jq_jQuery('.jq_question_text_cont').css('width', 'auto');";
-		
-		$data['ret_add_script'] .= "
-		window.onload = setScreenClass; 
-		window.onresize = setScreenClass;
 
-		function setScreenClass(){
-			var fmt = jq_jQuery('.jq_question_answers_cont').width();
-			var coverWidth = jq_jQuery('.cover').width();
-			var cls = (fmt<=(coverWidth+140))?'dc_pda_ver':'dc_layout';
-			jq_jQuery('.dc_layout').addClass(cls);
-		};
-		";
+		if ($data['q_data']->c_layout == 1) {
+		    $data['ret_add_script'] .= "jq_jQuery('.jq_question_text_cont').css('width', 'auto');";
+        }
+
+		$data['ret_add_script'] .= "";
 
 		if ($data['q_data']->c_qform && JoomlaquizHelper::jq_strpos($data['ret_add'], '{x}') !== false) {
 			$data['ret_add'] = '<form onsubmit=\'javascript: return false;\' name=\'quest_form'.$data['q_data']->c_id.'\'>'.str_replace('{x}', $qhtml, $data['ret_add']).'</form>';
@@ -88,14 +79,14 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		} else {
 			$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div style="width:100%;clear:both;" id="div_qoption'.$data['q_data']->c_id.'"><form onsubmit=\'javascript: return false;\' name=\'quest_form'.$data['q_data']->c_id.'\'>'.$qhtml.'</form></div>]]></quest_data_user>' . "\n";
 		}
-		
+
+        $data['ret_str'] .= "\t" . '<img_ratio>'.$ratio.'</img_ratio>' . "\n";
 		$data['ret_str'] .= "\t" . '<img_width>'.$w.'</img_width>' . "\n";
 		$data['ret_str'] .= "\t" . '<img_height>'.$h.'</img_height>' . "\n";
-		if(!$data['q_data']->sq_delayed) $data['q_data']->sq_delayed = 1;
+		if(!$data['q_data']->sq_delayed) {
+            $data['q_data']->sq_delayed = 1;
+        }
 		$data['ret_str'] .= "\t" . '<sq_delayed>'.$data['q_data']->sq_delayed.'</sq_delayed>' . "\n";
-
-
-
 
 		return $data['ret_str'];
 	}
@@ -247,19 +238,15 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		return true;
 	}
 	
-	public function onFeedbackQuestion(&$data){
-		
+	public function onFeedbackQuestion(&$data)
+    {
 		$database = JFactory::getDBO();
 		$query = "SELECT c_id as value, c_choice as text, c_right, '1' as c_review FROM #__quiz_t_dalliclick WHERE c_question_id = '".$data['q_data']->c_id."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$choice_data = $database->LoadObjectList();
 		
 		$choice_data[0]->score = $data['score'];
-		
-		foreach($choice_data as $t=>$cd) {
-			JoomlaquizHelper::JQ_GetJoomFish($choice_data[$t]->text, 'quiz_t_dalliclick', 'c_choice', $choice_data[$t]->value);
-		}
-		
+
 		$query = "SELECT c_id FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' AND c_question_id = '".$data['q_data']->c_id."'";
 		$database->SetQuery( $query );
 		$sid = $database->loadResult( );
@@ -269,48 +256,37 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		. "\n WHERE c.c_question_id = '".$data['q_data']->c_id."' ORDER BY c.ordering";
 		$database->SetQuery( $query );
 		$tmp = $database->LoadAssocList();
-		
-		
-		foreach($tmp as $t=>$cd) {
-			JoomlaquizHelper::JQ_GetJoomFish($tmp[$t]['c_choice'], 'quiz_t_dalliclick', 'c_choice', $tmp[$t]['c_choice_id']);
-		}
-			
+
 		$uanswer = array();
-		if(is_array($tmp))
-		foreach($tmp as $t) {
-			if($t['c_choice_id']) {
-				$uanswer['c_choice_id'][] = $t['c_choice_id'];
-				$uanswer['c_elapsed_time'][] = $t['c_elapsed_time'];
-			}				
-		}				
-		
-		$width = 390;
-		$height = 570;	
-		$img_data = array();
-		if(file_exists(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image)){
-			$img_data = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
-		}
-		$ratio = 1;
-		if(!empty($img_data)){
-			if($img_data[0] >= $width){
-				if($img_data[0] > $img_data[1]){
-					$ratio = $img_data[1]/$img_data[0];
-					$w = $width;
-					$h = round($width * $ratio);
-				}
-				if($img_data[0] < $img_data[1]) {
-					$ratio = $img_data[0]/$img_data[1];
-					$w = round($height * $ratio);
-					$h = $height;
-				}
-				if($img_data[0] == $img_data[1]){
-					$w = $h = $width;
-				}
-            } else {
-                $w = $img_data[0];
-                $h = $img_data[1];
+		if(!empty($tmp) && is_array($tmp)) {
+            foreach ($tmp as $t) {
+                if ($t['c_choice_id']) {
+                    $uanswer['c_choice_id'][] = $t['c_choice_id'];
+                    $uanswer['c_elapsed_time'][] = $t['c_elapsed_time'];
+                }
             }
-		}		
+        }
+
+        $width = 184; //based on the screen width 320px
+
+        $img_data = array();
+        if(file_exists(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image)) {
+            $img_data = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
+        }
+
+        if(!empty($img_data[1])) {
+            $ratio = $img_data[0]/$img_data[1];
+            if($img_data[0] >= $width) {
+                $w = $img_data[0];
+            } else {
+                $w = $width;
+            }
+            $h = round($w / $ratio);
+        } else {
+            $ratio = 1;
+            $w = $width;
+            $h = $w * $ratio;
+        }
 		
 		$feedback_data = array();
 		$feedback_data['choice_data'] = $choice_data;
@@ -320,24 +296,22 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		$feedback_data['h'] = $h;
 		
 		$qhtml = JoomlaQuiz_template_class::JQ_createFeedback($feedback_data, $data);
-		if(preg_match("/pretty_green/", $data['cur_template'])){
+
+		if(preg_match("/pretty_green/", $data['cur_template'])) {
 			$data['qoption'] = "\t" . $qhtml. "\n";
 		} else {
 			$data['qoption'] = "\t" . '<div><form onsubmit=\'javascript: return false;\' name=\'quest_form\'>'.$qhtml.'</form></div>' . "\n";
 		}
+
 		return $data['qoption'];
 	}
 		
-	public function onReviewQuestion(&$data){
-		
+	public function onReviewQuestion(&$data)
+    {
 		$database = JFactory::getDBO();
 		$query = "SELECT c_id as value, c_choice as text, c_right, '1' as c_review FROM #__quiz_t_dalliclick WHERE c_question_id = '".$data['q_data']->c_id."' ORDER BY ordering";
 		$database->SetQuery( $query );
 		$choice_data = $database->LoadObjectList();
-						
-		foreach($choice_data as $t=>$cd) {
-			JoomlaquizHelper::JQ_GetJoomFish($choice_data[$t]->text, 'quiz_t_dalliclick', 'c_choice', $choice_data[$t]->value);
-		}
 		
 		$query = "SELECT c_id FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$data['stu_quiz_id']."' AND c_question_id = '".$data['q_data']->c_id."'";
 		$database->SetQuery( $query );
@@ -348,49 +322,38 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		. "\n WHERE c.c_question_id = '".$data['q_data']->c_id."' ORDER BY c.ordering";
 		$database->SetQuery( $query );
 		$tmp = $database->LoadAssocList();
-		
-		foreach($tmp as $t=>$cd) {
-			JoomlaquizHelper::JQ_GetJoomFish($tmp[$t]['c_choice'], 'quiz_t_dalliclick', 'c_choice', $tmp[$t]['c_choice_id']);
-		}
 			
 		$uanswer = array();
-		if(is_array($tmp))
-		foreach($tmp as $t) {
-			if($t['c_choice_id']) {
-				$uanswer['c_choice_id'][] = $t['c_choice_id'];
-				$uanswer['c_elapsed_time'][] = $t['c_elapsed_time'];
-			}				
-		}				
-		
-		$width = 390;
-		$height = 570;
-			
-		$img_data = array();
-		if(file_exists(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image)){
-			$img_data = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
-		}
-		$ratio = 1;
-		if(!empty($img_data)){
-			if($img_data[0] >= $width){
-				if($img_data[0] > $img_data[1]){
-					$ratio = $img_data[1]/$img_data[0];
-					$w = $width;
-					$h = round($width * $ratio);
-				}
-				if($img_data[0] < $img_data[1]) {
-					$ratio = $img_data[0]/$img_data[1];
-					$w = round($height * $ratio);
-					$h = $height;
-				}
-				if($img_data[0] == $img_data[1]){
-					$w = $h = $width;
-				}
-			} else {
-                $w = $img_data[0];
-                $h = $img_data[1];
+		if(!empty($tmp) && is_array($tmp)) {
+            foreach ($tmp as $t) {
+                if ($t['c_choice_id']) {
+                    $uanswer['c_choice_id'][] = $t['c_choice_id'];
+                    $uanswer['c_elapsed_time'][] = $t['c_elapsed_time'];
+                }
             }
-		}
-		
+        }
+
+        $width = 184; //based on the screen width 320px
+
+        $img_data = array();
+        if(file_exists(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image)) {
+            $img_data = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
+        }
+
+        if(!empty($img_data[1])) {
+            $ratio = $img_data[0]/$img_data[1];
+            if($img_data[0] >= $width) {
+                $w = $img_data[0];
+            } else {
+                $w = $width;
+            }
+            $h = round($w / $ratio);
+        } else {
+            $ratio = 1;
+            $w = $width;
+            $h = $w * $ratio;
+        }
+
 		$review_data = array();
 		$review_data['choice_data'] = $choice_data;
 		$review_data['uanswer'] = $uanswer;
@@ -399,8 +362,10 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		$review_data['h'] = $h;
 		
 		$qhtml = JoomlaQuiz_template_class::JQ_createReview($review_data, $data);
+
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div><form onsubmit=\'javascript: return false;\' name=\'quest_form\'>'. $qhtml .'</form></div>]]></quest_data_user>' . "\n";
-		return $data;		
+
+		return $data;
 	}
 	
 	public function onGetResult(&$data){
@@ -411,13 +376,11 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 		. "\n WHERE c.c_question_id = '".$data['qid']."' ORDER BY c.ordering";
 		$database->SetQuery( $query );
 		$tmp = $database->LoadAssocList();
-		foreach($tmp as $t=>$cd) {
-			JoomlaquizHelper::JQ_GetJoomFish($tmp[$t]['c_choice'], 'quiz_t_dalliclick', 'c_choice', $tmp[$t]['id']);
-		}
+
 		$data['info']['c_choice'] = $tmp;
 		$query = "SELECT SUM(a_point) FROM #__quiz_t_dalliclick WHERE c_question_id = ".$data['qid']." AND c_right = 1";
-			$database->SetQuery( $query );
-			$data['info']['c_point'] += $database->LoadResult();
+		$database->SetQuery( $query );
+		$data['info']['c_point'] += $database->LoadResult();
 		
 		return true;
 	}

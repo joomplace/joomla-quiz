@@ -184,7 +184,7 @@ textarea.jq_survey {
 .jq_bottom_container {
 	overflow:hidden;
 	width:100%;
-	padding-top: 10px;
+	padding: 10px 0 30px;
 }
 
 .jq_question_inner {
@@ -534,19 +534,6 @@ padding:5px;
     margin-bottom: 20px;
 }
 
-.dc_layout .dc_cover_container,
-.dc_layout .dc_buttons_container {
-	display:table-cell;
-	float:none;
-	vertical-align:top;
-}
-
-.dc_pda_ver .dc_cover_container,
-.dc_pda_ver .dc_buttons_container {
-	display:block;
-	width:100%;
-	text-align:center;
-}
 .cover{
 	position:relative;
 	float:left;
@@ -555,8 +542,7 @@ padding:5px;
 	float:none;
 	margin:auto;
 }
-.square
-{
+.square {
 	display:block;
 	float:left;
 	border:1px solid #cccccc;
@@ -567,11 +553,6 @@ padding:5px;
 	   -moz-box-sizing:border-box;
 	        box-sizing:border-box;
 }
-.lt-ie8 .square {
-	behavior:url(/components/com_joomlaquiz/boxsizing.php);
-}
-.square {border-style:solid;} /* IE6-IE7*/
-html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 
 .dc_layout {
 	display:table;
@@ -584,28 +565,45 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 	vertical-align:top;
 }
 .dc_layout .dc_image {
-	float:none;
-    display: block;
+	display: block;
+	float: none;
+	left: 0;
 	position: absolute;
+	top: 0;
+	z-index:0;
 }
 .dc_layout .dc_buttons_container {
 	min-width:120px;
+	padding-left: 10px;
 }
-.pause
-{
+.dc_layout .dc_button {
+	margin-bottom: 10px;
+}
+.dc_pda_ver .dc_cover_container,
+.dc_pda_ver .dc_buttons_container {
+	display:block;
+	width:100%;
+	text-align:center;
+}
+.dc_pda_ver .dc_buttons_container {
+	margin: 20px auto;
+	width: 70%;
+}
+.dc_pda_ver .dc_buttons_container>table {
+	margin: 20px 0;
+	width: 100%;
+}
+.pause {
 	left: 170px;
     position: absolute;
     top: 50%;
 	z-index:100;
 }
-.dc_time
-{
+.dc_time {
+	color:#000000;
 	margin-top:10px;
 	clear:both;
 }
-	.dc_time{
-		color:#000000;
-	}
 .jq_time_tick_container_popup .dc_time,
 .jq_time_tick_container_popup .q_time-separator{
 	font-weight:bold;

@@ -1,45 +1,17 @@
-function getPosition_x(el){
-	return 10;
-	var  left = 0, top = 0;
-	do {
-		left += el.offsetLeft || 0;
-		top += el.offsetTop || 0;
-		el = el.offsetParent;
-	} while (el);
-	return left;
-}
-
-function getPosition_y(el){
-	return 10;
-	var  left = 0, top = 0;
-	do {
-	left += el.offsetLeft || 0;
-		top += el.offsetTop || 0;
-		el = el.offsetParent;
-	} while (el);
-	return top;
-}
-
 function getCirclePosition(el){
     el = jq_jQuery(el[0]);
     var scale = el.closest('svg').data('scale');
     return [el.attr('cx')*scale, el.attr('cy')*scale];
 }
 
-var img_width_init = 0,
-	wOrigin = 0,
+var wOrigin = 0,
 	hOrigin = 0,
-	viewport_width = 0,
-	img_height_init = 0,
+	ratio = 1,
 	scaleX = 0,
 	scaleY = 0,
-	initial = 1,
-	drawPolygons = null,
 	paper = null,
-	getNewPath = null,
+	drawPolygons = null,
 	landscape = false;
-prev_it_width = 0;
-prev_it_height = 0;
 
 window.onresize = function(){
 	setTimeout(_recalculateSize, 10);
@@ -47,7 +19,7 @@ window.onresize = function(){
 }
 
 if(!landscape){
-	jQuery(window).bind( 'orientationchange', function(e){
+	jQuery(window).bind('orientationchange', function(e){
 		setTimeout(_recalculateSize, 10);
 		landscape = true;
 	});
@@ -55,83 +27,74 @@ if(!landscape){
 
 function _recalculateSize(){
 	var hotspots = jq_jQuery('#foo > svg, .hotspot > svg');
-    // console.log('in');
-
-	if(hotspots.length){	
-
+	if(hotspots.length){
 		jq_jQuery(hotspots).each(function(){
-			var svg = jq_jQuery(this);
-            var wrapper = svg.parent();
-			var img = svg.find('image');
-			var src = img.attr('xlink:href');
-            var circle = svg.find("circle");
-			if(!src || src=='undefined'){
-				src = img.attr('href');
+			var svg = jq_jQuery(this),
+				wrapper = svg.parent(),
+				img = svg.find('image'),
+				src = img.attr('href'),
+            	circle = svg.find("circle");
+
+			if(!src || src === 'undefined'){
+				src = img.attr('xlink:href');
 			}
-			// need to be removed after drawPolygons() will be refactored
-            viewport_width = wrapper.width();
+
             var fullscaleimage = new Image();
+			fullscaleimage.src = src;
+
             fullscaleimage.onload = function(){
-                img_width_init = fullscaleimage.width;
-                img_height_init = fullscaleimage.height;
-			
-                fullscaleimage.remove();
-			
-                var prev_svg_width = svg.width();
-                var svg_width = svg.width();
-                var wrapper_width = wrapper.width();
-			
-                if(svg_width < wrapper_width){
-                    if(wrapper_width > img_width_init)
-					svg_width = img_width_init;
-				else{
-                        svg_width = wrapper_width;
+				wOrigin = fullscaleimage.width;
+				hOrigin = fullscaleimage.height;
+				ratio = wOrigin / hOrigin;
+
+                var svg_width = svg.width(),
+                	wrapper_width = wrapper.width();
+
+				if(svg_width < wrapper_width){
+					if(wrapper_width > wOrigin) {
+						svg_width = wOrigin;
+					} else {
+						svg_width = wrapper_width;
 					}
-			}
+				}
 
-            var nwidth = svg_width;
-			
-			var ratio = img_height_init/img_width_init;
-			var nheight = nwidth * ratio;
+            	var nwidth = svg_width,
+					nheight = nwidth / ratio;
 
-			svg.attr('width', nwidth);
-                svg.attr('height', nheight);
+				scaleX = wOrigin / nwidth;
+				scaleY = hOrigin / nheight;
 
-                if(circle.data('scale')=="initial"){
-                    // console.log('initial');
-                    var cursor_adjust = nwidth/img_width_init;
+				svg.attr('width', nwidth);
+				svg.attr('height', nheight);
+				svg.data('scale', scaleX);
+
+				var cursor_adjust;
+                if(circle.data('scale') == 'initial'){
+                    cursor_adjust = nwidth / wOrigin;
                 }else{
-                    // console.log('prev');
-                    var cursor_adjust = nwidth/img.attr('width');
+                    cursor_adjust = nwidth / img.attr('width');
                 }
-                // console.log(cursor_adjust);
                 circle.data('scale','');
 
-			img.attr('width', nwidth);
-			img.attr('height', nheight);
+				img.attr('width', nwidth);
+				img.attr('height', nheight);
 
-                var cx = circle.attr('cx'); // horizontal percentage
-                var cy = circle.attr('cy'); // vertical percentage
-
-                var scale = img_width_init/nwidth;
-                svg.data('scale',scale);
+                var cx = circle.attr('cx');
+                var cy = circle.attr('cy');
 
                 circle.attr('cx', cx*cursor_adjust);
                 circle.attr('cy', cy*cursor_adjust);
-			
-			scaleX = wOrigin / nwidth;
-			scaleY = hOrigin / nheight;
-			if(jq_jQuery('#foo > svg').length){
-				svg.find("path").remove();
-				drawPolygons();
-			}
-			
-                prev_it_width = nwidth;
-                prev_it_height = nheight;
 
-			initial = 0;
+				if(jq_jQuery('#foo > svg').length){
+					drawPolygons();
+					svg.find('path').remove();
+					var rect = svg.find('rect');
+					rect.attr('width', nwidth);
+					rect.attr('height', nheight);
+				}
+
+				fullscaleimage = null;
             };
-            fullscaleimage.src = src;
 		});
 	}
 }

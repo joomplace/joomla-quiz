@@ -14,13 +14,10 @@ defined('_JEXEC') or die('Restricted access');
  */
 class JoomlaquizViewCreateHotspot
 {
-	public static function getQuestionContent($hotspot, $data){
-		
-		$isMobile = JFactory::getApplication()->client->mobile;
-
+	public static function getQuestionContent($hotspot, $data)
+    {
 		$live_site = JURI::root();
-		$count_hotspot = !empty($hotspot) ? count($hotspot) : 0;
-		
+
 		$hotspot['c_select_x'] = (isset($hotspot['c_select_x'])? $hotspot['c_select_x']: 0);
 		$hotspot['c_select_y'] = (isset($hotspot['c_select_y'])? $hotspot['c_select_y']: 0);
 		
@@ -40,9 +37,7 @@ class JoomlaquizViewCreateHotspot
 		$imagesizes = getimagesize(JPATH_SITE.'/images/joomlaquiz/images/'.$data['q_data']->c_image);
 		$w = $imagesizes[0];
 		$h = $imagesizes[1];
-		$koef = round($w/$h);
-
-		if($isMobile){
+		$koef = round($w/$h, 5);
 
 		$jq_tmpl_html = <<<HTMLEND
 		
@@ -56,40 +51,30 @@ class JoomlaquizViewCreateHotspot
 			return top;
 		}
 
-		var koef = {$koef};
-		var wOrigin = {$w};
-		var hOrigin = {$h};
-
-		jq_jQuery('#foo').attr('style', 'width: 100% !important');
+        wOrigin = {$w};
+		hOrigin = {$h};
+        ratio = {$koef};
+        
+		jq_jQuery('#foo').css({'width':'100% !important'});
 		var w = jq_jQuery('#foo').width();
 		
-		var viewport_width = jq_jQuery(document.body).width();
+		var viewport_width = jq_jQuery('body').width();
 		if(viewport_width < w){
 		    w = viewport_width - 50;
 		}
 		
-		if(koef > 1){
-			var h = w / koef;
-		} else {
-			var h = w * koef;
-		}
+		var h = w / ratio;
 
-		//globalWidth.push(w);
-		//globalHeight.push(h);
-
-		var l = getPosition_x('#foo');
-		var t = getPosition_y('#foo');
+		scaleX = wOrigin / w;
+		scaleY = hOrigin / h;
 		
-		var scaleX = wOrigin / w;
-		var scaleY = hOrigin / h;
-
-		var paper = Raphael('foo', w, h);
+		paper = Raphael('foo', w, h);
 		var img = paper.image('{$live_site}images/joomlaquiz/images/{$data['q_data']->c_image}', 0, 0, w, h);
 		var rect = paper.rect(0, 0, w, h).attr({fill:'none'});
         
         path_elems.length=0;
         
-		var drawPolygons = function(){
+		drawPolygons = function(){
 			var paths = new Array();
 			{$path_str}
 			if(paths.length){
@@ -106,11 +91,10 @@ class JoomlaquizViewCreateHotspot
 
 							var coords = ps[j].split(' ');
 							if(coords.length){
-								var tX = coords[1];
-								var tY = coords[2];
-
-								pX.push(tX / scaleX);
-								pY.push(tY / scaleY);
+								var tX = scaleX > 1 ? (coords[1] / scaleX) : (coords[1] * scaleX);
+								var tY = scaleY > 1 ? (coords[2] / scaleY) : (coords[2] * scaleY);
+								pX.push(tX);
+								pY.push(tY);
 							}
 						}
 					}
@@ -162,69 +146,6 @@ class JoomlaquizViewCreateHotspot
 		});
 HTMLEND;
 
-		} else {
-
-		$jq_tmpl_html = <<<HTMLEND
-		
-		function getPosition_x(el) {
-			var left = jq_jQuery(el).offset().left;
-			return left;
-		}	
-			
-		function getPosition_y(el) {
-			var top = jq_jQuery(el).offset().top;
-			return top;
-		}
-		
-		var h = {$h};
-		var w = {$w};
-		var l = getPosition_x('#foo');
-		var t = getPosition_y('#foo');
-		
-		var paper = Raphael('foo', w, h);
-		var img = paper.image('{$live_site}images/joomlaquiz/images/{$data['q_data']->c_image}', 0, 0, w, h);
-		var rect = paper.rect(0, 0, w, h).attr({fill:'none'});
-		
-		path_elems.length=0;
-		
-		var drawPolygons = function(){
-				var paths = new Array();
-				{$path_str}
-				if(paths.length){
-					for(var p = 0;p < paths.length;p++){					
-						path = paper.path();
-						path.attr({fill: 'none', 'stroke': 'none'});
-						path.attr({path: paths[p]});
-						path_elems.push(path);
-					}
-				}
-		}
-		drawPolygons();
-		
-		{$circle}
-		img.click(function(event){
-			var event = event || window.event;
-			var x = event.clientX;
-			var y = event.clientY;
-			var r = 5;
-			
-			var qqq1 = event.pageY || (event.clientY + (document.documentElement.scrollTop || document.body.scrollTop));
-			var qqq2 = event.pageX || (event.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft));
-			var base_y = getPosition_y('#foo') + 1;
-			var base_x = getPosition_x('#foo') + 1;
-			
-			cx = Math.round(qqq2 - base_x);
-			cy = Math.round(qqq1 - base_y);
-			
-			if (circle == null){
-				circle = paper.circle(cx, cy, r).attr({stroke:'red', fill:'orange'});
-			} else {
-				circle.attr({cx: cx, cy: cy, r: r});
-			}
-		});		
-HTMLEND;
-		}
-		
 		return $jq_tmpl_html;
 	}
 }

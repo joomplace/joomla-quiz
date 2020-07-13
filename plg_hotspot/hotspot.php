@@ -28,8 +28,7 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$hs_data = $database->loadResult();
 		$data['hs_data_array'] = json_decode($hs_data);
 		
-		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div id="foo"></div>';
-		$data['ret_str'] .= ']]></quest_data_user>' . "\n";
+		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div id="foo"></div>]]></quest_data_user>' . "\n";
 		$data['ret_add_script'] = JoomlaQuiz_template_class::JQ_createQuestion($hotspot, $data);	
 
 		return $data;
@@ -48,13 +47,13 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		$data['is_avail'] = 1;
 		if (!empty($ddd)) {
 			$ans_array = explode(',', $data['answer']);
-
 			if ($ans_array[2]) {
 				$data['is_correct'] = 1;
 				$c_quest_score = $ddd[0]->c_point;
 			}
 			if ($ddd[0]->c_attempts) {
-				$data['c_all_attempts'] = $ddd[0]->c_attempts; }
+				$data['c_all_attempts'] = $ddd[0]->c_attempts;
+			}
 		}
 
 		$data['c_quest_cur_attempt'] = 0;

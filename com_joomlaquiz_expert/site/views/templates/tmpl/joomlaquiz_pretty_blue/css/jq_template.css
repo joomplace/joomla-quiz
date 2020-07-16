@@ -1102,6 +1102,9 @@ div.correct_answer
 		float: none;
 		padding-right: 15px;
 	}
+	a.jq_back_link {
+		padding-left: 15px;
+	}
 }
 
 .jq_mchoice{
@@ -1264,4 +1267,14 @@ div.incorrect_answer_mini {
 }
 .certificateMessage{
     margin-bottom: 20px;
+}
+
+.jq_feedback_question-imgmatch_block {
+	max-width: 33%;
+	padding: 10px !important;
+}
+.review_question-imgmatch_block {
+	max-width: 50%;
+	padding: 10px !important;
+	vertical-align: middle;
 }

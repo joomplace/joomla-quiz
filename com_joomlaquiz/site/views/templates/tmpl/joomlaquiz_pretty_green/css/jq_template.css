@@ -1124,18 +1124,13 @@ td.jq_calculus_custom_empty_cell{
 	   -moz-box-sizing:border-box;
 	        box-sizing:border-box;
 }
-.lt-ie8 .square {
-	behavior:url(/components/com_joomlaquiz/boxsizing.php);
-}
 .dc_buttons_container {
     margin-left: 10px;
 }
-
 .dc_buttons_container table
 {
 	width:100%;
 }
-
 .pause
 {
 	left: 170px;
@@ -1143,28 +1138,21 @@ td.jq_calculus_custom_empty_cell{
     top: 100px;
 	z-index:100;
 }
-
-.square {border-style:solid;} /* IE6-IE7*/
-html>/**/body .square {border-style:dotted;} /*all normal browsers*/
-
 .dc_time
 {
 	margin-top:10px;
 	clear:both;
 }
-
 .jq_quest_time_title
 {
 	display:block;
 	float:right;
 }
-
 .jq_quest_time_past
 {
 	margin-left:25px;
 	margin-bottom:10px;
 }
-
 .sortHelper
 {
 	border: 1px dashed #7BA428;

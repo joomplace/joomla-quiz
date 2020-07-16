@@ -9,38 +9,35 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-/**
- * Joomlaquiz Deluxe class
- */
 class JoomlaquizViewFeedbackImgmatch
 {
-	public static function getFeedbackContent($qdata, $data){
-		
-		$jq_tmpl_html = "<div class='jq_feedback_question_content'>";
+	public static function getFeedbackContent($qdata, $data)
+    {
+        $jq_tmpl_html = "<div class='jq_feedback_question_content jq_feedback_question_content-imgmatch'>";
 		$jq_tmpl_html .= '<table class="jq_feedback_question_content_inner" style="text-align:center">
 							<tbody>
 							<tr class="jq_feedback_question_content_header">
 								<td>'.JText::_('COM_JQ_POSSIBLE_ANSWERS').'</td>
 								<td>'.JText::_('COM_QUIZ_CORRECT').'</td>
-								<td>'.JText::_('COM_JQ_YOUR_CHOICE').'</td>';
-		$k = 2;
-		if(is_array($qdata))
-		foreach($qdata as $t) {
-			$correct = ($t['c_correct']) ? '<img src="'.JURI::root().'components/com_joomlaquiz/assets/images/tick.png"/>' : '<img src="'.JURI::root().'components/com_joomlaquiz/assets/images/tickr.png"/>';
-			$jq_tmpl_html .= '<tr class="jq_feedback_question_content_container">'.
-								'<td><img src="'. JURI::root().'images/joomlaquiz/images/resize/'.($t['c_left_text']). '" style="height:100px;" /></td>'.
-								'<td><img src="'. JURI::root().'images/joomlaquiz/images/resize/'.($t['c_right_text']). '" style="height:100px;" /></td>'.
-								'<td><img src="'. JURI::root().'images/joomlaquiz/images/resize/'.($t['c_sel_text']). '" style="height:100px;" style="vertical-align:middle;"/>&nbsp;'.$correct.'</td>'.
-								'</tr>';
-			$k = 3 - $k;
-		}
+								<td>'.JText::_('COM_JQ_YOUR_CHOICE').'</td>
+							</tr>';
+
+		if(is_array($qdata)) {
+            foreach ($qdata as $t) {
+                $correct = ($t['c_correct']) ? '<img src="' . JURI::root() . 'components/com_joomlaquiz/assets/images/tick.png"/>' : '<img src="' . JURI::root() . 'components/com_joomlaquiz/assets/images/tickr.png"/>';
+                $jq_tmpl_html .= '<tr class="jq_feedback_question_content_container">' .
+                        '<td class="jq_feedback_question-imgmatch_block"><img src="' . JURI::root() . 'images/joomlaquiz/images/resize/' . ($t['c_left_text']) . '" /></td>' .
+                        '<td class="jq_feedback_question-imgmatch_block"><img src="' . JURI::root() . 'images/joomlaquiz/images/resize/' . ($t['c_right_text']) . '" /></td>' .
+                        '<td class="jq_feedback_question-imgmatch_block"><img src="' . JURI::root() . 'images/joomlaquiz/images/resize/' . ($t['c_sel_text']) . '" style="vertical-align:middle;"/>&nbsp;' . $correct . '</td>' .
+                    '</tr>';
+            }
+        }
 		
-		$jq_tmpl_html .= "<tr><td colspan='4' valign='top' align='left'><strong>".JText::_('COM_QUIZ_RES_MES_SCORE')." ".$qdata[0]['score']."</strong></td>" . "\n";
-		$jq_tmpl_html .= "</tr></tbody></table>" . "\n";
+		$jq_tmpl_html .= "<tr><td colspan='4' valign='top' align='left'><b>".JText::_('COM_QUIZ_RES_MES_SCORE')." ".$qdata[0]['score']."</b></td></tr>" . "\n";
+		$jq_tmpl_html .= "</tbody></table>" . "\n";
 		$jq_tmpl_html.='</div>' . "\n";
 		
 		return $jq_tmpl_html;
 	}
 }
-
 ?>

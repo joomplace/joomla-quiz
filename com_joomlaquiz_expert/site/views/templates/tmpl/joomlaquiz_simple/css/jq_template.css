@@ -55,7 +55,12 @@ div.incorrect_answer_mini {
 
 .jq_question_answers_cont{
 	width:85%;
-} 
+}
+@media(max-width: 768px) {
+	.jq_question_answers_cont{
+		width:100%;
+	}
+}
 
 .jq_question_answers_cont form{
 	overflow:hidden;
@@ -608,4 +613,14 @@ padding:5px;
 .jq_time_tick_container_popup .q_time-separator{
 	font-weight:bold;
 	color:#333;
+}
+
+.jq_feedback_question-imgmatch_block {
+	max-width: 33%;
+	padding: 10px !important;
+}
+.review_question-imgmatch_block {
+	max-width: 50%;
+	padding: 10px !important;
+	vertical-align: middle;
 }

@@ -55,7 +55,12 @@ div.incorrect_answer_mini {
 
 .jq_question_answers_cont{
 	width:85%;
-} 
+}
+@media(max-width: 768px) {
+	.jq_question_answers_cont{
+		width:100%;
+	}
+}
 
 .jq_question_answers_cont form{
 	overflow:hidden;

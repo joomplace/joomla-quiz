@@ -49,16 +49,17 @@ div.incorrect_answer_mini {
 }
 /*-------------------------------------------------------------------*/
 
-
 #jq_quiz_container hr{
     clear: both;
 }
 
 .jq_question_answers_cont{
-    /*overflow:hidden;*/
     width:85%;
-    /*	padding-left: 20px;*/
-    /*float:left;*/
+}
+@media(max-width: 768px) {
+    .jq_question_answers_cont{
+        width:100%;
+    }
 }
 
 .jq_question_answers_cont form{
@@ -703,11 +704,6 @@ table#quiz_table label {
 	   -moz-box-sizing:border-box;
 	        box-sizing:border-box;
 }
-.lt-ie8 .square {
-	behavior:url(/components/com_joomlaquiz/boxsizing.php);
-}
-.square {border-style:solid;} /* IE6-IE7*/
-html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 
 .dc_layout {
 	display:table;

@@ -1090,6 +1090,29 @@ div.correct_answer
 	margin:0 25px;
 }
 
+@media(max-width: 380px) {
+	.jq_quiz_task_container {
+		clear: both;
+		display: block;
+		float: none;
+		margin: 60px auto 20px;
+	}
+	.jq_quiz_task_container a {
+		display: block;
+		float: none;
+		margin: 15px auto;
+		text-align: center;
+		width: 70%;
+	}
+	.jq_quiz_task_container a.jq_next_link {
+		float: none;
+		padding-right: 15px;
+	}
+	a.jq_back_link {
+		padding-left: 15px;
+	}
+}
+
 .jq_mchoice{
 	width:100%;
 }
@@ -1156,8 +1179,7 @@ div.incorrect_answer_mini {
 	background:#558BBE;
 }
 
-.jq_mchoice_overal .sectiontableheader strong
-{
+.jq_mchoice_overal .sectiontableheader strong {
 	padding:5px;
 }
 

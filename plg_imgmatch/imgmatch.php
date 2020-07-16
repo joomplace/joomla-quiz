@@ -34,25 +34,33 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		$quest_limit_time = $database->loadResult();
 
 		$data['ret_str'] .= "\t" . '<quest_limit_time>'.$quest_limit_time.'</quest_limit_time>';
-		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div style="overflow-x: auto;"><table id="dd_table" style="border-collapse:separate;">';
-        if(!$data['q_data']->c_width){
+
+		if(!$data['q_data']->c_width){
             $data['q_data']->c_width = 100;
         }
         if(!$data['q_data']->c_height){
             $data['q_data']->c_height = 100;
         }
+        $ratio = round($data['q_data']->c_width / $data['q_data']->c_height, 5);
+
+        $data['ret_str'] .= "\t" . '<img_ratio>'.$ratio.'</img_ratio>';
+        $data['ret_str'] .= "\t" . '<img_width>'.$data['q_data']->c_width.'</img_width>';
+        $data['ret_str'] .= "\t" . '<img_height>'.$data['q_data']->c_height.'</img_height>';
+
+        $data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div class="imagematch-answers"><table id="dd_table" style="border-collapse:separate;">';
+
 		if(!empty($match_data)){
 			foreach($match_data as $ii => $dd_data){
 				$data['ret_str'] .= "\t" .'<tr>';
 				$data['ret_str'] .= "\t" .'<td style="padding:10px 0;">';
-				$data['ret_str'] .= "\t" .'<div style="float:left;width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;background-repeat: no-repeat;background-image:url('.JURI::root().'images/joomlaquiz/images/resize/'.$dd_data->c_left_text.');"><input type="hidden" class="jq_left_text" name="lefts[]" value="'.$dd_data->c_id.'***'.$dd_data->c_left_text.'" /></div>';
+				$data['ret_str'] .= "\t" .'<div style="float:left;width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;background-repeat: no-repeat;background-size:contain;background-image:url('.JURI::root().'images/joomlaquiz/images/resize/'.$dd_data->c_left_text.');"><input type="hidden" class="jq_left_text" name="lefts[]" value="'.$dd_data->c_id.'***'.$dd_data->c_left_text.'" /></div>';
 				$data['ret_str'] .= "\t" .'</td>';
 				$data['ret_str'] .= "\t" .'<td id="gw_'.($dd_c).'" width="'.$data['q_data']->c_width.'" height="'.$data['q_data']->c_height.'" style="padding:10px 0;">';
-                $data['ret_str'] .= "\t" .'<div style="width:'.$data['q_data']->c_width.'px;">&nbsp;</div>';
+                $data['ret_str'] .= "\t" .'<div class="imagematch-target" style="width:'.$data['q_data']->c_width.'px;">&nbsp;</div>';
 				$data['ret_str'] .= "\t" .'<input type="hidden" class="jq_complete" name="complete[]" value="false" /></td>';
 				$data['ret_str'] .= "\t" .'<td id="gw_'.($dd_c+1).'" width="'.$data['q_data']->c_width.'" height="'.$data['q_data']->c_height.'" style="padding:10px 0;">';
 
-				$data['ret_str'] .= "\t" .'<div class="groupItem" style="background-repeat: no-repeat;cursor:move;float:left;width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;background-image:url('.JURI::root().'images/joomlaquiz/images/resize/'.$shuffle_match[$ii]->c_right_text.');"><div class="headerItem" style="width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;" draggable="true"><input type="hidden" class="jq_right_text" name="rights[]" value="'.$shuffle_match[$ii]->c_right_text.'" /><!--x--></div></div>';
+				$data['ret_str'] .= "\t" .'<div class="groupItem" style="background-repeat: no-repeat;background-size:contain;cursor:move;float:left;width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;background-image:url('.JURI::root().'images/joomlaquiz/images/resize/'.$shuffle_match[$ii]->c_right_text.');"><div class="headerItem" style="width:'.$data['q_data']->c_width.'px;height:'.$data['q_data']->c_height.'px;" draggable="true"><input type="hidden" class="jq_right_text" name="rights[]" value="'.$shuffle_match[$ii]->c_right_text.'" /><!--x--></div></div>';
 				$data['ret_str'] .= "\t" .'</td>';
 				$data['ret_str'] .= "\t" .'</tr>';
 				array_push($script_arr,'"#gw_'.$dd_c.'"');

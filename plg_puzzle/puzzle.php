@@ -17,13 +17,8 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 	var $name		= 'Puzzle';
 	var $_name		= 'puzzle';
 	
-	public function onCreateQuestion(&$data) {
-		
-		$database = JFactory::getDBO();
-		$query = "SELECT `c_pieces` FROM #__quiz_t_puzzle WHERE c_question_id = '".$data['q_data']->c_id."'";
-		$database->SetQuery( $query );
-		$pieces = $database->LoadObjectList();
-		
+	public function onCreateQuestion(&$data)
+    {
 		$data['ret_str'] .= "\t" . '<quest_data_user><![CDATA[<div style="width:100%;clear:both;"><form onsubmit=\'javascript: return false;\' name=\'quest_form\' id=\'quest_form\'></form></div>]]></quest_data_user>' . "\n";
 		
 		$c_width = 200;
@@ -35,28 +30,27 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 			$c_height = $img_data[1] + 150;
 		}
 
-        //$data['ret_add_script'] .= "options = {handler: 'iframe', size: {x: ".$c_width.", y: ".$c_height.", closable: 0, closeBtn: 0}};";
-        $data['ret_add_script'] .= "var puzzleWidth = window.innerWidth * 0.8 < ".$c_width." ? window.innerWidth * 0.8 : ".$c_width.";
-            var puzzleHeight = puzzleWidth / (". $c_width / $c_height .");
+        $data['ret_add_script'] .= "var puzzleWidth = document.documentElement.clientWidth * 0.8 < ".$c_width." ? document.documentElement.clientWidth * 0.8 : ".$c_width.";
+            var puzzleHeight = Math.ceil(puzzleWidth / (". $c_width / $c_height ."));
             options = {handler:'iframe', size:{x: puzzleWidth, y: puzzleHeight}, closable: true, closeBtn: false};";
 		
 		return $data;
 	}
 	
-	public function onAjaxPlugin($data){
-		
-		$mainframe = JFactory::getApplication();
+	public function onAjaxPlugin($data)
+    {
+		$app = JFactory::getApplication();
+		$input = $app->input;
 		$database = JFactory::getDBO();
-		$my = JFactory::getUser();
 		
-		switch($data['plg_task']){
+		switch($data['plg_task']) {
 			case 'show':
 				require_once(JPATH_SITE.'/plugins/joomlaquiz/puzzle/html/puzzle.php');
-				$mainframe->close();
-			break;
+				$app->close();
+			    break;
 			case 'getdata':
-				$qid = JFactory::getApplication()->input->get('qid');
-				$stu_quiz_id = JFactory::getApplication()->input->get('stu_quiz_id');
+				$qid = $input->getInt('qid', 0);
+				$stu_quiz_id = $input->getInt('stu_quiz_id', 0);
 				
 				$database->setQuery("SELECT * FROM #__quiz_t_question WHERE `c_id` = '".$qid."'");
 				$q_data = $database->loadObject();
@@ -64,16 +58,13 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 				$database->setQuery("SELECT `c_pieces` FROM #__quiz_t_puzzle WHERE `c_question_id` = '".$qid."'");
 				$pieces = $database->loadResult();
 				
-				$database->setQuery("SELECT `c_id` FROM `#__quiz_r_student_question` WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qid."'");
-				$exists = $database->loadResult();
+				$database->setQuery("SELECT `c_id`, `c_attempts` FROM `#__quiz_r_student_question` WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qid."'");
+				$student_data = $database->loadObject();
 				
 				$xml_attempts = '<c_attempts>1</c_attempts>';
-				if($exists){
-					$database->setQuery("SELECT `c_attempts` FROM `#__quiz_r_student_question` WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qid."'");
-					$c_attempts = $database->loadResult();
-					
+				if($student_data->c_id){
 					$q_data->c_attempts = ($q_data->c_attempts) ? $q_data->c_attempts : 1;
-					if($c_attempts < $q_data->c_attempts){
+					if((int)$student_data->c_attempts < (int)$q_data->c_attempts){
 						$database->setQuery("UPDATE `#__quiz_r_student_question` SET `c_attempts` = `c_attempts` + 1 WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qid."'");
 						$database->query();
 					} else {
@@ -97,15 +88,15 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 				echo $xml_attempts. "\n";
 				echo '</response>' . "\n";
 
-				die;
-			break;
+                $app->close();
+			    break;
 			case 'addpoints':
-				$stu_quiz_id = JFactory::getApplication()->input->get('stu_quiz_id');
-				$quest_id = JFactory::getApplication()->input->get('quest_id');
-				$quiz_id = JFactory::getApplication()->input->get('quiz_id');
-				$action = JFactory::getApplication()->input->get('action', '');
-				$piece = JFactory::getApplication()->input->get('piece');
-				$ltime = JFactory::getApplication()->input->get('ltime');
+				$stu_quiz_id = $input->getInt('stu_quiz_id', 0);
+				$quest_id = $input->getInt('quest_id', 0);
+				$quiz_id = $input->getInt('quiz_id', 0);
+				$action = $input->get('action', '');
+				$piece = $input->getInt('piece', 0);
+				$ltime = $input->getInt('ltime', 0);
 
 				$database->setQuery("SELECT `c_point`, `c_timer` FROM #__quiz_t_question WHERE `c_id` = '".$quest_id."' AND `c_quiz_id` = '".$quiz_id."'");
 				$q_data = $database->loadAssoc();
@@ -142,8 +133,8 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 				JPluginHelper::importPlugin('system');
 				$dispatcher->trigger('onJQuizAnswerSubmitted', array (&$data));
 				
-				$mainframe->close();
-			break;
+				$app->close();
+			    break;
 		}
 		
 	}

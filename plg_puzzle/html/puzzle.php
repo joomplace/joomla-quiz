@@ -90,6 +90,7 @@ defined('_JEXEC') or die;
                         jq_jQuery("#jq_message_box").fadeIn();
                         return true;
                     }
+
                     PUZZLE_DIFFICULTY = jq_jQuery(xml).find('puzzle_difficulty').text();
                     quest_timer_sec = parseInt(jq_jQuery(xml).find('quest_time').text());
                     point = jq_jQuery(xml).find('c_point').text();
@@ -99,8 +100,9 @@ defined('_JEXEC') or die;
                     jq_jQuery("#jq_quest_conteiner").html(c_quest_text);
 
                     _img = new Image();
-                    addEvent(_img, "load", onImage);
                     _img.src = "<?php echo JURI::root();?>images/joomlaquiz/images/" + c_image;
+
+                    addEvent(_img, "load", onImage);
                 }
             });
 
@@ -112,9 +114,8 @@ defined('_JEXEC') or die;
                 ratio = w / h;
             _sourceImageWidth = _img.width;
             _sourceImageHeight = _img.height;
-            _img.width = (window.innerWidth - 20) * 0.5 < w ? (window.innerWidth - 20) * 0.5 : w;
+            _img.width = (document.documentElement.clientWidth - 20) * 0.5 < w ? (document.documentElement.clientWidth - 20) * 0.5 : w;
             _img.height = _img.width / ratio;
-
             _pieceWidth = Math.floor(_img.width / PUZZLE_DIFFICULTY);
             _pieceHeight = Math.floor(_img.height / PUZZLE_DIFFICULTY);
             _puzzleWidth = _pieceWidth * PUZZLE_DIFFICULTY;
@@ -129,6 +130,8 @@ defined('_JEXEC') or die;
             _canvas.width = _puzzleWidth * 2;
             _canvas.height = _puzzleHeight;
             _canvas.style.border = "1px solid #cccccc";
+            _canvas.style.display = "block";
+            _canvas.style.margin = "10px auto";
         }
 
         function initPuzzle(){
@@ -136,12 +139,9 @@ defined('_JEXEC') or die;
             _mouse = {x:0,y:0};
             _currentPiece = null;
             _currentDropPiece = null;
-
-            //_stage.drawImage(_img, 0, 0, _puzzleWidth, _puzzleHeight, 0, 0, _puzzleWidth, _puzzleHeight);
             _stage.drawImage(_img, 0, 0, Math.floor(_sourceImageWidth / PUZZLE_DIFFICULTY) * PUZZLE_DIFFICULTY, Math.floor(_sourceImageHeight / PUZZLE_DIFFICULTY) * PUZZLE_DIFFICULTY, 0, 0, _puzzleWidth, _puzzleHeight);
             _img = new Image();
             _img.src = _canvas.toDataURL('image/jpeg');
-
             createTitle("<?php echo JText::_('COM_QUIZ_CLICK_TO_START_PUZZLE');?>");
             buildPieces();
         }
@@ -154,8 +154,7 @@ defined('_JEXEC') or die;
             _stage.globalAlpha = 1;
             _stage.textAlign = "center";
             _stage.textBaseline = "middle";
-            //_stage.font = "20px Arial";
-            _stage.font = "1.25em Arial";
+            _stage.font = "1em Arial";
             if(!jq_jQuery.browser.msie){
                 _stage.fillText(msg,_puzzleWidth / 2,_puzzleHeight - 20);
             }
@@ -450,7 +449,7 @@ defined('_JEXEC') or die;
         addListenerMulti(window, 'touchstart touchmove touchend touchcancel', onTouchTriggerMouseEvent);
 
         function onTouchTriggerMouseEvent(e) {
-            e.preventDefault();
+            //e.preventDefault();
             if (e.touches.length > 1 || (e.type == 'touchend' && e.touches.length > 0)){
                 return;
             }

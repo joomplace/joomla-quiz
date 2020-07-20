@@ -36,12 +36,12 @@ class JoomlaquizViewFeedbackPuzzle
         $xPos = 0;
         $yPos = 0;
 
-        $jq_tmpl_html .= "<img src='".JURI::root()."images/joomlaquiz/images/".$data['qdata'][0]['q_data']->c_image."' width='".$puzzleWidth."' height='".$puzzleHeight."' style='position:absolute;top:0px;left:0px;'>";
+        $jq_tmpl_html .= "<img class='feedback-puzzle__img' src='".JURI::root()."images/joomlaquiz/images/".$data['qdata'][0]['q_data']->c_image."' width='".$puzzleWidth."' height='".$puzzleHeight."' style='position:absolute;top:0px;left:0px;'>";
         $cc = 1;
         for($n = 0; $n < $data['qdata'][0]['difficulty']; $n++){
             for($m = 0; $m < $data['qdata'][0]['difficulty']; $m++){
                 $bkg = (!in_array($cc, $feedback_data)) ? 'background: #eeeeee;filter:alpha(opacity=70);-moz-opacity:.7; opacity:.7;' : 'filter:alpha(opacity=0);-moz-opacity:0; opacity:0;';
-                $jq_tmpl_html .= "<div style='".$bkg." width:".$pieceWidth."px; height:".$pieceHeight."px;float:left;'><!--x--></div>";
+                $jq_tmpl_html .= "<div class='feedback-puzzle__piece' style='".$bkg." width:".$pieceWidth."px; height:".$pieceHeight."px;float:left;'><!--x--></div>";
                 $xPos += $pieceWidth;
                 if($xPos >= $puzzleWidth){
                     $xPos = 0;

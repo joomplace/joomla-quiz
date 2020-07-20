@@ -76,7 +76,7 @@ class JoomlaquizModelResults extends JModelList
         $total_rows = 0;
         if($rows && !empty($rows)){
             $query->clear();
-            $query->select('COUNT(*)')
+            $query->select('1')
                 ->from($db->qn('#__quiz_r_student_quiz','sq'))
                 ->join('left',$db->qn('#__quiz_r_student_question','squ').' ON '.$db->qn('sq.c_id').' = '.$db->qn('squ.c_stu_quiz_id'))
                 ->join('left',$db->qn('#__quiz_t_quiz','q').' ON '.$db->qn('sq.c_quiz_id').' = '.$db->qn('q.c_id'))
@@ -86,7 +86,8 @@ class JoomlaquizModelResults extends JModelList
                 $query->where($db->qn('sq.c_student_id').' = '.$db->q($user->id));
             }
             $db->setQuery($query);
-            $total_rows = $db->loadResult();
+            $db->execute();
+            $total_rows = $db->getNumRows();
         }
 
         $quizzes = array();

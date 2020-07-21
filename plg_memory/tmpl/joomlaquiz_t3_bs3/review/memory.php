@@ -9,22 +9,20 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-/**
- * Joomlaquiz Deluxe class
- */
 class JoomlaquizViewReviewMemory
 {
-	public static function getReviewContent($review_data, $data){
-		
+	public static function getReviewContent($review_data, $data)
+    {
 		$jq_tmpl_html = "<div style='width:100%;'>";
 		$jq_tmpl_html .= '<table width="100%" id="quest_table">
 							<tr>
-								<td class="sectiontableheader">'.JText::_('COM_JQ_POSSIBLE_ANSWERS').'</td>
-								<td class="sectiontableheader">'.JText::_('COM_JQ_YOUR_CHOICE').'</td>
-								<td class="sectiontableheader">'.JText::_('COM_JQ_YOUR_MEMORY_POINTS').'</td>';
+								<td>'.JText::_('COM_JQ_POSSIBLE_ANSWERS').'</td>
+								<td>'.JText::_('COM_JQ_YOUR_CHOICE').'</td>
+								<td>'.JText::_('COM_JQ_YOUR_MEMORY_POINTS').'</td>
+							</tr>';
 		
 		$k = 2;
-		if(count($review_data['memory_data'])){
+		if(!empty($review_data['memory_data'])){
 			foreach($review_data['memory_data'] as $mem) {
 				$wrong_correct = (in_array($mem->m_id, $review_data['udata'])) ? '<img src="'.JURI::root().'components/com_joomlaquiz/assets/images/tick.png" style="vertical-align:middle;margin-left:10px;"/>' : '<img src="'.JURI::root().'components/com_joomlaquiz/assets/images/tickr.png" style="vertical-align:middle;margin-left:10px;"/>';
 				
@@ -43,16 +41,17 @@ class JoomlaquizViewReviewMemory
 				}
 								
 				$jq_tmpl_html .= '<tr class="sectiontableentry'.$k.'">'.
-								'<td class="jq_feedback_question_content_col_wide"><img src="'. JURI::root().'images/joomlaquiz/images/memory/'.($mem->c_img). '" width="150"/>&nbsp;&nbsp;<img src="'. JURI::root().'images/joomlaquiz/images/memory/'.($mem->c_img). '" width="150"/></td>'.
-								'<td style="vertical-align:middle;">'.$wrong_correct.'</td>'.
-								'<td>'.$score.$expl.'</td>'.
+                                    '<td class="jq_feedback_question_content_col_wide"><img src="'. JURI::root().'images/joomlaquiz/images/memory/'.($mem->c_img). '" />&nbsp;&nbsp;<img src="'. JURI::root().'images/joomlaquiz/images/memory/'.($mem->c_img). '" /></td>'.
+                                    '<td style="vertical-align:middle;">'.$wrong_correct.'</td>'.
+                                    '<td>'.$score.$expl.'</td>'.
 								'</tr>';
 				$k = 3 - $k;
 			}
 		}
-		
+
+        $jq_tmpl_html .= "</table></div>";
+
 		return $jq_tmpl_html;
 	}
 }
-
 ?>

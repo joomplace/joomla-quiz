@@ -13,12 +13,21 @@ if (questions[i].cur_quest_type == 4) {
 	// *** end of DRAG'and'DROP CODE *** //
 
 	for(var j =1; j <= questions[i].kol_drag_elems; j++) {
-			jq_jQuery('div#ddiv'+questions[i].cur_quest_id+'_'+j).mouseup(function(event){
-				stopDrag(event);
-			}).mousedown(function(event){
-				startDrag(event);
-			});
+		jq_jQuery('div#ddiv'+questions[i].cur_quest_id+'_'+j).mouseup(function(event){
+			stopDrag(event);
+		}).mousedown(function(event){
+			startDrag(event);
+		});
 	}
 
 	setDrnDnAnswers(i);
+
+	jQuery(function ($) {
+		var dragdropTable = $('.dragdrop_table');
+		if($(dragdropTable).length) {
+			jpEqualHeight($(dragdropTable).find('td'));
+			jpEqualHeight($(dragdropTable).find('td>div'));
+		}
+	});
+
 }

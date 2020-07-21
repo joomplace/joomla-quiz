@@ -611,3 +611,9 @@ html>/**/body .square {border-style:dotted;} /*all normal browsers*/
 	font-weight:bold;
 	color:#333;
 }
+
+.dragdrop_table div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

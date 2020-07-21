@@ -40,7 +40,7 @@ class plgJoomlaquizDragdrop extends plgJoomlaquizQuestion
 		. 'ids_in_cont'.$data['q_data']->c_id.' = new Array(kol_drag_elems'.$data['q_data']->c_id.');'."\n".'cont_for_ids'.$data['q_data']->c_id.' = new Array(kol_drag_elems'.$data['q_data']->c_id.');'."\n".' answ_ids'.$data['q_data']->c_id.' = new Array(kol_drag_elems'.$data['q_data']->c_id.'); '."\n"
 		. 'cont_index = 0;'."\n".' last_drag_id = 0;'."\n".' last_drag_id_drag = 0; '."\n";
 		$data['ret_str'] .= ''
-		. '<div style=\'width:100%;text-align:center;position:relative;\'><table id=\'quest_table\' align=\'center\' style=\'position:relative;\'>';
+		. '<div style=\'width:100%;text-align:center;position:relative;\'><table id=\'quest_table\' class=\'dragdrop_table\' align=\'center\' style=\'position:relative;\'>';
 
 		$query = "SELECT c_matching_id, c_sel_text FROM #__quiz_t_matching AS m LEFT JOIN #__quiz_r_student_matching AS sm"
 		. "\n ON m.c_id = sm.c_matching_id AND sm.c_sq_id = '".$data['sid']."' WHERE m.c_question_id = '".$data['q_data']->c_id."'";

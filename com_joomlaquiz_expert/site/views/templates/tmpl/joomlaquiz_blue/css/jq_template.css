@@ -1823,3 +1823,9 @@ table#quiz_table label {
     padding: 10px !important;
     vertical-align: middle;
 }
+
+.dragdrop_table div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

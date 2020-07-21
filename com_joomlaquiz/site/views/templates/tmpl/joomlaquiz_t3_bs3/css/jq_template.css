@@ -1221,3 +1221,9 @@ td.jq_calculus_custom_empty_cell{
 	margin: 0px -16px -16px;
 	padding: 20px 0px;
 }
+
+.dragdrop_table div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

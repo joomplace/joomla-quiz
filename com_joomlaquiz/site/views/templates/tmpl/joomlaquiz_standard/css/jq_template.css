@@ -747,3 +747,9 @@ table#quiz_table label {
 td.quest_pos > label {
     margin: 2px 0px 5px;
 }
+
+.dragdrop_table div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

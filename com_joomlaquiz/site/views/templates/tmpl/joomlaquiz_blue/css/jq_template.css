@@ -1730,3 +1730,8 @@ table#quiz_table label {
 .certificateMessage{
     margin-bottom: 20px;
 }
+.dragdrop_table div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -234,3 +234,14 @@ function getParent(elemSelector, parentSelector) {
 	return null;
 }
 
+function jpEqualHeight(group) {
+	var tallest = 0,
+		thisHeight = 0;
+	group.each(function() {
+		thisHeight = jQuery(this).height();
+		if(thisHeight > tallest) {
+			tallest = thisHeight;
+		}
+	});
+	group.height(tallest);
+}

@@ -1264,3 +1264,9 @@ td.jq_calculus_custom_empty_cell{
 .certificateMessage{
     margin-bottom: 20px;
 }
+
+.dragdrop_table div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

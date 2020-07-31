@@ -120,6 +120,7 @@ object{
 }
 .jq_panel_link_container{
 	float:left;
+	margin: 15px 10px;
 }	
 .jq_panel_link {
 	padding-left:10px;
@@ -592,6 +593,7 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
 	vertical-align:bottom;
 	display: block;
 	float: left;
+	margin-right: 5px;
 }
 
 #c_flag_label{
@@ -664,4 +666,10 @@ iframe, svg {
 	height: auto;
 	vertical-align: middle;
 	border: 0;
+}
+#jq_quiz_container a {
+	overflow-wrap: break-word;
+}
+.jq_flagged_question {
+	float: none;
 }

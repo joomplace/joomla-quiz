@@ -867,12 +867,12 @@ td.jq_match_image_element{
 	color:#8bb257;
 	font-size:13px;
 	margin-left: 38px;
-	float:left;
+	/*float:left;*/
 }
 
 .jq_result_value
 {
-	float:right;
+	/*float:right;*/
 }
 .jq_result_bg{
 	background-color:#f5f5f5;

@@ -1220,6 +1220,7 @@ td.jq_calculus_custom_empty_cell{
 .jquiz_bottom {
 	margin: 0px -16px -16px;
 	padding: 20px 0px;
+	min-height: 89px;
 }
 
 .dragdrop_table div {

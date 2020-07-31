@@ -867,7 +867,7 @@ function jq_processFeedback(task, is_preview, skip_question){
 
 			if(~~show_flag){
 				
-				jq_jQuery('.jq_flagged_question').show();
+				jq_jQuery('.jq_flagged_question').show().css({'display':'inline-block'});
 				jq_jQuery('#c_flag').bind('click', function(){
 					setFlag(feedback_quest_id);
 				});

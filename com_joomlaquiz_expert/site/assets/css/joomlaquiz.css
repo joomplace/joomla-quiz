@@ -649,3 +649,14 @@ div.moduletable.joomlaquiz_container table.contentpaneopen h4 {
 	margin-left: 0 !important;
 	margin-right: 0 !important;
 }
+
+iframe, svg {
+	max-width: 100%;
+	box-sizing: border-box;
+}
+#jq_quiz_container img {
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+	border: 0;
+}

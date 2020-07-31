@@ -36,7 +36,7 @@ class JoomlaquizViewFeedbackPuzzle
         $xPos = 0;
         $yPos = 0;
 
-        $jq_tmpl_html .= "<img class='feedback-puzzle__img' src='".JURI::root()."images/joomlaquiz/images/".$data['qdata'][0]['q_data']->c_image."' width='".$puzzleWidth."' height='".$puzzleHeight."' style='position:absolute;top:0px;left:0px;'>";
+        $jq_tmpl_html .= "<img class='feedback-puzzle__img' src='".JURI::root()."images/joomlaquiz/images/".$data['qdata'][0]['q_data']->c_image."' width='".$puzzleWidth."' height='".$puzzleHeight."' style='position:absolute;top:0px;left:0px;' data-difficulty='".$data['qdata'][0]['difficulty']."' >";
         $cc = 1;
         for($n = 0; $n < $data['qdata'][0]['difficulty']; $n++){
             for($m = 0; $m < $data['qdata'][0]['difficulty']; $m++){

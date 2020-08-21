@@ -1,10 +1,16 @@
 var dropped = false;
 function createDD(){
+
+	if(jq_jQuery('.jq_blank_wrap').height() > (document.documentElement.clientHeight - 10)){
+		jq_jQuery('.jq_blank_wrap').height(document.documentElement.clientHeight - 10);
+	}
+
 	jq_jQuery(".jq_draggable_answer").draggable({
 		containment:'parent',
 		cursor: 'move',
 		revert: true,
 		revertDuration: 0,
+		scroll: true,
 		start: function(event, ui) {
 			dropped = false;
 		},
@@ -17,6 +23,7 @@ function createDD(){
 		cursor: 'move',
 		revert: true,
 		revertDuration: 0,
+		scroll: true,
 		start: function(event, ui) {
 			dropped = false;
 			if (jq_jQuery(this).hasClass( 'jq_blank_draggable' )) {
@@ -51,14 +58,14 @@ function createDD(){
 					jq_getObj('hid'+ui.draggable.attr("id")).value = '';
 				}
 
-				this.innerHTML = '<span class="jq_blank_draggable" id="_'+this.id+'" xid="'+ui.draggable.attr("xid")+'">'+ui.draggable.html()+'</span>&nbsp;';
+				this.innerHTML = '<span class="jq_blank_draggable" id="_'+this.id+'" xid="'+ui.draggable.attr("xid")+'" draggable="true">'+ui.draggable.html()+'</span>&nbsp;';
 
 				check_Blank(this.id.replace('blk_id_','') , ui.draggable.html());
 
 				if (droppable_value && ui.draggable.hasClass("jq_blank_draggable")) {
 					var tid = ""+ui.draggable.attr("id");
 					jq_getObj('hid'+tid).value = droppable_value;
-					jq_getObj(tid.substr(1)).innerHTML = '<span class="jq_blank_draggable" id="'+tid+'" '+(xid? 'xid="'+xid: '')+'">'+droppable_value+'</span>&nbsp;';
+					jq_getObj(tid.substr(1)).innerHTML = '<span class="jq_blank_draggable" id="'+tid+'" '+(xid? 'xid="'+xid: '')+'" draggable="true">'+droppable_value+'</span>&nbsp;';
 				} else if (droppable_value) {
 					ui.draggable.css('visibility','hidden');
 					jq_jQuery('.jq_draggable_answer[xid="'+xid+'"]').css('visibility','visible');

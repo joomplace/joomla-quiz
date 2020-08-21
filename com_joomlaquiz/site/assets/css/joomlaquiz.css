@@ -673,3 +673,6 @@ iframe, svg {
 .jq_flagged_question {
 	float: none;
 }
+.jq_blank_wrap{
+	width: 100%;
+}

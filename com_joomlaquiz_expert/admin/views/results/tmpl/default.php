@@ -22,6 +22,10 @@ $userId		= $user->get('id');
 $extension = 'com_joomlaquiz';
 
 $sortFields = $this->getSortFields();
+
+//custom 714 start
+$database = JFactory::getDBO();
+//custom 714 end
 ?>
 <script type="text/javascript">
 	Joomla.orderTable = function() {
@@ -249,7 +253,30 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="has-context">
 						<?php if($item->c_passed){ ?>
-							<?php echo base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$item->c_id.''.$item->c_student_id.''.$item->c_total_score, 10, 36) ?>
+							<?php
+                            //echo base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$item->c_id.''.$item->c_student_id.''.$item->c_total_score, 10, 36);
+                            //custom714 start
+                            if(!empty($item->c_order_id) && $item->c_order_id < 1000000000
+                                && file_exists(JPATH_SITE . '/administrator/components/com_virtuemart/helpers/config.php')) { //vm
+
+                                $query = "SELECT vm_o.* "
+                                    . "\n FROM #__virtuemart_orders AS vm_o"
+                                    . "\n INNER JOIN #__virtuemart_order_items AS vm_oi ON vm_oi.virtuemart_order_id = vm_o.virtuemart_order_id"
+                                    . "\n LEFT JOIN #__virtuemart_order_histories AS vm_oh ON vm_oi.virtuemart_order_id = vm_oh.virtuemart_order_id AND vm_oh.order_status_code IN ('C')"
+                                    . "\n INNER JOIN #__quiz_products AS qp ON qp.pid = vm_oi.virtuemart_product_id"
+                                    . "\n WHERE vm_o.virtuemart_user_id = " . $item->c_student_id . "  AND vm_o.virtuemart_order_id = $item->c_order_id AND vm_o.order_status IN ('C') AND qp.id = " . $item->c_rel_id
+                                ;
+                                $database->SetQuery( $query );
+                                $rel_check = $database->loadObject();
+
+                                if(!empty($rel_check->order_number)){
+                                    echo $certificate_number = $item->c_quiz_id . '-' . $rel_check->order_number;
+                                }
+                            } else {
+                                echo $certificate_number = $item->c_quiz_id . '-' . $item->c_student_id;
+                            }
+                            //custom714 end
+                            ?>
 						<?php } ?>
 					</td>
 					<?php echo JHtml::_('content.prepare','',$item,'admin.results.table.row'); ?>

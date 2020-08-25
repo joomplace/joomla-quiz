@@ -1,8 +1,8 @@
 var dropped = false;
 function createDD(){
 
-	if(jq_jQuery('.jq_blank_wrap').height() > (document.documentElement.clientHeight - 10)){
-		jq_jQuery('.jq_blank_wrap').height(document.documentElement.clientHeight - 10);
+	if(jq_jQuery('.jq_blank_wrap').height() > (document.documentElement.clientHeight * 0.7)){
+		jq_jQuery('.jq_blank_wrap').height(document.documentElement.clientHeight * 0.7);
 	}
 
 	jq_jQuery(".jq_draggable_answer").draggable({
@@ -13,13 +13,15 @@ function createDD(){
 		scroll: true,
 		start: function(event, ui) {
 			dropped = false;
+			joomlaquizBlank.headerDemoSiteInpin(); //fix for demo-site to allow scrolling
 		},
 		stop: function(event, ui) {
 			dropped = false;
+			joomlaquizBlank.headerDemoSitePin();
 		}
 	});
 
-	makeBlankDraggable();
+	joomlaquizBlank.makeBlankDraggable();
 
 	jq_jQuery(".jq_blank_droppable").droppable({
 		accept: '.jq_blank_draggable, .jq_draggable_answer',
@@ -28,7 +30,7 @@ function createDD(){
 		tolerance: 'pointer',
 		out: function(event, ui) {
 			//When dragging an element across multiple fields, the 'out'-event will occur multiple times.
-			prevBlankContainerIds.push(jq_jQuery(this).attr('id'));
+			joomlaquizBlank.prevBlankContainerIds.push(jq_jQuery(this).attr('id'));
 		},
 		drop: function(event, ui){
 			dropped = true;
@@ -60,47 +62,67 @@ function createDD(){
 				}
 			}
 
-			makeBlankDraggable();
-			blankFieldsRestoration();
+			joomlaquizBlank.makeBlankDraggable();
+			joomlaquizBlank.blankFieldsRestoration();
 			jq_jQuery("body").css('cursor', 'default');
 		},
 	});
 }
 
-function makeBlankDraggable() {
-	jq_jQuery('.jq_blank_draggable').draggable({
-		cursor: 'move',
-		revert: true,
-		revertDuration: 0,
-		scroll: true,
-		start: function(event, ui) {
-			dropped = false;
-			if (jq_jQuery(this).hasClass( 'jq_blank_draggable' )) {
-				jq_jQuery(this).addClass( 'jq_draggable_answer_span' );
-			}
-		},
-		stop: function(event, ui) {
-			if (jq_jQuery(this).hasClass( 'jq_blank_draggable' )) {
-				jq_jQuery(this).removeClass( 'jq_draggable_answer_span' );
-			}
-			if (!dropped) {
-				jq_getObj('hid'+this.id).value = '';
-				jq_jQuery('.jq_draggable_answer[xid="'+jq_jQuery(this).attr("xid")+'"]').css('visibility','visible');
-				jq_jQuery(this).remove();
-			}
-			dropped = false;
-			blankFieldsRestoration();
-		}
-	});
-}
+jq_jQuery(function ($) {
+	window.joomlaquizBlank = window.joomlaquizBlank || {};
+	joomlaquizBlank.prevBlankContainerIds = [];
 
-var prevBlankContainerIds = [];
+	joomlaquizBlank.makeBlankDraggable = function () {
+		$('.jq_blank_draggable').draggable({
+			cursor: 'move',
+			revert: true,
+			revertDuration: 0,
+			scroll: true,
+			start: function(event, ui) {
+				dropped = false;
+				if ($(this).hasClass( 'jq_blank_draggable' )) {
+					$(this).addClass( 'jq_draggable_answer_span' );
+				}
+				joomlaquizBlank.headerDemoSiteInpin();
+			},
+			stop: function(event, ui) {
+				if ($(this).hasClass( 'jq_blank_draggable' )) {
+					$(this).removeClass( 'jq_draggable_answer_span' );
+				}
+				if (!dropped) {
+					jq_getObj('hid'+this.id).value = '';
+					$('.jq_draggable_answer[xid="'+$(this).attr("xid")+'"]').css('visibility','visible');
+					$(this).remove();
+				}
+				dropped = false;
+				joomlaquizBlank.blankFieldsRestoration();
+				joomlaquizBlank.headerDemoSitePin();
+			}
+		});
+	};
 
-function blankFieldsRestoration() {
-	prevBlankContainerIds.forEach(function(item, i, arr) {
-		if(!jQuery('#'+item).find('span.jq_blank_draggable').length) {
-			jq_jQuery('#'+item).html('<span class="jq_blank_draggable ui-draggable" id="_'+item+'" style="position: relative;"></span>&nbsp;');
+	joomlaquizBlank.blankFieldsRestoration = function () {
+		joomlaquizBlank.prevBlankContainerIds.forEach(function(item, i, arr) {
+			if(!$('#'+item).find('span.jq_blank_draggable').length) {
+				$('#'+item).html('<span class="jq_blank_draggable ui-draggable" id="_'+item+'" style="position:relative;"></span>&nbsp;');
+			}
+		});
+		joomlaquizBlank.prevBlankContainerIds = [];
+	};
+
+	joomlaquizBlank.headerDemoSitePin = function () {
+		if($('#t3-mainnav.navbar-fixed-top').length) {
+			$('#t3-mainnav.navbar-fixed-top').css({'position':'fixed'});
+			$('body').css({'padding-top':'55px'});
 		}
-	});
-	prevBlankContainerIds = [];
-}
+	};
+
+	joomlaquizBlank.headerDemoSiteInpin = function () {
+		if($('#t3-mainnav.navbar-fixed-top').length) {
+			$('#t3-mainnav.navbar-fixed-top').css({'position':'relative'});
+			$('body').css({'padding-top':'0px'});
+		}
+	};
+
+});

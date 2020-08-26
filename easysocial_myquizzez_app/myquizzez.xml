@@ -23,12 +23,12 @@
 	<!--
 		The creation date of this app.
 	-->
-	<created>December 2018</created>
+	<created>August 2020</created>
 
 	<!--
 		Give a version for your app. Ideal to follow the semantic version guideline, http://semver.org/
 	-->
-	<version>3.7.7</version>
+	<version>3.7.8</version>
 
 	<!--
 		Any copyright message for your app

@@ -1,1 +1,0 @@
-ALTER TABLE `#__quiz_cert_fields` ADD COLUMN `text_x_center` TINYINT(1) NOT NULL DEFAULT '0' AFTER `font`;

@@ -2,18 +2,17 @@
 <extension version="3.0" type="plugin" group="content" method="upgrade">
 	<name>Content - Quiz Content</name>
 	<author>JoomPlace Team</author>
-	<creationDate>December 2018</creationDate>
+	<creationDate>August 2020</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.7</version>
+	<version>3.7.8</version>
 	<description>Displays formatted code in content items</description>
 	<files>
 		<filename plugin="quizcont">quizcont.php</filename>
 		<filename>index.html</filename>
 		<filename>quizcont.xml</filename>
-
 	</files>
 	<config>
 		<fields name="params">

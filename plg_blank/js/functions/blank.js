@@ -119,7 +119,7 @@ jq_jQuery(function ($) {
 	};
 
 	joomlaquizBlank.headerDemoSiteInpin = function () {
-		if($('#t3-mainnav.navbar-fixed-top').length) {
+		if($('#t3-mainnav.navbar-fixed-top').length && document.documentElement.clientWidth <= 768) {
 			$('#t3-mainnav.navbar-fixed-top').css({'position':'relative'});
 			$('body').css({'padding-top':'0px'});
 		}

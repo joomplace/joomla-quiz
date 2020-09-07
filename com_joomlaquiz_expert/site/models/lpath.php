@@ -89,7 +89,13 @@ class JoomlaquizModelLpath extends JModelList
 				$lpath->message = '<p align="left">'.JText::_('COM_LPATH_NOT_AVAILABLE').'</p>';
 				return array($lpath, null);
 			}
-		
+
+			$quiz_id_in_lp = array();
+			foreach ($lpath_all as $lpath_one) {
+                $quiz_id_in_lp[] = $database->q($lpath_one->qid);
+            }
+            $quiz_id_in_lp_string = implode(',', $quiz_id_in_lp);
+
 			$passed_steps = array('q'=>array(), 'a'=>array());
             $count_passed_steps = array();
 
@@ -97,7 +103,8 @@ class JoomlaquizModelLpath extends JModelList
             $query->select( $database->qn(array('type', 'qid')) )
                 ->from($database->qn('#__quiz_lpath_stage'))
                 ->where( $database->qn('uid') . '=' . $database->q((int)$my->id))
-                ->where( $database->qn('lpid') . '=' . $database->q((int)$lpath->id));
+                ->where( $database->qn('lpid') . '=' . $database->q((int)$lpath->id))
+                ->where( $database->qn('stage') . '=' . $database->q('1'));
             if($lpath->package_id && $lpath->rel_id){
                 $query->where( $database->qn('oid') . '=' . $database->q((int)$package_id));
                 $query->where( $database->qn('rel_id') . '=' . $database->q((int)$rel_id));
@@ -113,9 +120,9 @@ class JoomlaquizModelLpath extends JModelList
             }
 
             if($lpath->package_id && $lpath->rel_id){
-                $query = "SELECT * FROM #__quiz_r_student_quiz WHERE c_student_id = '{$my->id}' AND c_order_id ='{$package_id}' AND c_rel_id = '{$rel_id}' AND c_passed = 1 ";
+                $query = "SELECT * FROM `#__quiz_r_student_quiz` WHERE `c_student_id` = '{$my->id}' AND `c_order_id` ='{$package_id}' AND `c_rel_id` = '{$rel_id}' AND `c_passed` = '1' AND `c_quiz_id` IN ({$quiz_id_in_lp_string}) ";
             } else {
-                $query = "SELECT * FROM #__quiz_r_student_quiz WHERE c_student_id = '{$my->id}' AND c_passed = 1 ";
+                $query = "SELECT * FROM `#__quiz_r_student_quiz` WHERE `c_student_id` = '{$my->id}' AND `c_passed` = '1' AND `c_quiz_id` IN ({$quiz_id_in_lp_string}) ";
             }
 			$database->SetQuery( $query );		
 			$passed_quizzes = $database->loadObjectList();
@@ -159,7 +166,7 @@ class JoomlaquizModelLpath extends JModelList
             }
 
             $link = true;
-			if(is_array($lpath_all ) && !empty($lpath_all )) {
+			if(is_array($lpath_all) && !empty($lpath_all)) {
                 foreach ($lpath_all as $i => $row) {
                     $lpath_all[$i]->show_link = $link;
                     if ($link == true && !array_key_exists($lpath_all[$i]->all_id, $passed_steps[$row->type])) {

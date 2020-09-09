@@ -73,7 +73,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 
 				    if ($right_row->gtype && @$ddd[0]->c_qform == 0) {
 						if ($right_row->regexp) {
-							if (isset($ans_array[$z]->text) && preg_match((string)$right_row->c_text, (string)$ans_array[$z]->text)) {
+							if (isset($ans_array[$z]->text) && preg_match('/'.(string)$right_row->c_text.'/', (string)$ans_array[$z]->text)) {
 								$is_correct_t++;
 								$c_quest_score += $right_row->a_points;
 								$ans_array[$z]->result = 1;
@@ -93,8 +93,8 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 								$ans_array[$z]->result = 1;
 							}
 						} else { 
-							if ($right_row->regexp) {	
-								if (isset($ans_array[$z]->text) && preg_match((string)$right_row->c_text, (string)$ans_array[$z]->text)) {
+							if ($right_row->regexp) {
+								if (isset($ans_array[$z]->text) && preg_match('/'.(string)$right_row->c_text.'/', (string)$ans_array[$z]->text)) {
 									$is_correct_q++;
 									$c_quest_score += $right_row->a_points;
 									$ans_array[$z]->result = 1;
@@ -110,6 +110,7 @@ class plgJoomlaquizBlank extends plgJoomlaquizQuestion
 					}
 
 				}
+
 				if ($ddd[0]->c_attempts) {
 					$data['c_all_attempts'] = $ddd[0]->c_attempts; 
 				}

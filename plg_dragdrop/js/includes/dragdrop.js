@@ -1,5 +1,5 @@
 if (questions[i].cur_quest_type == 4) {
-	// *** DRAG'and'DROP CODE *** //
+	//Drag and drop
 
 	questions[i].kol_drag_elems = eval('kol_drag_elems'+questions[i].cur_quest_id);
 	questions[i].drag_array = new Array(questions[i].kol_drag_elems);
@@ -10,7 +10,6 @@ if (questions[i].cur_quest_type == 4) {
 	questions[i].answ_ids = new Array(questions[i].kol_drag_elems);
 	questions[i].answ_ids = eval('answ_ids'+questions[i].cur_quest_id);
 	questions[i].cont_index = 0;
-	// *** end of DRAG'and'DROP CODE *** //
 
 	for(var j =1; j <= questions[i].kol_drag_elems; j++) {
 		jq_jQuery('div#ddiv'+questions[i].cur_quest_id+'_'+j).mouseup(function(event){
@@ -18,6 +17,11 @@ if (questions[i].cur_quest_type == 4) {
 		}).mousedown(function(event){
 			startDrag(event);
 		});
+
+		//for Firefox
+		document.getElementById('ddiv'+questions[i].cur_quest_id+'_'+j).ondragstart = function() {
+			return false;
+		};
 	}
 
 	setDrnDnAnswers(i);

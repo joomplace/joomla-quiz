@@ -67,10 +67,6 @@ function subfolding($r_url){
                         <td align="left"><?php echo JText::_('COM_JOOMLAQUIZ_ABOUT_TEXT'); ?></td>
                     </tr>
                     <tr>
-                        <td align="left">Community Forum:</td>
-                        <td align="left"><a target="_blank" href="http://www.joomplace.com/forum/joomla-components/joomlaquiz-deluxe.html">http://www.joomplace.com/forum/joomla-components/joomlaquiz-deluxe.html</a></td>
-                    </tr>
-                    <tr>
                         <td align="left">Support Helpdesk:</td>
                         <td align="left"><a target="_blank" href="http://www.joomplace.com/support/helpdesk/post-purchase-questions/ticket/create">http://www.joomplace.com/support/helpdesk/post-purchase-questions/ticket/create</a></td>
                     </tr>

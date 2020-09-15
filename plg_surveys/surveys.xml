@@ -2,12 +2,12 @@
 <extension version="3.0" type="plugin" group="joomlaquiz" method="upgrade">
 	<name>Joomlaquiz - surveys</name>
 	<author>JoomPlace Team</author>
-	<creationDate>August 2020</creationDate>
+	<creationDate>September 2020</creationDate>
 	<copyright>(C) JoomPlace, www.joomplace.com</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>support@joomplace.com</authorEmail>
 	<authorUrl>www.joomplace.com</authorUrl>
-	<version>3.7.8</version>
+	<version>3.7.9</version>
 	<isapplication>false</isapplication>
 	<isbrowsable>false</isbrowsable>
 	<description>Added Surveys question type</description>

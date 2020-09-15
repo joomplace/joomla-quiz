@@ -2,13 +2,13 @@
 <extension type="package" version="3.x" method="upgrade">
   <name>Joomla Quiz Deluxe Package</name>
   <author>Joomplace Team</author>
-  <creationDate>August 2020</creationDate>
+  <creationDate>September 2020</creationDate>
   <packagename>expert_quiz</packagename>
   <authorEmail>support@joomplace.com</authorEmail>
   <authorUrl>www.joomplace.com</authorUrl>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-  <version>3.7.8</version>
+  <version>3.7.9</version>
   <files folder="packages">
     <file type="component" id="com_joomlaquiz">com_joomlaquiz_expert.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_lastten.zip</file>
@@ -38,6 +38,6 @@
     <file type="plugin" id="updater" group="installer">plg_installer_joomplaceupdater.zip</file>
   </files>
   <updateservers>
-    <server type="collection" priority="1" name="Joomplace Update Site">http://www.joomplace.com/updates/collections.xml</server>
+    <server type="collection" priority="1" name="Joomplace Update Site">https://www.joomplace.com/updates/collections.xml</server>
   </updateservers>
 </extension>

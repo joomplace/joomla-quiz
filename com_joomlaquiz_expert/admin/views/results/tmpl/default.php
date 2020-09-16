@@ -23,6 +23,13 @@ $extension = 'com_joomlaquiz';
 
 $sortFields = $this->getSortFields();
 ?>
+<?php //custom746 start ?>
+    <style>
+        .survey-highlight, .survey-highlight>td {
+            background-color: lightgoldenrodyellow !important;
+        }
+    </style>
+<?php //custom746 end ?>
 <script type="text/javascript">
 	Joomla.orderTable = function() {
 		table = document.getElementById("sortTable");
@@ -172,8 +179,13 @@ $sortFields = $this->getSortFields();
                 $canCheckin	= $user->authorise('core.admin', 'com_checkin');
                 $canChange	= $user->authorise('core.edit.state', $extension.'.results.'.$item->c_id) && $canCheckin;
 				$dateReport = JHTML::_('date', $item->c_date_time, 'd-m-Y H:i:s', null);
+
+                //custom746 start
+                $add_class = (!empty($item->survey_highlight)) ? ' survey-highlight' : '';
 			?>
-				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="1">
+				<!--<tr class="row<?php echo $i % 2; ?>" sortable-group-id="1">-->
+                <tr class="row<?php echo $i % 2; ?><?php echo $add_class; ?>" sortable-group-id="1">
+                <?php //custom746 end ?>
 					<td class="order nowrap center">
 						<?php echo ($i+1);?>
 					</td>

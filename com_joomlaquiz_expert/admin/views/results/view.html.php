@@ -27,6 +27,8 @@ class JoomlaquizViewResults extends JViewLegacy
 		$layout = $this->getLayout();
         $this->messageTrigger = $this->get('CurrDate');
 		$this->addTemplatePath(JPATH_BASE.'/components/com_joomlaquiz/helpers/html');
+        $model = $this->getModel();
+
 		if($layout == 'stu_report'){
 			$cid = JFactory::getApplication()->input->get('cid');
 			$this->cid = $cid;
@@ -36,7 +38,8 @@ class JoomlaquizViewResults extends JViewLegacy
 			$this->addStureportToolBar();
 
 			$this->items = $this->get('Items');
-			$model = $this->getModel();
+
+			//$model = $this->getModel();
 			foreach($this->items as &$row){
 			    $row->c_point += $model->getItemSum($row);
 			}
@@ -77,6 +80,23 @@ class JoomlaquizViewResults extends JViewLegacy
 			$this->pagination = $pagination;
 			$this->state = $state;
 			$this->lists = $lists;
+
+			//custom746 start
+            $this->all_survey_manual = $this->get('AllSurveyManual');
+            if(!empty($this->all_survey_manual)) {
+                foreach($this->items as $item){
+                    $ids_in_chain = explode('*', $item->q_chain);
+                    foreach ($ids_in_chain as $id_in_chain) {
+                        if(in_array($id_in_chain, $this->all_survey_manual)) {
+                            if(!$model->surveyGraded($id_in_chain, $item->c_id)) {
+                                $item->survey_highlight = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            //custom746 end
 		}
         parent::display($tpl);
     }

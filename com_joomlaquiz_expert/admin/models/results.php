@@ -207,6 +207,11 @@ class JoomlaquizModelResults extends JModelList
 		$query->leftJoin("#__quiz_t_qtypes as qt ON q.c_type = qt.c_id");
         $query->leftJoin("`#__extensions` as `e` ON (CONVERT (e.element USING utf8) COLLATE utf8_unicode_ci) = qt.c_type");
 		$query->where("sp.c_stu_quiz_id = '".$cid."' AND e.folder = 'joomlaquiz' AND e.type = 'plugin'");
+
+        //custom746 start
+        $query->select("q.c_manual, sp.reviewed");
+        //custom746 end
+
 		//if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
 		//	$query->where('`q`.`c_type` != 9');
 		//}
@@ -516,7 +521,6 @@ class JoomlaquizModelResults extends JModelList
         $query->from('`#__quiz_setup`');
         $query->where("c_par_name='curr_date'");
 
-
         $result = $db->setQuery($query)->loadResult();
         if (strtotime("+2 month",strtotime($result))<=strtotime(JFactory::getDate())) {
             return true;
@@ -524,5 +528,42 @@ class JoomlaquizModelResults extends JModelList
             return false;
         }
     }
+
+    //custom746 start
+    public function getAllSurveyManual()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select($db->qn('c_id'))
+            ->from($db->qn('#__quiz_t_question'))
+            ->where($db->qn('c_type') .'='. $db->q('8'))     //survey
+            ->where($db->qn('c_manual') .'='. $db->q('1'));  //Manual grading: YES
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+        if($ids) {
+            return $ids;
+        } else {
+            return false;
+        }
+    }
+
+    public function surveyGraded($question_id=0, $stu_quiz_id=0)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select($db->qn('reviewed'))
+            ->from($db->qn('#__quiz_r_student_question'))
+            ->where($db->qn('c_stu_quiz_id') .'='. $db->q($stu_quiz_id))
+            ->where($db->qn('c_question_id') .'='. $db->q($question_id));
+        $db->setQuery($query);
+        $reviewed = $db->loadResult();
+
+        if($reviewed) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //custom746 end
 
 }

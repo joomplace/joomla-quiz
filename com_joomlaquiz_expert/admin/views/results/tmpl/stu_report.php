@@ -14,6 +14,13 @@ JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 
 ?>
+<?php //custom746 start ?>
+<style>
+    .survey-highlight {
+        background-color: lightgoldenrodyellow !important;
+    }
+</style>
+<?php //custom746 end ?>
 <?php echo $this->loadTemplate('menu');?>
 <form action="<?php echo JRoute::_('index.php?option=com_joomlaquiz&view=results&layout=stu_report&cid='.$this->cid); ?>" method="post" name="adminForm" id="adminForm">
     <?php if (!empty( $this->sidebar)) : ?>
@@ -60,7 +67,13 @@ JHtml::_('formbehavior.chosen', 'select');
 			</tfoot>
 			<tbody>
 			<?php foreach ($this->items as $i => $item) :?>
-				<tr class="row<?php echo $i % 2; ?>" sortable-group-id="1">
+                <?php
+                //custom746 start
+                $add_class = ($item->c_type == 8 && $item->c_manual == 1 && $item->reviewed == 0) ? ' survey-highlight' : '';
+                ?>
+                <!--<tr class="row<?php echo $i % 2; ?>" sortable-group-id="1">-->
+                <tr class="row<?php echo $i % 2; ?><?php echo $add_class; ?>" sortable-group-id="1">
+                <?php //custom746 end ?>
 					<td class="order nowrap center">
 						<?php echo ($this->pagination->limitstart+$i+1);?>
 					</td>

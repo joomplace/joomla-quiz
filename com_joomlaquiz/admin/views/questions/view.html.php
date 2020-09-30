@@ -104,14 +104,18 @@ class JoomlaquizViewQuestions extends JViewLegacy
 
 				$quizzes = JoomlaquizHelper::getQuizzesForSelect();
 
-				$quizzesFields = JHTML::_('select.options', $quizzes, 'value', 'text', $state->get('filter.quiz_id'));
-				
+                $quizzesFields = JHTML::_('select.options', $quizzes, 'value', 'text',
+                    $app->getUserStateFromRequest('quizzes.filter.quiz_id', 'filter_quiz_id',
+                        JFactory::getApplication()->input->getInt('quiz_id',0)
+                    )
+                );
+
 				JHtmlSidebar::addFilter(
 					JText::_('COM_JOOMLAQUIZ_SELECT_QUIZ'),
-					'quiz_id',
+                    'filter_quiz_id',
 					$quizzesFields
 				);
-				
+
 				$qtypesFields = JHTML::_('select.options', $this->get("QuestionType"), 'value', 'text', $app->getUserStateFromRequest('quizzes.filter.qtype_id', 'filter_qtype_id')); 
 				
 				JHtmlSidebar::addFilter(

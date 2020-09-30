@@ -34,7 +34,7 @@ class JoomlaquizTableQuestions extends JTable
 		public function saveorder($idArray = null, $lft_array = null)
 		{
 			$db = JFactory::getDBO();
-			$filter_quiz_id = JFactory::getApplication()->input->get('filter_quiz_id');
+			$filter_quiz_id = JFactory::getApplication()->input->getInt('filter_quiz_id');
 			if(!empty($idArray)){
 				foreach($idArray as $ord => $qid){
 					$db->setQuery("UPDATE #__quiz_t_question SET `ordering` = '".$ord."' WHERE `c_id` = '".$qid."' AND `c_quiz_id` = '".$filter_quiz_id."'");

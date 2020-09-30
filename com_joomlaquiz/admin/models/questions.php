@@ -53,7 +53,7 @@ class JoomlaquizModelQuestions extends JModelList
         $search = $this->getUserStateFromRequest('questions.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-		$quiz_id = $this->getUserStateFromRequest('questions.filter.quiz_id', 'quiz_id', 0);
+        $quiz_id = $this->getUserStateFromRequest('questions.filter.quiz_id', 'filter_quiz_id');
         $this->setState('filter.quiz_id', $quiz_id);
 
         $qtype_id = $this->getUserStateFromRequest('questions.filter.qtype_id', 'filter_qtype_id');

@@ -2845,6 +2845,9 @@ class JoomlaquizModelAjaxaction extends JModelList
                     . ']]></quest_score>' . "\n";
                 $ret_str .= "\t" . '<quest_separator><![CDATA['
                     . $q_data->c_separator . ']]></quest_separator>' . "\n";
+                //custom 758 start
+                $ret_str .= "\t" . '<custom_css_class><![CDATA['. $q_data->custom_css_class .']]></custom_css_class>' . "\n";
+                //custom758 end
                 $ret_str .= ($q_data->c_time_limit) ? "\t"
                     . '<quest_limit_time>' . $q_data->c_time_limit
                     . '</quest_limit_time>' . "\n"
@@ -3557,6 +3560,9 @@ class JoomlaquizModelAjaxaction extends JModelList
 				$ret_str .= "\t" . '<quest_id>'.$q_data->c_id.'</quest_id>' . "\n";
 				$ret_str .= "\t" . '<quest_score><![CDATA['.$q_data->c_point.']]></quest_score>' . "\n";
 				$ret_str .= "\t" . '<quest_separator><![CDATA['.$q_data->c_separator.']]></quest_separator>' . "\n";
+                //custom 758 start
+                $ret_str .= "\t" . '<custom_css_class><![CDATA['. $q_data->custom_css_class .']]></custom_css_class>' . "\n";
+                //custom758 end
 				$ret_str .= "\t" . '<quest_im_check>0</quest_im_check>' . "\n";
 
 				$query = "SELECT c_id FROM #__quiz_r_student_question AS sq WHERE c_stu_quiz_id = '".$stu_quiz_id."' AND c_question_id = '".$q_data->c_id."'";

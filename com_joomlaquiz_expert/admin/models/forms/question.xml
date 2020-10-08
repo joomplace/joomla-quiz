@@ -47,6 +47,15 @@
 		<field name="c_penalty" type="text" default="" size="30"
 				label="COM_JOOMLAQUIZ_PENALTY" labelclass="control-label" required="false">
 		</field>
+		<field
+		    name="custom_css_class"
+			type="text"
+			default=""
+			size="30"
+			label="COM_JOOMLAQUIZ_QUESTION_CUSTOM_CSS_CLASS_LABEL"
+			description="COM_JOOMLAQUIZ_QUESTION_CUSTOM_CSS_CLASS_DESC"
+		>
+		</field>
 	</fieldset>
 	<fieldset name="question_feedback"
 		label="COM_JOOMLAQUIZ_SETTINGS_GLOBAL"

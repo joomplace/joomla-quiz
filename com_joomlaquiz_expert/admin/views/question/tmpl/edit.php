@@ -133,6 +133,9 @@ $model = $this->getModel('question');
 				</div>
 			<?php }
 			}
+			//custom 758 start
+            echo $this->form->renderField('custom_css_class');
+            //custom 758 end
 			?>
 		</fieldset>
 		<fieldset class="adminform">

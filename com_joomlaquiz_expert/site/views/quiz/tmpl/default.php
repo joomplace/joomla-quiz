@@ -48,8 +48,13 @@ if ($quiz->c_image){
     $document->setMetaData('og:image', null);
     $document->setMetaData( 'og:image', JURI::root().$quiz->c_image, 'property');
 }
-?>
 
+$quiz_template_pretty = false;
+if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name) ) {
+    $quiz_template_pretty = true;
+}
+
+?>
 <noscript>
 <?php echo JText::_('COM_JQ_NOSCRIPT');?>
 </noscript>
@@ -59,7 +64,7 @@ if ($quiz->c_image){
 <?php
 	include_once(JPATH_SITE.'/components/com_joomlaquiz/views/quiz/tmpl/js/joomlaquiz.js.php');
 ?>
-<div class="<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name) ) { echo "jq_quiz_container_tbl_content"; } else { echo 'moduletable joomlaquiz_container';}?>">
+<div id="joomlaquiz_container_wrap" data-pretty="<?php echo $quiz_template_pretty; ?>" class="<?php if($quiz_template_pretty) { echo "jq_quiz_container_tbl_content"; } else { echo 'moduletable joomlaquiz_container';}?>">
 <?php if ($quiz->template_name) {
 		if ($is_preview) {
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');

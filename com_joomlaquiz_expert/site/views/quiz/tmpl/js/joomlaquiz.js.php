@@ -172,6 +172,9 @@ function jq_GetQuestionData(question, n) {
 	questions[n].quiz_script_data = question.getElementsByTagName('quiz_script_data')[0].firstChild.data;
 	questions[n].cur_quest_num = question.getElementsByTagName('quiz_quest_num')[0].firstChild.data;
 	questions[n].im_check = parseInt(question.getElementsByTagName('quest_im_check')[0].firstChild.data);
+    //custom 758 start
+    questions[n].custom_css_class = question.getElementsByTagName('custom_css_class')[0].firstChild.data;
+    //custom 758 end
 	questions[n].div_id = 'quest_div' + questions[n].cur_quest_id;
 	questions[n].response = question;
 }
@@ -188,6 +191,10 @@ function jq_CreateQuestions() {
 	var question_info = '';
 	jq_getObj('jq_quiz_container').innerHTML = '';
 
+	//758
+    var quizWrap = document.getElementById('joomlaquiz_container_wrap'),
+        quizPretty = quizWrap.dataset.pretty;
+
 	for (var i = 0; i < quest_count; i++){
 		questions[i] = new question_data();
 		if (questions[i].cur_quest_type == 9) {
@@ -203,6 +210,10 @@ function jq_CreateQuestions() {
 		var div_quest_text = document.createElement("div");
 		var div_inside = document.createElement("div");
 		div_inside.id = questions[i].div_id;
+
+        //758
+        quizWrap.className = (quizPretty ? 'jq_quiz_container_tbl_content ' : 'moduletable joomlaquiz_container ') + questions[i].custom_css_class;
+
 		<?php
 			if(!preg_match("/pretty_green/", $quiz->template_name)){
 				echo "div_inside.style.position = 'relative';";

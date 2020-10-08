@@ -561,6 +561,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_question` (
   `c_detailed_feedback` text NOT NULL,
   `c_time_limit` int(10) unsigned NOT NULL DEFAULT '0',
   `c_show_timer` tinyint(4) NOT NULL DEFAULT '0',
+  `custom_css_class` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`c_id`),
   KEY `c_quiz_id` (`c_quiz_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

@@ -193,7 +193,8 @@ function jq_CreateQuestions() {
 
 	//758
     var quizWrap = document.getElementById('joomlaquiz_container_wrap'),
-        quizPretty = quizWrap.dataset.pretty;
+        quizPretty = quizWrap.dataset.pretty,
+        questionCustomCssClass;
 
 	for (var i = 0; i < quest_count; i++){
 		questions[i] = new question_data();
@@ -212,7 +213,12 @@ function jq_CreateQuestions() {
 		div_inside.id = questions[i].div_id;
 
         //758
-        quizWrap.className = (quizPretty ? 'jq_quiz_container_tbl_content ' : 'moduletable joomlaquiz_container ') + questions[i].custom_css_class;
+        if(<?php echo $quiz->c_pagination; ?> == 0) {  //One question per page (default)
+            questionCustomCssClass = '';
+            quizWrap.className = (quizPretty ? 'jq_quiz_container_tbl_content ' : 'moduletable joomlaquiz_container ') + questions[i].custom_css_class;
+        } else {
+            questionCustomCssClass = ' class="' + questions[i].custom_css_class + '"';
+        }
 
 		<?php
 			if(!preg_match("/pretty_green/", $quiz->template_name)){
@@ -267,7 +273,8 @@ function jq_CreateQuestions() {
 		question_template = question_template.replace(/\{QUESTION_TEXT\}/, div_quest_text.innerHTML);
 		question_template = question_template.replace(/\{ANSWERS\}/, questions[i].quest_data_user);
 
-		jq_getObj('jq_quiz_container').innerHTML = jq_getObj('jq_quiz_container').innerHTML + '<div <?php echo ((!preg_match("/pretty_green/", $quiz->template_name)) ? 'style="position: relative;"' : '');?> id="qcontainer'+questions[i].cur_quest_id+'">' + question_template + (questions[i].c_separator? question_delimeter:'') + '</div>';
+		//758
+		jq_getObj('jq_quiz_container').innerHTML = jq_getObj('jq_quiz_container').innerHTML + '<div <?php echo ((!preg_match("/pretty_green/", $quiz->template_name)) ? 'style="position: relative;"' : '');?> id="qcontainer'+questions[i].cur_quest_id+'"' + questionCustomCssClass + '>' + question_template + (questions[i].c_separator? question_delimeter:'') + '</div>';
 
 		questions[i].disabled = false;
 

@@ -5,6 +5,13 @@ function setDrnDnAnswers(n) {
 	} catch(e){}
 	var i = 0;
 	var j = 0;
+
+	var dragdropTable = jQuery('.dragdrop_table');
+	if(jQuery(dragdropTable).length) {
+		jpEqualHeight(jQuery(dragdropTable).find('td'));
+		jpEqualHeight(jQuery(dragdropTable).find('td>div'));
+	}
+
 	if (ans_count > 0) {
 		var lfield_id = 0;
 		var rfield_id = 0;

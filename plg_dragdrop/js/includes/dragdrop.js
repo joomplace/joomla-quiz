@@ -26,12 +26,4 @@ if (questions[i].cur_quest_type == 4) {
 
 	setDrnDnAnswers(i);
 
-	jQuery(function ($) {
-		var dragdropTable = $('.dragdrop_table');
-		if($(dragdropTable).length) {
-			jpEqualHeight($(dragdropTable).find('td'));
-			jpEqualHeight($(dragdropTable).find('td>div'));
-		}
-	});
-
 }

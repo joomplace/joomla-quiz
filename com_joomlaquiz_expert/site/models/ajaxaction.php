@@ -1486,6 +1486,9 @@ class JoomlaquizModelAjaxaction extends JModelList
                     $reviewAccessGranted = $this->user->authorise('core.review', 'com_joomlaquiz.quiz.'.$quiz->c_id);
 					if ($quiz->c_certificate && !$c_manual && $user_passed && $certAccessGranted) {
 					    $footer_ar[2] = "<div class='jq_footer_link jq_certificate'><a href='javascript:void(0)' onclick=\"window.open ('". JRoute::_( "index.php?option=com_joomlaquiz&task=printcert.get_certificate&stu_quiz_id=".$stu_quiz_id."&user_unique_id=".$user_unique_id."")."','blank');\">".JText::_('COM_QUIZ_FIN_BTN_CERTIFICATE')."</a></div>";
+					    //custom 753 start
+                        $footer_ar[99] = "<div class='jq_footer_link jq_certificate'><a href='javascript:void(0)' onclick=\"window.open ('". JRoute::_( "index.php?option=com_joomlaquiz&task=printcert.get_certificate&stu_quiz_id=".$stu_quiz_id."&user_unique_id=".$user_unique_id."&sharepoint=1")."','blank');\">".JText::_('COM_QUIZ_FIN_BTN_CERTIFICATE_SHAREPOINT')."</a></div>";
+                        //custom 753 end
 					}
 					if ($quiz->c_enable_print && !$c_manual) {
                         $footer_ar[1] = "<div class='jq_footer_link jq_print'><a href='javascript:void(0)' onclick=\"window.open ('".JRoute::_("index.php?option=com_joomlaquiz&task=printresult.get_pdf&lang="._JQ_JF_LANG."&stu_quiz_id=".$stu_quiz_id."&user_unique_id=".$user_unique_id."")."','blank');\">".JText::_('COM_FIN_BTN_PRINT')."</a></div>";

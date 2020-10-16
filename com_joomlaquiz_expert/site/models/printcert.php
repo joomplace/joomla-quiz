@@ -492,28 +492,32 @@ class JoomlaquizModelPrintcert extends JModelList
         ob_end_clean();
         imagedestroy($im);
 
-        $body = 'Content-Disposition: form-data; name="file"';
-        $body .= '; filename="' . $file_name . '"' . "\r\n";
-        $body .= 'Content-Type: image/png' . "\r\n\r\n";
-        $body .= $image_data."\r\n";
-
-        $delimiter = '-------------'.uniqid();
-        $post = '';
-        $post .= '--' . $delimiter. "\r\n". $body;
-        $post .= "--" . $delimiter . "--\r\n";
+        $uploadRequest = array(
+            'filename' => $file_name,
+            //'file' => base64_encode($image_data)
+            'file' => $image_data
+        );
 
         $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERPWD, "TheHubContribute@empowertranslate.com:T1ger!W4tch0ut!");
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
         curl_setopt($ch, CURLOPT_URL, $sharepoint_URL);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data; boundary=' . $delimiter, 'Content-Length: ' . strlen($post)));
-        curl_exec($ch);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $uploadRequest);
+        $response = curl_exec($ch);
+
+        if(JFactory::getUser()->id == 863) {  //user: Hub Test , test@empowertranslate.com
+            $info = curl_getinfo($ch);
+            echo '<pre>'.print_r($info, true).'</pre>';
+        }
 
         if (curl_errno($ch)) {
             echo curl_error($ch);
             $result = true;
         } else {
-            echo 'File uploaded successfully.';
+            echo $response;
             $result = false;
         }
 

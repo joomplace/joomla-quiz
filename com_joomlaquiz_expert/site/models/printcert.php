@@ -484,7 +484,8 @@ class JoomlaquizModelPrintcert extends JModelList
             return false;
         }
 
-        $sharepoint_URL = 'https://rptranslate.sharepoint.com/:f:/r/sites/Administration/Human%20Resources%20Training/Training%20Records/'.$sharepoint_URL_last;
+        //$sharepoint_URL = 'https://rptranslate.sharepoint.com/:f:/r/sites/Administration/Human%20Resources%20Training/Training%20Records/'.$sharepoint_URL_last;
+        $sharepoint_URL = 'https://rptranslate.sharepoint.com/sites/Training/Documents/'.$sharepoint_URL_last;
 
         ob_start();
         imagepng($im);

@@ -13,6 +13,14 @@ CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+
+INSERT INTO `#__quiz_certificates` (`id`, `cert_name`, `cert_file`, `crtf_align`, `crtf_shadow`, `text_x`, `text_y`, `text_size`, `crtf_text`, `text_font`) VALUES
+('', 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', ''),
+('', 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', ''),
+('', 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '');
+
+
+
 --
 -- Структура таблицы `#__quiz_cert_fields`
 --
@@ -67,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_dashboard_items` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 
-REPLACE INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
+INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
 (1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
 (2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
 (3, 'Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
@@ -368,7 +376,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_templates` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
 
 
-REPLACE INTO `#__quiz_templates` (`id`, `template_name`) VALUES
+INSERT INTO `#__quiz_templates` (`id`, `template_name`) VALUES
 (1, 'joomlaquiz_standard'),
 (2, 'joomlaquiz_t3_bs3'),
 (3, 'joomlaquiz_blue'),
@@ -506,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_t_qtypes` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
 
 
-REPLACE INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES
+INSERT INTO `#__quiz_t_qtypes` (`c_id`, `c_qtype`, `c_type`) VALUES
 (1, 'Multiple Choice', 'choice'),
 (2, 'Multiple Response', 'mresponse'),
 (3, 'True/False', 'truefalse'),

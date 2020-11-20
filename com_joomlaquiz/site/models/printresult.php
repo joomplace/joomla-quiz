@@ -421,7 +421,11 @@ class JoomlaquizModelPrintresult extends JModelList
 			$pdf->Ln();
 			$pdf->setFont($fontFamily, 'B');
 			//$pdf->setStyle('b', true);
-			$str = ($i + 1) . ".[" . number_format($data['c_score'],1) . '/' . number_format($data['c_point'],1) . "]";
+
+            //custom 771
+            //$str = ($i + 1) . ".[" . number_format($data['c_score'],1) . '/' . number_format($data['c_point'],1) . "]";
+            $str = ($i + 1) . '.&nbsp;';
+
 			$pdf->Write(5, $pdf_doc->cleanText($str), '', 0);
 
             $type = $data['c_type'];

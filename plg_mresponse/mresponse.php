@@ -384,7 +384,9 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		//$data['pdf']->SetFont('freesans');
 		$fontFamily = $data['pdf']->getFontFamily();
 
-		for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {
+        //custom 771
+		//for($j=0,$k='A';$j < count($data['data']['c_choice']);$j++,$k++) {
+        for($j=0,$k=1;$j < count($data['data']['c_choice']);$j++,$k++) {
 			if($data['data']['c_choice'][$j]['c_choice_id']) {
 				$data['answer'] .= $k." ";
 			}
@@ -409,13 +411,26 @@ class plgJoomlaquizMresponse extends plgJoomlaquizQuestion
 		$data['pdf']->Ln();
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', true);
-		$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
+
+        //custom 771
+		//$str = '  '.JText::_('COM_QUIZ_PDF_ANSWER');
+        $str = JText::_('COM_QUIZ_PDF_ANSWER');
+
 		//$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
         $data['pdf']->writeHTML('<b>'.$str.'</b>', false);
 		$data['pdf']->setFont($fontFamily);
 		//$data['pdf']->setStyle('b', false);
 		$str = $data['answer'];
 		$data['pdf']->Write(5, $data['pdf_doc']->cleanText($str), '', 0);
+
+        //custom 771
+        if(!empty($correct_answer)) {
+            $data['pdf']->Ln();
+            $data['pdf']->setFont($fontFamily);
+            $data['pdf']->writeHTML(JText::_('COM_QUIZ_PDF_CORRECT_ANSWER'), false);
+            $data['pdf']->setFont($fontFamily);
+            $data['pdf']->Write(5, $data['pdf_doc']->cleanText($correct_answer), '', 0);
+        }
 
 		return $data['pdf'];
 	}

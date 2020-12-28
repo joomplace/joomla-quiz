@@ -240,6 +240,10 @@ function jq_CreateQuestions() {
 			div_inside.innerHTML = question_info + '<span class="error_messagebox_quest" id="error_messagebox_quest'+questions[i].cur_quest_id+'"><!-- x --></span>';
 		}
 
+		//custom 775 start
+        questions[i].quest_data = 'ID: ' + questions[i].cur_quest_id + '#<br />' + questions[i].quest_data;
+		//custom 775 end
+
 		div_inside.innerHTML += questions[i].quest_data;
 		div_quest_text.appendChild(div_inside);
 

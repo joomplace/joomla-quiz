@@ -68,7 +68,7 @@ class JoomlaquizViewCreateHotspot
 		scaleX = wOrigin / w;
 		scaleY = hOrigin / h;
 		
-		paper = Raphael('foo', w, h);
+		paper = Raphael('foo', 100, 100);
 		var img = paper.image('{$live_site}images/joomlaquiz/images/{$data['q_data']->c_image}', 0, 0, w, h);
 		var rect = paper.rect(0, 0, w, h).attr({fill:'none'});
         

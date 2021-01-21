@@ -15,11 +15,10 @@ class modAvailablelpHelper
 {
 	public static function getResult()
 	{
-        $user_id = JFactory::getUser()->id;
+        $user = JFactory::getUser();
         $db = JFactory::getDBO();
         $result = array();
 
-        $query = $db->getQuery(true);
         $query = 'SELECT COUNT(`r`.`lid`) AS `dif`, `r`.`lid`, `r`.`stage`, `r`.`uid`
                     FROM
                     (
@@ -29,24 +28,26 @@ class modAvailablelpHelper
                         (
                             SELECT *
                             FROM `#__quiz_lpath_stage`
-                            WHERE `uid` = ' . $user_id . '
+                            WHERE `uid` = ' . $user->id . '
                         ) AS `s` ON `s`.`qid` = `l`.`qid` AND `s`.`type` = `l`.`type` AND `s`.`lpid` = `l`.`lid`
                         GROUP BY `l`.`lid`,`s`.`stage`
                     ) AS `r` 
                     GROUP BY `r`.`lid`';
-        $db->SetQuery($query);
+        $db->setQuery($query);
         $result = $db->loadAssocList();
 
         $lid_array =  array();
 
-        foreach ($result as $item) {
-            if ($item['dif'] == 1 && $item['stage'] == 0) {
-                $lid_array[] = $item['lid'];
+        if(!empty($result)) {
+            foreach ($result as $item) {
+                if ($item['dif'] == 1 && $item['stage'] == 0) {
+                    $lid_array[] = $item['lid'];
+                }
             }
         }
 
         $final_result = array();
-        if ($lid_array) {
+        if (!empty($lid_array)) {
             $query = $db->getQuery(true);
             $query->select(array('ql.id', 'ql.title AS title', 'c.title AS category'))
                 ->from($db->qn('#__quiz_lpath', 'ql'))
@@ -55,6 +56,15 @@ class modAvailablelpHelper
                 ->where($db->qn('ql.id') . ' IN (' . implode(",", $lid_array) . ')');
             $db->SetQuery($query);
             $final_result = $db->loadObjectList();
+        }
+
+        if(!empty($final_result)){
+            foreach ($final_result as $i=> $lpath) {
+                $viewAccessGranted = $user->authorise('core.access', 'com_joomlaquiz.lp.'.$lpath->id);
+                if (!$viewAccessGranted) {
+                    unset($final_result[$i]);
+                }
+            }
         }
 
         return $final_result;

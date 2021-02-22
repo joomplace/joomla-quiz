@@ -1788,10 +1788,9 @@ function jq_UpdateTaskDiv(task, skip_question) {
 			<?php if ($quiz->c_enable_skip==1) { ?>
 			<?php if ($quiz->c_enable_prevnext) {?> task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
 			task_container = task_container + jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
-			<?php }
-			elseif ($quiz->c_enable_skip==2){?>
-            <?php if ($quiz->c_enable_prevnext) {?> task_container += jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>')+ <?php }?>'';
-                    task_container += jq_NextButton('jq_QuizContinueFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
+            <?php } elseif ($quiz->c_enable_skip==2) { ?>
+                <?php if ($quiz->c_enable_prevnext) {?> task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
+                task_container = task_container + jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>') + jq_NextButton('jq_QuizContinueFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
 			<?php } else { ?>
 			<?php if ($quiz->c_enable_prevnext) {?> task_container = jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>');<?php }?>
 			task_container = task_container + jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
@@ -1807,17 +1806,12 @@ function jq_UpdateTaskDiv(task, skip_question) {
 			task_container = jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>')+
 			<?php if ($quiz->c_enable_prevnext) {?> jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>')+ <?php }?>'';
 
-			<?php } else { ?>
+    <?php } elseif ($quiz->c_enable_skip==2) { ?>
 			<?php if ($quiz->c_enable_prevnext) {?> task_container += jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>')+ <?php }?>'';
-			task_container += jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>');
-			<?php } ?>
-    <?php if ($quiz->c_enable_skip==2){?>
-    <?php if(preg_match("/standard/", $quiz->template_name)||preg_match("/blue/", $quiz->template_name)){?>
-    task_container = '<a onclick="javascript:jq_QuizNextFinish()" id="jq_finish_link_container" title="<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>"></a>' + task_container;
+    task_container = task_container + jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_NEXT'))?>') + jq_SubmitButton('jq_QuizContinueFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
     <?php } else {?>
-    task_container += jq_NextButton('jq_QuizContinueFinish()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))
-    ?>');
-    <?php  } ?>
+			<?php if ($quiz->c_enable_prevnext) {?> task_container += jq_PrevButton('jq_QuizPrevQuestion()','<?php echo addslashes(JText::_('COM_QUIZ_PREV'))?>')+ <?php }?>'';
+			task_container += jq_NextButton('jq_QuizNextOn()', '<?php echo addslashes(JText::_('COM_QUIZ_FINISH'))?>');
 			<?php } ?>
 			<?php } ?>				
 			is_last = true;

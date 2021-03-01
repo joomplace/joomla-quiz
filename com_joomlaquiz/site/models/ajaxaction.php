@@ -3152,12 +3152,19 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->setQuery($query);
 		$stu_quiz = $database->loadObjectList();
 		$stu_quiz = @$stu_quiz[0];
-		
-		$query = "SELECT q_chain FROM `#__quiz_q_chain` WHERE s_unique_id = '".$stu_quiz->unique_id."'";
-		$database->setQuery($query);
-		$q_chain = $database->loadResult();	
-		$q_ids = explode('*', $q_chain);
-		
+
+		$view_from_results_page = JFactory::getApplication()->input->getInt('vfrp', 0);
+		if($view_from_results_page) {
+            $query = "SELECT `c_question_id` FROM `#__quiz_r_student_question` WHERE `c_stu_quiz_id` = '".$stu_quiz_id."'";
+            $database->setQuery($query);
+            $q_ids = $database->loadColumn();
+        } else {
+            $query = "SELECT q_chain FROM `#__quiz_q_chain` WHERE s_unique_id = '".$stu_quiz->unique_id."'";
+            $database->setQuery($query);
+            $q_chain = $database->loadResult();
+            $q_ids = explode('*', $q_chain);
+        }
+
 		$total = count($q_ids);
 		
 		if (!isset($_REQUEST['quest_per_page']) && abs($quest_per_page-$total) < 6){

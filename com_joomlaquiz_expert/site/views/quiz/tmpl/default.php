@@ -117,21 +117,26 @@ if ($quiz->c_image){
 		<?php
 		} else if(isset($quiz->result_data)) {
 			echo JoomlaQuiz_template_class::JQ_MainScreen('');
+
+            $view_from_results_page = 0;
+			if(!empty($quiz->result_data->view_from_results_page)) {
+                $view_from_results_page = 1;
+            }
 		?>
 		<script language="javascript" type="text/javascript">
 		<!--//--><![CDATA[//><!--
 			jq_jQuery(document).ready(function() {result_mode();});
-
 			function result_mode(){
-
-
 				var jq_quiz_c_t = jq_getObj('jq_quiz_container_title');
 				if (jq_quiz_c_t) jq_quiz_c_t.innerHTML = "<?php echo addslashes($quiz->c_title)?>";
-
 				user_unique_id = '<?php echo $quiz->result_data->unique_id; ?>';
 				stu_quiz_id = <?php echo $quiz->result_data->c_id; ?>;
-				jq_MakeRequest('&ajax_task=finish_stop&quiz=<?php echo $quiz->result_data->c_quiz_id; ?>'+'&stu_quiz_id='+stu_quiz_id, 1);
-
+				var vfrp = <?php echo $view_from_results_page; ?>;
+				if(vfrp==1) {
+                    jq_MakeRequest('&ajax_task=finish_stop&quiz=<?php echo $quiz->result_data->c_quiz_id; ?>'+'&stu_quiz_id='+stu_quiz_id+'&vfrp=1', 1);
+                } else {
+                    jq_MakeRequest('&ajax_task=finish_stop&quiz=<?php echo $quiz->result_data->c_quiz_id; ?>'+'&stu_quiz_id='+stu_quiz_id, 1);
+                }
 			}
 		//--><!]]>
 		</script>

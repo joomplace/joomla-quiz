@@ -21,10 +21,15 @@ class JoomlaquizControllerResults extends JControllerForm
 		return $model;
 	}
 	
-	public function sturesult(){
-		
+	public function sturesult()
+    {
 		$model = $this->getModel();
 		$quiz_params = $model->getQuizParams();
+
+        if(!empty($quiz_params->result_data)) {
+            $quiz_params->result_data->view_from_results_page = 1;
+        }
+
         $this->addFBMetaTags($quiz_params);
 		require_once(JPATH_SITE.'/components/com_joomlaquiz/views/quiz/view.html.php');
 		$view = $this->getView("quiz");

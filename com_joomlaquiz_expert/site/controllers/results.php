@@ -21,10 +21,14 @@ class JoomlaquizControllerResults extends JControllerForm
 		return $model;
 	}
 	
-	public function sturesult(){
-		
+	public function sturesult()
+    {
 		$model = $this->getModel();
 		$quiz_params = $model->getQuizParams();
+
+		if(!empty($quiz_params->result_data)) {
+            $quiz_params->result_data->view_from_results_page = 1;
+        }
 
 		/*
 		 * need to generate and set meta data

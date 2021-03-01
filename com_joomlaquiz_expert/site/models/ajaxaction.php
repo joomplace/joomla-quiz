@@ -1011,7 +1011,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if($share_id){
 			$database->setQuery("SELECT COUNT(id) FROM `#__quiz_r_student_share` WHERE `id` = '".$share_id."'");
 			$is_share = $database->loadResult();
-
             $session->clear('share_id');
             unset($session_share_id);
 		}
@@ -3204,12 +3203,19 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database->setQuery($query);
 		$stu_quiz = $database->loadObjectList();
 		$stu_quiz = @$stu_quiz[0];
-		
-		$query = "SELECT q_chain FROM `#__quiz_q_chain` WHERE s_unique_id = '".$stu_quiz->unique_id."'";
-		$database->setQuery($query);
-		$q_chain = $database->loadResult();	
-		$q_ids = explode('*', $q_chain);
-		
+
+		$view_from_results_page = JFactory::getApplication()->input->getInt('vfrp', 0);
+		if($view_from_results_page) {
+            $query = "SELECT `c_question_id` FROM `#__quiz_r_student_question` WHERE `c_stu_quiz_id` = '".$stu_quiz_id."'";
+            $database->setQuery($query);
+            $q_ids = $database->loadColumn();
+        } else {
+            $query = "SELECT q_chain FROM `#__quiz_q_chain` WHERE s_unique_id = '".$stu_quiz->unique_id."'";
+            $database->setQuery($query);
+            $q_chain = $database->loadResult();
+            $q_ids = explode('*', $q_chain);
+        }
+
 		$total = count($q_ids);
 		
 		if (!isset($_REQUEST['quest_per_page']) && abs($quest_per_page-$total) < 6){
@@ -3501,6 +3507,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 			}
 			
 		}
+
 		if ($last_pbreak_id) {
 			$found = 0;
 			foreach($qchids as $qchid) {
@@ -3515,7 +3522,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		} else {
 			$q_ids = $qchids;
 		}
-		
+
 		$query = "SELECT * FROM `#__quiz_t_question` WHERE  `ordering` >= '{$last_ordering}' AND published = 1 AND c_id <> '{$last_pbreak_id}' AND c_id IN ('".implode("','", $q_ids)."') ORDER by ordering, c_id";
 		$database->SetQuery($query);
 		$tmp = $database->loadObjectList();
@@ -3527,7 +3534,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				}
 			}
 		}
-		
+
 		foreach($all_quests as $q_data) {
 			$quest_count++;
 			$ret_add_script = '';

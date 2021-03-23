@@ -55,12 +55,10 @@ class JoomlaquizViewCreateHotspot
 		hOrigin = {$h};
         ratio = {$koef};
         
-		jq_jQuery('#foo').css({'width':'100% !important'});
-		var w = jq_jQuery('#foo').width();
-		
-		var viewport_width = jq_jQuery('body').width();
-		if(viewport_width < w){
-		    w = viewport_width - 50;
+		var maxWidth = jq_jQuery('#jq_quiz_container').width(),
+            w = wOrigin;
+        if(maxWidth < wOrigin){
+                w = maxWidth;
 		}
 		
 		var h = w / ratio;

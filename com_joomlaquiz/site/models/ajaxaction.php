@@ -1306,14 +1306,20 @@ class JoomlaquizModelAjaxaction extends JModelList
 					
 					if (!$result_mode){
 						$ret_str .= "\t" . '<quiz_redirect>'.intval($quiz->c_redirect_after).'</quiz_redirect>' . "\n";
-                        if ($quiz->c_redirect_after == 1) {
 						if ($quiz->c_redirect_linktype && $fin_message) {
-                                $ret_str .= "\t" . '<quiz_redirect_url><![CDATA[' . JUri::base() . $quiz->c_redirect_link . ']]></quiz_redirect_url>' . "\n";
+                                $result = filter_var($quiz->c_redirect_link, FILTER_VALIDATE_URL);
+                                if($result){
+                                    $homeurl="";
+                                } else {
+                                    $homeurl = JUri::base();
+                                }
+                                $link_to_redirect = $homeurl.$quiz->c_redirect_link;
+                                $ret_str .= "\t" . '<quiz_redirect_url><![CDATA['.$link_to_redirect.']]></quiz_redirect_url>'."\n";
 							$fin_message = '';
 						} else {
 							$ret_str .= "\t" . '<quiz_redirect_url><![CDATA['.$quiz->c_redirect_link.']]></quiz_redirect_url>' . "\n";
 						    }
-                        }
+
 						$ret_str .= "\t" . '<quiz_redirect_delay>'.intval($quiz->c_redirect_delay).'</quiz_redirect_delay>' . "\n";
 					} else {
 						$ret_str .= "\t" . '<quiz_redirect>0</quiz_redirect>' . "\n";

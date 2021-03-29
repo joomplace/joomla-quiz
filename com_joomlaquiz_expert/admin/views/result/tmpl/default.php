@@ -34,3 +34,9 @@ $extension = 'com_joomlaquiz';
 	<?php echo JHtml::_('form.token'); ?>
     </div>
 </form>
+<script>
+    jQuery("#c_score").on('keyup', function() {
+        let value = jQuery(this).val();
+        jQuery(this).val(value.replace(",", '.'));
+    });
+</script>

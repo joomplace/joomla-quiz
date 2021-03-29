@@ -314,7 +314,7 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$mainframe = JFactory::getApplication();
 		$database = JFactory::getDBO();
 		$jinput = $mainframe->input;
-		$c_score = $jinput->get('c_score', null, 'FLOAT');
+	    $c_score = $jinput->get('c_score','');
 		$query = "SELECT q.c_type, q.c_id,q.c_image, sq.c_stu_quiz_id, q.c_question, c_title_true, c_title_false, sq.c_score, sq.`remark`, sq.reviewed FROM #__quiz_t_question as q, #__quiz_r_student_question as sq"
 		. "\n WHERE q.c_id = sq.c_question_id and sq.c_id = '".$data['id']."' AND q.published = 1"
 		;
@@ -333,7 +333,7 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 		$lists['id'] = $data['id'];
 		$lists['answer'] = $answer;
 
-		if (isset($c_score) && !$q_data[0]->reviewed){
+        if (trim($c_score) != '' && !$q_data[0]->reviewed) {
             $remark = JFactory::getApplication()->input->getRaw('remark', '');
 
             $c_score = (float)$c_score;

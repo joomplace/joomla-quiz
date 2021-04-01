@@ -1307,7 +1307,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					if (!$result_mode){
 						$ret_str .= "\t" . '<quiz_redirect>'.intval($quiz->c_redirect_after).'</quiz_redirect>' . "\n";
 						if ($quiz->c_redirect_linktype && $fin_message) {
-							$ret_str .= "\t" . '<quiz_redirect_url><![CDATA['.$fin_message.']]></quiz_redirect_url>' . "\n";
+							$ret_str .= "\t" . '<quiz_redirect_url><![CDATA['.$quiz->c_redirect_link.']]></quiz_redirect_url>' . "\n";
 							$fin_message = '';
 						} else {
 							$ret_str .= "\t" . '<quiz_redirect_url><![CDATA['.$quiz->c_redirect_link.']]></quiz_redirect_url>' . "\n";

@@ -133,7 +133,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				$sc_procent = ($stu_quiz->c_full_score != 0) ? number_format(($stu_quiz->user_score * 100) / $stu_quiz->c_full_score, 2, '.', ' ') : 0;
 				$font_text = $certif->crtf_text;
 				$font_text = JHtml::_('content.prepare',$this->revUni($font_text),$stu_quiz,'');
-				$font_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $font_text);
+				$font_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.(int)$stu_quiz->user_score, 10, 36)), $font_text);
 				$font_text = str_replace("#name#", $this->revUni($u_name), $font_text);
 				$font_text = str_replace("#surname#", $this->revUni($u_surname), $font_text);
 				$font_text = str_replace("#email#", $this->revUni($u_email), $font_text);
@@ -259,7 +259,7 @@ class JoomlaquizModelPrintcert extends JModelList
 				if (is_array($fields) && !empty($fields)) {
 					foreach($fields as $field){
 						$field->f_text = JHtml::_('content.prepare',$this->revUni($field->f_text),$stu_quiz,'');
-						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.$stu_quiz->user_score, 10, 36)), $field->f_text);
+						$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.(int)$stu_quiz->user_score, 10, 36)), $field->f_text);
 						$field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);
 						$field->f_text = str_replace("#surname#", $this->revUni($u_surname), $field->f_text);
 						$field->f_text = str_replace("#email#", $u_email, $field->f_text);

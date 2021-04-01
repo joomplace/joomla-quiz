@@ -424,7 +424,8 @@ class plgJoomlaquizSurveys extends plgJoomlaquizQuestion
 			<?php } else {?>
 			<tr class="row1">
 				<td align="left">
-					<strong><?php echo JText::_('COM_JOOMLAQUIZ_POINTS');?></strong> <input name="c_score" value="<?php echo $data['lists']['c_score'];?>" type="text" class="inputbox" /> &nbsp; <input type="button" value="Apply" onclick="javascript: document.adminForm.id.value='<?php echo $data['lists']['id']; ?>'; document.adminForm.stu_id.value='<?php echo $data['lists']['qid']; ?>'; submitbutton('quest_reportA');" />			
+					<strong><?php echo JText::_('COM_JOOMLAQUIZ_POINTS');?></strong> <input id="c_score" name="c_score"
+                                                                                          value="<?php echo $data['lists']['c_score'];?>" type="text" class="inputbox" required/> &nbsp; <input type="button" value="Apply" onclick="javascript: document.adminForm.id.value='<?php echo $data['lists']['id']; ?>'; document.adminForm.stu_id.value='<?php echo $data['lists']['qid']; ?>'; submitbutton('quest_reportA');" />
 				</td>
 			</tr>
 			<tr class="row1">

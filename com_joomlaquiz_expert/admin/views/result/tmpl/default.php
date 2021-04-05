@@ -34,3 +34,12 @@ $extension = 'com_joomlaquiz';
 	<?php echo JHtml::_('form.token'); ?>
     </div>
 </form>
+<script>
+    jQuery(function($){
+        if($('#c_score').length){
+            $('#c_score').on('input', function(){
+                $(this).val( $(this).val().replace(/[^\d\.]/g,'').replace(/^([^\.]*\.)|\./g,'$1') );
+            });
+        }
+    });
+</script>

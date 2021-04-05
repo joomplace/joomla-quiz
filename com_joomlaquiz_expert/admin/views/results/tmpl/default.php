@@ -249,7 +249,7 @@ $sortFields = $this->getSortFields();
 					</td>
 					<td class="has-context">
 						<?php if($item->c_passed){ ?>
-							<?php echo base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$item->c_id.''.$item->c_student_id.''.$item->c_total_score, 10, 36) ?>
+							<?php echo base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$item->c_id.''.$item->c_student_id.''.(int)$item->c_total_score, 10, 36); ?>
 						<?php } ?>
 					</td>
 					<?php echo JHtml::_('content.prepare','',$item,'admin.results.table.row'); ?>

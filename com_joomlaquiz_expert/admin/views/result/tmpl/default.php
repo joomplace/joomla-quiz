@@ -35,8 +35,11 @@ $extension = 'com_joomlaquiz';
     </div>
 </form>
 <script>
-    jQuery("#c_score").on('keyup', function() {
-        let value = jQuery(this).val();
-        jQuery(this).val(value.replace(",", '.'));
+    jQuery(function($){
+        if($('#c_score').length){
+            $('#c_score').on('input', function(){
+                $(this).val( $(this).val().replace(/[^\d\.]/g,'').replace(/^([^\.]*\.)|\./g,'$1') );
+            });
+        }
     });
 </script>

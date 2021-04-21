@@ -565,8 +565,8 @@ class JoomlaquizHelper
 						$database->SetQuery( $query );
 						$user_tries = $database->loadColumn();
 						$last_try_date = strtotime($user_tries[count($user_tries)-1]);
-					
-						if ($last_try_date + ($quiz->c_min_after*60) > strtotime(JFactory::getDate()) ){
+
+                        if ( ($last_try_date + ($quiz->c_min_after*60)) > time() ){
 							if ($quiz->c_once_per_day && date('d', $last_try_date) != date('d')) {
 								return true;
 							}
@@ -834,7 +834,7 @@ class JoomlaquizHelper
 				->where("`c_id` IN (".$qch_ids.")")
 				->where($database->qn('published')." = 1")
 				->where($database->qn('c_type')." <> 11");
-			
+
 			$database->SetQuery( $query );
 			$max_score = $database->LoadResult();
 			

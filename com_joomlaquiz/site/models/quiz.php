@@ -332,8 +332,8 @@ class JoomlaquizModelQuiz extends JModelList
 			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);
 			if (!$is_attempts) {
 				if ($wait_time){
-					/* might be replaced with spritf */
-					$message = str_replace("{text}", ($wait_time>60? floor($wait_time/60).' '.JText::_('COM_QUIZ_MINUTES'): $wait_time. ' seconds'), JText::_('COM_QUIZ_COMEBACK_LATER'));
+                    $wait_time_str = $this->waitTimeToString($wait_time);
+                    $message = JText::sprintf('COM_QUIZ_COMEBACK_LATER', $wait_time_str);
 				}else {
 					$message = JText::_('COM_QUIZ_ALREADY_TAKEN');
 				}
@@ -371,8 +371,8 @@ class JoomlaquizModelQuiz extends JModelList
 			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);
 			if (!$is_attempts) {
 				if ($wait_time){
-					/* might be replaced with spritf */
-					$message = str_replace("{text}", ($wait_time>60? floor($wait_time/60).' '.JText::_('COM_QUIZ_MINUTES'): $wait_time. JText::_('COM_QUIZ_SECONDS')), JText::_('COM_QUIZ_COMEBACK_LATER'));
+					$wait_time_str = $this->waitTimeToString($wait_time);
+                    $message = JText::sprintf('COM_QUIZ_COMEBACK_LATER', $wait_time_str);
 				}else {
 					$message = JText::_('COM_QUIZ_ALREADY_TAKEN');
 				}
@@ -645,4 +645,45 @@ class JoomlaquizModelQuiz extends JModelList
 	
 		return $data;	
 	}
+
+	public function secondsToArray($secs=0)
+    {
+        $res = array();
+
+        $res['days'] = floor($secs / 86400);
+        $secs = $secs % 86400;
+
+        $res['hours'] = floor($secs / 3600);
+        $secs = $secs % 3600;
+
+        $res['minutes'] = floor($secs / 60);
+        $res['secs'] = $secs % 60;
+
+        return $res;
+    }
+
+    public function waitTimeToString($wait_time=0)
+    {
+        $wait_time_arr = $this->secondsToArray($wait_time);
+
+        $waitTimeString = '';
+
+        if(!empty($wait_time_arr['days'])) {
+            $waitTimeString .= ' ' . $wait_time_arr['days'] . JText::_('COM_JOOMLAQUIZ_QUIZ_WAIT_TIME_DAYS') ;
+        }
+
+        if(!empty($wait_time_arr['hours'])) {
+            $waitTimeString .= ' ' . $wait_time_arr['hours'] . JText::_('COM_JOOMLAQUIZ_QUIZ_WAIT_TIME_HOURS') ;
+        }
+
+        if(!empty($wait_time_arr['minutes'])) {
+            $waitTimeString .= ' ' . $wait_time_arr['minutes'] . JText::_('COM_JOOMLAQUIZ_QUIZ_WAIT_TIME_MINUTES') ;
+        }
+
+        if(!empty($wait_time_arr['secs'])) {
+            $waitTimeString .= ' ' . $wait_time_arr['secs'] . JText::_('COM_JOOMLAQUIZ_QUIZ_WAIT_TIME_SECONDS') ;
+        }
+
+        return trim($waitTimeString);
+    }
 }

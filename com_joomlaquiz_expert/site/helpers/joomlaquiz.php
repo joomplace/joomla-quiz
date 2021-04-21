@@ -549,7 +549,7 @@ class JoomlaquizHelper
             if($result_event && !empty($result_event)){
                 $cust_params = $result_event[0];
             }
-			
+
 			//stand alone quiz	or  free learn path
 			if (!$order_id && !$rel_id) {
 				if ($quiz->c_number_times) {			
@@ -565,8 +565,8 @@ class JoomlaquizHelper
 						$database->SetQuery( $query );
 						$user_tries = $database->loadColumn();
 						$last_try_date = strtotime($user_tries[count($user_tries)-1]);
-					
-						if ($last_try_date + ($quiz->c_min_after*60) > strtotime(JFactory::getDate()) ){
+
+                        if ( ($last_try_date + ($quiz->c_min_after*60)) > time() ){
 							if ($quiz->c_once_per_day && date('d', $last_try_date) != date('d')) {
 								return true;
 							}

@@ -441,10 +441,20 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$numbers = range (0,($kol_quests - 1));
 						srand ((float)microtime()*1000000);
 						shuffle ($numbers);
-						while (list (, $number) = each ($numbers)) {
-							$chain_str .= $q_data[$number]->c_id."*";
-							$chin_nums .= "{$number}*";
-						}
+
+						// ToDo: After testing, leave only the 'else' option.
+                        if (version_compare(PHP_VERSION, '8.0', '<')) {
+                            while (list (, $number) = each ($numbers)) {
+                                $chain_str .= $q_data[$number]->c_id."*";
+                                $chin_nums .= "{$number}*";
+                            }
+                        } else {
+                            foreach($numbers as $number) {
+                                $chain_str .= $q_data[$number]->c_id."*";
+                                $chin_nums .= "{$number}*";
+                            }
+                        }
+
 						if(strlen($chain_str))
 						{
 							$chain_str = JoomlaquizHelper::jq_substr($chain_str,0,strlen($chain_str)-1);

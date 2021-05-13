@@ -198,7 +198,10 @@ class JoomlaquizModelPrintresult extends JModelList
 		$appsLib = JqAppPlugins::getInstance();
 		$plugins = $appsLib->loadApplications();
 
-		defined(_PDF_GENERATED) or define('_PDF_GENERATED', JText::_('COM_JOOMLAQUIZ_PDF_GENERATED'));
+        if(!defined('_PDF_GENERATED')) {
+            define('_PDF_GENERATED', JText::_('COM_JOOMLAQUIZ_PDF_GENERATED'));
+        }
+
 		$database = JFactory::getDBO();
 
 		$str = "";

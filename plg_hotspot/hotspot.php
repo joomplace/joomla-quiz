@@ -220,19 +220,29 @@ class plgJoomlaquizHotspot extends plgJoomlaquizQuestion
 		return $data;		
 	}
 	
-	public function onGetResult(&$data){
-		
+	public function onGetResult(&$data)
+    {
 		$database = JFactory::getDBO();
+
 		$query = "SELECT * FROM `#__quiz_t_question` AS `q`, `#__quiz_t_ext_hotspot` AS `h`"
 		. "\n WHERE q.c_id = '".$data['qid']."' AND q.c_id = h.c_question_id AND q.published = 1";
 		$database->SetQuery( $query );
 		$data['info']['c_hotspot'] = $database->LoadRow();
+
 		$query = "select * from #__quiz_r_student_hotspot where c_sq_id='".$data['id']."'";
 		$database->SetQuery( $query );
 		$tmp = $database->LoadRow();
-		while(list($key,$value) = each($tmp)) {
-			$data['info']['c_hotspot'][$key] = $value;
-		}
+
+        // ToDo: After testing, leave only the 'else' option.
+        if (version_compare(PHP_VERSION, '8.0', '<')) {
+            while(list($key,$value) = each($tmp)) {
+                $data['info']['c_hotspot'][$key] = $value;
+            }
+        } else {
+            foreach($tmp as $key=>$value) {
+                $data['info']['c_hotspot'][$key] = $value;
+            }
+        }
 		
 		return true;
 	}

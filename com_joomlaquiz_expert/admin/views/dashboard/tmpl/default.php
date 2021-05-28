@@ -126,10 +126,22 @@ function subfolding($r_url){
 	<input type="hidden" name="task" value="" />
 	<?php echo JHtml::_('form.token'); ?>
 </form>
+<div class="admin_banners">
+    <div class="admin_banner admin_banner_support"><div><?php echo JText::_("COM_JOOMLAQUIZ_ADMIN_BANNER_SUPPORT"); ?><i class="icon-remove"></i></div></div>
+    <div class="admin_banner admin_banner_dev"><div><?php echo JText::_("COM_JOOMLAQUIZ_ADMIN_BANNER_DEVELOPMENT"); ?><i class="icon-remove"></i></div></div>
+    <div class="admin_banner admin_banner_donate"><div><?php echo JText::_("COM_JOOMLAQUIZ_ADMIN_BANNER_DONATE"); ?><i class="icon-remove"></i></div></div>
+</div>
 <?php if ($this->messageTrigger) { ?>
-<div id="notification" class="jqd-survey-wrap clearfix" style="clear: both">
-    <div class="jqd-survey">
+<div id="notification" class="jqd-survey-wrap clearfix">
+    <div class="jqd-survey jqd-survey-dashboard">
         <span><?php echo JText::_("COM_JOOMLAQUIZ_NOTIFICMES1"); ?><a onclick="jq_dateAjaxRef()" style="cursor: pointer" rel="nofollow" target="_blank"><?php echo JText::_("COM_JOOMLAQUIZ_NOTIFICMES2"); ?></a><?php echo JText::_("COM_JOOMLAQUIZ_NOTIFICMES3"); ?><i id="close-icon" class="icon-remove" onclick="jq_dateAjaxIcon()"></i></span>
     </div>
 </div>
 <?php } ?>
+<script>
+    jQuery(function($){
+        $('.admin_banner .icon-remove').on('click', function(){
+            $(this).closest('.admin_banner').remove();
+        });
+    });
+</script>

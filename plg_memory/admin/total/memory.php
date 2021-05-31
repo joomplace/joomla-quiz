@@ -17,7 +17,7 @@ function getTotalScoreMemory($qid){
 	$database->SetQuery( $query );
 	$qch_ids_type_13 = $database->loadColumn();
 
-	if(count($qch_ids_type_13)) {
+	if(!empty($qch_ids_type_13)) {
 		$query = "SELECT SUM(a_points) FROM #__quiz_t_memory WHERE c_question_id IN (".implode(',', $qch_ids_type_13).")";
 		$database->SetQuery( $query );
 		$total_score += $database->LoadResult();

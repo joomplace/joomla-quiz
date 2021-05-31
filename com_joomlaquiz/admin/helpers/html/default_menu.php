@@ -9,7 +9,7 @@
 defined('_JEXEC') or die;
 $app = JFactory::getApplication();
 $document = JFactory::getDocument();
-$document->addStyleSheet(JURI::root().'administrator/components/com_joomlaquiz/assets/css/joomlaquiz.css');
+$document->addStyleSheet(JURI::root().'administrator/components/com_joomlaquiz/assets/css/joomlaquiz.css?v='.JoomlaquizHelper::getVersion());
 
 ?>
 <div id="jp-navbar" class="navbar navbar-static navbar-inverse">

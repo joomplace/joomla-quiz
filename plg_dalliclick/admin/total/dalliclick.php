@@ -21,7 +21,7 @@ function getTotalScoreDalliclick($qid){
 	$database->SetQuery( $query );
 	$qch_ids_type_14 = $database->loadColumn();
 
-	if(count($qch_ids_type_14)) {
+	if(!empty($qch_ids_type_14)) {
 		foreach($qch_ids_type_14 as $key => $c_question_id){
 			$query = "SELECT b.c_right FROM #__quiz_t_question as a, #__quiz_t_dalliclick as b WHERE a.c_id = '".$c_question_id."' AND b.c_question_id = a.c_id AND a.published = 1";
 			$database->SetQuery( $query );

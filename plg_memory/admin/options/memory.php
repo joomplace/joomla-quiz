@@ -26,7 +26,7 @@ defined('_JEXEC') or die;
 	</tr>
 	<?php
 	$k = 0; $ii = 1; $ind_last = (isset($row->memory_data)) ? count($row->memory_data) : 0;
-	if(count($row->memory_data)){
+	if(!empty($row->memory_data)){
 	foreach ($row->memory_data as $frow) { ?>
 	<tr class="<?php echo "row$k"; ?>">
 		<td><?php echo $ii?></td>

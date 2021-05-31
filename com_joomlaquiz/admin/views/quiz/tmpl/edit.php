@@ -562,9 +562,8 @@ window.onload = function (){
 					<div class="controls">
 					<table cellpadding="10" cellspacing="10" id="feed_toins" <?php if($this->item->c_feed_option == 0) echo 'style="display:none;"';?>>
 					<?php			
-						if(@count($this->feed_opres))
-						{
-							foreach($this->feed_opres as $fopt)
+                if (!empty($this->feed_opres)) {
+                    foreach ($this->feed_opres as $fopt)
 							{
 								echo '<tr>';
 								echo '<td><a href="javascript: void(0);" onclick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="'.JURI::root().'administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a></td>';

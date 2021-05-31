@@ -74,6 +74,10 @@ jQuery(document).ready(function(){
     jQuery("#jform_c_ismetatitle0").click(function () {
         jQuery("#jform_c_metatitle").attr("disabled", true);
     });
+
+    <?php if(!empty($this->item->head_cat)) { ?>
+    showHideCategories(document.getElementById('head_cat'));
+    <?php } ?>
 });
 
 window.onload = function (){

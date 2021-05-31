@@ -17,44 +17,61 @@ $input = $app->input;
 ?>
 <script>
 jQuery(document).ready(function(){
-window.counter = Number("<?php echo(count($this->jq_pool_cat));?>");
-jQuery("#jform_c_email_chk1").click(function () {
+    window.counter = Number("<?php echo(count($this->jq_pool_cat));?>");
+
+    var poolRandDiv = jQuery('#jform_pool_rand').closest('.control-group'),
+        headCatDiv = jQuery('#head_cat').closest('.control-group'),
+        catPoolDiv = jQuery('#cat_pool_with_head').closest('.control-group');
+
+    jQuery("#jform_c_email_chk1").click(function () {
       jQuery("#jform_c_emails").removeAttr("disabled");
     });
-jQuery("#jform_c_email_chk0").click(function () {
+    jQuery("#jform_c_email_chk0").click(function () {
       jQuery("#jform_c_emails").attr("disabled", true);
     });
-jQuery("#jform_c_pool0").click(function () {
+    jQuery("#jform_c_pool0").click(function () {
 		jQuery("#jform_pool_rand").attr("disabled", true);
 		jQuery("#head_cat").attr("disabled", true);
 		jQuery("#cat_pool_with_head input").attr("disabled", true);
+
+        jQuery(poolRandDiv).hide('slow');
+        jQuery(headCatDiv).hide('slow');
+        jQuery(catPoolDiv).hide('slow');
     });
-jQuery("#jform_c_pool1").click(function () {
+    jQuery("#jform_c_pool1").click(function () {
 		jQuery("#jform_pool_rand").attr("disabled", false);
 		jQuery("#head_cat").attr("disabled", true);
 		jQuery("#cat_pool_with_head input").attr("disabled", true);
-   });
-jQuery("#jform_c_pool2").click(function () {
+
+        jQuery(poolRandDiv).show('slow');
+        jQuery(headCatDiv).hide('slow');
+        jQuery(catPoolDiv).hide('slow');
+    });
+    jQuery("#jform_c_pool2").click(function () {
 		jQuery("#jform_pool_rand").attr("disabled", true);
 		jQuery("#head_cat").attr("disabled", false);
 		jQuery("#cat_pool_with_head input").attr("disabled", false);
-   });
-jQuery("#jform_c_ismetadescr1").click(function () {
+
+        jQuery(poolRandDiv).hide('slow');
+        jQuery(headCatDiv).show('slow');
+        jQuery(catPoolDiv).show('slow');
+    });
+    jQuery("#jform_c_ismetadescr1").click(function () {
         jQuery("#jform_c_metadescr").removeAttr("disabled");
     });
-jQuery("#jform_c_iskeywords1").click(function () {
+    jQuery("#jform_c_iskeywords1").click(function () {
         jQuery("#jform_c_keywords").removeAttr("disabled");
     });
-jQuery("#jform_c_ismetatitle1").click(function () {
+    jQuery("#jform_c_ismetatitle1").click(function () {
         jQuery("#jform_c_metatitle").removeAttr("disabled");
     });
-jQuery("#jform_c_ismetadescr0").click(function () {
+    jQuery("#jform_c_ismetadescr0").click(function () {
         jQuery("#jform_c_metadescr").attr("disabled", true);
     });
-jQuery("#jform_c_iskeywords0").click(function () {
+    jQuery("#jform_c_iskeywords0").click(function () {
         jQuery("#jform_c_keywords").attr("disabled", true);
     });
-jQuery("#jform_c_ismetatitle0").click(function () {
+    jQuery("#jform_c_ismetatitle0").click(function () {
         jQuery("#jform_c_metatitle").attr("disabled", true);
     });
 });
@@ -69,28 +86,44 @@ window.onload = function (){
     var checked7 = document.getElementById('jform_c_ismetatitle1').getAttribute('checked');
     var counter = Number("<?php echo(count($this->jq_pool_cat));?>");
 
+    var poolRandDiv = jQuery('#jform_pool_rand').closest('.control-group'),
+        headCatDiv = jQuery('#head_cat').closest('.control-group'),
+        catPoolDiv = jQuery('#cat_pool_with_head').closest('.control-group');
+
     if(checked1!=null){
-	document.getElementById('jform_c_emails').disabled = false;
+	    document.getElementById('jform_c_emails').disabled = false;
 	} else{ 
-	document.getElementById('jform_c_emails').disabled = true;
+	    document.getElementById('jform_c_emails').disabled = true;
 	}
 
     if(checked2!=null){
 		jQuery("#jform_pool_rand").attr("disabled", true);
 		jQuery("#head_cat").attr("disabled", true);
 		jQuery("#cat_pool_with_head input").attr("disabled", true);
+
+        jQuery(poolRandDiv).hide('slow');
+        jQuery(headCatDiv).hide('slow');
+        jQuery(catPoolDiv).hide('slow');
     }
 
     if(checked3!=null){
 		jQuery("#jform_pool_rand").attr("disabled", false);
 		jQuery("#head_cat").attr("disabled", true);
 		jQuery("#cat_pool_with_head input").attr("disabled", true);
+
+        jQuery(poolRandDiv).show('slow');
+        jQuery(headCatDiv).hide('slow');
+        jQuery(catPoolDiv).hide('slow');
     }
 
     if(checked4!=null){
 		jQuery("#jform_pool_rand").attr("disabled", true);
 		jQuery("#head_cat").attr("disabled", false);
 		jQuery("#cat_pool_with_head input").attr("disabled", false);
+
+        jQuery(poolRandDiv).hide('slow');
+        jQuery(headCatDiv).show('slow');
+        jQuery(catPoolDiv).show('slow');
     }
 
     if(checked5!=null){
@@ -578,18 +611,8 @@ window.onload = function (){
 	    </div>
 		<div class="tab-pane" id="question-pool-option">
 		<fieldset class="adminform">
-			<div class="control-group">
-				<?php echo $this->form->getLabel('c_pool'); ?>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_pool'); ?>
-				</div>
-			</div>
-			<div class="control-group">
-				<?php echo $this->form->getLabel('c_auto_breaks'); ?>
-				<div class="controls">
-					<?php echo $this->form->getInput('c_auto_breaks'); ?>
-				</div>
-			</div>
+            <?php echo $this->form->renderField('c_pool'); ?>
+            <?php echo $this->form->renderField('c_auto_breaks'); ?>
 			<div class="control-group">
 				<div class="control-label">
                     <?php echo $this->form->getLabel('pool_rand'); ?>
@@ -599,7 +622,11 @@ window.onload = function (){
 				</div>
 			</div>
 			<div class="control-group">
-                <label data-content="<?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES_DESC');?>" data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_BY_CATEGORIES_DESC');?>" class="control-label hasPopover" for="head_cat" id="jform_pool_rand-lbl" aria-invalid="false"><?php echo JText::_('COM_JOOMLAQUIZ_TEMPLATE_LABEL');?></label>
+                <label data-content="<?php echo JText::_('COM_JOOMLAQUIZ_HEAD_CATEGORY_DESC');?>"
+                       data-original-title="<?php echo JText::_('COM_JOOMLAQUIZ_HEAD_CATEGORY_DESC');?>"
+                       class="control-label hasPopover" for="head_cat" id="jform_pool_rand-lbl" aria-invalid="false">
+                    <?php echo JText::_('COM_JOOMLAQUIZ_HEAD_CATEGORY_LABEL');?>
+                </label>
                 <div class="controls">
 					<?php echo $this->head_cat;?>
 				</div>

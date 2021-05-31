@@ -32,7 +32,7 @@ class JoomlaquizTableQuiz extends JTable
 			$database = JFactory::getDBO();
             $input = JFactory::getApplication()->input;
             $jform = $input->get('jform', array(), 'ARRAY');
-			
+
 			if ((int)$jform['c_id'] < 1)
 			{
 				$query = "SELECT COUNT(*) "
@@ -90,7 +90,8 @@ class JoomlaquizTableQuiz extends JTable
             $this->c_category_id = (int)$jform['c_category_id'];
             $this->c_skin = $jform['c_skin'];
             $this->c_certificate = $jform['c_certificate'];
-			$res = parent::store($updateNulls);			
+            $this->head_cat = $jform['head_cat'];
+			$res = parent::store($updateNulls);
 			// -- add pool ----//
 
 			$query = "DELETE FROM #__quiz_pool WHERE q_id=".$this->c_id;

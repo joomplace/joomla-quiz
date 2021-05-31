@@ -87,9 +87,10 @@ class JoomlaquizTableQuiz extends JTable
 				$this->setRules($rules);
 			}
 
-			$this->c_category_id = (int)$jform['c_category_id'];
-			$this->c_skin = $jform['c_skin'];
-			$this->c_certificate = $jform['c_certificate'];
+            $this->c_category_id = (int)$jform['c_category_id'];
+            $this->c_skin = $jform['c_skin'];
+            $this->c_certificate = $jform['c_certificate'];
+            $this->head_cat = $jform['head_cat'];
 			$res = parent::store($updateNulls);			
 			// -- add pool ----//
 

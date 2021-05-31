@@ -28,7 +28,7 @@ class JoomlaquizViewQuiz extends JViewLegacy
  		$this->state	= $this->get('State');
 		$this->item		= $this->get('Item');
 		$this->form		= $this->get('Form');
-			
+
 		// Check for errors.
 		if (!empty($errors = $this->get('Errors'))) {
             JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
@@ -58,7 +58,7 @@ class JoomlaquizViewQuiz extends JViewLegacy
 		}
 			
 		$qc_tag = $quiz_data['head_cat_arr'];
-		$this->head_cat = JHTML::_('select.genericlist', $qc_tag, 'head_cat', 'class="" size="1" onchange="javascript:showHideCategories(this)"', 'value', 'text' );
+		$this->head_cat = JHTML::_('select.genericlist', $qc_tag, 'jform[head_cat]', 'class="" size="1" onchange="javascript:showHideCategories(this)"', 'value', 'text', $this->item->head_cat, 'head_cat');
 		$this->jq_pool_cat = $quiz_data['jq_pool_cat'];
 		$this->q_count = $quiz_data['q_count'];
 		

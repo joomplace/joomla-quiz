@@ -6,9 +6,9 @@
 * @copyright Copyright (C) JoomPlace, www.joomplace.com
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
-defined('_JEXEC') or die('Restricted access');
- 
-jimport('joomla.application.component.controlleradmin');
+defined('_JEXEC') or die;
+
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Questions Controller
@@ -21,8 +21,8 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
          */
         public function getModel($name = 'Questions', $prefix = 'JoomlaquizModel', $config = array('ignore_request' => true))
         {
-                $model = parent::getModel($name, $prefix, $config);
-                return $model;
+            $model = parent::getModel($name, $prefix, $config);
+            return $model;
         }
 				
 		public function saveOrderAjax()
@@ -282,63 +282,70 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 			$mainframe->redirect('index.php?option=com_joomlaquiz&view=questions');
 		}
 		
-		public function deleteQuestions() {
+		public function deleteQuestions()
+        {
+            $app = JFactory::getApplication();
+            $ids = $app->input->get('cid', array(),'array');
+            $ids = ArrayHelper::toInteger($ids);
 
-		$cids = JFactory::getApplication()->input->get('cids',array(),'array');
+            $model = $this->getModel();
+            $model->delete($ids);
 
-		$cids = explode(',', $cids[0]);
-
-		$model = $this->getModel();
-		$model->delete($cids);
-
-		JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
+            $app->redirect('index.php?option=com_joomlaquiz&view=questions');
 		}
 
-		public function checkComplitedQuestions() {
+		public function checkComplitedQuestions()
+        {
+            $this->checkToken();
 
-			$cid = JFactory::getApplication()->input->get('cid',array(),'array');
+            $app = JFactory::getApplication();
+			$ids = $app->input->get('cid', array(),'array');
+            $ids = ArrayHelper::toInteger($ids);
 
-			$cids = implode( ',', $cid );
-			$database = JFactory::getDBO();
-			if ($cid) {
-				$query = $database->getQuery(true);
-				$query->select($database->qn('c_question_id'))
-					->from($database->qn('#__quiz_r_student_question'))
-					->where($database->qn('c_question_id').' IN ('.implode(',',array_filter($cid)).')')
-					->group($database->qn('c_question_id'));
-					$database->setQuery($query);
-				$q_ids = $database->loadColumn();
-			}
+            $db = JFactory::getDBO();
+            $query = $db->getQuery(true);
 
-			if ($q_ids) {
+            $ids_arr = array();
+            foreach($ids as $id) {
+                $ids_arr[] = $db->q($id);
+            }
+            $ids_str = implode(',', $ids_arr);
 
-				$query = $database->getQuery(true);
-				$query->select($database->qn('c_question'))
-					->from($database->qn('#__quiz_t_question'))
-					->where($database->qn('c_id').' IN ('.implode(',',array_filter($q_ids)).')');
-					$database->setQuery($query);
-				$questions = $database->loadColumn();
+			if(!empty($ids)) {
+				$query->select($db->qn('c_question_id'))
+					->from($db->qn('#__quiz_r_student_question'))
+					->where($db->qn('c_question_id').' IN ('.$ids_str.')')
+					->group($db->qn('c_question_id'));
+				$db->setQuery($query);
+				$q_ids = $db->loadColumn();
+			} else {
+                $app->enqueueMessage(JText::_('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST'), 'warning');
+                $app->redirect('index.php?option=com_joomlaquiz&view=questions');
+            }
 
-				$app = JFactory::getApplication();
+			if(!empty($q_ids)) {
+				$cids = '';
+                foreach($ids as $id) {
+                    $cids .= '<input type="hidden" name="cid[]" value="'.$id.'" />';
+                }
 
-				$app->enqueueMessage('Question'.((count($q_ids) > 1)?'s ':' ').strip_tags(implode(', ',$questions)).' have been completed. Do you really want to delete them ?'.
-					'<form action="'.JRoute::_('index.php?option=com_joomlaquiz&view=questions&task=questions.deleteQuestions').'" method="post" name="message-Form" id="message-Form">
+                $app->enqueueMessage(JText::sprintf('COM_JOOMLAQUIZ_QUESTIONS_DELETE_COMPLITED_MSG', implode(',', $q_ids)) .
+					"<form action=\"#\" method=\"post\" name=\"message-Form\" id=\"message-Form\">
 							<div>
 							<br>
-								<button class="btn" type="submit" title="Delete"><i>Delete</i></button>
-								<a class="btn" type="button" title="Cancel" href ='."'".JRoute::_("index.php?option=com_joomlaquiz&view=questions")."'".'><i>Cancel</i></a>
-								<input type="hidden" name="cids" value="'.$cids.'" />
+								<button class=\"btn\" type=\"submit\" title=\"Delete\"><i>".JText::_('COM_JOOMLAQUIZ_QUESTIONS_DELETE_COMPLITED_BTN_DELETE')."</i></button>
+								<a class=\"btn\" type=\"button\" title=\"Cancel\" href=\"".JRoute::_('index.php?option=com_joomlaquiz&view=questions')."\"><i>".JText::_('COM_JOOMLAQUIZ_QUESTIONS_DELETE_COMPLITED_BTN_CANCEL')."</i></a>
+								".$cids."
+								<input type=\"hidden\" name=\"option\" value=\"com_joomlaquiz\" />
+								<input type=\"hidden\" name=\"task\" value=\"questions.deleteQuestions\" />
 							</div>
-						</form>', 'Message');
+						</form>", 'message');
+                $app->redirect('index.php?option=com_joomlaquiz&view=questions');
 
-				JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
+			} else {
+			    $this->deleteQuestions();
+            }
 
-				return true;
-			}
-
-			$model = $this->getModel();
-			$model->delete($cid);
-
-			JFactory::getApplication()->redirect('index.php?option=com_joomlaquiz&view=questions');
+            return true;
 		}
 }

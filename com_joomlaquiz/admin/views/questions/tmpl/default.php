@@ -272,3 +272,22 @@ $sortFields = $this->getSortFields();
         </div>
     </div>
 <?php } ?>
+<?php
+$session = JFactory::getSession();
+$marked_for_deletion = $session->get('joomlaquiz.questions.marked_for_deletion', null);
+if(!empty($marked_for_deletion)) { ?>
+    <script>
+        window.onload = function() {
+            var markedForDeletion = '<?php echo $marked_for_deletion; ?>'.split(','),
+                targetInputs = document.querySelectorAll('input[name="cid[]"]');
+            targetInputs.forEach(function(el) {
+                if(markedForDeletion.includes(el.value)) {
+                    el.click();
+                }
+            });
+        };
+    </script>
+<?php
+    $session->set('joomlaquiz.questions.marked_for_deletion', null);
+}
+?>

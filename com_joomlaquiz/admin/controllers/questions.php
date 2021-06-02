@@ -293,6 +293,8 @@ class JoomlaquizControllerQuestions extends JControllerAdmin
 								<input type=\"hidden\" name=\"task\" value=\"questions.deleteQuestions\" />
 							</div>
 						</form>", 'message');
+
+                JFactory::getSession()->set('joomlaquiz.questions.marked_for_deletion', implode(',', $ids));
                 $app->redirect('index.php?option=com_joomlaquiz&view=questions');
 
 			} else {

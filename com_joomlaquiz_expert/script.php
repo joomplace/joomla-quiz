@@ -621,24 +621,6 @@ class com_joomlaquizInstallerScript
 
         $this->migrateCategories();
 		$this->defaultCategoryCheck();
-
-        if (!JFolder::exists(JPATH_SITE . '/images/joomlaquiz/images/memory') ) {
-            JFolder::create( JPATH_SITE . '/images/joomlaquiz/images/memory');
-        }
-        if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/memory/tnnophoto.jpg')
-            && JFile::exists(JPATH_SITE . '/plugins/joomlaquiz/memory/admin/images/tnnophoto.jpg')
-        ) {
-            JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/memory/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/memory/tnnophoto.jpg');
-        }
-
-        if (!JFolder::exists(JPATH_SITE . '/images/joomlaquiz/images/resize') ) {
-            JFolder::create( JPATH_SITE . '/images/joomlaquiz/images/resize');
-        }
-        if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg')
-            && JFile::exists(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg')
-        ) {
-            JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg');
-        }
 	}
 }
 ?>

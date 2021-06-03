@@ -29,7 +29,25 @@ class com_joomlaquizInstallerScript
 		if (!JFolder::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images') ) {
 			JFolder::create( JPATH_ROOT . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images');
 		}
-		
+
+        if (!JFolder::exists(JPATH_SITE . '/images/joomlaquiz/images/memory') ) {
+            JFolder::create( JPATH_SITE . '/images/joomlaquiz/images/memory');
+        }
+        if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/memory/tnnophoto.jpg')
+                && JFile::exists(JPATH_SITE . '/plugins/joomlaquiz/memory/admin/images/tnnophoto.jpg')
+        ) {
+            JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/memory/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/memory/tnnophoto.jpg');
+        }
+
+        if (!JFolder::exists(JPATH_SITE . '/images/joomlaquiz/images/resize') ) {
+            JFolder::create( JPATH_SITE . '/images/joomlaquiz/images/resize');
+        }
+        if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg')
+            && JFile::exists(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg')
+        ) {
+            JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/imgmatch/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/resize/tnnophoto.jpg');
+        }
+
 		/* need to be refactored // delete duplication */
 		if (!JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_green.jpg')) {
 			JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images' .DIRECTORY_SEPARATOR. 'certificate_green.jpg', JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_green.jpg');

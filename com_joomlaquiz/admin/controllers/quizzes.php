@@ -104,7 +104,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
         $session = JFactory::getSession();
         $session->clear('com_joomlaquiz.move.quizzes.cids');
 
-		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=quizzes', $msg.$msg2);
+		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg.$msg2);
 	}
 	
 	public function copy_quiz_sel(){
@@ -124,7 +124,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 	{
 		$model = $this->getModel();
 		$msg = $model->copyQuizzes();
-		$this->setRedirect( 'index.php?option=com_joomlaquiz&view=quizzes', $msg);
+		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg);
 	}
 	
 	public function export_quizzes_all()
@@ -132,8 +132,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		$this->export_quizzes(true);
 		return true;
 	}
-	
-	public function export_quizzes($all_quizzes = false){
+
+    public function export_quizzes($all_quizzes = false){
 
         $cid = $this->input->get('cid', array(), 'array');
         if($all_quizzes) $cid = -1;
@@ -504,6 +504,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $quiz_xml .= "\n\t\t\t\t<quiz_feed_option>".$quiz->c_feed_option."</quiz_feed_option>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_paid_check>".$quiz->paid_check."</quiz_paid_check>";
                 $quiz_xml .= "\n\t\t\t\t<quiz_pagination>".$quiz->c_pagination."</quiz_pagination>";
+                $quiz_xml .= "\n\t\t\t\t<quiz_access_message>".$quiz->c_quiz_access_message."</quiz_access_message>";
+                $quiz_xml .= "\n\t\t\t\t<quiz_certificate_access_message>".$quiz->c_quiz_certificate_access_message."</quiz_certificate_access_message>";
+                $quiz_xml .= "\n\t\t\t\t<quiz_head_cat>".$quiz->head_cat."</quiz_head_cat>";
 
                 $query = "SELECT * FROM #__quiz_t_question WHERE c_quiz_id = ".$quiz->c_id;
                 $database->SetQuery($query);
@@ -787,8 +790,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		
 		return $category;
 	}
-	
-	public function import_quizzes() {
+
+    public function import_quizzes(){
         $database = JFactory::getDBO();
 
         $quiz_images = array();
@@ -993,7 +996,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
-								c_resbycat,	c_feed_option, paid_check, c_pagination)  ";
+								c_resbycat,	c_feed_option, paid_check, c_pagination,
+                                c_quiz_access_message, c_quiz_certificate_access_message, head_cat)  ";
                         $query .= "VALUES(".
                             $db->quote($free_id). ",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_show_author).",".$db->quote($qcat->quiz_autostart).",".$db->quote($qcat->quiz_timer_style).",".$db->quote($qcat->quiz_one_time).",
@@ -1012,7 +1016,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
 								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote(@$qcat->quiz_resbycat).",
-								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
+								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).",
+                                ".$db->quote($qcat->quiz_access_message).", ".$db->quote($qcat->quiz_certificate_access_message).", ".$db->quote($qcat->quiz_head_cat).")";
                         $database->setQuery($query);
                         if (!$database->execute()) {
                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1059,7 +1064,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$q_quest->id;
                                 $database->setQuery($query);
                                 $dubl_rowq = $database->LoadObjectList();
-                                if (!empty($dubl_rowq)) {
+                                if(!empty($dubl_rowq)) {
                                     $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
                                     $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                     $database->setQuery($query);
@@ -1201,7 +1206,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								c_random, published, 
 								c_slide, c_language, c_certificate, 
 								c_feedback, c_pool, c_auto_breaks,
-								c_resbycat, c_feed_option, paid_check, c_pagination)  ";
+								c_resbycat, c_feed_option, paid_check, c_pagination,
+                                c_quiz_access_message, c_quiz_certificate_access_message, head_cat)  ";
                     $query .= "VALUES(
 								".$db->quote($free_id).",".$db->quote($categories_relations_quiz[$qcat->quiz_category]).",".$db->quote($qcat->quiz_number_times).",
 								".$db->quote($qcat->quiz_show_author).",".$db->quote($qcat->quiz_autostart).",".$db->quote($qcat->quiz_timer_style).",".$db->quote($qcat->quiz_one_time).",
@@ -1220,7 +1226,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 								".$db->quote($qcat->quiz_random).",".$db->quote($qcat->quiz_published).",
 								".$db->quote($qcat->quiz_slide).",".$db->quote($qcat->quiz_language).",".$db->quote($qcat->quiz_certificate).",
 								".$db->quote($qcat->quiz_feedback).",".$db->quote($qcat->quiz_pool).",".$db->quote(@$qcat->quiz_auto_breaks).",".$db->quote($qcat->quiz_resbycat).",
-								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).")";
+								".$db->quote($qcat->quiz_feed_option).", ".$db->quote($qcat->quiz_paid_check).", ".$db->quote($qcat->quiz_pagination).",
+                                ".$db->quote($qcat->quiz_access_message).", ".$db->quote($qcat->quiz_certificate_access_message).", ".$db->quote($qcat->quiz_head_cat).")";
                     $database->setQuery($query);
                     if (!$database->execute()) {
                         echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
@@ -1270,7 +1277,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             $query = "SELECT * FROM #__quiz_t_question WHERE c_id=".$q_quest->id;
                             $database->setQuery($query);
                             $dubl_rowq = $database->LoadObjectList();
-                            if (!empty($dubl_rowq)) {
+                            if(!empty($dubl_rowq)) {
                                 $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random, c_qform) ";
                                 $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                 $database->setQuery($query);
@@ -1425,8 +1432,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             $database->setQuery($query);
                             $dubl_rowq = $database->LoadObjectList();
 
-                            if (!empty($dubl_rowq)) {
-                                if ($dubl_rowq[0]->c_question != $q_quest->question_text) {
+                            if(!empty($dubl_rowq)) {
+                                if($dubl_rowq[0]->c_question != $q_quest->question_text) {
                                     $query = "INSERT INTO #__quiz_t_question(c_id,c_quiz_id,c_point,c_attempts,c_question,c_image,c_type,ordering,c_right_message,c_wrong_message,c_detailed_feedback,c_feedback,cq_id,c_ques_cat,c_random,c_qform) ";
                                     $query .= " VALUES ('',".$db->quote($new_quiz_id).",".$db->quote($q_quest->c_point).",".$db->quote($q_quest->c_attempts).",".$db->quote($q_quest->question_text).",".$db->quote($q_quest->question_image).",".$db->quote($q_quest->c_type).",".$db->quote($q_quest->ordering).",".$db->quote($q_quest->question_rmess).",".$db->quote($q_quest->question_wmess).",".$db->quote($q_quest->question_dfmess).",".$db->quote($q_quest->c_feedback).",".$db->quote($q_quest->cq_id).",".$db->quote($categories_relations_questions[$q_quest->c_ques_cat]).",".$db->quote($q_quest->c_random).",".$db->quote($q_quest->c_qform).")";
                                     $database->setQuery($query);
@@ -1631,125 +1638,3 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		}
 	}
 }
-
-
-/*  following 2 functions don't need at all
-	function migrateCategories(){
-	
-		$this->defaultCategoryCheck();
-		
-		$db = JFactory::getDBO();
-		
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__quiz_t_category');
-		$quiz_categories = $db->setQuery($query)->loadObjectList('c_id');
-		
-		$error = false;
-		foreach($quiz_categories as $key => $qzc){
-			$extension = 'com_joomlaquiz';
-			$title     = $qzc->c_category;
-			$desc      = $qzc->instruction;
-			$parent_id = 1;
-			$quiz_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $qzc->c_id);
-			if(!$quiz_categories[$key]->id){
-				$error = true;
-			}else{
-				$query->clear();
-				$query->update('#__quiz_t_quiz')
-					->set('`c_category_id` = "'.$quiz_categories[$key]->id.'"')
-					->where('`c_category_id` = "'.$quiz_categories[$key]->note.'"');
-				$db->setQuery($query)->execute();
-			}
-		}
-		if(!$error){
-			$query->clear();
-			$query->delete('#__quiz_t_category');
-			$db->setQuery($query)->execute();
-		}
-		
-		/* create pseudo-tree *//*
-		$query = $db->getQuery(true);
-		$query->select('DISTINCT(qc_tag) AS value, qc_tag')
-			->from('#__quiz_q_cat')
-			->where('TRIM(qc_tag) <> \'\'');
-		$head_categories = $db->setQuery($query)->loadObjectList('qc_tag');
-		
-		foreach($head_categories as $key => $hqc){
-			$extension = 'com_joomlaquiz.questions';
-			$title     = $hqc->qc_tag;
-			$desc      = '';
-			$parent_id = 1;
-			$head_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $hqc->c_id);
-		}
-		/* pseudo-tree done */
-	/*	
-		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__quiz_q_cat');
-		$quest_categories = $db->setQuery($query)->loadObjectList('qc_id');
-		
-		$error = false;
-		foreach($quest_categories as $key => $quc){
-			$extension = 'com_joomlaquiz.questions';
-			$title     = $quc->qc_category;
-			$desc      = $quc->instruction;
-			$parent_id = $head_categories[$quc->qc_tag]->id;
-			$quest_categories[$key] = $this->createCategory($extension, $title, $desc, $parent_id, $quc->c_id);
-			if(!$quest_categories[$key]->id){
-				$error = true;
-			}else{
-				$query->clear();
-				$query->update('#__quiz_t_question')
-					->set('`c_ques_cat` = "'.$quiz_categories[$key]->id.'"')
-					->where('`c_ques_cat` = "'.$quiz_categories[$key]->note.'"');
-				$db->setQuery($query)->execute();
-			}
-		}
-		if(!$error){
-			$query->clear();
-			$query->delete('#__quiz_q_cat');
-			$db->setQuery($query)->execute();
-		}
-		
-	}
-	
-	function defaultCategoryCheck()
-	{
-		/* checking default category quizzes *//*
-		$extension = 'com_joomlaquiz';
-		$title     = 'Uncategorised';
-		$desc      = 'A default category for the joomlaquiz quizzes.';
-		$parent_id = 1;
-		
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__categories')
-			->where('`extension`="'.$extension.'"')
-			->where('`parent_id`="'.$parent_id.'"');
-		$exists = count($db->setQuery($query)->loadObjectList());
-		
-		if(!$exists)
-			$this->createCategory($extension, $title, $desc, $parent_id);
-		
-		/* checking default category questions *//*
-		$extension = 'com_joomlaquiz.questions';
-		$title     = 'Uncategorised';
-		$desc      = 'A default category for the joomlaquiz questions.';
-		$parent_id = 1;
-		
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id')
-			->from('#__categories')
-			->where('`extension`="'.$extension.'"')
-			->where('`parent_id`="'.$parent_id.'"');
-		$exists = count($db->setQuery($query)->loadObjectList());
-		
-		if(!$exists)
-			$this->createCategory($extension, $title, $desc, $parent_id);
-	}
-	*/
-	
-

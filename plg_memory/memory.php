@@ -446,6 +446,15 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 		
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
+
+        if (!JFolder::exists(JPATH_SITE . '/images/joomlaquiz/images/memory') ) {
+            JFolder::create( JPATH_SITE . '/images/joomlaquiz/images/memory');
+        }
+
+        if (!JFile::exists(JPATH_SITE . '/images/joomlaquiz/images/memory/tnnophoto.jpg')) {
+            JFile::copy(JPATH_SITE . '/plugins/joomlaquiz/memory/admin/images/tnnophoto.jpg', JPATH_SITE . '/images/joomlaquiz/images/memory/tnnophoto.jpg');
+        }
+
 		$memory_dir = JPATH_SITE.'/images/joomlaquiz/images/memory';
 		
 		if(!file_exists($memory_dir)){

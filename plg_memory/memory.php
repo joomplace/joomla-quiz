@@ -555,20 +555,20 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 		return false;
 	}
 	
-	function _uploadResizeCropImg(){
+	function _uploadResizeCropImg($data){
 		
 		$mainframe = JFactory::getApplication();
         $jinput = $mainframe->input;
 		$database = JFactory::getDBO();
-		
+
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.path');
 
 		$filedata = $jinput->files->get('Filedata', array(), 'array');
-		
+
 		$userfile2 = !empty($filedata['tmp_name']) ? $filedata['tmp_name'] : '';
 		$userfile_name = !empty($filedata['name']) ? $filedata['name'] : '';
-		$qid = $jinput->getInt('c_id', 0);
+		$qid = $data['qid'];
 		
 		if (!empty($filedata)) {
 			$base_Dir = JPATH_SITE."/images/joomlaquiz/images/memory";
@@ -599,17 +599,22 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 				$width = ($width) ? $width : 150;
 				
 				require_once(JPATH_SITE.'/administrator/components/com_joomlaquiz/assets/image.class.php');
-				
 				$image = new SimpleImage();
 				$image->load($base_Dir.'/'.$filedata['name']);
 				$image->resizeToWidth($width);
-				
 				$image->save($base_Dir.'/'.$filedata['name']);
-				
+
+                $database->setQuery("SELECT `c_id` FROM `#__quiz_t_qtypes` WHERE `c_type` = '".$data['quest_type']."'");
+                $quest_type = (int)$database->loadResult();
+
 				$javascript = '<script type="text/javascript">alert("'.JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$filedata['name'].JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL').'"); var image = parent.document.getElementById("picture"); image.options[image.options.length] = new Option("'.$filedata['name'].'", "'.$filedata['name'].'");
 				var image_cover = parent.document.getElementById("picture_cover"); image_cover.options[image_cover.options.length] = new Option("'.$filedata['name'].'", "'.$filedata['name'].'");
 				parent.jQuery(\'#picture\').trigger(\'liszt:updated\');
 				parent.jQuery(\'#picture_cover\').trigger(\'liszt:updated\');
+				parent.jQuery(\'input[name="jform[c_id]"]\').val('.$qid.');
+				parent.jQuery(\'input[name="c_id"]\').val('.$qid.');
+				parent.jQuery(\'input[name="jform[c_type]"]\').val('.$quest_type.');
+				parent.document.getElementById("system-message-container").innerHTML = "";
 				</script>';
 				
 				echo $javascript;
@@ -633,9 +638,9 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
         $jform = $jinput->get('jform', array(), 'ARRAY');
 		$plg_task = $jinput->get('plgtask', '');
         $database = JFactory::getDBO();
-		
+
 		if($plg_task == 'upload_resize_crop_img'){
-			$this->_uploadResizeCropImg();
+			$this->_uploadResizeCropImg($data);
 			die;
 		}
 

@@ -24,9 +24,8 @@ function jq_uploadMemoryImage()
 	
 	var form = document.adminForm;
 	form.setAttribute('target', 'brkFrame');
-	form.task.value = 'question.apply';
 	form.plgtask.value = 'upload_resize_crop_img';
-	form.submit();
+    Joomla.submitbutton('question.apply');
 	form.setAttribute('target', '');
 	form.plgtask.value = '';
 	return true;

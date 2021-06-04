@@ -58,9 +58,9 @@ else
 			<div class="control-group form-inline">
 				<table class="adminform" style="margin-top:10px; margin-bottom:10px; ">
 					<tr><td>
-						<small>
-							<?php echo JText::_('COM_JOOMLAQUIZ_AFTER_YOU_HAVE_UPLOADED');?>
-						</small><br>
+						<!--<small>
+							<?php //echo JText::_('COM_JOOMLAQUIZ_AFTER_YOU_HAVE_UPLOADED');?>
+						</small><br>-->
 						<small>
 							<?php echo JText::_('COM_JOOMLAQUIZ_IF_YOU_WANT_TOUPLOAD');?>
 						</small>
@@ -71,7 +71,7 @@ else
 				<table width="100%" class="adminform">
 					<tr>
 						<td colspan="2">
-							<img src="<?php echo $img_cert?>" alt="" name="imagelib" />
+							<img src="<?php echo (!empty($img_cert) ? $img_cert : ''); ?>" alt="" name="imagelib" id="imagelib" />
 						</td>
 					</tr>
 				</table>

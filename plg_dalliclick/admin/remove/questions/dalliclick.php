@@ -9,11 +9,12 @@
 
 defined('_JEXEC') or die;
 
-function removeQuestionsDalliclick($cids){
-	
+function removeQuestionsDalliclick($cids)
+{
 	$database = JFactory::getDBO();
-	$query = "DELETE FROM #__quiz_t_dalliclick WHERE c_question_id IN ( $cids )";
+	$query = "DELETE FROM `#__quiz_t_dalliclick` WHERE `c_question_id` IN ($cids)";
 	$database->setQuery( $query );
-	
+    $database->execute();
+
 	return true;
 }

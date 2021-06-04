@@ -9,11 +9,12 @@
 
 defined('_JEXEC') or die;
 
-function removeQuestionsImgmatch($cids){
-	
+function removeQuestionsImgmatch($cids)
+{
 	$database = JFactory::getDBO();
-	$query = "DELETE FROM #__quiz_t_matching WHERE c_question_id IN ( $cids )";
-	$database->setQuery( $query );
+	$query = "DELETE FROM `#__quiz_t_matching` WHERE `c_question_id` IN ($cids)";
+	$database->setQuery($query);
+    $database->execute();
 	
 	return true;
 }

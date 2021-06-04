@@ -608,7 +608,8 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		return false;
 	}
 
-	function _uploadResizeImg(){
+	function _uploadResizeImg($data)
+    {
 		$mainframe = JFactory::getApplication();
 		$database = JFactory::getDBO();
 		$jinput = $mainframe->input;
@@ -619,7 +620,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 
 		$userfile2 = (!empty($user_files['tmp_name']) ? $user_files['tmp_name'] : "");
 		$userfile_name = (!empty($user_files['name']) ? $user_files['name'] : "");
-		$qid = JFactory::getApplication()->input->get('c_id');
+        $qid = $data['qid'];
 
 		if (!empty($user_files)) {
 			$base_Dir = JPATH_SITE."/images/joomlaquiz/images/resize";
@@ -652,15 +653,21 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 
 				$image = new SimpleImage();
 				$image->load($base_Dir.'/'.$user_files['name']);
-
 				$image->resizeToHeight($height);
 				$image->save($base_Dir.'/'.$user_files['name']);
 
-				$javascript = '<script type="text/javascript">alert("'.JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$user_files['name'].JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL').'"); var image_left = parent.document.getElementById("picture_left"); image_left.options[image_left.options.length] = new Option("'.$user_files['name'].'", "'.$user_files['name'].'");
+                $database->setQuery("SELECT `c_id` FROM `#__quiz_t_qtypes` WHERE `c_type` = '".$data['quest_type']."'");
+                $quest_type = (int)$database->loadResult();
+
+                $javascript = '<script type="text/javascript">alert("'.JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$user_files['name'].JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL').'"); 
+                var image_left = parent.document.getElementById("picture_left"); image_left.options[image_left.options.length] = new Option("'.$user_files['name'].'", "'.$user_files['name'].'");
 				parent.jQuery(\'#picture_left\').trigger(\'liszt:updated\');
 				var image_right = parent.document.getElementById("picture_right"); image_right.options[image_right.options.length] = new Option("'.$user_files['name'].'", "'.$user_files['name'].'");
 				parent.jQuery(\'#picture_right\').trigger(\'liszt:updated\');
-				
+				parent.jQuery(\'input[name="jform[c_id]"]\').val('.$qid.');
+				parent.jQuery(\'input[name="c_id"]\').val('.$qid.');
+				parent.jQuery(\'input[name="jform[c_type]"]\').val('.$quest_type.');
+				parent.document.getElementById("system-message-container").innerHTML = "";
 				</script>';
 
 				echo $javascript;
@@ -689,7 +696,7 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 
 		$plg_task = JFactory::getApplication()->input->get('plgtask', '');
 		if($plg_task == 'upload_resize_img'){
-			$this->_uploadResizeImg();
+			$this->_uploadResizeImg($data);
 			die;
 		}
 

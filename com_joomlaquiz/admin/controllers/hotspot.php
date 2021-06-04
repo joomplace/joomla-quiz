@@ -22,7 +22,6 @@ class JoomlaquizControllerHotspot extends JControllerForm
 	
 	public function uploadimage() {
 		$css = JFactory::getApplication()->input->get('t','khepri');
-		
 		$message = '';
         $userfile = JFactory::getApplication()->input->files->get('userfile', array(), 'array');
 		$userfile2=(isset($userfile['tmp_name']) ? $userfile['tmp_name'] : "");
@@ -32,8 +31,8 @@ class JoomlaquizControllerHotspot extends JControllerForm
 			$base_Dir = JPATH_SITE."/images/joomlaquiz/images/";
 			
 			if (empty($userfile_name)) {
-				echo "<script>alert('".JText::_('COM_JOOMLAQUIZ_PLEASE_SELECT_AN_IMAGE')."'); document.location.href='index.php?no_html=1&tmpl=component&option=com_joomlaquiz&task=uploadimage&directory=".$directory."&t=".$css."';</script>";
-			}
+				echo "<script>alert('".JText::_('COM_JOOMLAQUIZ_PLEASE_SELECT_AN_IMAGE')."'); document.location.href='index.php?no_html=1&tmpl=component&option=com_joomlaquiz&task=hotspot.uploadimage&directory=".$directory."&t=".$css."';</script>";
+            }
 			$filename = explode(".", $userfile_name);
 		
 			if (preg_match("/[^0-9a-zA-Z_\-]/", $filename[0])) {

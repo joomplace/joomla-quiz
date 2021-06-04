@@ -17,11 +17,38 @@ $imgPath = JURI::root().'images/joomlaquiz/images/'.$this->filename;
         var newOption = "<?php echo $this->filename?>";
         if(newOption!=""){
             var path = "<?php echo $imgPath?>";
-            jQuery('#c_image',window.parent.document).append("<option value="+newOption+" selected='selected'>"+newOption+"</option>").hide().show();
-            jQuery('#img_hotspot', window.parent.document).attr("src",path).hide().show();
+
+            // Hotspot & Dalliclick
+            if(window.parent !== null && jQuery('#img_hotspot', window.parent.document).length) {
+                var imgSelect = jQuery('#c_image', window.parent.document);
+                jQuery(imgSelect).find('option').attr('selected', null);
+                jQuery(imgSelect).append("<option value="+newOption+" selected='selected'>"+newOption+"</option>");
+                window.parent.jQuery('#c_image').trigger('liszt:updated');
+                jQuery('#img_hotspot', window.parent.document).attr("src",path);
+            }
+
+            // Puzzle
+            if(opener !== null && jQuery('#img_puzzle', opener.document).length) {
+                var imgSelect = jQuery('#c_image', opener.document);
+                jQuery(imgSelect).find('option').attr('selected', null);
+                jQuery(imgSelect).append('<option value="'+newOption+'" selected="selected">'+newOption+'</option>');
+                opener.jQuery('#c_image').trigger('liszt:updated');
+                jQuery('#img_puzzle', opener.document).attr('src', path);
+            }
+
+            // Uploading a certificate
+            if(opener !== null && jQuery('#jformcert_file', opener.document).length) {
+                var imgSelect = jQuery('#jformcert_file', opener.document);
+                jQuery(imgSelect).find('option').attr('selected', null);
+                jQuery(imgSelect).append('<option value="'+newOption+'" selected="selected">'+newOption+'</option>');
+                opener.jQuery('#jformcert_file').trigger('liszt:updated');
+                jQuery('#imagelib', opener.document).attr('src', path);
+            }
+
             return true;
+        } else {
+            return false;
         }
-    else return false;
     }
 </script>
 <body onload="load()">

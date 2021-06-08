@@ -625,24 +625,25 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 		if (!empty($user_files)) {
 			$base_Dir = JPATH_SITE."/images/joomlaquiz/images/resize";
 			$filename = explode(".", $userfile_name);
+			$location_href = '/administrator/index.php?option=com_joomlaquiz&view=question&layout=edit&c_id='.(int)$data['qid'];
 
 			if (preg_match("/[^0-9a-zA-Z_]/", $filename[0])) {
-				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_FILE_MUST')."'); window.history.go(-1);</script>\n";
+                echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_FILE_MUST')."'); parent.document.location.href=\"".$location_href."\";</script>\n";
 				die();
 			}
 
 			if (JFile::exists($base_Dir.'/'.$userfile_name)) {
-				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_IMAGE').$userfile_name.JText::_('COM_JOOMLAQUIZ_ALREADY_EXISTS')."'); window.history.go(-1);</script>\n";
+				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_IMAGE').$userfile_name.JText::_('COM_JOOMLAQUIZ_ALREADY_EXISTS')."'); parent.document.location.href=\"".$location_href."\";</script>\n";
 				die();
 			}
 
 			if ((strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".gif")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpg")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpeg")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".png")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".bmp")) ) {
-				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_ACCEPTED_FILES')."'); window.history.go(-1);</script>\n";
+				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_ACCEPTED_FILES')."'); parent.document.location.href=\"".$location_href."\";</script>\n";
 				die();
 			}
 
 			if (!JFile::move($user_files['tmp_name'],$base_Dir.'/'.$user_files['name']) || !JPath::setPermissions($base_Dir.'/'.$user_files['name'])) {
-				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$userfile_name.JText::_('COM_JOOMLAQUIZ_FAILED')."'); window.history.go(-1);</script>\n";
+				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$userfile_name.JText::_('COM_JOOMLAQUIZ_FAILED')."'); parent.document.location.href=\"".$location_href."\";</script>\n";
 				die();
 			} else {
 				require_once(JPATH_SITE.'/administrator/components/com_joomlaquiz/assets/image.class.php');

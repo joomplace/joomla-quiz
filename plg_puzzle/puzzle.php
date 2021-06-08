@@ -62,7 +62,7 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 				$student_data = $database->loadObject();
 				
 				$xml_attempts = '<c_attempts>1</c_attempts>';
-				if($student_data->c_id){
+				if($student_data->c_id && (int)$stu_quiz_id>0){
 					$q_data->c_attempts = ($q_data->c_attempts) ? $q_data->c_attempts : 1;
 					if((int)$student_data->c_attempts < (int)$q_data->c_attempts){
 						$database->setQuery("UPDATE `#__quiz_r_student_question` SET `c_attempts` = `c_attempts` + 1 WHERE `c_stu_quiz_id` = '".$stu_quiz_id."' AND `c_question_id` = '".$qid."'");

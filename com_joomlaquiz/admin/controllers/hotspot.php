@@ -51,14 +51,16 @@ class JoomlaquizControllerHotspot extends JControllerForm
 			jimport('joomla.filesystem.file');
 			jimport('joomla.filesystem.folder');
 			
-			if (!JFile::move($userfile['tmp_name'],$base_Dir.$userfile['name']) || !JPath::setPermissions($base_Dir.$userfile['name'])) {
+			if($message=='') {
+                if (!JFile::move($userfile['tmp_name'],$base_Dir.$userfile_name) || !JPath::setPermissions($base_Dir.$userfile['name'])) {
 				$message = JText::_('COM_JOOMLAQUIZ_UPLOAD_OF').$userfile_name.JText::_('COM_JOOMLAQUIZ_FAILED');
-			} else {
-				$message = '<span class="hotspotimg_upload_success" style="color: #3c763d;">'.JText::_('COM_JOOMLAQUIZ_UPLOAD_OF')
-                    .$userfile_name.JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL').'</span>';
-			}
+                } else {
+                    $message = '<span class="hotspotimg_upload_success" style="color: #3c763d;">'.JText::_('COM_JOOMLAQUIZ_UPLOAD_OF')
+                        .$userfile_name.JText::_('COM_JOOMLAQUIZ_TO').$base_Dir.JText::_('COM_JOOMLAQUIZ_SUCCESSFUL').'</span>';
+                }
+		    }
 		}
-		
+
 		require_once(JPATH_BASE.'/components/com_joomlaquiz/views/upload/view.html.php');
         $view = $this->getView('Upload', 'HTML', 'JoomlaquizView');
         $view->assignRef('filename', $userfile_name);

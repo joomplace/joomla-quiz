@@ -576,7 +576,7 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 	}
 	
 	public function onAdminIsFeedback(&$data){
-		return false;
+		return true;
 	}
 	
 	public function onAdminIsPoints(&$data){
@@ -818,4 +818,16 @@ class plgJoomlaquizDalliclick extends plgJoomlaquizQuestion
 			
 		return $data['answer'];	
 	}
+
+	public function onSaveQuestion(&$data)
+    {
+        $database = JFactory::getDBO();
+        $query = $database->getQuery(true);
+        $query->select("is_correct")
+            ->from('#__quiz_r_student_question')
+            ->where('c_stu_quiz_id='.$query->q($data['stu_quiz_id']))
+            ->where('c_question_id='.$query->q($data['quest_id']));
+        $database->setQuery($query);
+        $data['is_correct'] = (int)$database->loadResult();
+    }
 }

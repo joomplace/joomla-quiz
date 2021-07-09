@@ -70,6 +70,7 @@ defined('_JEXEC') or die;
             quest_id = jq_jQuery(parent.response).find('quest_id').text();
             task = jq_jQuery(parent.response).find('task').text();
             stu_quiz_id = parent.stu_quiz_id;
+            quest_id = <?php echo $_GET['quest_id']?>;
 
             if((!quest_id || !stu_quiz_id) && task != 'quest_preview'){
                 jq_jQuery("body").html("<div id='jq_message_box'></div>");

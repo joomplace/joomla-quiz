@@ -193,7 +193,9 @@ function clearSquaresStop(element)
 	dc_timer2 = 0;
 	var quest_val = jq_jQuery(element).attr('id');
 	var qid = parseInt(quest_val.replace(/quest_choice_/, ''));
-	var quest_id = jq_jQuery(response).find('quest_id').text();
+	var quest_form = jq_jQuery(element).closest('form').attr('name');
+	var quest_id = parseInt(quest_form.replace(/quest_form/, ''));
+
 	var open_squares = dc_c - squares.length - 1;
 	
 	jq_jQuery.ajax({

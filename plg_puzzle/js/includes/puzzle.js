@@ -1,10 +1,10 @@
 if(questions[i].cur_quest_type == 11){
-
+	if(questions.length==1) {
 	var task = jq_jQuery(parent.response).find('task').text();
 	if(task != 'review_start' && task != 'review_next'){
 		puzzle_cur_id = questions[i].cur_quest_id;
 		SqueezeBox.initialize({});
-		SqueezeBox.fromElement('<?php echo JUri::root();?>index.php?option=com_joomlaquiz&task=ajaxaction.procces&ajax_task=ajax_plugin&plg_task=show&quest_type=puzzle', options);
+			SqueezeBox.fromElement('<?php echo JUri::root();?>index.php?option=com_joomlaquiz&task=ajaxaction.procces&ajax_task=ajax_plugin&plg_task=show&quest_type=puzzle&quest_id=' + puzzle_cur_id, options);
 		jq_jQuery('#sbox-overlay, #sbox-btn-close, #jq_close_button').click(function(){
 			clearInterval(quest_timer);
 			jq_jQuery.ajax({
@@ -37,5 +37,9 @@ if(questions[i].cur_quest_type == 11){
 		},
 		puzzleObserverObserver = new MutationObserver(puzzleObserverCallback);
 	puzzleObserverObserver.observe(puzzleObserverTarget, puzzleObserverConfig);
+	} else {
+		jQuery('#qcontainer'+questions[i].cur_quest_id).append('<button onClick="startPuzzle('+questions[i].cur_quest_id+','+stu_quiz_id+')">Start' +
+			' Puzzle</button>');
+	}
 
 }

@@ -1597,7 +1597,6 @@ function jq_QuizNext() { //send 'TASK = next'
 	<?php } else { ?>
 	var jq_task = 'next';
 	<?php } ?>
-    qid = jq_jQuery(response).find('skip_question').text();
 	var answer = '';
 	var url = '&ajax_task=' + jq_task + '&quiz=<?php echo $quiz->c_id?>'+'&stu_quiz_id='+stu_quiz_id;
 	for(var n=0; n < quest_count; n++) {
@@ -1615,7 +1614,7 @@ function jq_QuizNext() { //send 'TASK = next'
 				break;
 
 			}
-			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]='+answer+'&next_id_quest='+qid;
+			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]='+answer;
 		} else {
 			url = url + '&quest_id[]='+questions[n].cur_quest_id+'&answer[]=';
 		}

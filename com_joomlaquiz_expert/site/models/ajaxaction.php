@@ -723,9 +723,12 @@ class JoomlaquizModelAjaxaction extends JModelList
                              shuffle($q_not_answer);
                          }
                     $next_quest= array_shift($q_not_answer);
-                        if($quiz->c_enable_skip != 0){
-                            $next_quest = intval( JFactory::getApplication()->input->get( 'next_id_quest', 0 ) );;
+                    if($quiz->c_enable_skip != 0){
+                        if(!empty($qchids)) {
+                            $key = array_search(array_shift($quest_ids), $qchids);
+                            $next_quest = (isset($qchids[$key + 1])) ? $qchids[$key + 1] : $qchids[0];
                         }
+                    }
                      if (!empty($q_not_answer)) {
                         $q_data = array();
                         $query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($next_quest)."' AND published = 1 ";

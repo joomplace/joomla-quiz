@@ -665,19 +665,16 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$qchids = explode('*',$qch_ids);// chain
 
                     $q_not_answer = array_diff($qchids, $q_ids);
-                    if($quiz->c_random) {
-                        shuffle($q_not_answer);
-                    }
-                    $next_quest= array_shift($q_not_answer);
-                    if($quiz->c_enable_skip != 0){
-                         if(!empty($qchids)) {
-                             $key = array_search(array_shift($quest_ids), $qchids);
-                                $next_quest = (isset($qchids[$key + 1])) ? $qchids[$key + 1] : $qchids[0];
-                        }
-                    }
                     if (!empty($q_not_answer)) {
+                        $next_quest= array_shift($q_not_answer);
+                        if($quiz->c_enable_skip != 0) {
+                            if (!empty($qchids)) {
+                                $key = array_search(array_shift($quest_ids), $qchids);
+                                $next_quest = (isset($qchids[$key + 1])) ? $qchids[$key + 1] : $qchids[0];
+                            }
+                        }
                         $q_data = array();
-                        $query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval($next_quest)."' AND published = 1 ";
+                        $query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".$next_quest."' AND published = 1 ";
                         $database->SetQuery( $query );
                         $q_data = $database->LoadObjectList();
                         $ret_str .= "\t" . '<task>next</task>' . "\n";

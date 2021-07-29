@@ -32,8 +32,8 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 
         $data['ret_add_script'] .= "var puzzleWidth = document.documentElement.clientWidth * 0.8 < ".$c_width." ? document.documentElement.clientWidth * 0.8 : ".$c_width.";
             var puzzleHeight = Math.ceil(puzzleWidth / (". $c_width / $c_height ."));
-            options = {handler:'iframe', size:{x: puzzleWidth, y: puzzleHeight}, closable: true, closeBtn: false};";
-		
+            if(typeof options === 'undefined'){options = [];}
+            options.push({c_id: ".$data['q_data']->c_id.",handler:'iframe', size:{x: puzzleWidth, y: puzzleHeight}, closable: true, closeBtn: false});";
 		return $data;
 	}
 	

@@ -268,7 +268,10 @@ function setDalliclickImageSize(dalliclickImgRatio) {
 	}
 }
 
-function startDalliclick(cur_quest_id, stu_quiz_id) {
+function startDalliclick(cur_quest_id, stu_quiz_id, button=false) {
+	if(button) {
+		jQuery(button).hide();
+	}
 	var task = jq_jQuery(parent.response).find('task').text();
 	jQuery('#qcontainer'+cur_quest_id+' .jq_question_answers_cont').show();
 

@@ -2,6 +2,7 @@ jq_jQuery(function ($) {
     window.puzzle = window.puzzle || {};
 
     puzzle.setSize = function() {
+        console.log($(this));
         $('.feedback-puzzle__img').each(function () {
             var puzzleW = $(this).width(),
                 puzzleH = $(this).height(),
@@ -23,12 +24,21 @@ jq_jQuery(function ($) {
 });
 
 
-function startPuzzle(cur_quest_id, stu_quiz_id) {
+function startPuzzle(cur_quest_id, stu_quiz_id, button=false) {
+    if(button) {
+        jQuery(button).hide();
+    }
     var task = jq_jQuery(parent.response).find('task').text();
     if(task != 'review_start' && task != 'review_next'){
         puzzle_cur_id = cur_quest_id;
         SqueezeBox.initialize({});
-        SqueezeBox.fromElement('/index.php?option=com_joomlaquiz&task=ajaxaction.procces&ajax_task=ajax_plugin&plg_task=show&quest_type=puzzle&quest_id=' + puzzle_cur_id, options);
+        options.forEach(function(item, i, arr) {
+            if(item.c_id==cur_quest_id) {
+                queezeOptions = item;
+                return;
+            }
+        });
+        SqueezeBox.fromElement('/index.php?option=com_joomlaquiz&task=ajaxaction.procces&ajax_task=ajax_plugin&plg_task=show&quest_type=puzzle&quest_id=' + puzzle_cur_id, queezeOptions);
         jq_jQuery('#sbox-overlay, #sbox-btn-close, #jq_close_button').click(function(){
             clearInterval(quest_timer);
             jq_jQuery.ajax({
@@ -61,4 +71,5 @@ function startPuzzle(cur_quest_id, stu_quiz_id) {
         },
         puzzleObserverObserver = new MutationObserver(puzzleObserverCallback);
     puzzleObserverObserver.observe(puzzleObserverTarget, puzzleObserverConfig);
+
 }

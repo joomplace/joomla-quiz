@@ -2,13 +2,13 @@
 <extension type="package" version="3.x" method="upgrade">
   <name>Joomla Quiz Deluxe Package</name>
   <author>Joomplace Team</author>
-  <creationDate>September 2020</creationDate>
+  <creationDate>July 2021</creationDate>
   <packagename>quiz</packagename>
   <authorEmail>support@joomplace.com</authorEmail>
   <authorUrl>www.joomplace.com</authorUrl>
   <copyright>(C) JoomPlace, www.joomplace.com</copyright>
   <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-  <version>3.7.9</version>
+  <version>3.7.10</version>
   <files folder="packages">
     <file type="component" id="com_joomlaquiz">com_joomlaquiz.zip</file>
     <file type="module" id="joomlaquiz" client="site">mod_quiz_lastten.zip</file>

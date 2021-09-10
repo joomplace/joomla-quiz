@@ -1012,6 +1012,7 @@ function jq_processFeedback(task, is_preview, skip_question){
 				}
 			}// if do_feedback
 			else {
+              if(jq_getObj('quest_result_'+feedback_quest_id)){
 				if (prev_correct == '1') {
 					<?php if ($quiz->c_slide) { ?>
 						<?php if(preg_match("/pretty_green/", $quiz->template_name) || preg_match("/pretty_blue/", $quiz->template_name)){?>
@@ -1029,6 +1030,7 @@ function jq_processFeedback(task, is_preview, skip_question){
 						<?php } ?>
 					<?php } ?>
 				}
+              }
 			}
 		}//for...
 

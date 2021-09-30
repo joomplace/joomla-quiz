@@ -8,7 +8,8 @@
 */
 defined('_JEXEC') or die('Restricted access');
 
-
+use Office365\Runtime\Auth\UserCredentials;
+use Office365\SharePoint\ClientContext;
 
 jimport('joomla.application.component.modellist');
 /**
@@ -338,9 +339,9 @@ class JoomlaquizModelPrintcert extends JModelList
                             {imagettftext($im, $field->text_h, 0,  $field->text_x + $ad+2, $field->text_y+2,
                                     $grey, $font, $field->f_text);
                             }
-						imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
-					}
-				}
+						    imagettftext($im, $field->text_h, 0,  $field->text_x + $ad, $field->text_y, $black, $font, $field->f_text);
+					    }
+				    }
 				}
 
 				if (preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
@@ -351,7 +352,23 @@ class JoomlaquizModelPrintcert extends JModelList
 				} else {
 					$UserBrowser = '';
 				}
-				$file_name = 'Certificate.png';
+
+                //custom 728 start
+                //$file_name = 'Certificate.png';
+                $user_name_in_file = preg_replace('/\s/', '_', $u_name);
+                $quiz_name_in_file = preg_replace('/\s/', '_', $stu_quiz->c_title);
+                $file_name = $user_name_in_file . '.' . $quiz_name_in_file . '.png' ;
+                //custom 728 start end
+
+                //custom 753 start
+                $sharepoint = JFactory::getApplication()->input->getInt('sharepoint', 0);
+                if($sharepoint) {
+                    $this->sendCertificateSharepoint($im, $file_name);
+                    imagedestroy($im);
+                    exit;
+                }
+                //custom 753 end
+
 				header('Content-Type: image/png');
 				header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 				if ($UserBrowser == 'IE') {
@@ -446,4 +463,55 @@ class JoomlaquizModelPrintcert extends JModelList
 		$start_xx = $start_x + round(($max_width - $dim[4] - $start_x) / 2);        
 		imagettftext($image, $font_size, 0, $start_xx, $start_y, $color, $font, $string);
 	}
+
+	public function sendCertificateSharepoint($im, $file_name='Certificate.png')
+    {
+        $sharepoint_URL_last = '';
+
+        JLoader::register('FieldsHelper', JPATH_ADMINISTRATOR . '/components/com_fields/helpers/fields.php');
+        $customFields = FieldsHelper::getFields('com_users.user', JFactory::getUser(), true);
+
+        if(!empty($customFields)){
+            foreach ($customFields as $customField) {
+                if(mb_strtolower($customField->name) == 'sharepoint') {
+                    //$sharepoint_URL_last = preg_replace('/,\s/', '%2C%20', $customField->value);
+                    $sharepoint_URL_last = $customField->value;
+                    break;
+                }
+            }
+        }
+
+        if(!$sharepoint_URL_last) {
+            return false;
+        }
+
+        ob_start();
+        imagepng($im);
+        $image_data = ob_get_contents();
+        ob_end_clean();
+        imagedestroy($im);
+
+        require_once JPATH_SITE.'/vendor/autoload.php';
+
+        $settings = array(
+            'username' => 'TheHubContribute@empowertranslate.com',
+            'password' => 'T1ger!W4tch0ut!',
+            'url' => 'https://rptranslate.sharepoint.com/sites/Training'
+        );
+
+        try {
+            $credentials = new UserCredentials($settings['username'], $settings['password']);
+            $ctx = (new ClientContext($settings['url']))->withCredentials($credentials);
+            $targetList = $ctx->getWeb()->GetFolderByServerRelativeUrl('/sites/Training/Documents/'.$sharepoint_URL_last);
+            $uploadFile = $targetList->uploadFile($file_name, $image_data);
+            $ctx->executeQuery();
+            echo 'File ' . $file_name . ' has been uploaded';
+        }
+        catch (Exception $e) {
+            echo 'Error: ',  $e->getMessage(), "\n";
+        }
+
+        return true;
+    }
+
 }

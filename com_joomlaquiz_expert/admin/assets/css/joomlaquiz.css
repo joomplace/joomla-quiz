@@ -29,6 +29,12 @@
 .jqd-survey-dashboard {
     top: 120px;
 }
+@media (max-height: 850px) {
+    .jqd-survey-dashboard {
+        top: 90px!important;
+    }
+}
+
 .jqd-survey .icon-remove{
     position: absolute;
     font-size: 10px;

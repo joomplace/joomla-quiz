@@ -7,7 +7,7 @@
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die('Restricted Access');
- 
+
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
@@ -86,11 +86,11 @@ $sortFields = $this->getSortFields();
 					<th width="2%" class="nowrap center">
 						#
 					</th>
-					<th width="2%" class="hidden-phone">
+					<th width="2%" class="hidden-phone center">
 						<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					</th>
 					<th width="10%"class="pull-left">
-						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_NAME', 'template_name', $listDirn, $listOrder); ?> 
+						<?php echo JHtml::_('grid.sort', 'COM_JOOMLAQUIZ_NAME', 'template_name', $listDirn, $listOrder); ?>
 					</th>
 				</tr>
 			</thead>
@@ -103,7 +103,7 @@ $sortFields = $this->getSortFields();
 			</tfoot>
 			<tbody>
 			<?php foreach ($this->items as $i => $item) :
-			
+
 				$canEdit	= $user->authorise('core.edit',	$extension.'.templates.'.$item->id);
                 $canCheckin	= $user->authorise('core.admin', 'com_checkin');
                 $canChange	= $user->authorise('core.edit.state', $extension.'.templates.'.$item->id) && $canCheckin;
@@ -132,7 +132,7 @@ $sortFields = $this->getSortFields();
 		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
 		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
 		<?php echo JHtml::_('form.token'); ?>
-        
+
     </div>
 </form>
 <?php if ($this->messageTrigger) { ?>

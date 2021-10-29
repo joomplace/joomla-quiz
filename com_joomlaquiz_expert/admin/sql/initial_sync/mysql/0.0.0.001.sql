@@ -5,7 +5,7 @@ PRIMARY KEY (`id`)
 
 ALTER TABLE `#__quiz_certificates` ADD COLUMN `cert_name` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `id`;
 ALTER TABLE `#__quiz_certificates` ADD COLUMN `cert_file` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `cert_name`;
-ALTER TABLE `#__quiz_certificates` ADD COLUMN `crtf_align` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' AFTER `cert_file`;
+ALTER TABLE `#__quiz_certificates` ADD COLUMN `crtf_align` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '3' AFTER `cert_file`;
 ALTER TABLE `#__quiz_certificates` ADD COLUMN `crtf_shadow` TINYINT(4) NOT NULL DEFAULT '0' AFTER `crtf_align`;
 ALTER TABLE `#__quiz_certificates` ADD COLUMN `text_x` INT(11) NOT NULL DEFAULT '0' AFTER `crtf_shadow`;
 ALTER TABLE `#__quiz_certificates` ADD COLUMN `text_y` INT(11) NOT NULL DEFAULT '0' AFTER `text_x`;

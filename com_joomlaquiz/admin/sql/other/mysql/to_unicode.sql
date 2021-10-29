@@ -1,5 +1,5 @@
--- SELECT CONCAT('ALTER TABLE `',TABLE_NAME,'` CHANGE `',COLUMN_NAME,'` `',COLUMN_NAME,'` ',COLUMN_TYPE,' ',IF(CHARACTER_SET_NAME IS NOT NULL,'CHARACTER SET utf8 COLLATE utf8_unicode_ci ',''),IF(IS_NULLABLE = "YES",'NULL','NOT NULL'),' ',IF(EXTRA NOT LIKE "", EXTRA, CONCAT(' DEFAULT ',IF(COLUMN_DEFAULT IS NOT NULL,CONCAT('"',COLUMN_DEFAULT,'"'),IF(IS_NULLABLE = "YES",'NULL','""')))),';') AS `SQLS` 
--- FROM information_schema.COLUMNS 
+-- SELECT CONCAT('ALTER TABLE `',TABLE_NAME,'` CHANGE `',COLUMN_NAME,'` `',COLUMN_NAME,'` ',COLUMN_TYPE,' ',IF(CHARACTER_SET_NAME IS NOT NULL,'CHARACTER SET utf8 COLLATE utf8_unicode_ci ',''),IF(IS_NULLABLE = "YES",'NULL','NOT NULL'),' ',IF(EXTRA NOT LIKE "", EXTRA, CONCAT(' DEFAULT ',IF(COLUMN_DEFAULT IS NOT NULL,CONCAT('"',COLUMN_DEFAULT,'"'),IF(IS_NULLABLE = "YES",'NULL','""')))),';') AS `SQLS`
+-- FROM information_schema.COLUMNS
 -- WHERE TABLE_SCHEMA != 'information_schema' AND TABLE_NAME LIKE '%_quiz%'
 -- LIMIT 10;
 
@@ -7,7 +7,7 @@ ALTER TABLE `#__quiz_cert_fields` CHANGE `f_text` `f_text` text CHARACTER SET ut
 ALTER TABLE `#__quiz_cert_fields` CHANGE `font` `font` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL  DEFAULT "arial.ttf";
 ALTER TABLE `#__quiz_certificates` CHANGE `cert_name` `cert_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_certificates` CHANGE `cert_file` `cert_file` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
-ALTER TABLE `#__quiz_certificates` CHANGE `crtf_align` `crtf_align` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "0";
+ALTER TABLE `#__quiz_certificates` CHANGE `crtf_align` `crtf_align` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "3";
 ALTER TABLE `#__quiz_certificates` CHANGE `crtf_text` `crtf_text` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_certificates` CHANGE `text_font` `text_font` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";
 ALTER TABLE `#__quiz_constants` CHANGE `key_value` `key_value` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL  DEFAULT "";

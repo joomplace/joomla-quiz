@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cert_name` varchar(50) NOT NULL,
   `cert_file` varchar(50) NOT NULL,
-  `crtf_align` varchar(100) NOT NULL DEFAULT '0',
+  `crtf_align` varchar(100) NOT NULL DEFAULT '3',
   `crtf_shadow` tinyint(4) NOT NULL DEFAULT '0',
   `text_x` int(11) NOT NULL DEFAULT '0',
   `text_y` int(11) NOT NULL DEFAULT '0',
@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS `#__quiz_certificates` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 INSERT INTO `#__quiz_certificates` (`id`, `cert_name`, `cert_file`, `crtf_align`, `crtf_shadow`, `text_x`, `text_y`, `text_size`, `crtf_text`, `text_font`, `cert_offset`) VALUES
-(1, 'Certificate Green', 'certificate_green.jpg', '0', 0, 0, 0, 10, '', '', 100),
-(2, 'Certificate Blue', 'certificate_blue.jpg', '0', 0, 0, 0, 10, '', '', 150),
-(3, 'Certificate Beige', 'certificate_beige.jpg', '0', 0, 0, 0, 10, '', '', 200);
+(1, 'Certificate Green', 'certificate_green.jpg', '3', 0, 0, 0, 10, '', '', 100),
+(2, 'Certificate Blue', 'certificate_blue.jpg', '3', 0, 0, 0, 10, '', '', 150),
+(3, 'Certificate Beige', 'certificate_beige.jpg', '3', 0, 0, 0, 10, '', '', 200);
 
 -- --------------------------------------------------------
 

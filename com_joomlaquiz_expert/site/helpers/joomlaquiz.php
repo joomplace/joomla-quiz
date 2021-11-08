@@ -443,7 +443,8 @@ class JoomlaquizHelper
 			
 			$database = JFactory::getDBO();
 
-			$query = "SELECT q.c_title AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
+            //$query = "SELECT q.c_title AS quiz_id FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
+            $query = "SELECT q.* FROM #__quiz_t_quiz AS q, #__quiz_r_student_quiz AS sq WHERE sq.c_id = '".$sid."' AND sq.c_quiz_id = q.c_id";
 			$database->SetQuery( $query );
 			$info = $database->LoadAssocList();
 			$info = $info[0];
@@ -456,9 +457,34 @@ class JoomlaquizHelper
 				require_once(JPATH_SITE.'/components/com_joomlaquiz/models/printresult.php');
 			}
 			$str = JoomlaquizModelPrintresult::JQ_PrintResultForMail($sid);
-			
-			$email = $email_to;
-			$subject = JText::_('COM_QUIZ_RESULTS').'('.$info['quiz_id'].')';
+
+            //custom 554
+            $emails_all = array();
+			if((int)$info['c_email_to'] == 1 && (int)$info['c_email_chk'] == 0 && trim($info['c_emails'])){
+                $user_email = JFactory::getUser()->email;
+                if (filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
+                    $emails_all[] = $user_email;
+                }
+                $emails_admins = explode(',', trim($info['c_emails']));
+                if(!empty($emails_admins)) {
+                    foreach ($emails_admins as $email_admin){
+                        $email_admin = trim($email_admin);
+                        if (filter_var($email_admin, FILTER_VALIDATE_EMAIL)) {
+                            $emails_all[] = $email_admin;
+                        }
+                    }
+                }
+            }
+			if(!empty($emails_all)){
+                $email = $emails_all;
+                $subject = JText::_('COM_QUIZ_RESULTS').'('.$info['c_title'].')';
+            }
+			//end custom 554
+			else {
+                $email = $email_to;
+                $subject = JText::_('COM_QUIZ_RESULTS').'('.$info['quiz_id'].')';
+            }
+
 			$message = html_entity_decode($str, ENT_QUOTES);
 			
 			$config = new JConfig();

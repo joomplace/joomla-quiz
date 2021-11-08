@@ -125,11 +125,11 @@ class JoomlaquizModelPrintresult extends JModelList
 		$qch_ids = str_replace('*',',',$qch_ids);
 				
 		$total = JoomlaquizHelper::getTotalScore($qch_ids, $quiz_id);
-		
+
 		$str .= "\n";
 		$str .= JText::_('COM_QUIZ_PDF_QTITLE')." ".$info['c_title']."\n";
-		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?$info['username']:JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
-		$str .= JText::_('COM_QUIZ_PDF_NAME')." ".(($info['name'])?$info['name']:$info['user_name'].' '.(!empty($info['user_surname'])? $info['user_surname'] : ''))."\n";
+		$str .= JText::_('COM_QUIZ_PDF_UNAME')." ".(($info['username'])?($info['username']):JText::_('COM_QUIZ_USERNAME_ANONYMOUS'))."\n";
+        //$str .= JText::_('COM_QUIZ_PDF_NAME')." ".(($info['name'])?$info['name']:$info['user_name'].' '.(!empty($info['user_surname'])? $info['user_surname'] : ''))."\n";
         $user_email = '';
         if(!empty($info['email'])) {
             $user_email = $info['email'];
@@ -138,37 +138,58 @@ class JoomlaquizModelPrintresult extends JModelList
         }
         if(!empty($user_email))
             $str .= JText::_('COM_QUIZ_PDF_UEMAIL')." ".$user_email."\n";
-		$str .= JText::_('COM_QUIZ_PDF_USCORE')." ".number_format($info['c_total_score'],1)."\n";
-		$str .= JText::_('COM_QUIZ_PDF_TOTSCORE')." ".number_format($total,1)."\n";
-		$str .= JText::_('COM_QUIZ_PDF_PASSCORE')." ".$info['c_passing_score']."\n";
+
+        //$str .= JText::_('COM_QUIZ_PDF_USCORE')." ".number_format($info['c_total_score'],1)."\n";
+        $percent = (int)$total > 0 ? " (".number_format($info['c_total_score'] / $total *100,1). "%)" : '';
+		$str .= JText::_('COM_QUIZ_PDF_USCORE')." ".number_format($info['c_total_score'],1). " of " .number_format($total,1). $percent ."\n";
+        //$str .= JText::_('COM_QUIZ_PDF_TOTSCORE')." ".number_format($total,1)."\n";
+        //$str .= JText::_('COM_QUIZ_PDF_PASSCORE')." ".$info['c_passing_score']."\n";
+		$str .= "Passing Score: ". ceil($info['c_passing_score'] / 100 * $total) ." (".$info['c_passing_score']."%)\n";
+
 		$tot_min = floor($info['c_total_time'] / 60);
 		$tot_sec = $info['c_total_time'] - $tot_min*60;
 		$str .= JText::_('COM_QUIZ_PDF_USPENT')." ".str_pad($tot_min,2, "0", STR_PAD_LEFT).":".str_pad($tot_sec,2, "0", STR_PAD_LEFT)." ".JText::_('COM_QUIZ_PDF_QTIME')." "."\n";
+
+        $info_name = !empty($info['user_name']) ? $info['user_name'] : $info['name'];
+        $info_name .= (!empty($info['user_name']) && !empty($info['user_surname'])) ? ' '.$info['user_surname'] : '';
+
 		if ($info['c_passed'] == 1) {
-			$str .= $info['name']." ".JText::_('COM_QUIZ_PDF_PASQUIZ')." "."\n";
+			//$str .= $info['name']." ".JText::_('COM_QUIZ_PDF_PASQUIZ')." "."\n";
+            $str .= $info_name." ".JText::_('COM_QUIZ_PDF_PASQUIZ')." "."\n";
 		}
 		else {
-			$str .= $info['name']." ".JText::_('COM_QUIZ_PDF_NPASSQUIZ')." "."\n";
+			//$str .= $info['name']." ".JText::_('COM_QUIZ_PDF_NPASSQUIZ')." "."\n";
+            $str .= $info_name." ".JText::_('COM_QUIZ_PDF_NPASSQUIZ')." "."\n";
 		}		
 		$str .= " \n";
-		
+
+        $str .= "Incorrect Questions: \n\n";
+
 		$query = $database->getQuery(true);
-		$query->select('`rq`.`c_id`, `rq`.`remark`')
+        //$query->select('`rq`.`c_id`, `rq`.`remark`')
+		$query->select('`rq`.`c_id`, `rq`.`remark`, `rq`.`is_correct`')
 			->from('`#__quiz_r_student_question` AS `rq`')
 			->join('LEFT', '`#__quiz_t_question` AS `tq` ON `rq`.`c_question_id` = `tq`.`c_id`')
 			->order('`c_id`');
-		//if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
-		//	$query->where('`tq`.`c_type` != 9');
-		//}
+		if(JComponentHelper::getParams('com_joomlaquiz')->get('hide_boilerplates')){
+			$query->where('`tq`.`c_type` != 9');
+		}
 		$query->where('`rq`.`c_stu_quiz_id` = "'.$sid.'"');
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
 		$total = count($info);
 		
 		for($i=0;$i < $total;$i++) {
+
+            //custom 554: The email will contain only questions that were answered incorrectly
+		    if((int)$info[$i]->is_correct == 1){
+		        continue;
+            }
+
 			$data = array();
 			$data = JoomlaquizModelPrintresult::JQ_GetResults($info[$i]->c_id);
 			$str .= "".($i+1).".[".number_format($data['c_score'],1).'/'.number_format($data['c_point'],1)."] ".$data['c_question']."\n";
+			/*
 			$type = JoomlaquizHelper::getQuestionType($data['c_type']);
 			$answer = '';
 			
@@ -180,7 +201,7 @@ class JoomlaquizModelPrintresult extends JModelList
 			
 			$appsLib->triggerEvent( 'onSendEmail' , $email_data );
 			$str = $email_data['str'];
-			
+			*/
 			$str .= "\n";
 		}
 		$str .= " ";

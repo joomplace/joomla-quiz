@@ -3,9 +3,9 @@
 	<fieldset name="quiz_details"
 		label="COM_JOOMLAQUIZ_SETTINGS_GLOBAL"
 		>
-		
+
 		<field name="asset_id" type="hidden" filter="unset" />
-		
+
 		<field name="rules"
 			type="rules"
 			component="com_joomlaquiz"
@@ -20,12 +20,12 @@
 			   description="COM_JOOMLAQUIZ_TITLE_DESC"
 			   labelclass="control-label" required="true">
 		</field>
-		<field 
-			name="c_category_id" 
-			type="category" 
-			extension="com_joomlaquiz" 
-			label="COM_JOOMLAQUIZ_CATEGORY" 
-			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUIZCAT" 
+		<field
+			name="c_category_id"
+			type="category"
+			extension="com_joomlaquiz"
+			label="COM_JOOMLAQUIZ_CATEGORY"
+			description="COM_JOOMLAQUIZ_CHOOSE_THE_QUIZCAT"
 		/>
 		<field name="c_author" type="text" default="" size="30"
 				label="COM_JOOMLAQUIZ_AUTHOR2_LABEL"
@@ -48,12 +48,12 @@
 			<option value="0">COM_JOOMLAQUIZ_FREE</option>
 			<option value="1">COM_JOOMLAQUIZ_PAID</option>
 		</field>
-		<field name="c_autostart" type="list" default="0" label="COM_JOOMLAQUIZ_AUTOSTART_QUIZ" 
+		<field name="c_autostart" type="list" default="0" label="COM_JOOMLAQUIZ_AUTOSTART_QUIZ"
 		description="COM_JOOMLAQUIZ_IF_THIS_OPTION" labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_NO_DEFAULT</option>
 			<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<field name="c_pagination" type="list" default="0" label="COM_JOOMLAQUIZ_QUESTIONS_LAYOUT" 
+		<field name="c_pagination" type="list" default="0" label="COM_JOOMLAQUIZ_QUESTIONS_LAYOUT"
 		description="COM_JOOMLAQUIZ_THE_NUMBER_OF">
 			<option value="0">COM_JOOMLAQUIZ_ONE_QUESTION_PER_PAGE</option>
 			<option value="3">COM_JOOMLAQUIZ_AUTO_SEPARATED</option>
@@ -83,7 +83,7 @@
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field name="c_time_limit" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_TIME_LIMIT2" 
+				label="COM_JOOMLAQUIZ_TIME_LIMIT2"
 				description="COM_JOOMLAQUIZ_SPECIFY_THE_TIME" labelclass="control-label">
 		</field>
 		<field name="c_timer_style" type="list" default="0" label="COM_JOOMLAQUIZ_TIMER_STYLE_LABEL" description="COM_JOOMLAQUIZ_TIMER_STYLE_DESC"
@@ -93,11 +93,11 @@
 			<option value="2">COM_JOOMLAQUIZ_STANDART_WITH_LIMIT</option>
 		</field>
 		<field name="c_number_times" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_NUMBER_OF_TIMES" 
+				label="COM_JOOMLAQUIZ_NUMBER_OF_TIMES"
 				description="COM_JOOMLAQUIZ_ENTER_THE_NUMBER" labelclass="control-label">
 		</field>
 		<field name="c_min_after" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_THE_PERIOD" 
+				label="COM_JOOMLAQUIZ_THE_PERIOD"
 				description="COM_JOOMLAQUIZ_DEFINE_THE_PERIOD" labelclass="control-label">
 		</field>
 		<field
@@ -127,7 +127,7 @@
 			<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 	</fieldset>
-	
+
 	<fieldset name="quiz_description"
 		label="COM_JOOMLAQUIZ_QUIZ_DESCRIPTIONS"
 	>
@@ -135,7 +135,7 @@
 			class="inputbox"
 			filter="raw"
 			label="COM_JOOMLAQUIZ_DESCRIPTION_LABEL" description="COM_JOOMLAQUIZ_DESCRIPTION_DESC" required="false" />
-			
+
 		<field name="c_short_description" type="editor" buttons="true" hide="pagebreak,readmore,testimonial"
 			class="inputbox"
 			filter="raw"
@@ -205,7 +205,7 @@
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<field name="c_email_to" type="list" default="0" label="COM_JOOMLAQUIZ_ALLOW_USER_TO_EMAIL" 
+		<field name="c_email_to" type="list" default="0" label="COM_JOOMLAQUIZ_ALLOW_USER_TO_EMAIL"
 		description="COM_JOOMLAQUIZ_CHOOSE_THE_APPROPRIATE" labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_DISABLE_THIS_OPTION</option>
 			<option value="1">COM_JOOMLAQUIZ_TO_AUTHOR_EMAIL</option>
@@ -223,7 +223,7 @@
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field name="c_emails" type="text" default="" size="30"
-				label="COM_JOOMLAQUIZ_SEND_EMAIL_WHEN" 
+				label="COM_JOOMLAQUIZ_SEND_EMAIL_WHEN"
 				description="COM_JOOMLAQUIZ_LIKE_TO_RECEIVE" labelclass="control-label">
 		</field>
 		<field
@@ -388,8 +388,8 @@
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<field name="c_feed_option" type="list" default="0" label="COM_JOOMLAQUIZ_FEEDBACK_OPT" 
-		description="COM_JOOMLAQUIZ_CERTAIN_OR_EVERY" labelclass="control-label">
+		<field name="c_feed_option" type="list" default="0" label="COM_JOOMLAQUIZ_FEEDBACK_OPT"
+		description="COM_JOOMLAQUIZ_CHOOSE_HERE" labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_BY_PASSED</option>
 			<option value="2">COM_JOOMLAQUIZ_BY_SCORE</option>
 			<option value="1">COM_JOOMLAQUIZ_BY_SCORE_IN_PERCENTS</option>
@@ -402,7 +402,7 @@
 	>
 		<field name="c_pool" type="radio"
 			class="btn-group"
-			default="0"	
+			default="0"
 			label="COM_JOOMLAQUIZ_POOL_OPTIONS_LABEL"
 			description="COM_JOOMLAQUIZ_POOL_OPTIONS_DESC"
 			labelclass="control-label">
@@ -410,19 +410,19 @@
 			<option value="1">COM_JOOMLAQUIZ_RANDOM_QUESTIONS</option>
 			<option  value="2">COM_JOOMLAQUIZ_BY_CATEGORIES</option>
 		</field>
-		<field 
-			name="c_auto_breaks" 
-			type="text" 
-			default="" 
+		<field
+			name="c_auto_breaks"
+			type="text"
+			default=""
 			size="3"
-			label="COM_JOOMLAQUIZ_AUTO_BREAK_COUNT" 
-			labelclass="control-label" 
+			label="COM_JOOMLAQUIZ_AUTO_BREAK_COUNT"
+			labelclass="control-label"
 			description="COM_JOOMLAQUIZ_AUTO_BREAK_COUNT_DESCR"
 			showon="c_pool:1,2"
 		>
 		</field>
 		<field name="pool_rand" type="text" default="" size="10"
-				label="COM_JOOMLAQUIZ_NUMBER_OF_QUESTIONS" 
+				label="COM_JOOMLAQUIZ_NUMBER_OF_QUESTIONS"
 				labelclass="control-label" description="COM_JOOMLAQUIZ_POOL_RAND_DESCR">
 		</field>
 	</fieldset>

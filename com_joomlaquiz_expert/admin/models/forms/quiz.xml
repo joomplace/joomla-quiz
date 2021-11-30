@@ -111,7 +111,7 @@
 				<option value="0">COM_JOOMLAQUIZ_NO</option>
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
-		<field name="c_passing_score" type="text" default="" size="30"
+		<field name="c_passing_score" type="number" max="100" default="" size="30"
 			   label="COM_JOOMLAQUIZ_PASSING_SCORE2_LABEL"
 			   description="COM_JOOMLAQUIZ_PASSING_SCORE2_DESC"
 			   labelclass="control-label">

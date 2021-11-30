@@ -389,7 +389,7 @@
 				<option value="1">COM_JOOMLAQUIZ_YES</option>
 		</field>
 		<field name="c_feed_option" type="list" default="0" label="COM_JOOMLAQUIZ_FEEDBACK_OPT"
-		description="COM_JOOMLAQUIZ_CERTAIN_OR_EVERY" labelclass="control-label">
+		description="COM_JOOMLAQUIZ_CHOOSE_HERE" labelclass="control-label">
 			<option value="0">COM_JOOMLAQUIZ_BY_PASSED</option>
 			<option value="2">COM_JOOMLAQUIZ_BY_SCORE</option>
 			<option value="1">COM_JOOMLAQUIZ_BY_SCORE_IN_PERCENTS</option>

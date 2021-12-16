@@ -1275,7 +1275,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						foreach($q_cate as $curcat)
 						{
 							if($curcat[2] || $i){
-								$percent = ($curcat[2]) ? number_format(($curcat[1]/$curcat[2]) * 100, 0, '.', ',') : 0;
+								$percent = !empty($curcat[2]) ? number_format(($curcat[1]/$curcat[2]) * 100, 0, '.', ',') : 0;
 								$c_resbycat .= "<div class='jq_cat_score'>".$curcat[0].': '.sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $curcat[1], $curcat[2], $percent)."</div><br />";
 							}
 							$i++;
@@ -1596,7 +1596,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 							
 								$message .= "<br/>\n".JText::_('COM_QUIZ_HEADER_FIN_RESULTS')."<br/>\n";	
 								
-								$percent = ($max_score) ? number_format(($user_score/$max_score) * 100, 0, '.', ',') : 0;
+								$percent = !empty($max_score) ? number_format(($user_score/$max_score) * 100, 0, '.', ',') : 0;
 								if(!$c_manual)
                                     $message .= JText::_('COM_QUIZ_RES_MES_SCORE2').'  '.sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $user_score, $max_score, $percent)."<br/>\n";
                                 else

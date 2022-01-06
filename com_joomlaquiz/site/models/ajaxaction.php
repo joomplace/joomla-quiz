@@ -663,7 +663,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 
 					$qchids = explode('*',$qch_ids);      //chain
-                    $q_not_answer = array_diff($qchids, $q_ids);  //ids unanswered questions
+                    $q_not_answer = array_values(array_diff($qchids, $q_ids));  //ids unanswered questions
 
                     if (!empty($q_not_answer)) {
                         $next_quest_id = (int)$q_not_answer[0];

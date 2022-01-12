@@ -136,7 +136,12 @@ class JoomlaquizModelResults extends JModelList
 			$query = $this->getSTUQuery($cid, $query);			
 		}else{
 			$query->select("sq.user_email, sq.user_name, sq.unique_id, sq.unique_pass_id, sq.c_id, sq.c_passed, sq.c_total_score,sq.c_max_score as c_full_score, sq.c_total_time, sq.c_date_time, sq.params, sq.c_passed,q.c_title, q.c_author, q.c_passing_score, sq.c_student_id, u.username, u.name, u.email, q.c_pool, ch.q_chain");
-			$query->from('`#__quiz_r_student_quiz` as `sq`');
+
+            //custom856 start
+            $query->select("sq.c_quiz_id");
+            //custom856 end
+
+            $query->from('`#__quiz_r_student_quiz` as `sq`');
 			$query->join('LEFT', '`#__users` as `u` ON sq.c_student_id = u.id');
 			$query->join('LEFT', '`#__quiz_q_chain` AS `ch` ON ch.s_unique_id = sq.unique_id');
 			$query->join('LEFT', '`#__quiz_t_quiz` as `q` ON sq.c_quiz_id = q.c_id');

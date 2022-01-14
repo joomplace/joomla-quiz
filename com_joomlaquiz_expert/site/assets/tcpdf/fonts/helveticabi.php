@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Joomlaquiz Component for Joomla 3
  * @package Joomlaquiz
@@ -8,6 +9,7 @@
  */
 
 defined('_JEXEC') or die;
+
 // TCPDF FONT FILE DESCRIPTION
 $type='core';
 $name='Helvetica-BoldOblique';

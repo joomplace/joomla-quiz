@@ -162,8 +162,7 @@ class jq_pdf
 		return $text;
 	}
 	
-	function get_html_translation_table_my()
-    {
+	function get_html_translation_table_my() {
 		$trans = get_html_translation_table(HTML_ENTITIES);		
 		$trans[chr(32)] = '&nbsp;';    // Space
 		$trans[chr(130)] = '&sbquo;';    // Single Low-9 Quotation Mark
@@ -194,8 +193,7 @@ class jq_pdf
 		return $trans;
 	}
 	
-	function decodeHTML( $string )
-    {
+	function decodeHTML( $string ) {
 		$string = strtr( $string, array_flip($this->get_html_translation_table_my( ) ) );
 		//$string = preg_replace( "/&#([0-9]+);/me", "chr('\\1')", $string );
 		return $string;

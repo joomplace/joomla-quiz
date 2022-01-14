@@ -9,27 +9,23 @@
 
 defined('_JEXEC') or die;
 
-class jq_pdf {
+class jq_pdf
+{
 	var $_engine	= null;
-
 	var $_name		= 'joomla';
-
 	var $_header	= null;
-
 	var $_margin_header	= 5;
 	var $_margin_footer	= 10;
 	var $_margin_top	= 15;
 	var $_margin_bottom	= 15;
 	var $_margin_left	= 15;
 	var $_margin_right	= 15;
-
 	// Scale ratio for images [number of points in user unit]
 	var $_image_scale	= 2;
-	
 	var $_isRTL			= false;
 
-
-    public function __construct($options = array()) {
+    public function __construct($options = array())
+    {
 		$config = new JConfig();
 		
 		if (isset($options['margin-header'])) {

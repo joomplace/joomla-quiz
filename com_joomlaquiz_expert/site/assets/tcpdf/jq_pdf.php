@@ -9,23 +9,27 @@
 
 defined('_JEXEC') or die;
 
-class jq_pdf
-{
+class jq_pdf {
 	var $_engine	= null;
+
 	var $_name		= 'joomla';
+
 	var $_header	= null;
+
 	var $_margin_header	= 5;
 	var $_margin_footer	= 10;
 	var $_margin_top	= 15;
 	var $_margin_bottom	= 15;
 	var $_margin_left	= 15;
 	var $_margin_right	= 15;
+
 	// Scale ratio for images [number of points in user unit]
 	var $_image_scale	= 2;
+	
 	var $_isRTL			= false;
 
-    public function __construct($options = array())
-    {
+
+    public function __construct($options = array()) {
 		$config = new JConfig();
 		
 		if (isset($options['margin-header'])) {
@@ -162,8 +166,7 @@ class jq_pdf
 		return $text;
 	}
 	
-	function get_html_translation_table_my()
-    {
+	function get_html_translation_table_my() {
 		$trans = get_html_translation_table(HTML_ENTITIES);		
 		$trans[chr(32)] = '&nbsp;';    // Space
 		$trans[chr(130)] = '&sbquo;';    // Single Low-9 Quotation Mark
@@ -194,8 +197,7 @@ class jq_pdf
 		return $trans;
 	}
 	
-	function decodeHTML( $string )
-    {
+	function decodeHTML( $string ) {
 		$string = strtr( $string, array_flip($this->get_html_translation_table_my( ) ) );
 		//$string = preg_replace( "/&#([0-9]+);/me", "chr('\\1')", $string );
 		return $string;

@@ -129,7 +129,7 @@ function subfolding($r_url){
 <div class="admin_banners">
     <div class="admin_banner admin_banner_support"><div><?php echo JText::_("COM_JOOMLAQUIZ_ADMIN_BANNER_SUPPORT"); ?><i class="icon-remove"></i></div></div>
     <div class="admin_banner admin_banner_dev"><div><?php echo JText::_("COM_JOOMLAQUIZ_ADMIN_BANNER_DEVELOPMENT"); ?><i class="icon-remove"></i></div></div>
-    <div class="admin_banner admin_banner_donate"><div><?php echo JText::_("COM_JOOMLAQUIZ_ADMIN_BANNER_DONATE"); ?><i class="icon-remove"></i></div></div>
+    <div class="admin_banner admin_banner_free"><div><?php echo JText::_("COM_JOOMLAQUIZ_ADMIN_BANNER_FREE_EXTENSION"); ?><i class="icon-remove"></i></div></div>
 </div>
 <?php if ($this->messageTrigger) { ?>
 <div id="notification" class="jqd-survey-wrap clearfix">

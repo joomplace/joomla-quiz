@@ -96,7 +96,7 @@ window.onload = function (){
 
     if(checked1!=null){
 	    document.getElementById('jform_c_emails').disabled = false;
-	} else{ 
+	} else{
 	    document.getElementById('jform_c_emails').disabled = true;
 	}
 
@@ -284,7 +284,7 @@ window.onload = function (){
 				</div>
                 <div class="controls">
 					<?php echo $this->form->getInput('c_min_after'); ?>
-				</div>				
+				</div>
 			</div>
 			<div class="control-group">
 				<div class="control-label">
@@ -433,7 +433,7 @@ window.onload = function (){
 					<?php echo $this->form->getInput('c_redirect_after'); ?>
 				</div>
 			</div>
-			
+
 			<div class="control-group">
 				<div style="float:left;">
                     <div class="control-label">
@@ -520,7 +520,7 @@ window.onload = function (){
 			</div>
 		</fieldset>
 		<fieldset class="adminform">
-			<legend><?php echo JText::_('COM_JOOMLAQUIZ_QUIZ_FEEDBACK_OPT');?></legend>	
+			<legend><?php echo JText::_('COM_JOOMLAQUIZ_QUIZ_FEEDBACK_OPT');?></legend>
 			<div class="control-group">
 				<div class="control-label">
                     <?php echo $this->form->getLabel('c_share_buttons'); ?>
@@ -565,13 +565,13 @@ window.onload = function (){
 					<label class="hasTip control-label"></label>
 					<div class="controls">
 					<table cellpadding="10" cellspacing="10" id="feed_toins" <?php if($this->item->c_feed_option == 0) echo 'style="display:none;"';?>>
-					<?php			
+					<?php
                   if (!empty($this->feed_opres)) {
                             foreach ($this->feed_opres as $fopt) {
 								echo '<tr>';
 								echo '<td><a href="javascript: void(0);" onclick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="'.JURI::root().'administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a></td>';
-								echo '<td><input type="text" name="from_percent[]" maxlength="3" value="'.$fopt->from_percent.'" /></td>';
-								echo '<td><input type="text" name="to_percent[]" maxlength="3" value="'.$fopt->to_percent.'" /></td>';
+								echo '<td><input type="text" name="from_percent[]" maxlength="30" value="'.$fopt->from_percent.'" /></td>';
+								echo '<td><input type="text" name="to_percent[]" maxlength="30" value="'.$fopt->to_percent.'" /></td>';
 								echo '<td><textarea name="feed_by_percent[]" row="5" cols="50">'.stripslashes($fopt->fmessage).'</textarea></td>';
 								echo '</tr>';
 							}
@@ -582,10 +582,10 @@ window.onload = function (){
 					<table cellpadding="0" id="by_score_id" <?php if($this->item->c_feed_option == 0) echo 'style="display:none;"';?>>
 						<tr>
 							<td>
-								<?php echo JText::_('COM_JOOMLAQUIZ_IF_RECEIVED');?><input type="text" id="q_rfrom" name="q_rfrom" maxlength="3" style="margin-left:15px;"/>
+								<?php echo JText::_('COM_JOOMLAQUIZ_IF_RECEIVED');?><input type="text" id="q_rfrom" name="q_rfrom" maxlength="30" style="margin-left:15px;"/>
 							</td>
 							<td>
-								&nbsp;<?php echo JText::_('COM_JOOMLAQUIZ_TO');?>&nbsp;<input type="text" id="q_rto" name="q_rto" maxlength="3" />
+								&nbsp;<?php echo JText::_('COM_JOOMLAQUIZ_TO');?>&nbsp;<input type="text" id="q_rto" name="q_rto" maxlength="30" />
 							</td>
 							<td>
 								<input type="button" value="Add" onclick="if(validate_numeric(document.adminForm.q_rfrom) && validate_numeric(document.adminForm.q_rto)) InsertFrange('feed_toins'); else return false; " class="btn btn-small" style="margin-left:15px;"/>
@@ -757,20 +757,20 @@ window.onload = function (){
 					divs[i].style.display = 'none';
 				}
 			}
-		}						
+		}
 	}
-	
+
 	document.getElementById('jform_c_feed_option').onchange = function()
 	{
 		if(document.getElementById('jform_c_feed_option').value == 0 ) {document.getElementById('feed_toins').style.display = 'none';document.getElementById('by_score_id').style.display = 'none'; } else { document.getElementById('feed_toins').style.display = 'block';document.getElementById('by_score_id').style.display = 'block';}
 	}
-	
+
 	function Delete_tbl_row(element) {
 		var del_index = element.parentNode.parentNode.sectionRowIndex;
 		var tbl_id = element.parentNode.parentNode.parentNode.parentNode.id;
 		element.parentNode.parentNode.parentNode.deleteRow(del_index);
 	}
-		
+
 	function InsertFrange(table_id)
 	{
 		var tbl_elem = document.getElementById(table_id);
@@ -782,20 +782,20 @@ window.onload = function (){
 		var from_range = document.createElement("input");
 		from_range.type = "text";
 		from_range.name = "from_percent[]";
-		from_range.setAttribute('maxlength',3);
+		from_range.setAttribute('maxlength',30);
 		from_range.value = document.adminForm.q_rfrom.value;
 		var to_range = document.createElement("input");
 		to_range.type = "text";
 		to_range.name = "to_percent[]";
-		to_range.setAttribute('maxlength',3);
+		to_range.setAttribute('maxlength',30);
 		to_range.value = document.adminForm.q_rto.value;
-			
+
 		cell2.appendChild(from_range);
 		cell1.innerHTML = '<'+'a href="javascript: void(0);" onclick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="<?php echo JURI::root()?>administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a>';
 		cell3.appendChild(to_range);
 		var inc_text = 	document.createElement("textarea");
 		inc_text.name = "feed_by_percent[]";
-		inc_text.value = "feedback notes"; 
+		inc_text.value = "feedback notes";
 		inc_text.row = 5;
 		inc_text.cols = 50;
 		cell4.appendChild(inc_text);
@@ -803,14 +803,14 @@ window.onload = function (){
 		row.appendChild(cell2);
 		row.appendChild(cell3);
 		row.appendChild(cell4);
-			
+
 	}
-		
+
 	function validate_numeric(thfield)
 	{
 		var reas = new RegExp('[0-9]{1,3}');
-		if (!reas.test(thfield.value)) 
-		{	
+		if (!reas.test(thfield.value))
+		{
 			alert(thfield.value + '<?php echo addslashes( JText::_('COM_JOOMLAQUIZ_IS_NOT_NUMERIC'));?>');
 			return false;
 		}
@@ -819,9 +819,9 @@ window.onload = function (){
 			alert(thfield.value + '<?php echo JText::_('COM_JOOMLAQUIZ_MORE_THAN');?>');
 			return false;
 		}
-		return true;	
+		return true;
 	}
-	
+
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'quiz.cancel' || document.formvalidator.isValid(document.id('quiz-form'))) {
@@ -829,14 +829,14 @@ window.onload = function (){
 			<?php echo $this->form->getField('c_short_description')->save(); ?>
 			<?php echo $this->form->getField('c_right_message')->save(); ?>
 			<?php echo $this->form->getField('c_wrong_message')->save(); ?>
-			
+
 			Joomla.submitform(task, document.getElementById('quiz-form'));
 		}
 		else {
 			alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
 		}
 	}
-	
+
 	/* dumb code here as we`ve not renamed our columns still */
 	var initialGetElementById = document.getElementById;
 	document.getElementById = function(){

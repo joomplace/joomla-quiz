@@ -91,6 +91,11 @@ class com_joomlaquizInstallerScript
 					$db->execute();
 				}
 			}
+			if($version[0]<=3){
+				if($version[1]<=5){
+					$this->setEncoding();
+				}
+			}
 		}
 
 		$newColumns = array(
@@ -108,7 +113,8 @@ class com_joomlaquizInstallerScript
                 'c_sec_penalty' => "VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'tnnophoto.jpg'"
 			),
 			'r_student_question' => array(
-				'c_flag_question' => "TINYINT( 2 ) NOT NULL"
+				'c_flag_question' => "TINYINT( 2 ) NOT NULL",
+				'respond_at' => "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"
 			),
 			't_quiz' => array(
 				'c_flag' => 'TINYINT( 3 ) NOT NULL',
@@ -119,6 +125,8 @@ class com_joomlaquizInstallerScript
                 'c_quiz_access_message' => 'TEXT NOT NULL',
                 'c_quiz_certificate_access_message' => 'TEXT NOT NULL',
                 'head_cat' => "VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",
+				'one_time' => "INT(1) NOT NULL DEFAULT '0'",
+				'c_feedback_pdf' => "INT(2) NOT NULL AFTER `c_feedback`"
 			),
 			'r_student_quiz' => array(
 				'user_name' => 'VARCHAR(50) NOT NULL',
@@ -131,7 +139,8 @@ class com_joomlaquizInstallerScript
                 'category' => 'INT(11) NULL'
 			),
 			'certificates' => array(
-				'text_font' => 'VARCHAR(255) NOT NULL'
+				'text_font' => 'VARCHAR(255) NOT NULL',
+				'cert_offset' => "INT(4) NOT NULL AFTER `text_font`"
 			),
             'cert_fields' => array(
                 'text_x_center' =>"TINYINT(1) NOT NULL DEFAULT '0'"
@@ -298,6 +307,7 @@ class com_joomlaquizInstallerScript
 			$db->execute();
 		}
 
+		/*
 		//add quiz pool
 		$db->SetQuery("SELECT count(*) FROM `#__quiz_t_quiz` WHERE `c_title` = 'Questions Pool'");
 		if(!$db->LoadResult()){
@@ -316,6 +326,7 @@ class com_joomlaquizInstallerScript
 			$db->setQuery("UPDATE `#__quiz_t_quiz` SET `c_id` = 0 , `c_skin` = 1 WHERE `c_title` = 'Questions Pool'");
 			$db->execute();
 		}
+		*/
 
 		$db->setQuery("SELECT COUNT(id) FROM #__quiz_dashboard_items");
 		if(!$db->loadResult()){
@@ -338,6 +349,7 @@ class com_joomlaquizInstallerScript
 		$db->setQuery("INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES ('', 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'), ('', 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'), ('', 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'), ('', 2, '#course#', 170, 570, 20, 1, 'arial.ttf'), ('', 2, '#name#', 350, 450, 20, 1, 'arial.ttf');");
 		$db->execute();
 		*/
+
         $db->setQuery("ALTER TABLE `#__quiz_feed_option` MODIFY `from_percent` CHAR(30), MODIFY `to_percent` CHAR(30);");
         $db->execute();
     }
@@ -598,14 +610,41 @@ class com_joomlaquizInstallerScript
 		if(empty($dashs)){
 			$db->setQuery("
 				INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
-				(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/media/com_joomlaquiz/images/quizzes48.png', 1),
-				(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/media/com_joomlaquiz/images/questions48.png', 1),
-				(3, 'Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '".JURI::root(true)."/media/com_joomlaquiz/images/help48.png', 1);
+				(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
+				(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
+				(3, 'Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
 			");
 			$db->execute();
 		}
 
 		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_t_ext_hotspot` (`c_id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_question_id` int(12) NOT NULL, `c_paths` text NOT NULL, PRIMARY KEY (`c_id`))");
+		$db->execute();
+
+		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_r_student_dalliclick` (
+		  `c_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		  `c_sq_id` int(10) NOT NULL,
+		  `c_choice_id` int(10) NOT NULL,
+		  `c_elapsed_time` int(10) NOT NULL,
+		  PRIMARY KEY (`c_id`)
+		)");
+		$db->execute();
+
+		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_r_student_puzzle` (
+		  `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		  `c_sq_id` int(11) unsigned NOT NULL,
+		  `c_piece` int(10) NOT NULL,
+		  `c_elapsed_time` int(10) NOT NULL,
+		  PRIMARY KEY (`c_id`)
+		)");
+		$db->execute();
+
+		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_r_student_memory` (
+		  `c_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		  `c_sq_id` int(11) NOT NULL,
+		  `c_mid` int(11) NOT NULL,
+		  `c_elapsed_time` int(11) NOT NULL,
+		  PRIMARY KEY (`c_id`)
+		)");
 		$db->execute();
 
 		/* add Uncategorialised category for learning path */
@@ -622,6 +661,104 @@ class com_joomlaquizInstallerScript
 
         $this->migrateCategories();
 		$this->defaultCategoryCheck();
+	}
+
+	public function setEncoding()
+	{
+		$db	= JFactory::getDBO();
+
+		$db->setQuery("ALTER TABLE `#__quiz_certificates` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_cert_fields` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_constants` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_dashboard_items` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_export` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_feed_option` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_languages` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_lpath` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_lpath_quiz` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_lpath_stage` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_payments` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_pool` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_products` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_products_stat` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_product_info` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_q_cat` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_q_chain` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_blank` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_choice` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_dalliclick` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_hotspot` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_matching` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_memory` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_puzzle` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_question` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_quiz` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_share` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_r_student_survey` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_setup` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_templates` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_blank` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_category` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_choice` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_ext_hotspot` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_faketext` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_hotspot` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_matching` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_pbreaks` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_qtypes` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_question` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_text` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+
+		//expert
+		$db->setQuery("ALTER TABLE `#__quiz_t_dalliclick` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_memory` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_puzzle` DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci");
+		$db->execute();
 	}
 }
 ?>

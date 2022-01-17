@@ -571,8 +571,8 @@ window.onload = function (){
 							{
 								echo '<tr>';
 								echo '<td><a href="javascript: void(0);" onclick="javascript:Delete_tbl_row(this); return false;" title="Delete"><img src="'.JURI::root().'administrator/components/com_joomlaquiz/assets/images/publish_x.png"  border="0" alt="Delete"></a></td>';
-								echo '<td><input type="text" name="from_percent[]" maxlength="3" value="'.$fopt->from_percent.'" /></td>';
-								echo '<td><input type="text" name="to_percent[]" maxlength="3" value="'.$fopt->to_percent.'" /></td>';
+								echo '<td><input type="text" name="from_percent[]" maxlength="30" value="'.$fopt->from_percent.'" /></td>';
+								echo '<td><input type="text" name="to_percent[]" maxlength="30" value="'.$fopt->to_percent.'" /></td>';
 								echo '<td><textarea name="feed_by_percent[]" row="5" cols="50">'.stripslashes($fopt->fmessage).'</textarea></td>';
 								echo '</tr>';
 							}
@@ -583,10 +583,10 @@ window.onload = function (){
 					<table cellpadding="0" id="by_score_id" <?php if($this->item->c_feed_option == 0) echo 'style="display:none;"';?>>
 						<tr>
 							<td>
-								<?php echo JText::_('COM_JOOMLAQUIZ_IF_RECEIVED');?><input type="text" id="q_rfrom" name="q_rfrom" maxlength="3" style="margin-left:15px;"/>
+								<?php echo JText::_('COM_JOOMLAQUIZ_IF_RECEIVED');?><input type="text" id="q_rfrom" name="q_rfrom" maxlength="30" style="margin-left:15px;"/>
 							</td>
 							<td>
-								&nbsp;<?php echo JText::_('COM_JOOMLAQUIZ_TO');?>&nbsp;<input type="text" id="q_rto" name="q_rto" maxlength="3" />
+								&nbsp;<?php echo JText::_('COM_JOOMLAQUIZ_TO');?>&nbsp;<input type="text" id="q_rto" name="q_rto" maxlength="30" />
 							</td>
 							<td>
 								<input type="button" value="Add" onclick="if(validate_numeric(document.adminForm.q_rfrom) && validate_numeric(document.adminForm.q_rto)) InsertFrange('feed_toins'); else return false; " class="btn btn-small" style="margin-left:15px;"/>
@@ -764,7 +764,6 @@ window.onload = function (){
 	document.getElementById('jform_c_feed_option').onchange = function()
 	{
 		if(document.getElementById('jform_c_feed_option').value == 0 ) {document.getElementById('feed_toins').style.display = 'none';document.getElementById('by_score_id').style.display = 'none'; } else { document.getElementById('feed_toins').style.display = 'block';document.getElementById('by_score_id').style.display = 'block';}
-        if (document.getElementById('jform_c_feed_option').value == 1){document.getElementById('q_rfrom').type = "number"; document.getElementById('q_rfrom').max = "100"; document.getElementById('q_rfrom').min = "0";document.getElementById('q_rto').type = "number"; document.getElementById('q_rto').max = "100"; document.getElementById('q_rto').min = "0"}else{document.getElementById('q_rfrom').type = "text"; document.getElementById('q_rto').type = "text"}
 	}
 
 	function Delete_tbl_row(element) {
@@ -784,12 +783,12 @@ window.onload = function (){
 		var from_range = document.createElement("input");
 		from_range.type = "text";
 		from_range.name = "from_percent[]";
-		from_range.setAttribute('maxlength',3);
+		from_range.setAttribute('maxlength',30);
 		from_range.value = document.adminForm.q_rfrom.value;
 		var to_range = document.createElement("input");
 		to_range.type = "text";
 		to_range.name = "to_percent[]";
-		to_range.setAttribute('maxlength',3);
+		to_range.setAttribute('maxlength',30);
 		to_range.value = document.adminForm.q_rto.value;
 
 		cell2.appendChild(from_range);

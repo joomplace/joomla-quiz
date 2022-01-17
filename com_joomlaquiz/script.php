@@ -15,39 +15,39 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 class com_joomlaquizInstallerScript
 {
 	function install() {
-	
+
 		jimport( 'joomla.filesystem.folder' );
 		jimport( 'joomla.filesystem.file' );
-		
+
 		$adminDir = JPATH_ROOT.DIRECTORY_SEPARATOR.'administrator'.DIRECTORY_SEPARATOR.'components'.DIRECTORY_SEPARATOR.'com_joomlaquiz';
-		
+
 		/* is this needed? */
 		if (!JFolder::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . 'joomlaquiz') ) {
 			JFolder::create( JPATH_ROOT . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz');
 		}
-					
+
 		if (!JFolder::exists(JPATH_ROOT . DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images') ) {
 			JFolder::create( JPATH_ROOT . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images');
 		}
-		
+
 		/* need to be refactored // delete duplication */
 		if (!JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_green.jpg')) {
 			JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images' .DIRECTORY_SEPARATOR. 'certificate_green.jpg', JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_green.jpg');
 		}
-		
+
 		if (!JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_blue.jpg')) {
 			JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images' .DIRECTORY_SEPARATOR. 'certificate_blue.jpg', JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_blue.jpg');
 		}
-		
+
 		if (!JFile::exists(JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_beige.jpg')) {
 			JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images' .DIRECTORY_SEPARATOR. 'certificate_beige.jpg', JPATH_SITE . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'joomlaquiz' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'certificate_beige.jpg');
 		}
-		
+
 		/* copy font used for certificate //  need to be refactored  */
 		JFile::copy($adminDir . DIRECTORY_SEPARATOR . 'assets' .DIRECTORY_SEPARATOR. 'fonts' .DIRECTORY_SEPARATOR. 'arial.ttf', JPATH_SITE . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'arial.ttf');
-		
+
 	}
-	
+
 	function uninstall($parent)
     {
 	    echo '<p>' . JText::_('COM_JOOMLAQUIZ_UNINSTALL_TEXT') . '</p>';
@@ -71,14 +71,14 @@ class com_joomlaquizInstallerScript
 					->where('`link` LIKE "%com_joomlaquiz%"');
 				$db->setQuery($query);
 				$menu_items = $db->loadObjectList();
-				
+
 				$query->clear();
 				$query->select('*')
 					->from('`#__categories`')
 					->where('`extension` LIKE "%com_joomlaquiz%"');
 				$db->setQuery($query);
 				$categories = $db->loadObjectList('note');
-			
+
 				foreach($menu_items as $mi){
 					$mi->params = json_decode($mi->params);
 					$mi->params->cat_id = $categories[$mi->params->cat_id]->id;
@@ -92,8 +92,8 @@ class com_joomlaquizInstallerScript
 				}
 			}
 		}
-		
-		
+
+
 
 		$newColumns = array(
 			't_qtypes' => array(
@@ -172,7 +172,7 @@ class com_joomlaquizInstallerScript
 				}
 			}
 		}
-		
+
 		$db->setQuery("ALTER TABLE `#__quiz_r_student_question` CHANGE `c_score` `c_score` FLOAT( 11 ) NULL DEFAULT '0';");
 		$db->execute();
 		$db->setQuery("ALTER TABLE `#__quiz_r_student_quiz` CHANGE `c_total_score` `c_total_score` FLOAT NOT NULL DEFAULT '0';");
@@ -180,40 +180,40 @@ class com_joomlaquizInstallerScript
 
 		$db->setQuery("ALTER TABLE `#__quiz_t_question` CHANGE `c_point` `c_point` FLOAT NOT NULL DEFAULT '0';");
 		$db->execute();
-  
+
 		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_full_score` `c_full_score` FLOAT( 10 ) NOT NULL DEFAULT '0';");
 		$db->execute();
 		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_passing_score` `c_passing_score` FLOAT NOT NULL DEFAULT '0';");
 		$db->execute();
-		
+
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 1");
 		if(!$db->loadResult()){
 			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (1, 'Certificate Green', 'certificate_green.jpg')");
 			$db->execute();
 		}
-		
+
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 2");
 		if(!$db->loadResult()){
 			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (2, 'Certificate Blue', 'certificate_blue.jpg')");
 			$db->execute();
 		}
-		
+
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 3");
 		if(!$db->loadResult()){
 			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (3, 'Certificate Beige', 'certificate_beige.jpg')");
 			$db->execute();
 		}
-		
+
 		$db->setQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_delux'");
 		$joomlaquiz_delux_id = $db->loadResult();
 		if ($joomlaquiz_delux_id) {
 			$db->setQuery("UPDATE #__quiz_t_quiz SET c_skin = 1 WHERE c_skin = '{$joomlaquiz_delux_id}'");
 			$db->execute();
-			
+
 			$db->setQuery("DELETE #__quiz_t_quiz FROM `#__quiz_templates` WHERE template_name='joomlaquiz_delux''");
 			$db->execute();
 		}
-				
+
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_standard'");
 		if(!$db->loadResult()) {
 			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_standard');");
@@ -231,7 +231,7 @@ class com_joomlaquizInstallerScript
 			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_blue');");
 			$db->execute();
 		}
-		
+
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_simple'");
 		if(!$db->loadResult()) {
 			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_simple');");
@@ -243,13 +243,13 @@ class com_joomlaquizInstallerScript
 			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_pretty_green');");
 			$db->execute();
 		}
-		
+
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_pretty_blue'");
 		if(!$db->loadResult()) {
 			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_pretty_blue');");
 			$db->execute();
 		}
-		
+
 		//add quiz pool
 		$db->SetQuery("SELECT count(*) FROM `#__quiz_t_quiz` WHERE `c_title` = 'Questions Pool'");
 		if(!$db->LoadResult()){
@@ -263,12 +263,12 @@ class com_joomlaquizInstallerScript
 									`c_wrong_message` = '', 
 									`c_pass_message` = '', 
 									`c_unpass_message` = '', 
-									`c_short_description` = ''");	
+									`c_short_description` = ''");
 			$db->execute();
 			$db->setQuery("UPDATE `#__quiz_t_quiz` SET `c_id` = 0 , `c_skin` = 1 WHERE `c_title` = 'Questions Pool'");
 			$db->execute();
 		}
-		
+
 		$db->setQuery("SELECT COUNT(id) FROM #__quiz_dashboard_items");
 		if(!$db->loadResult()){
 			$db->setQuery("INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
@@ -290,11 +290,13 @@ class com_joomlaquizInstallerScript
 		$db->setQuery("INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES ('', 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'), ('', 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'), ('', 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'), ('', 2, '#course#', 170, 570, 20, 1, 'arial.ttf'), ('', 2, '#name#', 350, 450, 20, 1, 'arial.ttf');");
 		$db->execute();
 		*/
+        $db->setQuery("ALTER TABLE `#__quiz_feed_option` MODIFY `from_percent` CHAR(30), MODIFY `to_percent` CHAR(30);");
+        $db->execute();
     }
 
 
 	function migrateCategories(){
-		
+
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 
@@ -446,7 +448,7 @@ class com_joomlaquizInstallerScript
             }
         }
 	}
-	
+
 	function defaultCategoryCheck()
 	{
 		/* checking default category quizzes */
@@ -454,7 +456,7 @@ class com_joomlaquizInstallerScript
 		$title     = 'Uncategorised';
 		$desc      = 'A default category for the joomlaquiz quizzes.';
 		$parent_id = 1;
-		
+
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id')
@@ -462,16 +464,16 @@ class com_joomlaquizInstallerScript
 			->where('`extension`="'.$extension.'"')
 			->where('`parent_id`="'.$parent_id.'"');
 		$exists = count($db->setQuery($query)->loadObjectList());
-		
+
 		if(!$exists)
 			$this->createCategory($extension, $title, $desc, $parent_id);
-		
+
 		/* checking default category questions */
 		$extension = 'com_joomlaquiz.questions';
 		$title     = 'Uncategorised';
 		$desc      = 'A default category for the joomlaquiz questions.';
 		$parent_id = 1;
-		
+
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id')
@@ -479,12 +481,12 @@ class com_joomlaquizInstallerScript
 			->where('`extension`="'.$extension.'"')
 			->where('`parent_id`="'.$parent_id.'"');
 		$exists = count($db->setQuery($query)->loadObjectList());
-		
+
 		if(!$exists)
 			$this->createCategory($extension, $title, $desc, $parent_id);
 	}
-	
-	function createCategory($extension, $title, $desc, $parent_id=1, $note='', $published=1, $access = 1, $params = '{"target":"","image":""}', $metadata = '{"page_title":"","author":"","robots":""}', $language = '*'){	
+
+	function createCategory($extension, $title, $desc, $parent_id=1, $note='', $published=1, $access = 1, $params = '{"target":"","image":""}', $metadata = '{"page_title":"","author":"","robots":""}', $language = '*'){
 		if (version_compare(JVERSION, '3.0', 'lt'))
 		{
 		   JTable::addIncludePath(JPATH_PLATFORM . 'joomla/database/table');
@@ -514,7 +516,7 @@ class com_joomlaquizInstallerScript
             JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
             return false;
 		}
-		
+
 		// Rebuild the path for the category:
         if (!$category->rebuildPath($category->id))
         {
@@ -527,21 +529,21 @@ class com_joomlaquizInstallerScript
             JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
             return false;
         }
-		
+
 		return $category;
 	}
-	
+
 	function postflight($type, $parent)
     {
 		$app = JFactory::getApplication();
-		$db	= JFactory::getDBO();	
-		
+		$db	= JFactory::getDBO();
+
 		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_r_student_share` (`id` int(12) unsigned NOT NULL AUTO_INCREMENT, `c_quiz_id` int(12) unsigned NOT NULL, `c_stu_quiz_id` int(12) unsigned NOT NULL, `c_user_id` int(12) unsigned NOT NULL, `c_share_id` varchar(64) NOT NULL, PRIMARY KEY (`id`))");
 		$db->execute();
-		
+
 		$db->setQuery("CREATE TABLE IF NOT EXISTS `#__quiz_dashboard_items` ( `id` int(11) NOT NULL AUTO_INCREMENT, `title` varchar(255) NOT NULL, `url` varchar(255) NOT NULL, `icon` varchar(255) NOT NULL, `published` tinyint(1) NOT NULL,  PRIMARY KEY (`id`)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;");
 		$db->execute();
-		
+
 		$db->setQuery("SELECT * FROM `#__quiz_dashboard_items`");
 		$dashs = $db->loadObjectList();
 		if(empty($dashs)){
@@ -565,5 +567,5 @@ class com_joomlaquizInstallerScript
 		$this->migrateCategories();
         $this->defaultCategoryCheck();
 	}
-	
+
 }

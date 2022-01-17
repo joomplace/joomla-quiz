@@ -716,16 +716,32 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$q_ids = array(0);
 					}
 
-					$qchids = explode('*',$qch_ids);// chain
+					$qchids = explode('*',$qch_ids);      //chain
+                    $q_not_answer = array_values(array_diff($qchids, $q_ids));  //ids unanswered questions
 
-                    $q_not_answer = array_diff($qchids, $q_ids);
                     if (!empty($q_not_answer)) {
-                        $q_data = array();
-                        $query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".intval(array_shift($q_not_answer))."' AND published = 1 ";
-                        $database->SetQuery( $query );
-                        $q_data = $database->LoadObjectList();
+                        $next_quest_id = (int)$q_not_answer[0];
+                        if((int)$quiz->c_enable_skip != 0) {  //issue-812
+                            if(!empty($quest_ids)) {
+                                $last_answered_question_id = array_pop($quest_ids);
+                                $key_last_answered_in_chain = array_search($last_answered_question_id, $qchids);
+                                $n = 1;
+                                while (!empty($qchids[$key_last_answered_in_chain + $n])) {
+                                    if (in_array($qchids[$key_last_answered_in_chain + $n], $q_not_answer)) {
+                                        $next_quest_id = $qchids[$key_last_answered_in_chain + $n];
+                                        break;
+                                    }
+                                    $n++;
+                                }
+                                unset($n);
+                            }
+                        }
+                        $query = "SELECT * FROM #__quiz_t_question WHERE c_id = '".$next_quest_id."' AND published = 1 ";
+                        $database->setQuery($query);
+                        $q_data = $database->loadObject();
+
                         $ret_str .= "\t" . '<task>next</task>' . "\n";
-                        $ret_str .= $this->JQ_GetQuestData($q_data[0], $quiz_id, $stu_quiz_id);
+                        $ret_str .= $this->JQ_GetQuestData($q_data, $quiz_id, $stu_quiz_id);
                     } else {
                         $ret_str .= "\t" . '<task>finish</task>' . "\n";
                         if ($is_no_attempts == 1) {
@@ -964,7 +980,6 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$database = JFactory::getDBO(); 
 		$my = JFactory::getUser();
 		$ret_str = '';
-
         $session = JFactory::getSession();
 
         $session_lid = $session->get('quiz_lid');
@@ -1275,7 +1290,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 						foreach($q_cate as $curcat)
 						{
 							if($curcat[2] || $i){
-								$percent = ($curcat[2]) ? number_format(($curcat[1]/$curcat[2]) * 100, 0, '.', ',') : 0;
+								$percent = !empty($curcat[2]) ? number_format(($curcat[1]/$curcat[2]) * 100, 0, '.', ',') : 0;
 								$c_resbycat .= "<div class='jq_cat_score'>".$curcat[0].': '.sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $curcat[1], $curcat[2], $percent)."</div><br />";
 							}
 							$i++;
@@ -1596,7 +1611,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 							
 								$message .= "<br/>\n".JText::_('COM_QUIZ_HEADER_FIN_RESULTS')."<br/>\n";	
 								
-								$percent = ($max_score) ? number_format(($user_score/$max_score) * 100, 0, '.', ',') : 0;
+								$percent = !empty($max_score) ? number_format(($user_score/$max_score) * 100, 0, '.', ',') : 0;
 								if(!$c_manual)
                                     $message .= JText::_('COM_QUIZ_RES_MES_SCORE2').'  '.sprintf(JText::_('COM_QUIZ_RES_MES_SCORE_TPL'), $user_score, $max_score, $percent)."<br/>\n";
                                 else
@@ -3241,7 +3256,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		$query = "SELECT * FROM #__quiz_r_student_question WHERE c_stu_quiz_id = '".$stu_quiz_id."'";
 		$database->SetQuery( $query );
 		$info = $database->LoadObjectList();
-		
+
 		$ret_questions = '';
 		if (is_array($q_ids) && is_array($info))
 		foreach($q_ids as $z => $q_id){

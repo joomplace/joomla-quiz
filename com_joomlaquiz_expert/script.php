@@ -657,6 +657,17 @@ class com_joomlaquizInstallerScript
         if ( $type == 'update' ) {
             $db->setQuery("DROP TABLE IF EXISTS `#__quiz_configuration`");
             $db->execute();
+
+			//If the "expert" package was installed over the "standard" package,
+			//remove the old "standard" package from the extensions table.
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$conditions = array(
+				$db->qn('element') .'='. $db->q('pkg_quiz')
+			);
+			$query->delete($db->qn('#__extensions'))
+				->where($conditions);
+			$db->setQuery($query)->execute();
         }
 
         $this->migrateCategories();

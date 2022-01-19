@@ -7,10 +7,16 @@
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die;
+$joomla_major_version = JoomlaquizHelper::getJoomlaMajorVersion();
 $app = JFactory::getApplication();
-$document = JFactory::getDocument();
-$document->addStyleSheet(JURI::root().'administrator/components/com_joomlaquiz/assets/css/joomlaquiz.css?v='.JoomlaquizHelper::getVersion());
 
+if($joomla_major_version < 4) {
+    $document = JFactory::getDocument();
+    $document->addStyleSheet(JURI::root().'administrator/components/com_joomlaquiz/assets/css/joomlaquiz.css?v='.JoomlaquizHelper::getVersion());
+} else {
+    $wa = JFactory::getApplication()->getDocument()->getWebAssetManager();
+    $wa->registerAndUseStyle('joomlaquiz', JURI::root().'administrator/components/com_joomlaquiz/assets/css/joomlaquiz.css?v='.JoomlaquizHelper::getVersion());
+}
 ?>
 <div id="jp-navbar" class="navbar navbar-static navbar-inverse">
     <div class="navbar-inner">

@@ -61,7 +61,7 @@ class com_joomlaquizInstallerScript
         }
 
 		if(file_exists(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml')){
-			$xml = JFactory::getXML(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml');
+			$xml = simplexml_load_file(JPATH_ADMINISTRATOR .'/components/com_joomlaquiz/joomlaquiz.xml');
 			$this->version_from = $version = preg_split( '/(\s|\.)/', $xml->version );
 			if($version[1]<=4 && $version[2]<1){
 				$db = JFactory::getDbo();

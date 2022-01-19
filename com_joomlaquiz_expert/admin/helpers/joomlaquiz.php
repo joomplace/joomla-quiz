@@ -8,6 +8,8 @@
 */
 defined('_JEXEC') or die;
 
+use \Joomla\CMS\Version;
+
 require_once( JPATH_ROOT .'/components/com_joomlaquiz/libraries/apps.php' );
 
 /**
@@ -103,10 +105,15 @@ class JoomlaquizHelper
 		
         public static function getVersion() 
         {
-			$xml = JFactory::getXML(JPATH_COMPONENT_ADMINISTRATOR .'/joomlaquiz.xml');
+            $xml = simplexml_load_file(JPATH_COMPONENT_ADMINISTRATOR .'/joomlaquiz.xml');
 			return (string)$xml->version;
         }
-                
+
+        public static function getJoomlaMajorVersion()
+        {
+            return Version::MAJOR_VERSION;
+        }
+
         public static function showTitle($submenu)  
         {       
          	$document = JFactory::getDocument();

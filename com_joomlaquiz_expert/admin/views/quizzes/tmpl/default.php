@@ -6,15 +6,22 @@
  * @copyright Copyright (C) JoomPlace, www.joomplace.com
  * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
  */
-defined('_JEXEC') or die('Restricted Access');
+defined('_JEXEC') or die;
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
+use \Joomla\CMS\HTML\HTMLHelper;
+
+$joomla_major_version = JoomlaquizHelper::getJoomlaMajorVersion();
+
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('dropdown.init');
+if($joomla_major_version < 4) {
+    HTMLHelper::_('behavior.tooltip');
+}
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('formbehavior.chosen', 'select');
+
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 $user = JFactory::getUser();

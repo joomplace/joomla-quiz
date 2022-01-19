@@ -644,7 +644,7 @@ class com_joomlaquizInstallerScript
 		/* add Uncategorialised category for learning path */
 		$db->setQuery("SELECT `extension` FROM `#__categories` WHERE `extension` = 'com_joomlaquiz.lpath' ");
 		if (!$db->loadColumn()) {
-			$db->setQuery("INSERT INTO `#__categories` (`path`, `extension`, `title`, `alias`, `description`, `parent_id`, `published`, `params`, `metadata`,`created_time`) VALUES ('uncategorised', 'com_joomlaquiz.lpath', 'Uncategorised', 'uncategorised', 'A default category for the joomlaquiz questions.', 1, 1, '{\"target\":\"\",\"image\":\"\"}', '{\"page_title\":\"\",\"author\":\"\",\"robots\":\"\"}', NOW())");
+			$db->setQuery("INSERT INTO `#__categories` (`path`, `extension`, `title`, `alias`, `description`, `parent_id`, `published`, `params`, `metadata`, `created_time`, `modified_time`) VALUES ('uncategorised', 'com_joomlaquiz.lpath', 'Uncategorised', 'uncategorised', 'A default category for the joomlaquiz questions.', 1, 1, '{\"target\":\"\",\"image\":\"\"}', '{\"page_title\":\"\",\"author\":\"\",\"robots\":\"\"}', NOW(), NOW())");
 			$db->execute();
 		}
 

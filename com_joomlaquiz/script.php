@@ -195,23 +195,23 @@ class com_joomlaquizInstallerScript
 		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_passing_score` `c_passing_score` FLOAT NOT NULL DEFAULT '0';");
 		$db->execute();
 
+        /*
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 1");
 		if(!$db->loadResult()){
 			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (1, 'Certificate Green', 'certificate_green.jpg')");
 			$db->execute();
 		}
-
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 2");
 		if(!$db->loadResult()){
 			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (2, 'Certificate Blue', 'certificate_blue.jpg')");
 			$db->execute();
 		}
-
 		$db->setQuery("SELECT COUNT(*) FROM #__quiz_certificates WHERE `id` = 3");
 		if(!$db->loadResult()){
 			$db->SetQuery("INSERT INTO `#__quiz_certificates` (id, cert_name, cert_file) VALUES (3, 'Certificate Beige', 'certificate_beige.jpg')");
 			$db->execute();
 		}
+        */
 
 		$db->setQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_delux'");
 		$joomlaquiz_delux_id = $db->loadResult();
@@ -225,37 +225,37 @@ class com_joomlaquizInstallerScript
 
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_standard'");
 		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_standard');");
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (template_name) VALUES ('joomlaquiz_standard');");
 			$db->execute();
 		}
 
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_t3_bs3'");
 		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_t3_bs3');");
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (template_name) VALUES ('joomlaquiz_t3_bs3');");
 			$db->execute();
 		}
 
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_blue'");
 		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_blue');");
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (template_name) VALUES ('joomlaquiz_blue');");
 			$db->execute();
 		}
 
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_simple'");
 		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_simple');");
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (template_name) VALUES ('joomlaquiz_simple');");
 			$db->execute();
 		}
 
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_pretty_green'");
 		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_pretty_green');");
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (template_name) VALUES ('joomlaquiz_pretty_green');");
 			$db->execute();
 		}
 
 		$db->SetQuery("SELECT id FROM `#__quiz_templates` WHERE template_name='joomlaquiz_pretty_blue'");
 		if(!$db->loadResult()) {
-			$db->SetQuery("INSERT INTO `#__quiz_templates` (id, template_name) VALUES ('', 'joomlaquiz_pretty_blue');");
+			$db->SetQuery("INSERT INTO `#__quiz_templates` (template_name) VALUES ('joomlaquiz_pretty_blue');");
 			$db->execute();
 		}
 
@@ -282,10 +282,10 @@ class com_joomlaquizInstallerScript
 
 		$db->setQuery("SELECT COUNT(id) FROM #__quiz_dashboard_items");
 		if(!$db->loadResult()){
-			$db->setQuery("INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
-			(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
-			(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
-			(3, 'Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);");
+			$db->setQuery("INSERT INTO `#__quiz_dashboard_items` (`title`, `url`, `icon`, `published`) VALUES
+			('Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
+			('Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
+			('Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);");
 			$db->execute();
 		} else {
             $query = $db->getQuery(true);
@@ -296,11 +296,6 @@ class com_joomlaquizInstallerScript
             $db->setQuery($query);
             $db->execute();
         }
-
-		/*
-		$db->setQuery("INSERT INTO `#__quiz_cert_fields` (`c_id`, `cert_id`, `f_text`, `text_x`, `text_y`, `text_h`, `shadow`, `font`) VALUES ('', 2, 'For the successful completion of quiz:', 170, 520, 20, 0, 'arial.ttf'), ('', 2, '#reg_answer#', 170, 680, 20, 0, 'arial.ttf'), ('', 2, 'dated from #date(d F Y)#', 170, 630, 20, 0, 'arial.ttf'), ('', 2, '#course#', 170, 570, 20, 1, 'arial.ttf'), ('', 2, '#name#', 350, 450, 20, 1, 'arial.ttf');");
-		$db->execute();
-		*/
 
         $db->setQuery("ALTER TABLE `#__quiz_feed_option` MODIFY `from_percent` CHAR(30), MODIFY `to_percent` CHAR(30);");
         $db->execute();
@@ -560,10 +555,10 @@ class com_joomlaquizInstallerScript
 		$dashs = $db->loadObjectList();
 		if(empty($dashs)){
 			$db->setQuery("
-				INSERT INTO `#__quiz_dashboard_items` (`id`, `title`, `url`, `icon`, `published`) VALUES
-				(1, 'Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
-				(2, 'Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
-				(3, 'Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
+				INSERT INTO `#__quiz_dashboard_items` (`title`, `url`, `icon`, `published`) VALUES
+				('Manage Quizzes', 'index.php?option=com_joomlaquiz&view=quizzes', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/quizzes48.png', 1),
+				('Manage Questions', 'index.php?option=com_joomlaquiz&view=questions', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/questions48.png', 1),
+				('Help', 'https://www.joomplace.com/video-tutorials-and-documentation/joomla-quiz-deluxe-3.0/index.html', '".JURI::root(true)."/administrator/components/com_joomlaquiz/assets/images/help48.png', 1);
 			");
 			$db->execute();
 		}

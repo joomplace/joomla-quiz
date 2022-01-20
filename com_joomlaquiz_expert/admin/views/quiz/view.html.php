@@ -36,17 +36,17 @@ class JoomlaquizViewQuiz extends JViewLegacy
 		}
 		
 		$jq_cats = $this->get("Categories");
-		$this->jq_cats	= JHTML::_('select.genericlist', $jq_cats, 'jform[c_category_id]', 'class="" size="1"', 'c_id', 'c_category', $this->item->c_category_id );
+		$this->jq_cats	= JHTML::_('select.genericlist', $jq_cats, 'jform[c_category_id]', 'class="form-select" size="1"', 'c_id', 'c_category', $this->item->c_category_id );
 		
 		$jq_temps = $this->get("Templates");
-		$this->jq_templates = JHTML::_('select.genericlist', $jq_temps, 'jform[c_skin]', 'class="" size="1"', 'id', 'template_name', $this->item->c_skin );
+		$this->jq_templates = JHTML::_('select.genericlist', $jq_temps, 'jform[c_skin]', 'class="form-select" size="1"', 'id', 'template_name', $this->item->c_skin );
 		
 		$jq_cert = $this->get("Certificates");
 		
 		$options = array();
 		$options[] = JHTML::_('select.option', 0, JText::_('COM_JOOMLAQUIZ_NO_CERTIFICATE'));
 		$jq_cert = array_merge($options, $jq_cert);
-		$this->c_certificates = JHTML::_('select.genericlist', $jq_cert, 'jform[c_certificate]', 'class="" size="1"', 'value', 'text', $this->item->c_certificate );
+		$this->c_certificates = JHTML::_('select.genericlist', $jq_cert, 'jform[c_certificate]', 'class="form-select" size="1"', 'value', 'text', $this->item->c_certificate );
 		
 		$model = $this->getModel("Quiz");
 		$quiz_data = $model->getQuizData($this->item->c_id);
@@ -58,7 +58,7 @@ class JoomlaquizViewQuiz extends JViewLegacy
 		}
 			
 		$qc_tag = $quiz_data['head_cat_arr'];
-		$this->head_cat = JHTML::_('select.genericlist', $qc_tag, 'jform[head_cat]', 'class="" size="1" onchange="javascript:showHideCategories(this)"', 'value', 'text', $this->item->head_cat, 'head_cat');
+		$this->head_cat = JHTML::_('select.genericlist', $qc_tag, 'jform[head_cat]', 'class="form-select" size="1" onchange="javascript:showHideCategories(this)"', 'value', 'text', $this->item->head_cat, 'head_cat');
 		$this->jq_pool_cat = $quiz_data['jq_pool_cat'];
 		$this->q_count = $quiz_data['q_count'];
 		

@@ -7,6 +7,12 @@
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die;
+
+$joomla_major_version = JoomlaquizHelper::getJoomlaMajorVersion();
+?>
+<?php if($joomla_major_version < 4): ?>
+
+<?php
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
@@ -855,3 +861,7 @@ window.onload = function (){
 		}
 	}
 </script>
+
+<?php else: ?>
+    <?php require_once('j4edit.php'); ?>
+<?php endif; ?>

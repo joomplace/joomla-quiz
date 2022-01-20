@@ -267,9 +267,7 @@
     margin-bottom: 30px;
 }
 .jp-panel-logo.j4 {
-    height: 30px;
-    width: 30px;
-    vertical-align: top;
+    margin-top: 5px;
 }
 a.navbar-brand::before {
     content: '' !important;
@@ -291,7 +289,7 @@ a.navbar-brand::before {
 
 
 
-
+/* Joomla 4 end */
 
 
 

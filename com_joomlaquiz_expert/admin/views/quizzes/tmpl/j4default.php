@@ -15,7 +15,7 @@ HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('dropdown.init');
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
+//HTMLHelper::_('formbehavior.chosen', 'select');
 
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
@@ -58,7 +58,7 @@ if (extension_loaded ('mbstring')) {
                 </div>
                 <div class="btn-group pull-right hidden-phone">
                     <label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></label>
-                    <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
+                    <select name="directionTable" id="directionTable" class="input-medium form-select" onchange="Joomla.orderTable()">
                         <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC'); ?></option>
                         <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING'); ?></option>
                         <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING'); ?></option>
@@ -66,7 +66,7 @@ if (extension_loaded ('mbstring')) {
                 </div>
                 <div class="btn-group pull-right">
                     <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY'); ?></label>
-                    <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
+                    <select name="sortTable" id="sortTable" class="input-medium form-select" onchange="Joomla.orderTable()">
                         <option value=""><?php echo JText::_('JGLOBAL_SORT_BY'); ?></option>
                         <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder); ?>
                     </select>

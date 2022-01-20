@@ -38,7 +38,7 @@ class JoomlaquizViewQuizzes extends JViewLegacy
 			$submenu = 'copy_quizzes';
 			JoomlaquizHelper::showTitle($submenu);
 			
-			$categoryFields = JHTML::_('select.genericlist', $this->get("Categories"), 'categorycopy', 'class="input-medium" size="1"', 'value', 'text', 0); 
+			$categoryFields = JHTML::_('select.genericlist', $this->get("Categories"), 'categorycopy', 'class="input-medium form-select" size="1"', 'value', 'text', 0);
 			$this->categoryFields = $categoryFields;
 			$this->copy_quizzes = $this->get('CopyQuizzes');
 			
@@ -47,7 +47,7 @@ class JoomlaquizViewQuizzes extends JViewLegacy
 			$submenu = 'move_quizzes';
 			JoomlaquizHelper::showTitle($submenu);
 						
-			$categoryFields = JHTML::_('select.genericlist', $this->get("Categories"), 'categorymove', 'class="input-medium" size="1"', 'value', 'text', 0); 
+			$categoryFields = JHTML::_('select.genericlist', $this->get("Categories"), 'categorymove', 'class="input-medium form-select" size="1"', 'value', 'text', 0);
 			$this->categoryFields = $categoryFields;
 			$this->move_quizzes = $this->get('MovingQuizzes');
 			

@@ -261,3 +261,40 @@
 }
 /* admin banners end */
 
+
+/* Joomla 4 start */
+.j4-jp-menu {
+    margin-bottom: 30px;
+}
+.jp-panel-logo.j4 {
+    height: 30px;
+    width: 30px;
+    vertical-align: top;
+}
+a.navbar-brand::before {
+    content: '' !important;
+}
+.jqd-survey.j4 {
+    height: auto;
+}
+.jqd-survey.j4 a {
+    color: #3071a9 !important;
+}
+.j4-quizzes-filter-bar {
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -11,13 +11,14 @@ defined('_JEXEC') or die;
 use \Joomla\CMS\HTML\HTMLHelper;
 
 $joomla_major_version = JoomlaquizHelper::getJoomlaMajorVersion();
+?>
+<?php if($joomla_major_version < 4): ?>
 
+<?php
 HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('dropdown.init');
-if($joomla_major_version < 4) {
-    HTMLHelper::_('behavior.tooltip');
-}
+HTMLHelper::_('behavior.tooltip');
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
@@ -248,3 +249,7 @@ if (extension_loaded ('mbstring')) {
         </div>
     </div>
 <?php } ?>
+
+<?php else: ?>
+    <?php require_once('j4default.php'); ?>
+<?php endif; ?>

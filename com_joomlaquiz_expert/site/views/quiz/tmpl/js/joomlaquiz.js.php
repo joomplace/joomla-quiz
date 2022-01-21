@@ -1340,8 +1340,7 @@ function jq_StartQuiz() {
 	var custom_info = '';
 	<?php
 		JPluginHelper::importPlugin('content');
-		$dispatcher = JEventDispatcher::getInstance();
-		$dispatcher->trigger('onQuizCustomFieldsRenderJS');
+        JFactory::getApplication()->triggerEvent('onQuizCustomFieldsRenderJS');
 	?>
 
 	uname = encodeURIComponent(uname);

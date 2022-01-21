@@ -508,11 +508,10 @@ class JoomlaquizHelper
 			$params = new JInput();
 			$new_text = $text;
 
-			$dispatcher	= JDispatcher::getInstance();
+            JPluginHelper::importPlugin('content');
+            $results = JFactory::getApplication()->triggerEvent('onContentPrepare', array ('com_joomlaquiz', &$row, &$params, 0));
+            $results = JFactory::getApplication()->triggerEvent('onPrepareContent', array (& $row, & $params, 0));
 
-			JPluginHelper::importPlugin('content');
-			$results = $dispatcher->trigger('onContentPrepare', array ('com_joomlaquiz', &$row, &$params, 0));
-			$results = $dispatcher->trigger('onPrepareContent', array (& $row, & $params, 0));
 			$new_text = $row->text;
 		 
 			return $new_text;
@@ -550,8 +549,8 @@ class JoomlaquizHelper
 			}
 			
 			JPluginHelper::importPlugin('content');
-			$dispatcher = JEventDispatcher::getInstance();
-            $result_event = $dispatcher->trigger('onQuizCustomFieldsFromUser');
+            $result_event = JFactory::getApplication()->triggerEvent('onQuizCustomFieldsFromUser');
+
             $cust_params = '{}';
             if($result_event && !empty($result_event)){
                 $cust_params = $result_event[0];

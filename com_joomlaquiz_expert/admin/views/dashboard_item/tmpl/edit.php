@@ -19,7 +19,7 @@ echo $this->loadTemplate('menu');
 <script type="text/javascript">
     Joomla.submitbutton = function(task)
     {
-        if (task == 'dashboard_item.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
+        if (task == 'dashboard_item.cancel' || document.formvalidator.isValid(document.getElementById('item-form'))) {
             Joomla.submitform(task, document.getElementById('item-form'));
         }
         else {

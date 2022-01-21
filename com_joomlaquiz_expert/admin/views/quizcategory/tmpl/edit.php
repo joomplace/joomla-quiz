@@ -18,7 +18,7 @@ JHtml::_('formbehavior.chosen', 'select');
 
 Joomla.submitbutton = function(task)
 	{
-		if (task == 'quizcategory.cancel' || document.formvalidator.isValid(document.id('quizcategory-form'))) {
+		if (task == 'quizcategory.cancel' || document.formvalidator.isValid(document.getElementById('quizcategory-form'))) {
 			<?php echo $this->form->getField('c_instruction')->save(); ?>
 			Joomla.submitform(task, document.getElementById('quizcategory-form'));
 		}

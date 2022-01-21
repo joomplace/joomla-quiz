@@ -396,7 +396,7 @@ $input = $app->input;
 				return;
 			}
             if ((task == 'lpath.apply' || task == 'lpath.save' || task == 'lpath.save2new' || task == 'lpath.save2copy')
-                 && document.formvalidator.isValid(document.id('lpath-form')))
+                 && document.formvalidator.isValid(document.getElementById('lpath-form')))
             {
                 if(ids.length==0){
                     alert('<?php echo JText::_('COM_JOOMLAQUIZ_LPATH_NOQUIZSELECTED',true);?>');

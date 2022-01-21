@@ -129,9 +129,8 @@ class plgJoomlaquizPuzzle extends plgJoomlaquizQuestion
 				
 				$data['score'] = $point;
 
-				$dispatcher	= JDispatcher::getInstance();
 				JPluginHelper::importPlugin('system');
-				$dispatcher->trigger('onJQuizAnswerSubmitted', array (&$data));
+                JFactory::getApplication()->triggerEvent('onJQuizAnswerSubmitted', array (&$data));
 				
 				$app->close();
 			    break;

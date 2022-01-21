@@ -25,11 +25,12 @@ class JoomlaquizModelQuiz extends JModelList
 
 		/* get menu item params */
 		// check because fails on article save because of content plugin
-		if(!$app->isAdmin())
-			$params = $app->getParams();
-		else
-			$params = new JRegistry();
-		
+		if(!$app->isClient('administrator')) {
+            $params = $app->getParams();
+        } else {
+            $params = new JRegistry();
+        }
+
 		$error_info = '';
 		if (!isset($quiz_id) || !$quiz_id) {
 			$quiz_id = $jinput->get( 'quiz_id', $params->get('quiz_id', 0, 'INT'), 'INT');
@@ -484,10 +485,10 @@ class JoomlaquizModelQuiz extends JModelList
 			$quiz_params->c_description = preg_replace('/#name#/', $username_field, $quiz_params->c_description, 1);
 			$quiz_params->c_description = preg_replace('/#surname#/', $usersurname_field, $quiz_params->c_description, 1);
 			$quiz_params->c_description = preg_replace('/#email#/', $email_field, $quiz_params->c_description, 1);
-			
-			JPluginHelper::importPlugin('content');
-			$dispatcher = JEventDispatcher::getInstance();
-            $result_event = $dispatcher->trigger('onQuizCustomFieldsRender', array($quiz_params->c_description));
+
+            JPluginHelper::importPlugin('content');
+            $result_event = JFactory::getApplication()->triggerEvent('onQuizCustomFieldsRender', array($quiz_params->c_description));
+
             $processed_desc = '';
             if($result_event && !empty($result_event)){
                 $processed_desc = $result_event[0];
@@ -562,7 +563,6 @@ class JoomlaquizModelQuiz extends JModelList
 
 		$user		= JFactory::getUser();
 		$document	= JFactory::getDocument();
-		$dispatcher	= JDispatcher::getInstance();
 		$pathway	= $mainframe->getPathway();
 		$params		= $mainframe->getParams('com_content');
 		
@@ -615,15 +615,15 @@ class JoomlaquizModelQuiz extends JModelList
 		// Process the content plugins.
 		//
 		JPluginHelper::importPlugin('content');
-		$results = $dispatcher->trigger('onContentPrepare', array ('com_content.article', &$article, &$params, $offset));
-		$results = $dispatcher->trigger('onContentAfterTitle', array('com_content.article', &$article, &$params, $offset));
+        $results = JFactory::getApplication()->triggerEvent('onContentPrepare', array ('com_content.article', &$article, &$params, $offset));
+        $results = JFactory::getApplication()->triggerEvent('onContentAfterTitle', array('com_content.article', &$article, &$params, $offset));
 		$article->event = new stdClass;
 		$article->event->afterDisplayTitle = trim(implode("\n", $results));
 
-		$results = $dispatcher->trigger('onContentBeforeDisplay', array('com_content.article', &$article, &$params, $offset));
+        $results = JFactory::getApplication()->triggerEvent('onContentBeforeDisplay', array('com_content.article', &$article, &$params, $offset));
 		$article->event->beforeDisplayContent = trim(implode("\n", $results));
 
-		$results = $dispatcher->trigger('onContentAfterDisplay', array('com_content.article', &$article, &$params, $offset));
+        $results = JFactory::getApplication()->triggerEvent('onContentAfterDisplay', array('com_content.article', &$article, &$params, $offset));
 		$article->event->afterDisplayContent = trim(implode("\n", $results));
 		
 		// Increment the hit counter of the article.

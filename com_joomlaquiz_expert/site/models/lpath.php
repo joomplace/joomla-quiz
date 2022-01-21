@@ -29,7 +29,7 @@ class JoomlaquizModelLpath extends JModelList
 		$database = JFactory::getDBO();
 		$mainframe = JFactory::getApplication();
 
-		if($mainframe->isAdmin()){
+		if($mainframe->isClient('administrator')){
 			$params = JComponentHelper::getParams('com_joomlaquiz');
 		} else {
 			$params = $mainframe->getParams();

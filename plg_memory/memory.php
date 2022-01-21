@@ -172,9 +172,8 @@ class plgJoomlaquizMemory extends plgJoomlaquizQuestion
 				
 				$data['score'] = $c_score;
 
-				$dispatcher	= JDispatcher::getInstance();
 				JPluginHelper::importPlugin('system');
-				$dispatcher->trigger('onJQuizAnswerSubmitted', array (&$data));
+                JFactory::getApplication()->triggerEvent('onJQuizAnswerSubmitted', array (&$data));
 				
 				@header ('Expires: Fri, 14 Mar 1980 20:53:00 GMT');
 				@header ('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');

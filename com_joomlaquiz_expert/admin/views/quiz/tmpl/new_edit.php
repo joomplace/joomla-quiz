@@ -855,7 +855,7 @@ window.onload = function (){
 	
 	Joomla.submitbutton = function(task)
 	{
-		if (task == 'quiz.cancel' || document.formvalidator.isValid(document.id('quiz-form'))) {
+		if (task == 'quiz.cancel' || document.formvalidator.isValid(document.getElementById('quiz-form'))) {
 			<?php echo $this->form->getField('c_description')->save(); ?>
 			<?php echo $this->form->getField('c_short_description')->save(); ?>
 			<?php echo $this->form->getField('c_right_message')->save(); ?>

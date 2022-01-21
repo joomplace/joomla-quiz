@@ -45,7 +45,7 @@ $model = $this->getModel('question');
 			}
 		}
 		
-		if (task == 'question.cancel' || document.formvalidator.isValid(document.id('question-form'))) {	
+		if (task == 'question.cancel' || document.formvalidator.isValid(document.getElementById('question-form'))) {
 			Joomla.submitform(task, document.getElementById('question-form'));
 		}
 		else {

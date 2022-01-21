@@ -205,8 +205,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 				}
 
 				JPluginHelper::importPlugin('content');
-				$dispatcher = JEventDispatcher::getInstance();
-				list($cust_params) = $dispatcher->trigger('onQuizCustomFieldsRetrieve');
+				list($cust_params) = JFactory::getApplication()->triggerEvent('onQuizCustomFieldsRetrieve');
 				if(!$cust_params) $cust_params = '{}';
 
                 /*
@@ -1664,9 +1663,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 						$params['spent_time'] = $tot_time;
 						$params['comment'] = JText::sprintf('COM_QUIZ_AUP_USER_COMMENT', $quiz->c_title );
 
-						$dispatcher	= JDispatcher::getInstance();
-						JPluginHelper::importPlugin('system');
-						$dispatcher->trigger('onJQuizFinished', array (&$params));
+                        JPluginHelper::importPlugin('system');
+                        JFactory::getApplication()->triggerEvent('onJQuizFinished', array (&$params));
 					}
 					
 				}
@@ -3193,9 +3191,8 @@ class JoomlaquizModelAjaxaction extends JModelList
 		
 		$appsLib->triggerEvent( 'onSaveQuestion' , $data);
 
-		$dispatcher	= JDispatcher::getInstance();
-		JPluginHelper::importPlugin('system');
-		$dispatcher->trigger('onJQuizAnswerSubmitted', array (&$data));
+        JPluginHelper::importPlugin('system');
+        JFactory::getApplication()->triggerEvent('onJQuizAnswerSubmitted', array (&$data));
 		
 		$is_avail = $data['is_avail'];
 		$is_correct = $data['is_correct'];

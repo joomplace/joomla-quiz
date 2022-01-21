@@ -664,6 +664,22 @@ class com_joomlaquizInstallerScript
 			$db->setQuery($query)->execute();
         }
 
+		//added compatibility with Joomla 4 (tested on MariaDB 10.4)
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_auto_breaks` `c_auto_breaks` tinyint(5) NOT NULL DEFAULT '0';");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `asset_id` `asset_id` int(18) NOT NULL DEFAULT '0';");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_emails` `c_emails` text COLLATE utf8_unicode_ci DEFAULT NULL;");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_metadescr` `c_metadescr` text COLLATE utf8_unicode_ci DEFAULT NULL;");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_keywords` `c_keywords` text COLLATE utf8_unicode_ci DEFAULT NULL;");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `c_metatitle` `c_metatitle` text COLLATE utf8_unicode_ci DEFAULT NULL;");
+		$db->execute();
+		$db->setQuery("ALTER TABLE `#__quiz_t_quiz` CHANGE `paid_check_descr` `paid_check_descr` text COLLATE utf8_unicode_ci DEFAULT NULL;");
+		$db->execute();
+
         $this->migrateCategories();
 		$this->defaultCategoryCheck();
 	}

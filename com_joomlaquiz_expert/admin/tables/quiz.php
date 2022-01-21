@@ -90,8 +90,11 @@ class JoomlaquizTableQuiz extends JTable
             $this->c_category_id = (int)$jform['c_category_id'];
             $this->c_skin = $jform['c_skin'];
             $this->c_certificate = $jform['c_certificate'];
-            $this->head_cat = $jform['head_cat'];
+            $this->c_passing_score = !empty($jform['c_passing_score']) ? $jform['c_passing_score'] : 0;
+            $this->head_cat = !empty($jform['head_cat']) ? $jform['head_cat'] : '';
+
 			$res = parent::store($updateNulls);
+
 			// -- add pool ----//
 
 			$query = "DELETE FROM #__quiz_pool WHERE q_id=".$this->c_id;

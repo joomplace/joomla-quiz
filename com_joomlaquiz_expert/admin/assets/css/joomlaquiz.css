@@ -273,7 +273,9 @@ a.navbar-brand::before {
     content: '' !important;
 }
 .jqd-survey.j4 {
+    font-size: 12px;
     height: auto;
+    width: 470px;
 }
 .jqd-survey.j4 a {
     color: #3071a9 !important;

@@ -2423,7 +2423,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					$feedback_count++;
 					$ret_str .= "\t" . '<feedback>' . "\n";
 
-				if (!$quiz->c_show_qfeedback && !$is_no_attempts && ($quiz->c_feedback && $question[0]->c_feedback )&& $qtype != 9 && !$question[0]->c_immediate) {
+				if (/*!$quiz->c_show_qfeedback &&*/ !$is_no_attempts && ($quiz->c_feedback && $question[0]->c_feedback )&& $qtype != 9 && !$question[0]->c_immediate) {
 					$msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', (($is_correct)?(($qtype == 8)?$jq_language['COM_QUIZ_ANSWER_ACCEPTED']:$jq_language['COM_QUIZ_ANSWER_CORRECT']): ($got_one_correct? $jq_language['COM_QUIZ_PARTIALLY_CORRECT']:$jq_language['COM_QUIZ_ANSWER_INCORRECT'])));
 					if($qtype == 1)
 					{
@@ -3626,7 +3626,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		
 		JoomlaquizHelper::JQ_load_template($cur_template);
 
-        if (!$quiz->c_show_qfeedback && !$is_no_attempts && ($quiz->c_feedback && $question[0]->c_feedback )&& $qtype != 9 && !$question[0]->c_immediate) {
+        if (/*!$quiz->c_show_qfeedback &&*/ !$is_no_attempts && ($quiz->c_feedback && $question[0]->c_feedback )&& $qtype != 9 && !$question[0]->c_immediate) {
             $msg_html = JoomlaQuiz_template_class::JQ_show_messagebox('', (($is_correct)?(($qtype == 8)?$jq_language['COM_QUIZ_ANSWER_ACCEPTED']:$jq_language['COM_QUIZ_ANSWER_CORRECT']): ($got_one_correct? $jq_language['COM_QUIZ_PARTIALLY_CORRECT']:$jq_language['COM_QUIZ_ANSWER_INCORRECT'])));
             if($qtype == 1)
             {

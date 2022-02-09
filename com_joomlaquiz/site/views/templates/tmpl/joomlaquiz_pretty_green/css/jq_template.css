@@ -790,6 +790,9 @@ td.jq_match_image_element{
 	text-align:left;
 	padding-bottom: 10px;
 }
+.jq_mdropdown td.left_text {
+	padding-right: 5px;
+}
 .chzn-container .chzn-results .highlighted {
 	background: #80ac48;	
 }

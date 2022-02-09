@@ -369,7 +369,7 @@ class JoomlaquizHelper
 					$c_texts[] = $tmp2[$t]->c_text;
 				}
 			
-				$replacement = JoomlaQuiz_template_class::JQ_createBlank_fdb($c_texts, (isset($tmp[$i]['c_answer'])? $tmp[$i]['c_answer']: ''), 'red', $tmp[$i]['is_correct']);
+				$replacement = JoomlaQuiz_template_class::JQ_createBlank_fdb($c_texts, $tmp[$i]['is_correct'], (isset($tmp[$i]['c_answer'])? $tmp[$i]['c_answer']: ''), 'red');
 				
 				if(function_exists('str_ireplace')){
 					$q_text = str_ireplace("{Blank".($blnk[$i]->ordering + 1)."}", $replacement, $q_text);
@@ -511,7 +511,7 @@ class JoomlaquizHelper
 			return $new_text;
 		}
 		
-		public static function isQuizAttepmts($quiz_id, $lid=0, $rel_id=0, $order_id=0, &$msg) {
+		public static function isQuizAttepmts($quiz_id, &$msg, $lid=0, $rel_id=0, $order_id=0) {
 		
 			$my = JFactory::getUser();
 			$database = JFactory::getDBO();

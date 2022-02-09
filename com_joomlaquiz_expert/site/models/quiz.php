@@ -290,7 +290,7 @@ class JoomlaquizModelQuiz extends JModelList
 
 			/* Check attempts */
 			$wait_time = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $wait_time);
+			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $wait_time, 0, $rel_id, $package_id);
 
 			/* if no attempts */
 			if (!$is_attempts) {
@@ -326,10 +326,10 @@ class JoomlaquizModelQuiz extends JModelList
 			$quiz_params->lid_data = $db->loadObject();
 			
 			$tmp = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp);
+			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $tmp, $lid, 0, 0);
 			
 			$wait_time = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);
+			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $wait_time, 0, 0, 0);
 			if (!$is_attempts) {
 				if ($wait_time){
                     $wait_time_str = $this->waitTimeToString($wait_time);
@@ -368,7 +368,7 @@ class JoomlaquizModelQuiz extends JModelList
 			$doing_quiz = 1;
 			
 			$wait_time = '';
-			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);
+			$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $wait_time, 0, 0, 0);
 			if (!$is_attempts) {
 				if ($wait_time){
 					$wait_time_str = $this->waitTimeToString($wait_time);

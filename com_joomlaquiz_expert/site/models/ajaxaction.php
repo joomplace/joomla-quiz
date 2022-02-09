@@ -164,7 +164,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 		if ($quiz_id) {
 			
 			$msg = '';
-			if (!JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, $rel_id, $package_id, $msg))
+			if (!JoomlaquizHelper::isQuizAttepmts($quiz_id, $msg, $lid, $rel_id, $package_id))
 				return '';
 			
 			$user_unique_id = md5(uniqid(rand(), true));
@@ -1467,7 +1467,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 							->where($db->qn('c_passed').' = '.$db->q('1'))
 							->where($db->qn('c_quiz_id').' = '.$db->q($quiz->c_id))
 							->where($db->qn('c_student_id').' = '.$db->q($my->id));
-						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, $rel_id, $package_id, $tmp) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
+						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, $tmp, 0, $rel_id, $package_id) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 							$is_attempts = true;
 							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='".JRoute::_("index.php?option=com_joomlaquiz&view=quiz&package_id={$package_id}&rel_id={$rel_id}&quiz_id={$quiz_id}&force=1".JoomlaquizHelper::JQ_GetItemId())."'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 						}
@@ -1497,11 +1497,11 @@ class JoomlaquizModelAjaxaction extends JModelList
 							->where($db->qn('c_passed').' = '.$db->q('1'))
 							->where($db->qn('c_quiz_id').' = '.$db->q($quiz->c_id))
 							->where($db->qn('c_student_id').' = '.$db->q($my->id));
-						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, $lid, 0, 0, $tmp) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
+						if (JoomlaquizHelper::isQuizAttepmts($quiz_id, $tmp, $lid, 0, 0) && (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 							$is_attempts = true;
 							$footer_ar[5] = "<div class='jq_footer_link jq_try_again'><a href='". JRoute::_("index.php?option=com_joomlaquiz&view=quiz&lid={$lid}&quiz_id={$quiz_id}&force=1" . JoomlaquizHelper::JQ_GetItemId()) . "'>".JText::_('COM_QUIZ_TRY_AGAIN')."</a></div>";
 						}
-					} elseif (JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $tmp)
+					} elseif (JoomlaquizHelper::isQuizAttepmts($quiz_id, $tmp, 0, 0, 0)
 						&& (!$quiz->one_time || !$db->setQuery($query)->loadResult())){
 						$is_attempts = true;
                         $jinput = JFactory::getApplication()->input;
@@ -1561,7 +1561,7 @@ class JoomlaquizModelAjaxaction extends JModelList
 					}
 					
 					$wait_time = '';
-					$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, 0, 0, 0, $wait_time);
+					$is_attempts = JoomlaquizHelper::isQuizAttepmts($quiz_id, $wait_time, 0, 0, 0);
 
 					$c_statistic = '';	
 					if ((!$result_mode || $result_mode == 3) && $quiz->c_statistic) {

@@ -440,7 +440,7 @@ EOF_MSG;
 		return $jq_tmpl_html;
 	}
 
-	public static function JQ_createBlank_fdb(&$correct_answers, $user_answer = '', $color = 'red', $is_correct) { //html template for final feedback 'Blank' questions
+	public static function JQ_createBlank_fdb(&$correct_answers, $is_correct, $user_answer = '', $color = 'red') { //html template for final feedback 'Blank' questions
 		$tag = JFactory::getLanguage()->getTag();
 		$lang = JFactory::getLanguage();
 		$lang->load('com_joomlaquiz', JPATH_SITE, $tag, true);

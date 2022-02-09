@@ -671,3 +671,6 @@ iframe, svg {
 .jq_blank_wrap{
 	width: 100%;
 }
+input.jq_blank {
+	display: inline-block !important;
+}

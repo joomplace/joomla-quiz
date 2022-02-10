@@ -636,8 +636,14 @@ class plgJoomlaquizImgmatch extends plgJoomlaquizQuestion
 				die();
 			}
 
-			if ((strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".gif")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpg")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpeg")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".png")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".bmp")) ) {
-				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_ACCEPTED_FILES')."'); </script>\n";
+			if ((strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".gif"))
+                && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpg"))
+                    && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpeg"))
+                        && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".png"))
+                            && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".bmp"))
+                                && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-5),".jpeg"))
+            ) {
+				echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_ACCEPTED_FILES')."'); parent.document.location.href=\"".$location_href."\";</script>\n";
 				die();
 			}
 

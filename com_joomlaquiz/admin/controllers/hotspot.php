@@ -43,7 +43,12 @@ class JoomlaquizControllerHotspot extends JControllerForm
 				$message = JText::_('COM_JOOMLAQUIZ_IMAGE').$userfile_name.JText::_('COM_JOOMLAQUIZ_ALREADY_EXISTS');
 			}
 		
-			if ((strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".gif")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpg")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".png")) && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".bmp")) ) {
+			if ((strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".gif"))
+                && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".jpg"))
+                    && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".png"))
+                        && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-4),".bmp"))
+                            && (strcasecmp(JoomlaquizHelper::jq_substr($userfile_name,-5),".jpeg"))
+            ) {
 				$message = JText::_('COM_JOOMLAQUIZ_ACCEPTED_FILES');
 			}
 			

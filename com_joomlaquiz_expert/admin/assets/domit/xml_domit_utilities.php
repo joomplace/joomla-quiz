@@ -38,7 +38,7 @@ class DOMIT_Utilities {
 	* @param boolean True if illegal xml characters in text nodes and attributes should be converted to entities
 	* @return string The formatted string representation 
 	*/
-	function toNormalizedString (&$node, $subEntities=false, $definedEntities) {
+	function toNormalizedString (&$node, $definedEntities, $subEntities=false) {
 		$node_level = 0;
 		$response = '';
 		
@@ -48,14 +48,14 @@ class DOMIT_Utilities {
 
 			for ($i = 0; $i < $total; $i++) {
 				$response .= DOMIT_Utilities::getNormalizedString($node->childNodes[$i], 
-											$node_level, $subEntities, $definedEntities);
+											$node_level, $definedEntities, $subEntities);
 			}
 			
 			return $response;
 		}
 		else {
 			return ($response . DOMIT_Utilities::getNormalizedString($node, 
-								$node_level, $subEntities, $definedEntities));
+								$node_level, $definedEntities, $subEntities));
 		}
 	} //toNormalizedString		
 	
@@ -80,7 +80,7 @@ class DOMIT_Utilities {
 	* @param array User defined translation table for entities
 	* @return string The normalized string representation 
 	*/
-	function getNormalizedString(&$node, $node_level, $subEntities=false, $definedEntities) {
+	function getNormalizedString(&$node, $node_level, $definedEntities, $subEntities=false) {
 		$response = '';
 
 		switch ($node->nodeType)  {
@@ -115,8 +115,7 @@ class DOMIT_Utilities {
 				$total = $node->childCount;
 				
 				for ($i = 0; $i < $total; $i++) {
-					$response .= DOMIT_Utilities::getNormalizedString($node->childNodes[$i], $node_level,
-															$subEntities, $definedEntities);
+					$response .= DOMIT_Utilities::getNormalizedString($node->childNodes[$i], $node_level, $definedEntities, $subEntities);
 				}
 				
 				break;
@@ -220,8 +219,7 @@ class DOMIT_Utilities {
 
 			for ($i = 0; $i < $total; $i++) {
 				$child =& $myNodes[$i];
-				$response .= DOMIT_Utilities::getNormalizedString($child, $node_level,
-												$subEntities, $definedEntities);
+				$response .= DOMIT_Utilities::getNormalizedString($child, $node_level, $definedEntities, $subEntities);
 			}
 	
 			$response .= '</' . $node->nodeName . '>';
@@ -279,7 +277,7 @@ class DOMIT_Utilities {
 		$index = -1;
 		
 		for ($i = ($total - 1); $i >= 0; $i--) {
-			if ($fileName{$i} == '.') {
+			if ($fileName[$i] == '.') {
 				$index = $i;
 			}
 		}

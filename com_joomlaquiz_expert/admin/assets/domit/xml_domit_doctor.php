@@ -50,7 +50,7 @@ class domit_doctor {
 	* @param int The character index immediately following the ampersand in question
 	* @return string The repaired xml text
 	*/
-	function evaluateCharacter($xmlText, $illegalChar, $startIndex) {
+    static public function evaluateCharacter($xmlText, $illegalChar, $startIndex) {
 		$total = strlen($xmlText);
 		$searchingForCDATASection = false; 
 		

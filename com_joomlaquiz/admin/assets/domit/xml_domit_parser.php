@@ -377,7 +377,7 @@ class DOMIT_Node {
 		require_once(DOMIT_INCLUDE_PATH . 'xml_domit_utilities.php');
 		global $DOMIT_defined_entities_flip;
 		
-		$result = DOMIT_Utilities::toNormalizedString($this, $subEntities, $DOMIT_defined_entities_flip);
+		$result = DOMIT_Utilities::toNormalizedString($this, $DOMIT_defined_entities_flip, $subEntities);
 		
 		if ($htmlSafe) $result = $this->forHTML($result);
 			

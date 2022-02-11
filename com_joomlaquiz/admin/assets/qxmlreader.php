@@ -11,8 +11,7 @@ class QuizXMLReader
 	var $tag;
 	var $canRun = false;
 
-	function QuizXMLReader(  ){
-
+    function __construct() {
 		$this->canRun = class_exists('XMLReader');
 		$this->reader = new XMLReader();
 	}

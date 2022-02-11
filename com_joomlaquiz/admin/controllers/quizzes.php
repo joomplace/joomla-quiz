@@ -11,17 +11,18 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.filesystem.file');
 jimport('joomla.filesystem.folder');
 jimport('joomla.application.component.controlleradmin');
- 
+
+use \Joomla\CMS\Factory;
+use \Joomla\CMS\Language\Text;
+use \Joomla\CMS\Filesystem\Folder;
+use \Joomla\CMS\Filesystem\File;
+use \Joomla\Archive\Zip;
+
 /**
  * Quizzes Controller
  */
 class JoomlaquizControllerQuizzes extends JControllerAdmin
 {
-	
-	/**
-    * Proxy for getModel.
-    * @since       1.6
-    */
     public function getModel($name = 'Quizzes', $prefix = 'JoomlaquizModel', $config = array('ignore_request' => true))
     {
         $model = parent::getModel($name, $prefix, $config);
@@ -791,65 +792,55 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		return $category;
 	}
 
-    public function import_quizzes(){
-        $database = JFactory::getDBO();
+    public function import_quizzes()
+    {
+        $this->checkToken();
+        $app  = Factory::getApplication();
+        $database = Factory::getDBO();
 
         $quiz_images = array();
-        require_once(JPATH_BASE."/components/com_joomlaquiz/assets/pcl/pclzip.lib.php");
-        if(!extension_loaded('zlib')) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_ZLIB_LIBRARY'), 'error');
+
+        $backupfile = $app->input->files->get('importme', array(), 'raw');
+        $package_name = File::stripExt($backupfile['name']);
+        $package_TempPath = Factory::getConfig()->get('tmp_path', JPATH_ROOT.'/tmp');
+
+        $zip = new Zip(array('tmp_path' => $package_TempPath));
+
+        if(!$zip->isSupported()) {
+            Factory::getApplication()->enqueueMessage(Text::_('COM_JOOMLAQUIZ_ZLIB_LIBRARY'), 'error');
             return false;
         }
-
-        $backupfile = JFactory::getApplication()->input->files->get('importme', array(), 'array');
-
         if (empty($backupfile['name'])) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SELECT_FILE'), 'error');
+            Factory::getApplication()->enqueueMessage(Text::_('COM_JOOMLAQUIZ_SELECT_FILE'), 'error');
+            return false;
+        }
+        if(!$zip->checkZipData(file_get_contents($backupfile['tmp_name']))) {
+            Factory::getApplication()->enqueueMessage(Text::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
             return false;
         }
 
-
-        if (strcmp($this->jq_substr($backupfile['name'],-4,1),".")) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
-            return false;
-        }
-
-        if (!file_exists($backupfile['tmp_name'])) {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_SIZE_ERROR'), 'error');
-            return false;
-        }
-
-        if (preg_match("/.zip$/", strtolower($backupfile['name']))) {
-
-            $zipFile = new pclZip($backupfile['tmp_name']);
-            $zipContentArray = $zipFile->listContent();
-            $exp_xml_file = false;
-            foreach($zipContentArray as $thisContent) {
-                if ( preg_match('~.(php.*|phtml)$~i', $thisContent['filename']) ) {
-                    JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_READ_PACKAGE_ERROR'), 'error');
+        if (File::move($backupfile['tmp_name'], $package_TempPath.'/'.$package_name.'.zip')) {
+            $extract_dir = $package_TempPath.'/course_backup_'.uniqid(rand(), true).'/';
+            @Folder::create($extract_dir, 0755);
+            $package = $zip->extract($package_TempPath . '/' . $package_name . '.zip', $extract_dir);
+            if ($package) {
+                if(!File::delete($package_TempPath.'/'.$package_name.'.zip')){
+                    @chmod($package_TempPath.'/'.$package_name.'.zip', 0777);
+                    @unlink( $package_TempPath.'/'.$package_name.'.zip');
+                }
+                if(!File::exists($extract_dir.'export.xml')) {
+                    Factory::getApplication()->enqueueMessage(Text::_('COM_JOOMLAQUIZ_NOT_FIND_COURSE'), 'error');
                     return false;
                 }
-                if ($thisContent['filename'] == 'export.xml') {
-                    $exp_xml_file = true;
-                }
-            }
-            if ($exp_xml_file == false){
-                JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_NOT_FIND_COURSE'), 'error');
+            } else {
+                Factory::getApplication()->enqueueMessage(Text::_('COM_JOOMLAQUIZ_QUIZZEZ_IMPORT_FAILED_TO_EXTRACT'), 'error');
                 return false;
             }
         } else {
-            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMLAQUIZ_BAD_FILEEXT'), 'error');
+            Factory::getApplication()->enqueueMessage(Text::_('COM_JOOMLAQUIZ_QUIZZEZ_IMPORT_FAILED_TO_MOVE'), 'error');
             return false;
         }
-        $msg = '';
 
-        //copy upload file to /tmp
-        $this->uploadFile( $backupfile['tmp_name'], $backupfile['name'], $msg );
-        $tmp_dir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
-        $extract_dir = $tmp_dir."course_backup_".uniqid(rand(), true)."/";
-        $archive = $tmp_dir.$backupfile['name'];
-        //exstract archive in uniqfolder tmp
-        $this->extractBackupArchive( $archive, $extract_dir);
 
         // BEGIN IMPORT
         require_once(JPATH_BASE . '/components/com_joomlaquiz/assets/qxmlimport.php' );
@@ -1026,25 +1017,31 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         $asset       = JTable::getInstance('Asset');
                         $rule        = "core.view";
                         $user        = JFactory::getUser(0);
-                        $guest_group = array_pop($user->getAuthorisedGroups());
+                        $authorisedGroups = $user->getAuthorisedGroups();
+                        $guest_group = array_pop($authorisedGroups);
                         $asset_name = 'com_joomlaquiz.quiz.' . $free_id;
 
                         $asset->name = $asset_name;
                         $asset->title = $qcat->quiz_title;
-                        $rules = json_decode($asset->rules);
-                        if (isset($rules->$rule) && !is_array($rules->$rule)) {
-                            if (!$rules->$rule->$guest_group) {
+
+                        if (empty($asset->rules)) {
+                            $rules = new stdClass();
+                        } else {
+                            $rules = json_decode($asset->rules);
+                        }
+
+                        if (!empty($rules->$rule) && !is_array($rules->$rule)) {
+                            if (empty($rules->$rule->$guest_group)) {
                                 $rules->$rule->$guest_group = $qcat->quiz_guest;
                             }
                         } else {
-                            $rules->$rule               = new stdClass();
+                            $rules->$rule = new stdClass();
                             $rules->$rule->$guest_group = $qcat->quiz_guest;
                         }
                         $asset->rules = json_encode($rules);
                         $asset->store();
                         if (!$user->authorise('core.view', $asset_name)
-                            && $user->authorise('core.view', $asset_name)
-                            != $qcat->quiz_guest
+                            && $user->authorise('core.view', $asset_name) != $qcat->quiz_guest
                         ) {
                             JFactory::getApplication()
                                 ->enqueueMessage('There might be something wrong with guest access for quiz #'
@@ -1237,20 +1234,28 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $asset       = JTable::getInstance('Asset');
                     $rule        = "core.view";
                     $user        = JFactory::getUser(0);
-                    $guest_group = array_pop($user->getAuthorisedGroups());
+                    $authorisedGroups = $user->getAuthorisedGroups();
+                    $guest_group = array_pop($authorisedGroups);
                     $asset_name = 'com_joomlaquiz.quiz.' . $free_id;
 
                     $asset->name = $asset_name;
                     $asset->title = $qcat->quiz_title;
-                    $rules = json_decode($asset->rules);
-                    if (isset($rules->$rule) && !is_array($rules->$rule)) {
-                        if (!$rules->$rule->$guest_group) {
+
+                    if (empty($asset->rules)) {
+                        $rules = new stdClass();
+                    } else {
+                        $rules = json_decode($asset->rules);
+                    }
+
+                    if (!empty($rules->$rule) && !is_array($rules->$rule)) {
+                        if (empty($rules->$rule->$guest_group)) {
                             $rules->$rule->$guest_group = $qcat->quiz_guest;
                         }
                     } else {
-                        $rules->$rule               = new stdClass();
+                        $rules->$rule = new stdClass();
                         $rules->$rule->$guest_group = $qcat->quiz_guest;
                     }
+
                     $asset->rules = json_encode($rules);
                     $asset->store();
                     if (!$user->authorise('core.view', $asset_name)
@@ -1564,13 +1569,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             }
         }
 
-        // delete temporary files
-        //$this->deldir_my($extract_dir);
-        $this->delzip($tmp_dir);
-
         $msg2 = '';
         $count_import_total = 0;
-        for($i=0; $i<count($quizis_titles);$i++) {
+        for ($i=0; $i<count($quizis_titles);$i++) {
             $query = "SELECT COUNT(*) FROM #__quiz_t_quiz WHERE c_title=".$db->quote($quizis_titles[$i])."";
             $database->setQuery($query);
             $count_import = (int)$database->loadResult();
@@ -1583,47 +1584,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         $this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg1.$msg2.JText::_('COM_JOOMLAQUIZ_AFTER_IMPORT_TRANSFER_MEDIA') );
     }
-	
-	function delzip($basedir){
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
-		
-		if(!JFile::delete($basedir . 'exportquiz.zip')){
-			@chmod($basedir . 'exportquiz.zip', 0777);
-			@unlink( $basedir . 'exportquiz.zip' );
-		}
-		
-		return true;
-	}
-	
-	function deldir_my( $dir ) {
-		
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
-		
-		$current_dir = opendir( $dir );
-		$old_umask = umask(0);
-		while ($entryname = readdir( $current_dir )) {
-			if ($entryname != '.' and $entryname != '..') {
-				if (is_dir( $dir . $entryname )) {
-					$this->deldir_my( $dir . $entryname );
-				} else {
-					if(!JFile::delete($dir . $entryname)){
-						@chmod($dir . $entryname, 0777);
-						unlink( $dir . $entryname );
-					}
-				}
-			}
-		}
-		umask($old_umask);
-		closedir( $current_dir );
-		if(!JFolder::delete($dir)){
-			return rmdir( $dir );
-		}
-		
-		return true;
-	} 
-	
+
 	function jq_substr($str, $start, $length=null) {
 		if (function_exists('mb_substr')) {
 			if ($length!==null)

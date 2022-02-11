@@ -153,7 +153,7 @@ class DOMIT_DOMException {
 	* @param int The error number
 	* @param string A string explanation of the error
 	*/
-	function raiseException($errorNum, $errorString) {
+    static public function raiseException($errorNum, $errorString) {
 		if ($GLOBALS['DOMIT_DOMException_errorHandler'] != null) {
 			call_user_func($GLOBALS['DOMIT_DOMException_errorHandler'], $errorNum, $errorString);
 		}

@@ -61,7 +61,7 @@ function save_content() {
 </script>
 
 <form>
-    <?php JoomlaquizControllerQuestion::JQ_editorArea( $editor_name, '', 'cdescription', '100%;', '250', '75', '20' ) ; ?>
+    <?php JoomlaquizControllerQuestion::JQ_editorArea('', 'cdescription', '100%;', '250', '75', '20', $editor_name) ; ?>
 </form>
 
 <style type="text/css" >

@@ -8,14 +8,16 @@
 */
 defined('_JEXEC') or die('Restricted access');
 
+use \Joomla\CMS\MVC\Controller\AdminController;
 use \Joomla\CMS\Factory;
 use \Joomla\CMS\Language\Text;
 use \Joomla\CMS\Filesystem\Folder;
 use \Joomla\CMS\Filesystem\File;
 use \Joomla\Archive\Zip;
 use \Joomla\CMS\Filesystem\Path;
+use \Joomla\CMS\Table\Table;
 
-class JoomlaquizControllerQuizzes extends JControllerAdmin
+class JoomlaquizControllerQuizzes extends AdminController
 {
     public function getModel($name = 'Quizzes', $prefix = 'JoomlaquizModel', $config = array('ignore_request' => true))
     {
@@ -29,22 +31,23 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 	
 	public function move_quiz_sel(){
 		$cid = $this->input->get('cid', array(), 'array');
-		if (!is_array( $cid ) || empty( $cid )) {
+		if (!is_array($cid) || empty($cid)) {
 			echo "<script> alert('".Text::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 			exit;
 		}
 
-        $session = JFactory::getSession();
+        $session = Factory::getSession();
         $session->set('com_joomlaquiz.move.quizzes.cids', $cid);
 
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes&layout=move_quizzes');
 	}
 	
-	public function move_quizzes(){
-		$database = JFactory::getDBO();
-        $session = JFactory::getSession();
+	public function move_quizzes()
+    {
+		$database = Factory::getDBO();
+        $session = Factory::getSession();
         $cid = $session->get('com_joomlaquiz.move.quizzes.cids');
-		$categoryMove = intval(JFactory::getApplication()->input->get('categorymove'));
+		$categoryMove = intval(Factory::getApplication()->input->get('categorymove'));
 		$cids = implode( ',', $cid );
 		$total = count( $cid );
 		
@@ -72,7 +75,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		$database->setQuery( $query );
 		$categoryNew = $database->loadObject();
 		
-		$msg = JText::_('COM_JOOMLAQUIZ_QUIZZES_MOVED_TO'). $categoryNew->c_category.".";
+		$msg = Text::_('COM_JOOMLAQUIZ_QUIZZES_MOVED_TO'). $categoryNew->c_category.".";
 		$cats_names="";
 		$msg2 = '';
 		for($i=0;$i<count($items);$i++)
@@ -88,28 +91,29 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
 			if($database->loadResult() > 1)
 			{
-				$msg2 = JText::_('COM_JOOMLAQUIZ_NOTE_CATEGORY');
+				$msg2 = Text::_('COM_JOOMLAQUIZ_NOTE_CATEGORY');
 			}
 		}
 		if($cats_names)
 		{
-			$msg .= " ".$cats_names.JText::_('COM_JOOMLAQUIZ_MOVED_FROM').$items[0]->category_name.JText::_('COM_JOOMLAQUIZ_TO').$items[0]->category_name.". ";
+			$msg .= " ".$cats_names.Text::_('COM_JOOMLAQUIZ_MOVED_FROM').$items[0]->category_name.Text::_('COM_JOOMLAQUIZ_TO').$items[0]->category_name.". ";
 		}
 
-        $session = JFactory::getSession();
+        $session = Factory::getSession();
         $session->clear('com_joomlaquiz.move.quizzes.cids');
 
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg.$msg2);
 	}
 	
-	public function copy_quiz_sel(){
+	public function copy_quiz_sel()
+    {
 		$cid = $this->input->get('cid', array(), 'array');
 		if (!is_array( $cid ) || empty( $cid )) {
-			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
+			echo "<script> alert('".Text::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 			exit;
 		}
 
-        $session = JFactory::getSession();
+        $session = Factory::getSession();
         $session->set('com_joomlaquiz.copy.quizzes.cids', $cid);
 
 		$this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes&layout=copy_quizzes');
@@ -132,7 +136,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
     {
         $this->checkToken();
 
-        $database = JFactory::getDBO();
+        $database = Factory::getDBO();
 
         $cid = $this->input->get('cid', array(), 'array');
         if($all_quizzes) {
@@ -268,6 +272,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t<cert_name><![CDATA[".$qcert->cert_name."]]></cert_name>";
                     $quiz_xml .= "\n\t\t\t\t<cert_file><![CDATA[".$qcert->cert_file."]]></cert_file>";
                     $quiz_xml .= "\n\t\t\t\t<cert_offset><![CDATA[".$qcert->cert_offset."]]></cert_offset>";
+                    $quiz_xml .= "\n\t\t\t\t<text_font><![CDATA[".$qcert->text_font."]]></text_font>";
                     $quiz_xml .= "\n\t\t\t\t</quiz_certificate>";
                     if($qcert->cert_file) {
                         if(!in_array($qcert->cert_file, $all_images)) {
@@ -404,9 +409,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $database->setQuery($query);
                 $pool_options = $database->loadObjectList();
 
-                $asset       = JTable::getInstance('Asset');
+                $asset       = Table::getInstance('Asset');
                 $rule        = "core.view";
-                $user        = JFactory::getUser(0);
+                $user        = Factory::getUser(0);
                 $authorisedGroups = $user->getAuthorisedGroups();
                 $guest_group = array_pop($authorisedGroups);
 
@@ -456,21 +461,25 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $quiz_xml .= "\n\t\t\t\t<quiz_metatitle><![CDATA[".$quiz->c_metatitle."]]></quiz_metatitle>";
 
                 $quiz_xml .= "\n\t\t\t\t<quiz_feed_options>";
-                foreach ($feed_options as $feed_option) {
-                    $quiz_xml .= "\n\t\t\t\t\t<quiz_feed_option>";
-                    $quiz_xml .= "\n\t\t\t\t\t\t<quiz_from_percent><![CDATA[".$feed_option->from_percent."]]></quiz_from_percent>";
-                    $quiz_xml .= "\n\t\t\t\t\t\t<quiz_to_percent><![CDATA[".$feed_option->to_percent."]]></quiz_to_percent>";
-                    $quiz_xml .= "\n\t\t\t\t\t\t<quiz_fmessage><![CDATA[".$feed_option->fmessage."]]></quiz_fmessage>";
-                    $quiz_xml .= "\n\t\t\t\t\t</quiz_feed_option>";
+                if(!empty($feed_options)) {
+                    foreach ($feed_options as $feed_option) {
+                        $quiz_xml .= "\n\t\t\t\t\t<quiz_feed_option>";
+                        $quiz_xml .= "\n\t\t\t\t\t\t<quiz_from_percent><![CDATA[" . $feed_option->from_percent . "]]></quiz_from_percent>";
+                        $quiz_xml .= "\n\t\t\t\t\t\t<quiz_to_percent><![CDATA[" . $feed_option->to_percent . "]]></quiz_to_percent>";
+                        $quiz_xml .= "\n\t\t\t\t\t\t<quiz_fmessage><![CDATA[" . $feed_option->fmessage . "]]></quiz_fmessage>";
+                        $quiz_xml .= "\n\t\t\t\t\t</quiz_feed_option>";
+                    }
                 }
                 $quiz_xml .= "\n\t\t\t\t</quiz_feed_options>";
 
                 $quiz_xml .= "\n\t\t\t\t<quiz_pool_options>";
-                foreach ($pool_options as $pool_option) {
-                    $quiz_xml .= "\n\t\t\t\t\t<quiz_pool_option>";
-                    $quiz_xml .= "\n\t\t\t\t\t\t<quiz_q_cat><![CDATA[".$pool_option->q_cat."]]></quiz_q_cat>";
-                    $quiz_xml .= "\n\t\t\t\t\t\t<quiz_q_count><![CDATA[".$pool_option->q_count."]]></quiz_q_count>";
-                    $quiz_xml .= "\n\t\t\t\t\t</quiz_pool_option>";
+                if(!empty($pool_options)) {
+                    foreach ($pool_options as $pool_option) {
+                        $quiz_xml .= "\n\t\t\t\t\t<quiz_pool_option>";
+                        $quiz_xml .= "\n\t\t\t\t\t\t<quiz_q_cat><![CDATA[" . $pool_option->q_cat . "]]></quiz_q_cat>";
+                        $quiz_xml .= "\n\t\t\t\t\t\t<quiz_q_count><![CDATA[" . $pool_option->q_count . "]]></quiz_q_count>";
+                        $quiz_xml .= "\n\t\t\t\t\t</quiz_pool_option>";
+                    }
                 }
                 $quiz_xml .= "\n\t\t\t\t</quiz_pool_options>";
 
@@ -714,14 +723,16 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
         die();
     }
 
-	function createCategory($extension, $title, $desc, $parent_id=1, $note='', $published=1, $access = 1, $params = '{"target":"","image":""}', $metadata = '{"page_title":"","author":"","robots":""}', $language = '*'){	
-		if (version_compare(JVERSION, '3.0', 'lt'))
-		{
-		   JTable::addIncludePath(JPATH_PLATFORM . 'joomla/database/table');
+	function createCategory($extension, $title, $desc, $parent_id=1, $note='', $published=1, $access = 1, $params = '{"target":"","image":""}', $metadata = '{"page_title":"","author":"","robots":""}', $language = '*')
+    {
+		if (version_compare(JVERSION, '3.0', 'lt')) {
+		   Table::addIncludePath(JPATH_PLATFORM . 'joomla/database/table');
 		}
 
+        $app  = Factory::getApplication();
+
 		// Initialize a new category
-		$category = JTable::getInstance('Category');
+		$category = Table::getInstance('Category');
 		$category->extension = $extension;
 		$category->title = $title;
 		$category->description = $desc;
@@ -733,27 +744,26 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		$category->language = $language;
 
 		$category->setLocation($parent_id, 'last-child');
-		if (!$category->check())
-		{
-            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
-		   return false;
+
+		if (!$category->check()) {
+            $app->enqueueMessage($category->getError(), 'error');
+		    return false;
 		}
-		if (!$category->store(true))
-		{
-            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
-		   return false;
+
+		if (!$category->store(true)) {
+            $app->enqueueMessage($category->getError(), 'error');
+		    return false;
 		}
 
         // Rebuild the path for the category:
-        if (!$category->rebuildPath($category->id))
-        {
-            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
+        if (!$category->rebuildPath($category->id)) {
+            $app->enqueueMessage($category->getError(), 'error');
             return false;
         }
+
         // Rebuild the paths of the category's children:
-        if (!$category->rebuild())
-        {
-            JFactory::getApplication()->enqueueMessage($category->getError(), 'error');
+        if (!$category->rebuild()) {
+            $app->enqueueMessage($category->getError(), 'error');
             return false;
         }
 		
@@ -816,7 +826,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
         $quiz_cat = $xmlReader->quiz_categories();
 
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $categories_relations_quiz = array();
         if (!empty($quiz_cat)) {
             foreach ($quiz_cat as &$qcat) {
@@ -878,7 +888,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
                 $query = "SELECT * FROM #__quiz_certificates WHERE id=".$qcat->id;
                 $database->setQuery($query);
-                $dubl_row = $database->LoadObjectList();
+                $dubl_row = $database->loadObjectList();
 
                 if (!empty($dubl_row)) {
                     if($dubl_row[0]->cert_name != $qcat->cert_name || $dubl_row[0]->cert_file != $qcat->cert_file) {
@@ -916,24 +926,34 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 } else {
                     $qcat = array_shift($quizzes);
                 }
+
+                //quick warnings fixes
+                //ToDo: add default value to table field ?
+                if(empty($qcat->quiz_access_message)) {
+                    $qcat->quiz_access_message = '';
+                }
+                if(empty($qcat->quiz_certificate_access_message)) {
+                    $qcat->quiz_certificate_access_message = '';
+                }
+
                 $quizis_titles[] = $qcat->quiz_title;
                 $query = "SELECT * FROM #__quiz_t_quiz WHERE c_id=".$qcat->id;
                 $database->setQuery($query);
-                $dubl_row = $database->LoadObjectList();
+                $dubl_row = $database->loadObjectList();
 
                 $query = "SELECT MAX(c_id) FROM #__quiz_t_quiz";
                 $database->setQuery($query);
                 $free_id =  $database->loadResult()+1;
 
-
                 if (!empty($dubl_row)) {
                     if($dubl_row[0]->c_title != $qcat->quiz_title || $dubl_row[0]->c_created_time != $qcat->quiz_createtime) {
-                        foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
-                            $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
-                            $database->setQuery($query);
-                            $database->execute();
+                        if(!empty($qcat->quiz_feed_options)) {
+                            foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
+                                $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
+                                $database->setQuery($query);
+                                $database->execute();
+                            }
                         }
-
                         $query = "INSERT INTO #__quiz_t_quiz(
 								c_id, c_category_id, c_number_times,
 								c_show_author, c_autostart, c_timer_style,
@@ -982,9 +1002,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
                             exit();
                         }
-                        $asset       = JTable::getInstance('Asset');
+                        $asset       = Table::getInstance('Asset');
                         $rule        = "core.view";
-                        $user        = JFactory::getUser(0);
+                        $user        = Factory::getUser(0);
                         $authorisedGroups = $user->getAuthorisedGroups();
                         $guest_group = array_pop($authorisedGroups);
                         $asset_name = 'com_joomlaquiz.quiz.' . $free_id;
@@ -1011,7 +1031,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         if (!$user->authorise('core.view', $asset_name)
                             && $user->authorise('core.view', $asset_name) != $qcat->quiz_guest
                         ) {
-                            JFactory::getApplication()
+                            Factory::getApplication()
                                 ->enqueueMessage('There might be something wrong with guest access for quiz #'
                                     . $free_id . ' ' . $qcat->quiz_title
                                     . '. Please check quiz settings. (Previously "guest access" was '
@@ -1144,12 +1164,13 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     }
 
                 } else {
-                    foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
-                        $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
-                        $database->setQuery($query);
-                        $database->execute();
+                    if(!empty($qcat->quiz_feed_options)) {
+                        foreach ($qcat->quiz_feed_options as $quiz_feed_option) {
+                            $query = "INSERT INTO #__quiz_feed_option(quiz_id, from_percent, to_percent, fmessage) VALUES (" . $db->quote($free_id) . "," . $db->quote($quiz_feed_option->quiz_from_percent) . "," . $db->quote($quiz_feed_option->quiz_to_percent) . "," . $db->quote($quiz_feed_option->quiz_fmessage) . ")";
+                            $database->setQuery($query);
+                            $database->execute();
+                        }
                     }
-
                     $query = "INSERT INTO #__quiz_t_quiz(
 								c_id, c_category_id, c_number_times,
 								c_show_author, c_autostart, c_timer_style,
@@ -1199,9 +1220,9 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         exit();
                     }
 
-                    $asset       = JTable::getInstance('Asset');
+                    $asset       = Table::getInstance('Asset');
                     $rule        = "core.view";
-                    $user        = JFactory::getUser(0);
+                    $user        = Factory::getUser(0);
                     $authorisedGroups = $user->getAuthorisedGroups();
                     $guest_group = array_pop($authorisedGroups);
                     $asset_name = 'com_joomlaquiz.quiz.' . $free_id;
@@ -1230,7 +1251,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         && $user->authorise('core.view', $asset_name)
                         != $qcat->quiz_guest
                     ) {
-                        JFactory::getApplication()
+                        Factory::getApplication()
                             ->enqueueMessage('There might be something wrong with guest access for quiz #'
                                 . $free_id . ' ' . $qcat->quiz_title
                                 . '. Please check quiz settings. (Previously "guest access" was '
@@ -1379,17 +1400,19 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         }
                     }
                 }
-                foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
-                    $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count) VALUES (" . $db->quote($free_id)
-                        . "," . $db->quote($categories_relations_questions[$quiz_pool_option->quiz_q_cat]) . "," . $db->quote($quiz_pool_option->quiz_q_count) .")";
-                    $database->setQuery($query);
-                    $database->execute();
+                if(!empty($qcat->quiz_pool_options)) {
+                    foreach ($qcat->quiz_pool_options as $quiz_pool_option) {
+                        $query = "INSERT INTO #__quiz_pool(q_id, q_cat, q_count) VALUES (" . $db->quote($free_id)
+                            . "," . $db->quote($categories_relations_questions[$quiz_pool_option->quiz_q_cat]) . "," . $db->quote($quiz_pool_option->quiz_q_count) . ")";
+                        $database->setQuery($query);
+                        $database->execute();
+                    }
                 }
             }
         }
 
 
-        $jform = JFactory::getApplication()->input->get('jform', array(), 'ARRAY');
+        $jform = Factory::getApplication()->input->get('jform', array(), 'ARRAY');
         if (!empty($jform['imp_pool'])) {
             $quizzes_poolk = $xmlReader->quizess_pool();
 
@@ -1545,25 +1568,28 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $count_import = (int)$database->loadResult();
             $count_import_total += $count_import;
             if($count_import > 1) {
-                $msg2 .= " ".$count_import.JText::_('COM_JOOMLAQUIZ_QUIZES_QUIZZES').$quizis_titles[$i].JText::_('COM_JOOMLAQUIZ_AFTER_IMPORT');
+                $msg2 .= " ".$count_import.Text::_('COM_JOOMLAQUIZ_QUIZES_QUIZZES').$quizis_titles[$i].Text::_('COM_JOOMLAQUIZ_AFTER_IMPORT');
             }
         }
-        $msg1 = $count_import_total > 1 ? JText::_('COM_JOOMLAQUIZ_QUIZES_SUCCESSFULY_IMPORT') : JText::_('COM_JOOMLAQUIZ_QUIZ_SUCCESSFULY_IMPORT');
+        $msg1 = $count_import_total > 1 ? Text::_('COM_JOOMLAQUIZ_QUIZES_SUCCESSFULY_IMPORT') : Text::_('COM_JOOMLAQUIZ_QUIZ_SUCCESSFULY_IMPORT');
 
-        $this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg1.$msg2.JText::_('COM_JOOMLAQUIZ_AFTER_IMPORT_TRANSFER_MEDIA') );
+        $this->setRedirect('index.php?option=com_joomlaquiz&view=quizzes', $msg1.$msg2.Text::_('COM_JOOMLAQUIZ_AFTER_IMPORT_TRANSFER_MEDIA') );
     }
 
-	function jq_substr($str, $start, $length=null) {
+	function jq_substr($str, $start, $length=null)
+    {
 		if (function_exists('mb_substr')) {
-			if ($length!==null)
-				return mb_substr($str, $start, $length);
-			else
-				return mb_substr($str, $start);
+			if ($length!==null) {
+                return mb_substr($str, $start, $length);
+            } else {
+                return mb_substr($str, $start);
+            }
 		} else {
-			if ($length!==null)
-				return substr($str, $start, $length);
-			else
-				return substr($str, $start);
+			if ($length!==null) {
+                return substr($str, $start, $length);
+            } else {
+                return substr($str, $start);
+            }
 		}
 	}
 }

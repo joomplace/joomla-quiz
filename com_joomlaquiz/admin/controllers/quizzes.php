@@ -8,19 +8,13 @@
 */
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.filesystem.file');
-jimport('joomla.filesystem.folder');
-jimport('joomla.application.component.controlleradmin');
-
 use \Joomla\CMS\Factory;
 use \Joomla\CMS\Language\Text;
 use \Joomla\CMS\Filesystem\Folder;
 use \Joomla\CMS\Filesystem\File;
 use \Joomla\Archive\Zip;
+use \Joomla\CMS\Filesystem\Path;
 
-/**
- * Quizzes Controller
- */
 class JoomlaquizControllerQuizzes extends JControllerAdmin
 {
     public function getModel($name = 'Quizzes', $prefix = 'JoomlaquizModel', $config = array('ignore_request' => true))
@@ -36,7 +30,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 	public function move_quiz_sel(){
 		$cid = $this->input->get('cid', array(), 'array');
 		if (!is_array( $cid ) || empty( $cid )) {
-			echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
+			echo "<script> alert('".Text::_('COM_JOOMLAQUIZ_SELECT_AN_ITEM_TO_MOVE')."'); window.history.go(-1);</script>\n";
 			exit;
 		}
 
@@ -134,22 +128,18 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 		return true;
 	}
 
-    public function export_quizzes($all_quizzes = false){
+    public function export_quizzes($all_quizzes = false)
+    {
+        $this->checkToken();
 
-        $cid = $this->input->get('cid', array(), 'array');
-        if($all_quizzes) $cid = -1;
         $database = JFactory::getDBO();
 
-        if (!empty($cid)) {
-            require_once(JPATH_BASE."/components/com_joomlaquiz/assets/pcl/pclzip.lib.php");
+        $cid = $this->input->get('cid', array(), 'array');
+        if($all_quizzes) {
+            $cid = -1;
+        }
 
-            ////////////////////////////////////////////////////////////////////////////////
-            //create XML file
-            $xml_encoding = 'utf-8';
-            if (defined('_ISO')) {
-                $iso = explode( '=', _ISO );
-                $xml_encoding = $iso[1];
-            }
+        if (!empty($cid)) {
 
             $q_cids = '';
             if($cid != -1) {
@@ -158,15 +148,16 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
 
             if($cid != -1) {
                 $query = "SELECT * FROM #__quiz_t_quiz WHERE c_id IN (".$q_cids.")";
-            }
-            else {
+            } else {
                 $query = "SELECT * FROM #__quiz_t_quiz WHERE c_id!=0";
             }
-            $database->SetQuery($query);
-            $quiz_data = $database->LoadObjectList();
+            $database->setQuery($query);
+            $quiz_data = $database->loadObjectList();
+
             $query = "SELECT * FROM #__quiz_t_question WHERE c_quiz_id = 0 ";
-            $database->SetQuery($query);
-            $pool_data = $database->LoadObjectList();
+            $database->setQuery($query);
+            $pool_data = $database->loadObjectList();
+
             $quest_choice = '';
             $quest_match = '';
             $quest_blank = '';
@@ -174,13 +165,14 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quest_hotspot = '';
             $quizesname = '';
             $all_images = array();
+
             $quiz_xml = "";
-            $quiz_xml .= "<?xml version=\"1.0\" encoding=\"".$xml_encoding."\" ?>\r\n";
+            $quiz_xml .= "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\r\n";
             $quiz_xml .= "\t<course_backup lms_version=\"1.0.0\">\r\n";
             $quiz_xml .= "\n\t\t<name><![CDATA[HJKHJK]]></name>\r\n";
             $quiz_xml .= "\n\t\t<description><![CDATA[JoomlaQuizDelux]]></description>\r\n";
-            ///-- categories ----///
 
+            ///-- categories ----///
             $query = $database->getQuery(true);
             $query->select('c.*')
                 ->from($database->qn('#__categories', 'c'))
@@ -216,13 +208,13 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quizcat = $quiz_cat[$i];
                     $quiz_xml .= "\n\t\t\t<quiz_category c_id=\"".$quizcat->id."\">";
                     $quiz_xml .= "\n\t\t\t<c_category><![CDATA[".$quizcat->title."]]></c_category>";
-                    $quiz_xml .= "\n\t\t\t<c_instruction><![CDATA[".$quizcat->desc."]]></c_instruction>";
+                    $quiz_xml .= "\n\t\t\t<c_instruction><![CDATA[".$quizcat->description."]]></c_instruction>";
                     $quiz_xml .= "\n\t\t\t</quiz_category>";
                 }
             } else {
                 $query = "SELECT * FROM #__quiz_t_category";
-                $database->SetQuery($query);
-                $quiz_cat = $database->LoadObjectList();
+                $database->setQuery($query);
+                $quiz_cat = $database->loadObjectList();
                 for ($i=0, $n=count($quiz_cat); $i < $n; $i++) {
                     $quizcat = $quiz_cat[$i];
                     $quiz_xml .= "\n\t\t\t<quiz_category c_id=\"".$quizcat->c_id."\">";
@@ -238,13 +230,13 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quizcat = $quest_cat[$i];
                     $quiz_xml .= "\n\t\t\t<quest_category c_id=\"".$quizcat->id."\">";
                     $quiz_xml .= "\n\t\t\t<c_category><![CDATA[".$quizcat->title."]]></c_category>";
-                    $quiz_xml .= "\n\t\t\t<c_instruction><![CDATA[".$quizcat->desc."]]></c_instruction>";
+                    $quiz_xml .= "\n\t\t\t<c_instruction><![CDATA[".$quizcat->description."]]></c_instruction>";
                     $quiz_xml .= "\n\t\t\t</quest_category>";
                 }
             } else {
                 $query = "SELECT * FROM #__quiz_q_cat";
-                $database->SetQuery($query);
-                $quest_cat = $database->LoadObjectList();
+                $database->setQuery($query);
+                $quest_cat = $database->loadObjectList();
                 for ($i=0, $n=count($quest_cat); $i < $n; $i++) {
                     $quizcat = $quest_cat[$i];
                     $quiz_xml .= "\n\t\t\t<quest_category c_id=\"".$quizcat->qc_id."\">";
@@ -268,7 +260,7 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_certificate = $database->loadObjectList();
 
             $quiz_xml .= "\n\t\t\t<quiz_certificates>";
-            if(!empty($quiz_certificate))
+            if(!empty($quiz_certificate)) {
                 for ($i=0, $n=count($quiz_certificate); $i < $n; $i++) {
                     $qcert = $quiz_certificate[$i];
                     $quiz_xml .= "\n\t\t\t\t<quiz_certificate id=\"".$qcert->id."\" crtf_align=\"".$qcert->crtf_align."\" crtf_shadow=\"".$qcert->crtf_shadow."\"  text_x=\"".$qcert->text_x."\" text_y=\"".$qcert->text_y."\" text_size=\"".$qcert->text_size."\">";
@@ -277,20 +269,22 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t<cert_file><![CDATA[".$qcert->cert_file."]]></cert_file>";
                     $quiz_xml .= "\n\t\t\t\t<cert_offset><![CDATA[".$qcert->cert_offset."]]></cert_offset>";
                     $quiz_xml .= "\n\t\t\t\t</quiz_certificate>";
-                    if($qcert->cert_file)
-                    {
-                        if(!in_array($qcert->cert_file,$all_images))
+                    if($qcert->cert_file) {
+                        if(!in_array($qcert->cert_file, $all_images)) {
                             $all_images[] = $qcert->cert_file;
+                        }
                     }
                 }
+            }
             $quiz_xml .= "\n\t\t\t</quiz_certificates>";
+
             ///--quizess -----///
             $quiz_xml .= "\n\t\t<quizess_pool>";
             $quiz_xml .= "\n\t\t\t<quizess_poolos>";
             ///-- pools --- ///
             $quiz_xml .= "\n\t\t\t<quizzes_question_pool>";
-            if(!empty($pool_data))
-            {
+
+            if(!empty($pool_data)) {
                 for ($i=0, $n=count($pool_data); $i < $n; $i++) {
                     $pool = $pool_data[$i];
                     $quiz_xml .= "\n\t\t\t\t\t<quiz_question id=\"".$pool->c_id."\" c_point=\"".$pool->c_point."\" c_attempts=\"".$pool->c_attempts."\" c_type=\"".$pool->c_type."\" c_ques_cat=\"".$pool->c_ques_cat."\" cq_id=\"".$pool->cq_id."\" ordering=\"".$pool->ordering."\" c_random=\"".$pool->c_random."\" c_feedback=\"".$pool->c_feedback."\" c_qform=\"" . $pool->c_qform . "\">";
@@ -300,20 +294,19 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_wmess><![CDATA[".$pool->c_wrong_message."]]></question_wmess>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_dfmess><![CDATA[".$pool->c_detailed_feedback."]]></question_dfmess>";
                     $quiz_xml .= "\n\t\t\t\t\t</quiz_question>";
-                    if($pool->c_image)
-                    {
-                        if(!in_array($pool->c_image,$all_images))
+                    if($pool->c_image) {
+                        if(!in_array($pool->c_image,$all_images)) {
                             $all_images[] = $pool->c_image;
+                        }
                     }
-                    switch($pool->c_type)
-                    {
+                    switch($pool->c_type) {
                         case 1:
                         case 2:
                         case 3:
                         case 10:
                             $query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = ".$pool->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_choice .= "\n\t\t\t\t\t<quest_choice c_question_id=\"".$pool->c_id."\" c_right=\"".$choice->c_right."\" ordering=\"".$choice->ordering."\">";
@@ -326,8 +319,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         case 4:
                         case 5:
                             $query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = ".$pool->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_match .= "\n\t\t\t\t\t<quest_match c_question_id=\"".$pool->c_id."\" ordering=\"".$choice->ordering."\">";
@@ -339,8 +332,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             break;
                         case 6:
                             $query = "SELECT t.ordering as ordering, t.c_text as c_text, t.c_blank_id AS c_blank_id, b.points, b.css_class FROM #__quiz_t_blank as b, #__quiz_t_text as t WHERE b.c_id=t.c_blank_id AND b.c_question_id = ".$pool->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_blank .= "\n\t\t\t\t\t<quest_blank c_question_id=\"".$pool->c_id."\" c_blank_id=\"".$choice->c_blank_id."\" points=\"".$choice->points."\" css_class=\"".$choice->css_class."\" ordering=\"".$choice->ordering."\">";
@@ -348,8 +341,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 $quest_blank .= "\n\t\t\t\t\t</quest_blank>";
                             }
                             $query = "SELECT c_text, c_id FROM #__quiz_t_faketext WHERE c_quest_id = ".$pool->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_distr_blank .= "\n\t\t\t\t\t<quest_distr_blank c_question_id=\"".$pool->c_id."\" c_distr_id=\"".$choice->c_id."\">";
@@ -359,8 +352,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             break;
                         case 7:
                             $query = "SELECT * FROM #__quiz_t_hotspot as h WHERE h.c_question_id = ".$pool->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_hotspot .= "\n\t\t\t\t\t<quest_hotspot c_question_id=\"".$pool->c_id."\">";
@@ -402,7 +395,6 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_xml .= "\n\t\t<quizess>";
             for ($i=0, $n=count($quiz_data); $i < $n; $i++) {
 
-
                 $quiz = $quiz_data[$i];
                 $query = "SELECT * FROM #__quiz_feed_option WHERE quiz_id = '" . $quiz->c_id . "'";
                 $database->setQuery($query);
@@ -415,13 +407,23 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $asset       = JTable::getInstance('Asset');
                 $rule        = "core.view";
                 $user        = JFactory::getUser(0);
-                $guest_group = array_pop($user->getAuthorisedGroups());
+                $authorisedGroups = $user->getAuthorisedGroups();
+                $guest_group = array_pop($authorisedGroups);
+
                 $asset_name = 'com_joomlaquiz.quiz.' . $quiz->c_id;
-
-
                 $asset->loadByName($asset_name);
-                $rules = json_decode($asset->rules);
-                $is_quiz_quest = $rules->$rule->$guest_group;
+
+                if (empty($asset->rules)) {
+                    $rules = new stdClass();
+                } else {
+                    $rules = json_decode($asset->rules);
+                }
+
+                $is_quiz_quest = null;
+                if(!empty($rules->$rule) && !empty($rules->$rule->$guest_group)) {
+                    $is_quiz_quest = $rules->$rule->$guest_group;
+                }
+
                 $quizesname .= $quiz->c_title.',';
                 $quiz_xml .= "\n\t\t\t<quiz id=\"".$quiz->c_id."\" published=\"".$quiz->published."\">";
                 $quiz_xml .= "\n\t\t\t\t<quiz_category>".$quiz->c_category_id."</quiz_category>";
@@ -510,12 +512,12 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 $quiz_xml .= "\n\t\t\t\t<quiz_head_cat>".$quiz->head_cat."</quiz_head_cat>";
 
                 $query = "SELECT * FROM #__quiz_t_question WHERE c_quiz_id = ".$quiz->c_id;
-                $database->SetQuery($query);
-                $quest_data = $database->LoadObjectList();
+                $database->setQuery($query);
+                $quest_data = $database->loadObjectList();
 
                 $query = "SELECT `c_question_id` FROM #__quiz_t_pbreaks";
-                $database->SetQuery($query);
-                $pbreaks_data = $database->LoadObjectList();
+                $database->setQuery($query);
+                $pbreaks_data = $database->loadObjectList();
 
                 $pbreaks = array();
 
@@ -527,33 +529,34 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                 for ($j=0, $nj=count($quest_data); $j < $nj; $j++) {
                     $quest = $quest_data[$j];
                     $quiz_xml .= "\n\t\t\t\t\t<quiz_question id=\"".$quest->c_id."\" c_point=\"".$quest->c_point."\" c_attempts=\"".$quest->c_attempts."\" c_type=\"".$quest->c_type."\" c_ques_cat=\"".$quest->c_ques_cat."\" cq_id=\"".$quest->cq_id."\" ordering=\"".$quest->ordering."\" c_random=\"".$quest->c_random."\" c_feedback=\"".$quest->c_feedback."\" c_qform=\"" . $quest->c_qform . "\">";
-                    //$quiz_xml .= "\n\t\t\t\t\t\t<c_qform><![CDATA[" . $quest->c_qform . "]]></c_qform>";;
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_text><![CDATA[".$quest->c_question."]]></question_text>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_image><![CDATA[".$quest->c_image."]]></question_image>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_rmess><![CDATA[".$quest->c_right_message."]]></question_rmess>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_wmess><![CDATA[".$quest->c_wrong_message."]]></question_wmess>";
                     $quiz_xml .= "\n\t\t\t\t\t\t<question_dfmess><![CDATA[".$quest->c_detailed_feedback."]]></question_dfmess>";
 
-                    if (array_search($quest->c_id, $pbreaks) === false) $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[0]]></question_pbeaks>";
-                    else $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[1]]></question_pbeaks>";
-
-
-                    $quiz_xml .= "\n\t\t\t\t\t</quiz_question>";
-                    if($quest->c_image)
-                    {
-                        if(!in_array($quest->c_image,$all_images))
-                            $all_images[] = $quest->c_image;
+                    if (array_search($quest->c_id, $pbreaks) === false) {
+                        $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[0]]></question_pbeaks>";
+                    } else {
+                        $quiz_xml .= "\n\t\t\t\t\t\t<question_pbeaks><![CDATA[1]]></question_pbeaks>";
                     }
 
-                    switch($quest->c_type)
-                    {
+                    $quiz_xml .= "\n\t\t\t\t\t</quiz_question>";
+
+                    if($quest->c_image) {
+                        if(!in_array($quest->c_image,$all_images)) {
+                            $all_images[] = $quest->c_image;
+                        }
+                    }
+
+                    switch($quest->c_type) {
                         case 1:
                         case 2:
                         case 3:
                         case 10:
                             $query = "SELECT * FROM #__quiz_t_choice WHERE c_question_id = ".$quest->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_choice .= "\n\t\t\t\t\t<quest_choice c_question_id=\"".$quest->c_id."\" c_right=\"".$choice->c_right."\" ordering=\"".$choice->ordering."\">";
@@ -566,8 +569,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                         case 4:
                         case 5:
                             $query = "SELECT * FROM #__quiz_t_matching WHERE c_question_id = ".$quest->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_match .= "\n\t\t\t\t\t<quest_match c_question_id=\"".$quest->c_id."\" ordering=\"".$choice->ordering."\">";
@@ -579,8 +582,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             break;
                         case 6:
                             $query = "SELECT t.ordering as ordering,t.c_text as c_text, t.c_blank_id AS c_blank_id, b.points, b.css_class FROM #__quiz_t_blank as b, #__quiz_t_text as t WHERE b.c_id=t.c_blank_id AND b.c_question_id = ".$quest->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_blank .= "\n\t\t\t\t\t<quest_blank c_question_id=\"".$quest->c_id."\" c_blank_id=\"".$choice->c_blank_id."\"  points=\"".$choice->points."\" css_class=\"".$choice->css_class."\" ordering=\"".$choice->ordering."\">";
@@ -588,8 +591,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                                 $quest_blank .= "\n\t\t\t\t\t</quest_blank>";
                             }
                             $query = "SELECT c_text, c_id FROM #__quiz_t_faketext WHERE c_quest_id = ".$quest->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             $quest_distr_blank = '';
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
@@ -600,8 +603,8 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
                             break;
                         case 7:
                             $query = "SELECT * FROM #__quiz_t_hotspot as h WHERE h.c_question_id = ".$quest->c_id;
-                            $database->SetQuery($query);
-                            $choice_data = $database->LoadObjectList();
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
                             for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
                                 $choice = $choice_data[$k];
                                 $quest_hotspot .= "\n\t\t\t\t\t<quest_hotspot c_question_id=\"".$quest->c_id."\">";
@@ -635,41 +638,58 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             $quiz_xml .= "\n\t\t</quizess>";
             $quiz_xml .= "\n\t\t</course_backup>";
 
-            if (JFolder::exists(JPATH_SITE.'/tmp') !== false) {
-                $filename_xml = JPATH_SITE.'/tmp/export.xml';
-            } else {
-                $tmp_dir = JFactory::getConfig()->get('tmp_path');
-                $filename_xml = $tmp_dir.'/export.xml';
+            $tmp_dir = (Folder::exists(JPATH_SITE.'/tmp')) ? JPATH_SITE."/tmp/" : Factory::getConfig()->get('tmp_path').'/';
+            $uniq = strtotime(Factory::getDate());
+            $export_zip_file = $tmp_dir.'course_export_'.$uniq.'.zip';
+
+            $export_zip_folder = $tmp_dir.'course_export_'.$uniq;
+            if(Folder::exists($export_zip_folder)) {
+                Folder::delete($export_zip_folder);
             }
+            Folder::create($export_zip_folder);
 
+            $filename_xml = $export_zip_folder.'/export.xml';
             $handle = fopen($filename_xml, 'w+');
-
-            // try to write in XML file our xml-contents.
-            if (fwrite($handle, $quiz_xml) === FALSE) {
-                echo JText::_('COM_JOOMLAQUIZ_COULD_NOT_CREATE');
+            if (fwrite($handle, $quiz_xml) === false) {
+                echo Text::_('COM_JOOMLAQUIZ_COULD_NOT_CREATE');
                 exit;
             }
             fclose($handle);
 
-            $uniq = strtotime(JFactory::getDate());
-            $dir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
-            $backup_zip = $dir.'course_export_'.$uniq.'.zip';
-            $pz = new PclZip($backup_zip);
-            //----insert into database-----//
+            if(!empty($all_images)) {
+                if(Folder::exists($export_zip_folder.'/quiz_images')) {
+                    Folder::delete($export_zip_folder.'/quiz_images');
+                }
+                Folder::create($export_zip_folder.'/quiz_images');
+                foreach ($all_images as $quiz_image) {
+                    $filename = JPATH_SITE . '/images/joomlaquiz/images/'.$quiz_image;
+                    File::copy($filename, $export_zip_folder.'/quiz_images/'.$quiz_image);
+                }
+            }
+
+            $packing_files = Folder::files($export_zip_folder, '', true, true);
+            $packing_data = array();
+            foreach($packing_files as $packing_file) {
+                $tmp = array();
+                $tmp['name'] = str_replace(Path::clean($export_zip_folder).'/', '', $packing_file);
+                $tmp['data'] = file_get_contents($packing_file);
+                $tmp['time'] = filemtime($packing_file);
+                $packing_data[] = $tmp;
+            }
+
+            $zip = new Zip(array('tmp_path' => $tmp_dir));
+            $zip->create($export_zip_file, $packing_data);
+
+            if(Folder::exists($export_zip_folder)) {
+                Folder::delete($export_zip_folder);
+            }
+
             $curdata = date("Y-m-d");
             $query = "INSERT INTO #__quiz_export(eid,e_filename,e_date,e_quizes) values('','course_export_".$uniq.".zip','".$curdata."','".$database->escaped($this->jq_substr($quizesname,0,strlen($quizesname)-1))."')";
             $database->setQuery($query);
             $database->execute();
-            //add _lms_course_files_ catalog
-            $pz->create($filename_xml, PCLZIP_OPT_REMOVE_PATH, $filename_xml = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/');
-
-            if(!empty($all_images))
-                foreach($all_images as $quiz_image){
-                    $filename = JPATH_SITE . '/images/joomlaquiz/images/'.$quiz_image;
-                    $pz->add($filename,PCLZIP_OPT_REMOVE_PATH, JPATH_SITE . '/images/joomlaquiz/images/',PCLZIP_OPT_ADD_PATH, 'quiz_images');
-                }
-
         }
+
         if (preg_match('~Opera(/| )([0-9].[0-9]{1,2})~', $_SERVER['HTTP_USER_AGENT'])) {
             $UserBrowser = "Opera";
         }
@@ -690,62 +710,10 @@ class JoomlaquizControllerQuizzes extends JControllerAdmin
             header('Content-Disposition: attachment; filename="exportquiz.zip"');
             header('Pragma: no-cache');
         }
-        readfile($backup_zip);
+        readfile($export_zip_file);
         die();
     }
-	
-	function extractBackupArchive($archivename , $extractdir) {
-        //ToDo delete this path
-		$base_Dir = JPATH_SITE . '/tmp/';
-		
-		if (preg_match( '/.zip$/i', $archivename )) {
-			// Extract functions
-			if (file_exists(JPATH_BASE.'/components/com_joomlaquiz/assets/pcl/pclzip.lib.php')) {
-				require_once(JPATH_BASE.'/components/com_joomlaquiz/assets/pcl/pclzip.lib.php' );
-				require_once(JPATH_BASE.'/components/com_joomlaquiz/assets/pcl/pclerror.lib.php' );
-			} 
-			$backupfile = new PclZip( $archivename );
-			$ret = $backupfile->extract( PCLZIP_OPT_PATH, $extractdir );	
-		}
-		return true;
-	}
-	
-	function uploadFile( $filename, $userfile_name, &$msg ) {
-		
-		jimport('joomla.filesystem.file');
-		jimport('joomla.filesystem.folder');
-		
-		$baseDir = (JFolder::exists(JPATH_SITE.'/tmp') !== false)?JPATH_SITE."/tmp/":JFactory::getConfig()->get('tmp_path').'/';
-		if (file_exists( $baseDir )) {
-			if (is_writable( $baseDir )) {
-				if (JFile::move( $filename, $baseDir . $userfile_name )) {
-					jimport('joomla.filesystem.path');
-					if (JPath::setPermissions( $baseDir . $userfile_name )) {
-						return true;
-					} else {
-						$msg = JText::_('COM_JOOMLAQUIZ_FAILED_TO_CHANGE');
-					}
-				} else {
-					if(move_uploaded_file($filename, $baseDir . $userfile_name)){
-						jimport('joomla.filesystem.path');
-						if (JPath::setPermissions( $baseDir . $userfile_name )) {
-							return true;
-						} else {
-							$msg = JText::_('COM_JOOMLAQUIZ_FAILED_TO_CHANGE');
-						}
-					} else {
-						$msg = JText::_('COM_JOOMLAQUIZ_FAILED_TO_MOVE');
-					}
-				}
-			} else {
-				$msg = JText::_('COM_JOOMLAQUIZ_DIRECTORY_IS_NOT_WRITE');
-			}
-		} else {
-			$msg = JText::_('COM_JOOMLAQUIZ_DIRECTIRY_IS_NOT_EXISTS');
-		}
-		return false;
-	}
-	
+
 	function createCategory($extension, $title, $desc, $parent_id=1, $note='', $published=1, $access = 1, $params = '{"target":"","image":""}', $metadata = '{"page_title":"","author":"","robots":""}', $language = '*'){	
 		if (version_compare(JVERSION, '3.0', 'lt'))
 		{

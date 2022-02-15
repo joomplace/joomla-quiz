@@ -3331,38 +3331,52 @@ class JoomlaquizModelAjaxaction extends JModelList
 			$appsLib->triggerEvent( 'onFeedbackQuestion' , $data );
 			$qoption = $data['qoption'];
 									
-			if($c_show_qfeedback){
-				if($q_data->c_feedback)
-				{
-                    if($q_data->c_type == 1){       //Multiple Choice
-                        $database->SetQuery("SELECT * FROM `#__quiz_t_choice` WHERE `c_question_id` = '".(int)$q_data->c_id."'");
-                        $q_choices = $database->LoadObjectList();
+			if($c_show_qfeedback) {
+				if($q_data->c_feedback) {
+                    if (!empty($q_data->c_right_message)) {
+                        $right_message = $q_data->c_right_message;
+                    } elseif (!empty($quiz->c_right_message)) {
+                        $right_message = $quiz->c_right_message;
+                    } else {
+                        $right_message = JText::_('COM_QUIZ_CORRECT');
+                    }
 
-                        $database->SetQuery("SELECT * FROM `#__quiz_r_student_choice` WHERE `c_sq_id` = '".$data_qrsq->c_id."' ");
+                    if (!empty($q_data->c_detailed_feedback)) {
+                        $wrong_message = $q_data->c_detailed_feedback;
+                    } elseif (!empty($q_data->c_wrong_message)) {
+                        $wrong_message = $q_data->c_wrong_message;
+                    } elseif (!empty($quiz->c_wrong_message)) {
+                        $wrong_message = $quiz->c_wrong_message;
+                    } else {
+                        $wrong_message = JText::_('COM_QUIZ_INCORRECT');
+                    }
+
+                    $partially_message = !empty($q_data->c_partially_message) ? $q_data->c_partially_message : '';
+
+                    if($q_data->c_type == 1){       //Multiple Choice
+                        $database->setQuery("SELECT * FROM `#__quiz_t_choice` WHERE `c_question_id` = '".(int)$q_data->c_id."'");
+                        $q_choices = $database->loadObjectList();
+
+                        $database->setQuery("SELECT * FROM `#__quiz_r_student_choice` WHERE `c_sq_id` = '".$data_qrsq->c_id."' ");
                         $qrsc = $database->loadObject();
 
                         $feedback_message = '';
-
-                        if($q_choices && is_array($q_choices)) {
+                        if(!empty($q_choices) && is_array($q_choices)) {
                             foreach ($q_choices as $choice) {
                                 if((int)$is_correct){
                                     if ((int)$choice->c_right == (int)$is_correct) {
-                                        if(!empty($q_data->c_right_message)) {
-                                            $feedback_message .= $q_data->c_right_message;
-                                        }
+                                        $feedback_message .= $right_message;
                                         if(!empty($choice->c_incorrect_feed)) {
                                             $feedback_message .= $choice->c_incorrect_feed;
                                         }
                                         break;
                                     }
                                 } else {
-                                    if(!empty($q_data->c_detailed_feedback)) {
-                                        $feedback_message .= $q_data->c_detailed_feedback;
-                                    } elseif (!empty($q_data->c_wrong_message)) {
-                                        $feedback_message .= $q_data->c_wrong_message;
-                                    }
-                                    if($qrsc->c_choice_id == $choice->c_id && !empty($choice->c_incorrect_feed)){
-                                        $feedback_message .= $choice->c_incorrect_feed;
+                                    if($qrsc->c_choice_id == $choice->c_id ) {
+                                        $feedback_message .= $wrong_message;
+                                        if(!empty($choice->c_incorrect_feed)) {
+                                            $feedback_message .= $choice->c_incorrect_feed;
+                                        }
                                         break;
                                     }
                                 }
@@ -3371,41 +3385,14 @@ class JoomlaquizModelAjaxaction extends JModelList
                         $qoption .= "\t" . '<div class="jq_question_feedback"><strong>'.JText::_('COM_QUIZ_FEEDBACK_QUESTION').':</strong><br/><br/>'.$feedback_message.'</div>' . "\n";
                     }
                     else {
-                        if (!empty($q_data->c_right_message)) {
-                            $c_right_message = $q_data->c_right_message;
-                        } elseif (!empty($quiz->c_right_message)) {
-                            $c_right_message = $quiz->c_right_message;
-                        } else {
-                            $c_right_message = JText::_('COM_QUIZ_CORRECT');
+                        if($is_correct){
+                            $qoption .= "\t" . '<div class="jq_question_feedback"><b>' . JText::_('COM_QUIZ_FEEDBACK_QUESTION') . ':</b><br/><br/>' . $right_message . '</div>' . "\n";
                         }
-
-                        $feedback_title = JText::_('COM_QUIZ_FEEDBACK_QUESTION');
-
-                        if (!empty($score) && ($score > 0) && ($score < $max_points) && !empty($q_data->c_partially_message)) {
-                            $c_right_message = $q_data->c_partially_message;
-                            $feedback_title = JText::_('COM_QUIZ_PARTIALLY_CORRECT');
-                        }
-
-                        if(!empty($q_data->c_detailed_feedback)) {
-                            $c_wrong_message = $q_data->c_detailed_feedback;
-                        } elseif (!empty($q_data->c_wrong_message)) {
-                            $c_wrong_message = $q_data->c_wrong_message;
-                        } elseif (!empty($quiz->c_wrong_message)) {
-                            $c_wrong_message = $quiz->c_wrong_message;
-                        } else {
-                            $c_wrong_message = JText::_('COM_QUIZ_INCORRECT');
-                        }
-
-                        $begin_center = ($q_data->c_type == 7) ? '<center>' : '';
-                        $end_center = ($q_data->c_type == 7) ? '</center>' : '';
-
-                        if (!empty($score) && ($score > 0)) {
-                            $qoption .= "\t" . '<div class="jq_question_feedback">' . $begin_center . '<b>'.$feedback_title.':</b><br/><br/>' . $c_right_message . $end_center . '</div>' . "\n";
-                        } else {
-                            if($is_correct){
-                                $qoption .= "\t" . '<div class="jq_question_feedback">' . $begin_center . '<b>'.$feedback_title.':</b><br/><br/>' . $c_right_message . $end_center . '</div>' . "\n";
+                        else{
+                            if ($max_points > 0 && $score > 0 && $score < $max_points) {
+                                $qoption .= "\t" . '<div class="jq_question_feedback"><b>' . JText::_('COM_QUIZ_PARTIALLY_CORRECT') . ':</b><br/><br/>' . $partially_message . '</div>' . "\n";
                             } else {
-                                $qoption .= "\t" . '<div class="jq_question_feedback">' . $begin_center . '<b>'.$feedback_title.':</b><br/><br/>' . $c_wrong_message . $end_center . '</div>' . "\n";
+                                $qoption .= "\t" . '<div class="jq_question_feedback"><b>' . JText::_('COM_QUIZ_FEEDBACK_QUESTION') . ':</b><br/><br/>' . $wrong_message . '</div>' . "\n";
                             }
                         }
                     }

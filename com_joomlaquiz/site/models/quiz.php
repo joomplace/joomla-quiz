@@ -155,13 +155,13 @@ class JoomlaquizModelQuiz extends JModelList
 		$db->setQuery($query);
 		$quiz_params = $db->loadObject();
 		
-		if($quiz_params){
+		if(!empty($quiz_params)) {
 			$quiz_params->error = 0;
 			$quiz_params->message = '';
 		}
-				
-		/* if not published - clear data and set message */
-		if ($quiz_params->published != 1) {
+
+		// if not published - clear data and set message
+		if (empty($quiz_params) || $quiz_params->published != 1) {
 			$quiz_params = new stdClass;
 			$quiz_params->error = 1;
 			$quiz_params->message = '<p align="left">'.JText::_('COM_QUIZ_NOT_AVAILABLE').'</p>';

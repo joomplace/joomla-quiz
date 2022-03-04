@@ -21,7 +21,8 @@ class JoomlaquizControllerProduct extends JControllerForm
         return JFactory::getUser()->authorise('core.edit', 'com_joomlaquiz');             
     }
 	
-	public function save(){
+	public function save($key = null, $urlVar = null)
+    {
 		parent::save();
 		$task = JFactory::getApplication()->input->getCmd('task');
 		$pid = JFactory::getApplication()->input->getCmd('pid');

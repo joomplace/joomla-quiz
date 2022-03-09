@@ -18,7 +18,7 @@ if (class_exists('JToolBar')) {
 	$bar = JToolBar::getInstance('toolbar');
 	// Add a cancel button
 	$bar->appendButton( 'Standard', 'next', JText::_('COM_JOOMLAQUIZ_NEXT_BUTTON'), 'question.add', false, true );
-	$bar->appendButton( 'Standard', 'cancel', JText::_('COM_JOOMLAQUIZ_CANCEL_BUTTON'), 'cancel', false, false ); 
+	$bar->appendButton( 'Standard', 'cancel', JText::_('COM_JOOMLAQUIZ_CANCEL'), 'cancel', false, false );
 }
 
 $i = 0;

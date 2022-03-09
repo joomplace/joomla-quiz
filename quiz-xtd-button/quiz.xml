@@ -6,8 +6,8 @@
     <authorUrl>www.joomplace.com</authorUrl>
     <copyright>(C) JoomPlace, www.joomplace.com</copyright>
     <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-    <version>3.7.10</version>
-    <creationDate>July 2021</creationDate>
+    <version>3.7.11</version>
+    <creationDate>March 2022</creationDate>
     <description>Displays a button to make it possible to insert Joomla Quiz Deluxe into articles.</description>
     <languages folder="language/en-GB">
         <language tag="en-GB">en-GB.plg_editors-xtd_quiz.ini</language>

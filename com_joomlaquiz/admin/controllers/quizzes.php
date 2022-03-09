@@ -167,6 +167,7 @@ class JoomlaquizControllerQuizzes extends AdminController
             $quest_blank = '';
             $quest_distr_blank = '';
             $quest_hotspot = '';
+            $quest_ext_hotspot = '';
             $quizesname = '';
             $all_images = array();
 
@@ -359,14 +360,27 @@ class JoomlaquizControllerQuizzes extends AdminController
                             $query = "SELECT * FROM #__quiz_t_hotspot as h WHERE h.c_question_id = ".$pool->c_id;
                             $database->setQuery($query);
                             $choice_data = $database->loadObjectList();
-                            for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
-                                $choice = $choice_data[$k];
-                                $quest_hotspot .= "\n\t\t\t\t\t<quest_hotspot c_question_id=\"".$pool->c_id."\">";
-                                $quest_hotspot .= "\n\t\t\t\t\t\t<hs_start_x><![CDATA[".$choice->c_start_x."]]></hs_start_x>";
-                                $quest_hotspot .= "\n\t\t\t\t\t\t<hs_start_y><![CDATA[".$choice->c_start_y."]]></hs_start_y>";
-                                $quest_hotspot .= "\n\t\t\t\t\t\t<hs_width><![CDATA[".$choice->c_width."]]></hs_width>";
-                                $quest_hotspot .= "\n\t\t\t\t\t\t<hs_height><![CDATA[".$choice->c_height."]]></hs_height>";
-                                $quest_hotspot .= "\n\t\t\t\t\t</quest_hotspot>";
+                            if(!empty($choice_data)) {
+                                for ($k = 0, $nk = count($choice_data); $k < $nk; $k++) {
+                                    $choice = $choice_data[$k];
+                                    $quest_hotspot .= "\n\t\t\t\t\t<quest_hotspot c_question_id=\"" . $pool->c_id . "\">";
+                                    $quest_hotspot .= "\n\t\t\t\t\t\t<hs_start_x><![CDATA[" . $choice->c_start_x . "]]></hs_start_x>";
+                                    $quest_hotspot .= "\n\t\t\t\t\t\t<hs_start_y><![CDATA[" . $choice->c_start_y . "]]></hs_start_y>";
+                                    $quest_hotspot .= "\n\t\t\t\t\t\t<hs_width><![CDATA[" . $choice->c_width . "]]></hs_width>";
+                                    $quest_hotspot .= "\n\t\t\t\t\t\t<hs_height><![CDATA[" . $choice->c_height . "]]></hs_height>";
+                                    $quest_hotspot .= "\n\t\t\t\t\t</quest_hotspot>";
+                                }
+                            }
+                            $query = "SELECT * FROM #__quiz_t_ext_hotspot WHERE c_question_id = ".$pool->c_id;
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
+                            if(!empty($choice_data)) {
+                                for ($k = 0, $nk = count($choice_data); $k < $nk; $k++) {
+                                    $choice = $choice_data[$k];
+                                    $quest_ext_hotspot .= "\n\t\t\t\t\t<quest_ext_hotspot c_question_id=\"" . $pool->c_id . "\">";
+                                    $quest_ext_hotspot .= "\n\t\t\t\t\t\t<c_paths><![CDATA[" . $choice->c_paths . "]]></c_paths>";
+                                    $quest_ext_hotspot .= "\n\t\t\t\t\t</quest_ext_hotspot>";
+                                }
                             }
                             break;
                     }
@@ -388,6 +402,9 @@ class JoomlaquizControllerQuizzes extends AdminController
             $quiz_xml .= "\n\t\t\t\t<hotspot_data>";
             $quiz_xml .= $quest_hotspot;
             $quiz_xml .= "\n\t\t\t\t</hotspot_data>";
+            $quiz_xml .= "\n\t\t\t\t<hotspot_ext_data>";
+            $quiz_xml .= $quest_ext_hotspot;
+            $quiz_xml .= "\n\t\t\t\t</hotspot_ext_data>";
             $quiz_xml .= "\n\t\t\t</quizess_poolos>";
             $quiz_xml .= "\n\t\t</quizess_pool>";
             $quest_choice = '';
@@ -395,6 +412,7 @@ class JoomlaquizControllerQuizzes extends AdminController
             $quest_blank = '';
             $quest_distr_blank = '';
             $quest_hotspot = '';
+            $quest_ext_hotspot = '';
             //-end pool
 
             $quiz_xml .= "\n\t\t<quizess>";
@@ -614,14 +632,27 @@ class JoomlaquizControllerQuizzes extends AdminController
                             $query = "SELECT * FROM #__quiz_t_hotspot as h WHERE h.c_question_id = ".$quest->c_id;
                             $database->setQuery($query);
                             $choice_data = $database->loadObjectList();
-                            for ($k=0, $nk=count($choice_data); $k < $nk; $k++) {
-                                $choice = $choice_data[$k];
-                                $quest_hotspot .= "\n\t\t\t\t\t<quest_hotspot c_question_id=\"".$quest->c_id."\">";
-                                $quest_hotspot .= "\n\t\t\t\t\t\t<hs_start_x><![CDATA[".$choice->c_start_x."]]></hs_start_x>";
-                                $quest_hotspot .= "\n\t\t\t\t\t\t<hs_start_y><![CDATA[".$choice->c_start_y."]]></hs_start_y>";
-                                $quest_hotspot .= "\n\t\t\t\t\t\t<hs_width><![CDATA[".$choice->c_width."]]></hs_width>";
-                                $quest_hotspot .= "\n\t\t\t\t\t\t<hs_height><![CDATA[".$choice->c_height."]]></hs_height>";
-                                $quest_hotspot .= "\n\t\t\t\t\t</quest_hotspot>";
+                            if(!empty($choice_data)) {
+                                for ($k = 0, $nk = count($choice_data); $k < $nk; $k++) {
+                                    $choice = $choice_data[$k];
+                                    $quest_hotspot .= "\n\t\t\t\t\t<quest_hotspot c_question_id=\"" . $quest->c_id . "\">";
+                                    $quest_hotspot .= "\n\t\t\t\t\t\t<hs_start_x><![CDATA[" . $choice->c_start_x . "]]></hs_start_x>";
+                                    $quest_hotspot .= "\n\t\t\t\t\t\t<hs_start_y><![CDATA[" . $choice->c_start_y . "]]></hs_start_y>";
+                                    $quest_hotspot .= "\n\t\t\t\t\t\t<hs_width><![CDATA[" . $choice->c_width . "]]></hs_width>";
+                                    $quest_hotspot .= "\n\t\t\t\t\t\t<hs_height><![CDATA[" . $choice->c_height . "]]></hs_height>";
+                                    $quest_hotspot .= "\n\t\t\t\t\t</quest_hotspot>";
+                                }
+                            }
+                            $query = "SELECT * FROM #__quiz_t_ext_hotspot WHERE c_question_id = ".$quest->c_id;
+                            $database->setQuery($query);
+                            $choice_data = $database->loadObjectList();
+                            if(!empty($choice_data)) {
+                                for ($k = 0, $nk = count($choice_data); $k < $nk; $k++) {
+                                    $choice = $choice_data[$k];
+                                    $quest_ext_hotspot .= "\n\t\t\t\t\t<quest_ext_hotspot c_question_id=\"" . $quest->c_id . "\">";
+                                    $quest_ext_hotspot .= "\n\t\t\t\t\t\t<c_paths><![CDATA[" . $choice->c_paths . "]]></c_paths>";
+                                    $quest_ext_hotspot .= "\n\t\t\t\t\t</quest_ext_hotspot>";
+                                }
                             }
                             break;
                     }
@@ -642,6 +673,9 @@ class JoomlaquizControllerQuizzes extends AdminController
                 $quiz_xml .= "\n\t\t\t\t<hotspot_data>";
                 $quiz_xml .= $quest_hotspot;
                 $quiz_xml .= "\n\t\t\t\t</hotspot_data>";
+                $quiz_xml .= "\n\t\t\t\t<hotspot_ext_data>";
+                $quiz_xml .= $quest_ext_hotspot;
+                $quiz_xml .= "\n\t\t\t\t</hotspot_ext_data>";
                 $quiz_xml .= "\n\t\t\t</quiz>";
             }
             $quiz_xml .= "\n\t\t</quizess>";
@@ -1158,6 +1192,19 @@ class JoomlaquizControllerQuizzes extends AdminController
                                         }
                                     }
                                 }
+                                if (!empty(@$qcat->hotspot_ext_data)) {
+                                    foreach ($qcat->hotspot_ext_data as $ch_data) {
+                                        if ($ch_data->c_question_id == $q_quest->id) {
+                                            $query = "INSERT INTO #__quiz_t_ext_hotspot (c_id, c_question_id, c_paths) ";
+                                            $query .= " VALUES ('', ".$db->quote($new_quest_id).", ".$db->quote($ch_data->c_paths).")";
+                                            $database->setQuery($query);
+                                            if (!$database->execute()) {
+                                                echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                                                exit();
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
                         }
@@ -1395,7 +1442,19 @@ class JoomlaquizControllerQuizzes extends AdminController
                                         }
                                     }
                                 }
-
+                            }
+                            if (!empty($qcat->hotspot_ext_data)) {
+                                foreach ($qcat->hotspot_ext_data as $ch_data) {
+                                    if ($ch_data->c_question_id == $q_quest->id) {
+                                        $query = "INSERT INTO #__quiz_t_ext_hotspot (c_id, c_question_id, c_paths) ";
+                                        $query .= " VALUES ('', ".$db->quote($new_quest_id).", ".$db->quote($ch_data->c_paths).")";
+                                        $database->setQuery($query);
+                                        if (!$database->execute()) {
+                                            echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                                            exit();
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1528,6 +1587,19 @@ class JoomlaquizControllerQuizzes extends AdminController
                                     if ($ch_data->c_question_id == $q_quest->id) {
                                         $query = "INSERT INTO #__quiz_t_hotspot(c_id,c_question_id,c_start_x,c_start_y,c_width,c_height) ";
                                         $query .= " VALUES('',".$db->quote($new_quest_id).",".$db->quote($ch_data->hs_start_x).",".$db->quote($ch_data->hs_start_y).",".$db->quote($ch_data->hs_width).",".$db->quote($ch_data->hs_height).")";
+                                        $database->setQuery($query);
+                                        if (!$database->execute()) {
+                                            echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+                                            exit();
+                                        }
+                                    }
+                                }
+                            }
+                            if (!empty($qcat->hotspot_ext_data)) {
+                                foreach ($qcat->hotspot_ext_data as $ch_data) {
+                                    if ($ch_data->c_question_id == $q_quest->id) {
+                                        $query = "INSERT INTO #__quiz_t_ext_hotspot (c_id, c_question_id, c_paths) ";
+                                        $query .= " VALUES ('', ".$db->quote($new_quest_id).", ".$db->quote($ch_data->c_paths).")";
                                         $database->setQuery($query);
                                         if (!$database->execute()) {
                                             echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";

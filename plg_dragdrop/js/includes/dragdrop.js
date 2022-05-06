@@ -19,9 +19,11 @@ if (questions[i].cur_quest_type == 4) {
 		});
 
 		//for Firefox
-		document.getElementById('ddiv'+questions[i].cur_quest_id+'_'+j).ondragstart = function() {
-			return false;
-		};
+		if(jq_jQuery('#ddiv'+questions[i].cur_quest_id+'_'+j).length) {
+			document.getElementById('ddiv'+questions[i].cur_quest_id+'_'+ j).ondragstart = function () {
+				return false;
+			};
+		}
 	}
 
 	setDrnDnAnswers(i);

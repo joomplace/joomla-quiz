@@ -269,7 +269,7 @@ class JoomlaquizModelPrintcert extends JModelList
 
                         //custom856 start
                         //$field->f_text = str_replace("#unique_code#", $this->revUni(base_convert(JText::_('COM_JOOMLAQUIZ_SHORTCODE_ADJUSTER').$stu_quiz->c_id.''.$stu_quiz->c_student_id.''.(int)$stu_quiz->user_score, 10, 36)), $field->f_text);
-                        $font_text = str_replace("#unique_code#", $this->revUni($stu_quiz->c_id . '-' . $stu_quiz->c_student_id), $font_text);
+                        $field->f_text = str_replace("#unique_code#", $this->revUni($stu_quiz->c_id . '-' . $stu_quiz->c_student_id), $field->f_text);
                         //custom856 end
 
                         $field->f_text = str_replace("#name#", $this->revUni($u_name), $field->f_text);

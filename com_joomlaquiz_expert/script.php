@@ -131,6 +131,8 @@ class com_joomlaquizInstallerScript
 			'r_student_quiz' => array(
 				'user_name' => 'VARCHAR(50) NOT NULL',
 				'user_surname' => 'VARCHAR(100) NOT NULL',
+                'bridename' => 'VARCHAR(100) NOT NULL',
+                'groomname' => 'VARCHAR(100) NOT NULL',
                 'params' => "VARCHAR( 1024 ) NOT NULL DEFAULT '{}'"
 			),
 			'lpath' => array(

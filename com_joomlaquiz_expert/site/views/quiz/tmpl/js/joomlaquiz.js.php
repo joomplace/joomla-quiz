@@ -1319,6 +1319,17 @@ function jq_StartQuizOn() {
 		}
 	}
 
+    //custom865 start
+    if(document.getElementById('jq_bride') && document.getElementById('jq_bride').value == ''){
+        alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_BRIDE_NAME',true);?>');
+        return false;
+    }
+    if(document.getElementById('jq_groom') && document.getElementById('jq_groom').value == ''){
+        alert('<?php echo JText::_('COM_JOOMLAQUIZ_DEFINE_GROOM_NAME',true);?>');
+        return false;
+    }
+    //custom865 end
+
 	if (!quiz_blocked) {
 		jq_jQuery('#jq_quiz_container1').css('opacity', 0.7);
 		jq_jQuery('#jq_quiz_container1').addClass('jq_ajax_loader');
@@ -1338,6 +1349,12 @@ function jq_StartQuiz() {
 	var usurname = (document.getElementById('jq_user_surname') && document.getElementById('jq_user_surname').value != '') ? document.getElementById('jq_user_surname').value : '';
 	var uemail = (document.getElementById('jq_user_email') && document.getElementById('jq_user_email').value != '') ? document.getElementById('jq_user_email').value : '';
 	var custom_info = '';
+
+    //custom865 start
+    var bridename = document.getElementById('jq_bride') ? encodeURIComponent(document.getElementById('jq_bride').value) : '';
+    var groomname = document.getElementById('jq_groom') ? encodeURIComponent(document.getElementById('jq_groom').value) : '';
+    //custom865 end
+
 	<?php
 		JPluginHelper::importPlugin('content');
 		$dispatcher = JEventDispatcher::getInstance();
@@ -1352,7 +1369,11 @@ function jq_StartQuiz() {
 		custom_info = custom_info+'&qs='+qs;
 	}
 
-	jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + custom_info, 1);
+//	jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + custom_info, 1);
+
+    //custom865 start
+    jq_MakeRequest('&ajax_task=start&quiz=<?php echo $quiz->c_id?>&uname=' + uname + '&uemail=' + uemail + '&usurname=' + usurname + '&bridename=' + bridename + '&groomname=' + groomname + custom_info, 1);
+    //custom865 end
 }
 
 function JQ_gotoQuestionOn(qid) {

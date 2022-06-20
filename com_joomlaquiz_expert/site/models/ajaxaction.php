@@ -213,8 +213,16 @@ class JoomlaquizModelAjaxaction extends JModelList
                  * @imoortant: do not use JDate, as this will cause double time transform
                  */
                 $quiz_time = date( 'Y-m-d H:i:s');
-				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params)"
-			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', NOW(), '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).")";
+//				$query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, params)"
+//			. "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', NOW(), '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', ".$database->quote($cust_params).")";
+
+                //custom865 start
+                $bridename = JFactory::getApplication()->input->getString('bridename', '');
+                $groomname = JFactory::getApplication()->input->getString('groomname', '');
+                $query = "INSERT INTO #__quiz_r_student_quiz (c_order_id, c_rel_id, c_lid, c_quiz_id, c_student_id, c_total_score, c_total_time, c_date_time, c_passed, unique_id, unique_pass_id, c_finished, user_email, user_name, user_surname, bridename, groomname, params)"
+                    . "\n VALUES('".$package_id."', '".$rel_id."', '".$lid."', '".$quiz_id."', '".$my->id."', '0', '0', NOW(), '0', '".$user_unique_id."', '".$unique_pass_id."', 0, '".$user_email."', '".$user_name."', '".$user_surname."', '".$bridename."', '".$groomname."', ".$database->quote($cust_params).")";
+                //custom865 end
+
 				$database->SetQuery($query);
 				$database->query();
 				$stu_quiz_id = $database->insertid();

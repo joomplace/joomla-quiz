@@ -287,7 +287,9 @@ ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `c_max_score` DECIMAL(12,2) NOT 
 
 ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `user_name` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `c_max_score`;
 ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `user_surname` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `user_name`;
-ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `params` VARCHAR(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '{}' AFTER `user_surname`;
+ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `bridename` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `user_surname`;
+ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `groomname` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `bridename`;
+ALTER TABLE `#__quiz_r_student_quiz` ADD COLUMN `params` VARCHAR(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '{}' AFTER `groomname`;
 
 CREATE TABLE IF NOT EXISTS `#__quiz_r_student_share` (
 `id` INT(12) UNSIGNED NOT NULL AUTO_INCREMENT ,

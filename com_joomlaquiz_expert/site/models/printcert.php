@@ -27,9 +27,12 @@ class JoomlaquizModelPrintcert extends JModelList
 		$stu_quiz_id = intval( JFactory::getApplication()->input->get('stu_quiz_id', 0 ) );
 		$user_unique_id = JFactory::getApplication()->input->get('user_unique_id', '', 'STRING');
 		$unique_pass_id = JFactory::getApplication()->input->get('unique_pass_id', '', 'STRING');
-		
-		$query = "SELECT SUM(squ.c_score) as user_score, ch.q_chain, sq.params, sq.user_name, sq.user_email, sq.user_surname, sq.c_passed, sq.c_student_id, sq.c_total_score, sq.c_date_time, sq.c_total_time, sq.unique_id, sq.unique_pass_id, sq.c_max_score as c_full_score, qtq.c_title, qtq.c_certificate, qtq.c_id"
-		. "\n FROM #__quiz_r_student_quiz AS sq"
+
+//		$query = "SELECT SUM(squ.c_score) as user_score, ch.q_chain, sq.params, sq.user_name, sq.user_email, sq.user_surname, sq.c_passed, sq.c_student_id, sq.c_total_score, sq.c_date_time, sq.c_total_time, sq.unique_id, sq.unique_pass_id, sq.c_max_score as c_full_score, qtq.c_title, qtq.c_certificate, qtq.c_id"
+        //custom865 start
+        $query = "SELECT SUM(squ.c_score) as user_score, ch.q_chain, sq.params, sq.user_name, sq.user_email, sq.user_surname, sq.bridename, sq.groomname, sq.c_passed, sq.c_student_id, sq.c_total_score, sq.c_date_time, sq.c_total_time, sq.unique_id, sq.unique_pass_id, sq.c_max_score as c_full_score, qtq.c_title, qtq.c_certificate, qtq.c_id"
+        //custom865 end
+        . "\n FROM #__quiz_r_student_quiz AS sq"
 		. "\n LEFT JOIN #__quiz_t_quiz as qtq ON qtq.c_id = sq.c_quiz_id"
 		. "\n LEFT JOIN #__quiz_r_student_question as squ ON sq.c_id = squ.c_stu_quiz_id"
 		. "\n LEFT JOIN `#__quiz_q_chain` AS ch ON ch.s_unique_id = sq.unique_id"
@@ -138,6 +141,11 @@ class JoomlaquizModelPrintcert extends JModelList
 				$font_text = str_replace("#surname#", $this->revUni($u_surname), $font_text);
 				$font_text = str_replace("#email#", $this->revUni($u_email), $font_text);
 				$font_text = str_replace("#username#",$this->revUni($u_usrname), $font_text);
+
+                //custom865 start
+                $font_text = str_replace("#bridename#", $this->revUni($stu_quiz->bridename), $font_text);
+                $font_text = str_replace("#groomname#", $this->revUni($stu_quiz->groomname), $font_text);
+                //custom865 end
 
 				$reg_answer_replace = number_format($stu_quiz->user_score, 2, '.', ' ') .
                     ' ' . JText::_('COM_QUIZ_CERT_OUT_OF') . ' ' .
@@ -266,6 +274,11 @@ class JoomlaquizModelPrintcert extends JModelList
 						$field->f_text = str_replace("#surname#", $this->revUni($u_surname), $field->f_text);
 						$field->f_text = str_replace("#email#", $u_email, $field->f_text);
 						$field->f_text = str_replace("#username#",$this->revUni($u_usrname), $field->f_text);
+
+                        //custom865 start
+                        $field->f_text = str_replace("#bridename#", $this->revUni($stu_quiz->bridename), $field->f_text);
+                        $field->f_text = str_replace("#groomname#", $this->revUni($stu_quiz->groomname), $field->f_text);
+                        //custom865 end
 
                         //$field->f_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$sc_procent." ".JText::_('COM_QUIZ_CERT_PERCENT'), $field->f_text);
                         $field->f_text = str_replace("#reg_answer#",JText::_('COM_QUIZ_CERT_TOTAL')." ".$reg_answer_replace, $field->f_text);

@@ -15,7 +15,7 @@ With Joomla! quiz component you will make varied online quizzes both for work an
 - <i>Corporate purposes</i>: Make online quizzes for your staff training or employees assessment.
 - <i>Products promotion</i>: Want to advertise your products smartly? Create short and useful online courses or tests about certain type of goods or services. The information about your own products or business decisions as well as promotion codes for them will perfectly suit the quiz final page.
 
-# <b>FEATURES</b>
+<h2><b>FEATURES</b></h2>
 
 <b>SMART QUIZZES</b>
 

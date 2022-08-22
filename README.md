@@ -3,6 +3,8 @@
 
 <b>Joomla Quiz Deluxe</b> is compatible with <b>Joomla! 3.x</b>.
 
+To request changes/custom development of Joomla Quiz, please go to <a href="https://belitsoft.com/web-development" target="_blank" rel="noopener noreferrer">https://belitsoft.com/web-development</a>  and use the contact form there.
+
 The quiz extension is integrated with VirtueMart.
 
 <b>WHY TO USE THE EXTENSION?</b>

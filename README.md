@@ -1,7 +1,7 @@
 # Joomla Quiz Deluxe Component
 <b>Joomla Quiz Deluxe</b> is a comprehensive and easy-to-use quiz component for Joomla! websites. It will empower you to author great looking <b>media-rich</b> online quizzes. This Joomla! quiz extension includes a wide range of questions types (including multiple choice), modes and styles and allows you to insert video and audio into questions.
 
-<b>Joomla Quiz Deluxe</b> is compatible with <b>Joomla! 3.x</b>.<br />To request changes/custom development of Joomla Quiz, please go to <a href="https://belitsoft.com/web-development" target="_blank" rel="noopener noreferrer">https://belitsoft.com/web-development</a>  and use the contact form there.
+<b>Joomla Quiz Deluxe</b> is compatible with <b>Joomla! 3.x</b>.<br />To request changes/<b>custom development</b> of Joomla Quiz, please go to <a href="https://belitsoft.com/web-development" target="_blank" rel="noopener noreferrer">https://belitsoft.com/web-development</a>  and use the contact form there.
 
 The quiz extension is integrated with VirtueMart.
 

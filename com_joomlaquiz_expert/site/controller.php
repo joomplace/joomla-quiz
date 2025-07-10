@@ -8,19 +8,22 @@
 */
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
+
 /**
  * Joomlaquiz Component Controller
  */
-class JoomlaquizController extends JControllerLegacy
+class JoomlaquizController extends BaseController
 {
 	public function display($cachable = false, $urlparams = array())
 	{
 		
-		$user = JFactory::getUser();
-		$view = JFactory::getApplication()->input->getCmd('view', 'quiz');
-		$task = JFactory::getApplication()->input->getCmd('task');
-		$rel_id = JFactory::getApplication()->input->getInt('rel_id', 0);
-		$package_id = JFactory::getApplication()->input->getInt('package_id', 0);
+               $user = Factory::getUser();
+               $view = Factory::getApplication()->input->getCmd('view', 'quiz');
+               $task = Factory::getApplication()->input->getCmd('task');
+               $rel_id = Factory::getApplication()->input->getInt('rel_id', 0);
+               $package_id = Factory::getApplication()->input->getInt('package_id', 0);
 		
         parent::display();
 	}	

@@ -8,11 +8,15 @@
 */
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
+
 /**
  * Results HTML View class for the Joomlaquiz Deluxe Component
  */
  
-class JoomlaquizViewResults extends JViewLegacy
+class JoomlaquizViewResults extends BaseHtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -21,14 +25,14 @@ class JoomlaquizViewResults extends JViewLegacy
 
     function display($tpl = null) 
 	{
-        $document = JFactory::getDocument();
+        $document = Factory::getDocument();
         $document->addScript('components/com_joomlaquiz/assets/js/js.js');
 
 		$layout = $this->getLayout();
         $this->messageTrigger = $this->get('CurrDate');
 		$this->addTemplatePath(JPATH_BASE.'/components/com_joomlaquiz/helpers/html');
 		if($layout == 'stu_report'){
-			$cid = JFactory::getApplication()->input->get('cid');
+                        $cid = Factory::getApplication()->input->get('cid');
 			$this->cid = $cid;
 
 			$submenu = 'stu_report';
@@ -48,7 +52,7 @@ class JoomlaquizViewResults extends JViewLegacy
 			
 			if (!empty($errors = $this->get('Errors')))
 			{
-                JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+                Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 				return false;
 			}	
 			
@@ -69,7 +73,7 @@ class JoomlaquizViewResults extends JViewLegacy
 			
 			if (!empty($errors = $this->get('Errors')))
 			{
-                JFactory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
+                Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'error');
 				return false;
 			}
 			
@@ -120,11 +124,8 @@ class JoomlaquizViewResults extends JViewLegacy
 		);
 	}
 
-	protected function getConvertedURL($url) {
-		$newUrl = $url;
-
-		$router = new JRouterSite(array('mode'=>JROUTER_MODE_SEF));
-		$newUrl = $router->build($newUrl)->toString(array('path', 'query', 'fragment'));
+        protected function getConvertedURL($url) {
+                $newUrl = Route::_($url);
 
 		$newUrl = str_replace('/administrator/', '/', $newUrl);
 		$newUrl = str_replace('component/content/article/', '', $newUrl);

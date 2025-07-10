@@ -10,7 +10,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.database.table');
- 
+
 /**
  * Joomlaquiz Deluxe Table class
  */
@@ -21,11 +21,11 @@ class JoomlaquizTableProducts extends JTable
          *
          * @param object Database connector object
          */
-        function __construct(&$db) 
+        function __construct(&$db)
         {
                 parent::__construct('#__quiz_products', 'pid', $db);
         }
-		
+
 		function store($updateNulls = false)
         {
 			$database = JFactory::getDBO();
@@ -36,7 +36,7 @@ class JoomlaquizTableProducts extends JTable
 			$quiz_product_id = $jinput->getInt('quiz_product_id', 0) ? $jinput->getInt('quiz_product_id', 0) : '-1';
 			$product_id_int = (string)intval($product_id);
 			$name = !empty($jform['name']) ? $jform['name'] : '';
-			
+
 			if($product_id == '-1' && $quiz_product_id){
 				if ($name == '') {
 					echo "<script> alert('".JText::_('COM_JOOMLAQUIZ_SELECT_PRODUCT')."'); window.history.go(-1); </script>\n";
@@ -53,12 +53,12 @@ class JoomlaquizTableProducts extends JTable
 					. "\n WHERE `quiz_sku` = '{$product_id}'"
 					;
 				$database->setQuery($query);
-				$quiz_sku = $database->loadResult();			
-				
+				$quiz_sku = $database->loadResult();
+
 				if ($quiz_sku) {
 					$query = "UPDATE #__quiz_product_info SET `name` = '{$name}' WHERE `quiz_sku` = '".$quiz_sku."' ";
 					$database->setQuery($query);
-					$database->execute();	
+					$database->execute();
 				}
 			}
 
@@ -68,7 +68,7 @@ class JoomlaquizTableProducts extends JTable
 				$database->setQuery($query);
 				$database->execute();
 
-				$_REQUEST['name'] = $name;
+				$jinput->set('name', $name);
 			}
 
 			if ($quiz_sku)
@@ -81,7 +81,7 @@ class JoomlaquizTableProducts extends JTable
 
                 $type_ids = $type . '_ids';
 				$ids = !empty($jinput->get($type_ids)) ? $jinput->get($type_ids) : array();
-				
+
 				foreach($ids as $id) {
 					$values = array();
 					$values[] = $product_id;
@@ -175,8 +175,8 @@ class JoomlaquizTableProducts extends JTable
 					exit();
 				}
 			}
-			
-			$_REQUEST['pid'] = $product_id;
+
+			$jinput->set('pid', $product_id);
 
 			return true;
 		}

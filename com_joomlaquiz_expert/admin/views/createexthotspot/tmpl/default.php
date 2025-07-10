@@ -7,10 +7,12 @@
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die('Restricted Access');
-$css = JFactory::getApplication()->input->get('t','');
-				
+$app = JFactory::getApplication();
+$input = $app->input;
+$css = $input->get('t','');
+
 $hs_message = '';
-$hotspot = intval(JFactory::getApplication()->input->get('hotspot', 0));
+$hotspot = $input->getInt('hotspot', 0);
 if (!$hotspot) {
 	echo JText::_('COM_JOOMLAQUIZ_NO_IMAGE');
 	return;
@@ -28,21 +30,21 @@ if (!$image_name) {
 
 $image_path = "../images/joomlaquiz/images/".$image_name;
 
-$hs_task = JFactory::getApplication()->input->get('hs_task', '');
+$hs_task = $input->get('hs_task', '');
 if ($hs_task == 'save_hs') {
-	
-	$hs_areas = $_REQUEST['hs_areas'];
+
+	$hs_areas = $input->get('hs_areas', array(), 'array');
 	$c_paths = json_encode($hs_areas);
 
 	$query = "DELETE FROM `#__quiz_t_ext_hotspot` WHERE `c_question_id` = '".$hotspot."'";
 	$database->SetQuery( $query );
 	$database->query();
-	
+
 	$query = "INSERT INTO `#__quiz_t_ext_hotspot` (c_id, c_question_id, c_paths) "
 	. "\n VALUES('', '".$hotspot."', '".$c_paths."')";
 	$database->SetQuery( $query );
 	$database->query();
-	
+
 }
 
 $query = "SELECT * FROM `#__quiz_t_ext_hotspot` WHERE `c_question_id` = '".$hotspot."'";
@@ -50,7 +52,7 @@ $database->SetQuery( $query );
 $row = $database->loadObject();
 
 if ($row){
-    $c_paths = $row->c_paths;  
+    $c_paths = $row->c_paths;
 } else {
     $c_paths = "";
 }

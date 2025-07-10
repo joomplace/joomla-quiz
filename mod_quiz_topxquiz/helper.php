@@ -12,14 +12,16 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class modTopxquizHelper
 {
 	/*
 	 * @since  1.5
 	 */
-	public static function getResult(&$params)
-	{
-		$database = JFactory::getDBO();
+       public static function getResult(&$params)
+       {
+               $database = Factory::getDbo();
 		
 		$result = array();
 		$v_content_count 	= intval( $params->get( 'quiz_count', 10 ) );

@@ -10,14 +10,17 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ModuleHelper;
+
 jimport('models.qcategory', JPATH_SITE.'/components/com_joomlaquiz/');
 
-$db = JFactory::getDbo();
+$db = Factory::getDbo();
 $query = $db->getQuery(true);
 $sub_query = $db->getQuery(true);
 $sub_query->select('MAX('.$db->qn('c_total_score').')')
     ->from($db->qn('#__quiz_r_student_quiz'))
-    ->where($db->qn('c_student_id').' = '.$db->q(JFactory::getUser()->id))
+    ->where($db->qn('c_student_id').' = '.$db->q(Factory::getUser()->id))
     ->where($db->qn('c_quiz_id').' = '.$db->qn('q.c_id'));
 $query->select('('.$sub_query.') AS '.$db->qn('score'));
 $sub_query->clear('select')
@@ -32,4 +35,4 @@ if($params->get('quiz_ids', array())){
 
 $results = $db->setQuery($query)->loadObjectList();
 
-require JModuleHelper::getLayoutPath('mod_quiz_mysummary', $params->get('layout', 'default'));
+require ModuleHelper::getLayoutPath('mod_quiz_mysummary', $params->get('layout', 'default'));

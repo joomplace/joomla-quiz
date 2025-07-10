@@ -8,20 +8,25 @@
 */
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Table\Table;
+
 /**
  * Joomlaquiz Deluxe Component Controller
  */
-class JoomlaquizController extends JControllerLegacy
+class JoomlaquizController extends BaseController
 {
         /**
          * display task
          *
          * @return void
          */
-        function display($cachable = false, $urlparams = array())
-        {
-        	$view = JFactory::getApplication()->input->getCmd('view', 'dashboard');
-            JFactory::getApplication()->input->set('view', $view);
+       function display($cachable = false, $urlparams = array())
+       {
+               $view = Factory::getApplication()->input->getCmd('view', 'dashboard');
+           Factory::getApplication()->input->set('view', $view);
             $this->migrateParamsOnAir();
             parent::display($cachable);
         }
@@ -32,7 +37,7 @@ class JoomlaquizController extends JControllerLegacy
 			$jq_version = JoomlaquizHelper::getVersion();
 			$s = new Snoopy();
 			$s->read_timeout = 90;
-			$s->referer = JURI::root();
+                        $s->referer = Uri::root();
 			@$s->fetch('http://www.joomplace.com/version_check/componentVersionCheck.php?component=quiz_deluxe&current_version='.urlencode($jq_version));
 			$version_info = $s->results;
 			$version_info_pos = strpos($version_info, ":");
@@ -78,7 +83,7 @@ class JoomlaquizController extends JControllerLegacy
 
 			$s = new Snoopy();
 			$s->read_timeout = 10;
-			$s->referer = JURI::root();
+                        $s->referer = Uri::root();
 			@$s->fetch('http://www.joomplace.com/news_check/componentNewsCheck.php?component=quiz_deluxe');
 			$news_info = $s->results;
 
@@ -92,7 +97,7 @@ class JoomlaquizController extends JControllerLegacy
 
     public function migrateParamsOnAir()
     {
-        $db      = JFactory::getDbo();
+        $db      = Factory::getDbo();
         $columns = $db->getTableColumns('#__quiz_t_quiz');
         if (array_key_exists('c_guest', $columns)) {
             /*
@@ -105,9 +110,9 @@ class JoomlaquizController extends JControllerLegacy
                 ->from($db->qn('#__quiz_t_quiz'));
             $rows = $db->setQuery($query)->loadObjectList();
             /** @var JTableAsset $asset */
-            $asset       = JTable::getInstance('Asset');
+            $asset       = Table::getInstance('Asset');
             $rule        = "core.view";
-            $user        = JFactory::getUser(0);
+            $user        = Factory::getUser(0);
             $user_groups = $user->getAuthorisedGroups();
             $guest_group = array_pop($user_groups);
             foreach ($rows as $row) {
@@ -129,7 +134,7 @@ class JoomlaquizController extends JControllerLegacy
                     && $user->authorise('core.view', $asset_name)
                     != $row->c_guest
                 ) {
-                    JFactory::getApplication()
+                    Factory::getApplication()
                         ->enqueueMessage('There might be something wrong with guest access for quiz #'
                             . $row->c_id . ' ' . $row->c_title
                             . '. Please check quiz settings. (Previously "guest access" was '

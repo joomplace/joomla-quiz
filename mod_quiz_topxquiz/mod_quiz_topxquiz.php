@@ -12,6 +12,8 @@
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+use Joomla\CMS\Helper\ModuleHelper;
+
 // Include the syndicate functions only once
 require_once __DIR__ . '/helper.php';
 
@@ -24,6 +26,6 @@ if ($v_content_count == 0) {
 }
 
 $result = modTopxquizHelper::getResult($params);
-require JModuleHelper::getLayoutPath('mod_quiz_topxquiz', $params->get('layout', 'default'));
+require ModuleHelper::getLayoutPath('mod_quiz_topxquiz', $params->get('layout', 'default'));
 
 ?>

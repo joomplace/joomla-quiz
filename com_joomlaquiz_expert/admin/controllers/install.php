@@ -7,9 +7,9 @@
 * @license GNU/GPL http://www.gnu.org/copyleft/gpl.html
 */
 defined('_JEXEC') or die('Restricted access');
- 
+
 jimport('joomla.application.component.controllerform');
- 
+
 /**
  * Install Controller
  */
@@ -19,7 +19,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 	{
 		parent::__construct($config);
 	}
-	
+
 	/**
 	* Install plugins
 	*/
@@ -28,24 +28,26 @@ class JoomlaquizControllerInstall extends JControllerForm
 		include_once(JPATH_ROOT . '/administrator/components/com_joomlaquiz/installer/plugins.html');
 		exit;
 	}
-	
+
 	public function install_plugins(){
-		
+
 		ignore_user_abort(false); // STOP script if User press 'STOP' button
 		@set_time_limit(0);
 		@ob_end_clean();
 		@ob_start();
+		$app   = JFactory::getApplication();
+		$input = $app->input;
 		echo "<script>function getObj_frame(name) {"
 		. " if (parent.document.getElementById) { return parent.document.getElementById(name); }"
 		. "	else if (parent.document.all) { return parent.document.all[name]; }"
 		. "	else if (parent.document.layers) { return parent.document.layers[name]; }}"
 		. "parent.jQuery('#jq_install_btn').css('opacity', '0.5');"
 		. "</script>";
-		
+
 		jimport( 'joomla.filesystem.file' );
 		jimport( 'joomla.filesystem.folder' );
 		jimport( 'joomla.filesystem.archive' );
-		
+
 		$plugins		= array();
 		$plg_names 		= array();
 		$source			= JPATH_ROOT . '/components/com_joomlaquiz/jq_plugins.zip';
@@ -58,19 +60,20 @@ class JoomlaquizControllerInstall extends JControllerForm
 
 		if(JArchive::extract($source, $destination))
 		{
-			if(!empty($_REQUEST['jform'])){
-				foreach($_REQUEST['jform'] as $plg_name => $enable){
-					if($enable){
-						$plugins[]     = JPATH_ROOT . '/components/com_joomlaquiz/jq_plugins/plg_'.$plg_name.'.zip';
-						$plg_names[] = $plg_name;
-					}
-				}
-			}
+		$jform = $input->get('jform', array(), 'array');
+		if(!empty($jform)){
+		foreach($jform as $plg_name => $enable){
+		if($enable){
+		$plugins[]     = JPATH_ROOT . '/components/com_joomlaquiz/jq_plugins/plg_'.$plg_name.'.zip';
+		$plg_names[] = $plg_name;
+		}
+		}
+		}
 		}
 
 		jimport('joomla.installer.installer');
 		jimport('joomla.installer.helper');
-		
+
 		$plugins_count = count($plugins);
 		if(empty($plugins)){
 			echo "<script>"
@@ -86,7 +89,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 			. "</script>";
 			@flush();
 			@ob_end_flush();
-			
+
 			//remove temp folder
 			JFolder::delete($destination);
 			JFile::delete(JPATH_ROOT . '/components/com_joomlaquiz/jq_plugins.zip');
@@ -97,22 +100,22 @@ class JoomlaquizControllerInstall extends JControllerForm
 		{
 			$package   = JInstallerHelper::unpack($plugin);
 			$installer = JInstaller::getInstance();
-						
+
 			if ( ! $installer->install($package['dir']))
 			{
 				// There was an error installing the package
 			}
-			
+
 			// Cleanup the install files
 			if ( ! is_file($package['packagefile']))
 			{
 				$package['packagefile'] = $app->getCfg('tmp_path').'/'.$package['packagefile'];
 			}
-			
+
 			JInstallerHelper::cleanupInstall('', $package['extractdir']);
-			
+
 			$this->_installDatabase($plg_names[$ii]);
-			
+
 			echo "<script>var div_log = getObj_frame('div_log');"
 			. " if (div_log) {"
 			. "div_log.style.width = '".intval(($ii+1)*600/$plugins_count)."px';"
@@ -122,20 +125,21 @@ class JoomlaquizControllerInstall extends JControllerForm
 			@ob_flush();
 			sleep(1);
 		}
-	
-		if(!empty($_REQUEST['jform'])){
-			foreach($_REQUEST['jform'] as $plg_name => $enable){
-				if($enable){
-					$this->_enablePlugin($plg_name);
-				}
-			}
+
+		$jform = $input->get('jform', array(), 'array');
+		if(!empty($jform)){
+		foreach($jform as $plg_name => $enable){
+		if($enable){
+		$this->_enablePlugin($plg_name);
 		}
-		
+		}
+		}
+
 		//remove temp folder
 		JFolder::delete($destination);
 		//remove temp zip archive
 		JFile::delete(JPATH_ROOT . '/components/com_joomlaquiz/jq_plugins.zip');
-		
+
 		echo "<script>"
 		. "parent.jQuery('#div_progress').removeClass('progress-striped');"
 		. "parent.jQuery('#div_progress').addClass('progress-success');"
@@ -145,10 +149,10 @@ class JoomlaquizControllerInstall extends JControllerForm
 		. "</script>";
 		@flush();
 		@ob_end_flush();
-		
+
 		die;
 	}
-	
+
 	function _enablePlugin($plugin)
 	{
 		$db         = JFactory::getDBO();
@@ -169,7 +173,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 			return null;
 		}
 	}
-	
+
 	/**
 	* Install modules
 	*/
@@ -178,24 +182,26 @@ class JoomlaquizControllerInstall extends JControllerForm
 		include_once(JPATH_ROOT . '/administrator/components/com_joomlaquiz/installer/modules.html');
 		exit;
 	}
-	
-	function install_modules(){
-		
+
+		function install_modules(){
+
 		ignore_user_abort(false); // STOP script if User press 'STOP' button
 		@set_time_limit(0);
 		@ob_end_clean();
 		@ob_start();
+		$app   = JFactory::getApplication();
+		$input = $app->input;
 		echo "<script>function getObj_frame(name) {"
 		. " if (parent.document.getElementById) { return parent.document.getElementById(name); }"
 		. "	else if (parent.document.all) { return parent.document.all[name]; }"
 		. "	else if (parent.document.layers) { return parent.document.layers[name]; }}"
 		. "parent.jQuery('#jq_install_btn').css('opacity', '0.5');"
 		. "</script>";
-		
+
 		jimport( 'joomla.filesystem.file' );
 		jimport( 'joomla.filesystem.folder' );
 		jimport( 'joomla.filesystem.archive' );
-		
+
 		$modules		= array();
 		$source			= JPATH_ROOT . '/components/com_joomlaquiz/jq_modules.zip';
 		$destination	= JPATH_ROOT . '/components/com_joomlaquiz/jq_modules/';
@@ -207,18 +213,19 @@ class JoomlaquizControllerInstall extends JControllerForm
 
 		if(JArchive::extract($source, $destination))
 		{
-			if(!empty($_REQUEST['jform'])){
-				foreach($_REQUEST['jform'] as $mod_name => $enable){
-					if($enable){
-						$modules[]     = JPATH_ROOT . '/components/com_joomlaquiz/jq_modules/'.$mod_name.'.zip';
-					}
-				}
-			}
+		$jform = $input->get('jform', array(), 'array');
+		if(!empty($jform)){
+		foreach($jform as $mod_name => $enable){
+		if($enable){
+		$modules[]     = JPATH_ROOT . '/components/com_joomlaquiz/jq_modules/'.$mod_name.'.zip';
+		}
+		}
+		}
 		}
 
 		jimport('joomla.installer.installer');
 		jimport('joomla.installer.helper');
-		
+
 		$modules_count = count($modules);
 		if(empty($modules)){
 			echo "<script>"
@@ -234,7 +241,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 			. "</script>";
 			@flush();
 			@ob_end_flush();
-			
+
 			//remove temp folder
 			JFolder::delete($destination);
 			JFile::delete(JPATH_ROOT . '/components/com_joomlaquiz/jq_modules.zip');
@@ -245,18 +252,18 @@ class JoomlaquizControllerInstall extends JControllerForm
 		{
 			$package   = JInstallerHelper::unpack($module);
 			$installer = JInstaller::getInstance();
-						
+
 			if ( ! $installer->install($package['dir']))
 			{
 				// There was an error installing the package
 			}
-			
+
 			// Cleanup the install files
 			if ( ! is_file($package['packagefile']))
 			{
 				$package['packagefile'] = $app->getCfg('tmp_path').'/'.$package['packagefile'];
 			}
-			
+
 			JInstallerHelper::cleanupInstall('', $package['extractdir']);
 			echo "<script>var div_log = getObj_frame('div_log');"
 			. " if (div_log) {"
@@ -267,12 +274,12 @@ class JoomlaquizControllerInstall extends JControllerForm
 			@ob_flush();
 			sleep(1);
 		}
-		
+
 		//remove temp folder
 		JFolder::delete($destination);
 		//remove temp zip archive
 		JFile::delete(JPATH_ROOT . '/components/com_joomlaquiz/jq_modules.zip');
-		
+
 		echo "<script>"
 		. "parent.jQuery('#div_progress').removeClass('progress-striped');"
 		. "parent.jQuery('#div_progress').addClass('progress-success');"
@@ -284,48 +291,51 @@ class JoomlaquizControllerInstall extends JControllerForm
 		@ob_end_flush();
 		die;
 	}
-	
+
 	/**
 	* Install modules
 	*/
 	public function content_plugin(){
 		jimport( 'joomla.filesystem.file' );
-		
+
 		if(file_exists(JPATH_ROOT . '/components/com_joomlaquiz/jq_modules.zip')){
 			//remove temp zip archive
 			JFile::delete(JPATH_ROOT . '/components/com_joomlaquiz/jq_modules.zip');
 		}
-		
+
 		$allowContinue = true;
 		include_once(JPATH_ROOT . '/administrator/components/com_joomlaquiz/installer/content_plugin.html');
 		exit;
 	}
-	
-	function install_content_plugin()
-	{
+
+		function install_content_plugin()
+		{
 		ignore_user_abort(false); // STOP script if User press 'STOP' button
 		@set_time_limit(0);
 		@ob_end_clean();
 		@ob_start();
+		$app   = JFactory::getApplication();
+		$input = $app->input;
 		echo "<script>function getObj_frame(name) {"
 		. " if (parent.document.getElementById) { return parent.document.getElementById(name); }"
 		. "	else if (parent.document.all) { return parent.document.all[name]; }"
 		. "	else if (parent.document.layers) { return parent.document.layers[name]; }}"
 		. "parent.jQuery('#jq_install_btn').css('opacity', '0.5');"
 		. "</script>";
-		
+
 		jimport( 'joomla.filesystem.file' );
 		jimport( 'joomla.filesystem.folder' );
-		
+
 		$plugin = false;
-		if(!empty($_REQUEST['jform'])){
-			foreach($_REQUEST['jform'] as $plg_name => $enable){
-				if($enable){
-						$plugin     = JPATH_ROOT . '/components/com_joomlaquiz/quiz_content_plugin.zip';
-				}
-			}
+		$jform = $input->get('jform', array(), 'array');
+		if(!empty($jform)){
+		foreach($jform as $plg_name => $enable){
+		if($enable){
+		$plugin     = JPATH_ROOT . '/components/com_joomlaquiz/quiz_content_plugin.zip';
 		}
-		
+		}
+		}
+
 		if(!$plugin){
 			echo "<script>"
 			. "var div_log = getObj_frame('div_log');"
@@ -340,34 +350,34 @@ class JoomlaquizControllerInstall extends JControllerForm
 			. "</script>";
 			@flush();
 			@ob_end_flush();
-			
+
 			die;
 		}
-				
+
 		jimport('joomla.installer.installer');
 		jimport('joomla.installer.helper');
 
 		$app = JFactory::getApplication();
 		$package   = JInstallerHelper::unpack($plugin);
 		$installer = JInstaller::getInstance();
-					
+
 		if ( ! $installer->install($package['dir']))
 		{
 			// There was an error installing the package
 		}
-		
+
 		// Cleanup the install files
 		if ( ! is_file($package['packagefile']))
 		{
 			$package['packagefile'] = $app->getCfg('tmp_path').'/'.$package['packagefile'];
 		}
-		
+
 		JInstallerHelper::cleanupInstall('', $package['extractdir']);
 		$this->_enablePlugin('quizcont');
-		
+
 		//remove temp zip archive
 		JFile::delete(JPATH_ROOT . '/components/com_joomlaquiz/quiz_content_plugin.zip');
-		
+
 		echo "<script>"
 		. "var div_log = getObj_frame('div_log');"
 		. " if (div_log) {"
@@ -383,20 +393,20 @@ class JoomlaquizControllerInstall extends JControllerForm
 		@ob_end_flush();
 		die;
 	}
-	
+
 	public function done(){
 		jimport( 'joomla.filesystem.file' );
-		
+
 		if(file_exists(JPATH_ROOT . '/components/com_joomlaquiz/quiz_content_plugin.zip')){
 			//remove temp zip archive
 			JFile::delete(JPATH_ROOT . '/components/com_joomlaquiz/quiz_content_plugin.zip');
 		}
-		
+
 		$allowContinue = true;
 		include_once(JPATH_ROOT . '/administrator/components/com_joomlaquiz/installer/done.html');
 		exit;
 	}
-	
+
 	function _installDatabase($plugin)
 	{
 		$db	= JFactory::getDBO();
@@ -404,10 +414,10 @@ class JoomlaquizControllerInstall extends JControllerForm
 		jimport('joomla.filesystem.folder');
 		jimport('joomla.filesystem.path');
 		jimport('joomla.base.adapter');
-		
+
 		$sqlfile = JPATH_SITE.'/plugins/joomlaquiz/'.$plugin.'/sql/install.mysql.utf8.sql';
 		$buffer = file_get_contents($sqlfile);
-		
+
 		// Graceful exit and rollback if read not successful
 		if ($buffer === false)
 		{
@@ -424,13 +434,13 @@ class JoomlaquizControllerInstall extends JControllerForm
 			// No queries to process
 			return 0;
 		}
-		
+
 		// Process each query in the $queries array (split out of sql file).
 		foreach ($queries as $query)
 		{
 			$query = trim($query);
 
-			if ($query != '' && $query{0} != '#')
+		if ($query != '' && $query[0] != '#')
 			{
 				$db->setQuery($query);
 
@@ -442,9 +452,9 @@ class JoomlaquizControllerInstall extends JControllerForm
 				}
 			}
 		}
-		
+
 		$newColumns = array();
-		
+
 		switch($plugin){
 			case 'blank':
 				$newColumns = array(
@@ -456,7 +466,7 @@ class JoomlaquizControllerInstall extends JControllerForm
 			default:
 				break;
 		}
-		
+
 		if($newColumns){
 			foreach ($newColumns as $table => $fields)
 			{
@@ -493,6 +503,6 @@ class JoomlaquizControllerInstall extends JControllerForm
 				}
 			}
 		}
-		
+
 	}
 }
